@@ -1,0 +1,43 @@
+.sidebar-nav {
+    margin-top: 20px;
+    padding: 0;
+    list-style: none;
+}
+
+h1.page-title {
+    display: block;
+    font-size: 3em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    color: #C25100;
+    font-family: 'Lobster';
+}
+
+
+h2.tool-name {
+    color: #C25100;
+    font-family: 'Lobster';
+
+}
+
+
+
+body {
+	background-color: #fffcfc;
+	overflow-x: hidden;
+}
+
+.sidebar-nav {
+	border: 2px solid #C25100;
+	color: white;
+	padding: 20px;
+    min-height: 500px;
+    font-family: 'Lobster';
+}
+
+ul
+{
+    list-style-type: none;
+}
