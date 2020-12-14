@@ -44,3 +44,13 @@ class RF_PowerConversionForm(forms.Form):
     old_units = forms.ChoiceField(choices=CHOICES_Units, label='Units', initial='1')
     new_units = forms.ChoiceField(choices=CHOICES_Units, label='New units', initial='2')
 
+    
+    
+    def clean(self):
+        data = self.cleaned_data
+
+        if (data['old_units'] == '0') and (data['P'] <= 0):
+            raise ValidationError("P must be > 0")
+
+        return data
+
