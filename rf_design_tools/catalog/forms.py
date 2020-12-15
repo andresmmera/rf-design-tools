@@ -49,6 +49,7 @@ class RF_PowerConversionForm(forms.Form):
     def clean(self):
         data = self.cleaned_data
 
+        # Check that the power is not negative
         if (data['old_units'] == '0') and (data['P'] <= 0):
             raise ValidationError("P must be > 0")
 

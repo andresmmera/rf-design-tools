@@ -41,9 +41,13 @@ def CalculateReflectionCoefficientView(request):
             # Get data from the RtoZ form
             Z0 = complex(form_RtoZ.cleaned_data['Z0'], 0)
             gamma_mag = form_RtoZ.cleaned_data['gamma_mag']
-            S11 = round(20*math.log10(gamma_mag), 2)
             gamma_ang = form_RtoZ.cleaned_data['gamma_ang']     
             gamma = complex(gamma_mag*math.cos((math.pi/180)*gamma_ang), gamma_mag*math.sin((math.pi/180)*gamma_ang))
+
+            if (gamma_mag < 1e-3):
+                S11 = -1e3
+            else:
+                S11 = round(20*math.log10(gamma_mag), 2)
             
             # Calculations
             ZL = Z0*(1+gamma)/(1-gamma)
@@ -76,10 +80,17 @@ def CalculateReflectionCoefficientView(request):
             # Calculations
             ZL = complex(ZR, ZI)
             gamma = (ZL - Z0) / (ZL + Z0)
+            if (gamma.real < 1e-3):
+                gamma = complex(1e-3, gamma.imag)
+
             gamma_mag = round(math.sqrt(gamma.real*gamma.real + gamma.imag*gamma.imag), 2)
-            S11 = round(20*math.log10(gamma_mag), 2)
             gamma_ang = round((180/math.pi)*math.atan(gamma.imag / gamma.real), 2)
 
+            if (gamma_mag < 1e-3):
+                S11 = -1e3
+            else:
+                S11 = round(20*math.log10(gamma_mag), 2)
+            
             # Assign context for HTML processing
             context['gamma_mag'] = gamma_mag
             context['gamma_ang'] = gamma_ang

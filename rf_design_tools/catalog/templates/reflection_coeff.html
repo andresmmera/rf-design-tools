@@ -22,11 +22,15 @@
         </form>
 
         <!-- Present the result -->
-        {% if ZL %}
+        {% if ZL != None %}
         <div class="card">
           <div class="card-body">
             <p> Z<sub>L</sub> = {{ZL}} &#937; </p>
-            <p> S<sub>11</sub> = {{S11}} dB </p>
+            {% if S11 == -1e3 %}
+              <p> S<sub>11</sub> = &#8734; dB </p>
+            {%else%}
+              <p> S<sub>11</sub> = {{S11}} dB </p>
+            {% endif %}
           </div>
         </div>
         {% endif %}
@@ -53,11 +57,15 @@
         </form>
 
         <!-- Present the result -->
-        {% if gamma_mag %}
+        {% if gamma_mag != None %} <!-- Result from calculations -->
         <div class="card">
           <div class="card-body">
             <p> &#915;  = {{ gamma_mag}} &#8736; {{gamma_ang}} &#176; </p>
-            <p> S<sub>11</sub> = {{S11}} dB </p>
+              {% if S11 == -1e3 %}
+                  <p> S<sub>11</sub> = &#8734; dB </p>
+              {%else%}
+                  <p> S<sub>11</sub> = {{S11}} dB </p>
+              {% endif %}
           </div>
         </div>
         {% endif %}
