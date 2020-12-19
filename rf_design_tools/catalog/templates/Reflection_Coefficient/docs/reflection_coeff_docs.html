@@ -2,6 +2,40 @@
 
 {% block content %}
 
-<p>Write the docs here</p>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-{% endblock %}
+<div class="container-fluid">
+    <h1 style = "margin: 0.5cm 0.5cm 0.5cm;">Reflection coefficient equations</h1>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>Given a wave propagating through a medium with characteristic impedance Z<sub>0</sub>, the reflection coefficient indicates how much of the power is reflected back because of the change in the charateristic impedance.
+        So, if the load impedance is Z<sub>L</sub>, the reflection coefficient is calculated as:</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$\Gamma = {Z_L - Z_0 \over Z_L + Z_0} \tag{1}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        The load impedance can be calculated from the reflection coefficient as follows:
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$Z_L = Z_0 · {(1 + \Gamma) \over (1 - \Gamma)}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        On the other hand, the return loss and the SWR are calculated as:
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$S_{11} = {20 · log_{10}(\vert \Gamma \vert)} \tag{2}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$SWR = {1+ \vert \Gamma| \over 1 - \vert \Gamma \vert} \tag{3}$$</p>
+    </div>
+  </div> 
+
+{% endblock %} 
