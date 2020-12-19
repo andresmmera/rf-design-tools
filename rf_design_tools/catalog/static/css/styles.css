@@ -12,16 +12,19 @@ h1.page-title {
     margin-left: 0;
     margin-right: 0;
     color: #C25100;
-    font-family: 'Lobster';
+    font-family: 'Lato', sans-serif;
 }
 
 
-h2.tool-name {
-    color: #C25100;
-    font-family: 'Lobster';
-
+h2.tool-list {
+    color: #4d4845;
+    font-family: 'Lato', sans-serif;
 }
 
+h5.tool_title{
+    color: #4d4845;
+    font-family: 'Lato', sans-serif;
+}
 
 
 body {
@@ -34,7 +37,7 @@ body {
 	color: white;
 	padding: 20px;
     min-height: 500px;
-    font-family: 'Lobster';
+    font-family: 'Lato', sans-serif;;
 }
 
 ul
