@@ -13,10 +13,20 @@
         <div class="mx-auto">
           <!-- Instantiate the form -->
           <form method="POST"> 
-          {% csrf_token %}          
-          {{ form.as_p }} 
+            {% csrf_token %}          
+            {{ form.as_p }} 
   
-          <input type = "submit" value = "Calculate"> 
+            <!-- BUTTONS -->
+            <div class="d-flex flex-row justify-content-center">
+              <div class="p-2">
+                <input type = "submit" value = "Calculate">
+              </div>
+
+              <div class="p-2">
+                <a href="{% url 'rf_power_converter_docs' %}" class="btn btn-info" role="button">See docs</a>
+              </div>
+            </div>
+          
           </form>
   
           <!-- Present the result -->

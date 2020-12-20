@@ -5,9 +5,9 @@ from catalog.views import *
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
     
-    path('tool/reflection_coefficient', CalculateReflectionCoefficientView, name='reflection-coeff'),
-    path('tool/reflection_coefficient/docs', ReflectionCoefficientDocs, name='reflection-coeff-docs'),
+    path('tool/reflection_coefficient', CalculateReflectionCoefficientView, name='reflection_coeff_tool'),
+    path('tool/reflection_coefficient/docs', ReflectionCoefficientDocs, name='reflection_coeff_docs'),
     
-    path('tool/rf_power_converter', CalculatePowerConverterView, name='rf_power_converter'),
-    path('tool/rf_power_converter/docs', ReflectionCoefficientDocs, name='rf_power_converter-docs'),
+    path('tool/rf_power_converter', CalculatePowerConverterView, name='rf_power_converter_tool'),
+    path('tool/rf_power_converter/docs', RFPowerConversionDocs, name='rf_power_converter_docs'),
 ]

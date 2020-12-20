@@ -15,10 +15,19 @@
       <div class="mx-auto">
         <!-- Instantiate the form -->
         <form method="POST"> 
-        {% csrf_token %}          
-        {{ form_RtoZ.as_p }} 
+          {% csrf_token %}          
+          {{ form_RtoZ.as_p }} 
 
-        <input type = "submit" value = "Calculate"> 
+          <!-- BUTTONS -->
+          <div class="d-flex flex-row justify-content-center">
+            <div class="p-2">
+              <input type = "submit" value = "Calculate">
+            </div>
+
+            <div class="p-2">
+              <a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a>
+            </div>
+          </div>
         </form>
 
         <!-- Present the result -->
@@ -26,6 +35,7 @@
         <div class="card">
           <div class="card-body">
             <p> Z<sub>L</sub> = {{ZL}} &#937; </p>
+            <p>SWR = {{SWR}}</p>
             {% if S11 == -1e3 %}
               <p> S<sub>11</sub> = -&#8734; dB </p>
             {%else%}
@@ -50,10 +60,19 @@
       <div class="mx-auto">
         <!-- Instantiate the form -->
         <form method="POST"> 
-        {% csrf_token %}          
-        {{ form_ZtoR.as_p }} 
+          {% csrf_token %}          
+          {{ form_ZtoR.as_p }} 
 
-        <input type = "submit" value = "Calculate"> 
+          <!-- BUTTONS -->
+          <div class="d-flex flex-row justify-content-center">
+            <div class="p-2">
+              <input type = "submit" value = "Calculate">
+            </div>
+
+            <div class="p-2">
+              <a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a>
+            </div>
+          </div> 
         </form>
 
         <!-- Present the result -->
@@ -61,6 +80,7 @@
         <div class="card">
           <div class="card-body">
             <p> &#915;  = {{ gamma_mag}} &#8736; {{gamma_ang}} &#176; </p>
+            <p>SWR = {{SWR}}</p>
               {% if S11 == -1e3 %}
                   <p> S<sub>11</sub> = -&#8734; dB </p>
               {%else%}

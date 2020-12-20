@@ -6,7 +6,18 @@
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <div class="container-fluid">
-    <h1 style = "margin: 0.5cm 0.5cm 0.5cm;">Reflection coefficient equations</h1>
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Reflection coefficient equations</h1>
+        </div>
+    
+        <div class="col-6 align-self-center text-right">
+            <div class=”card card-inverse card-danger”>
+                <a href="{% url 'reflection_coeff_tool' %}" class="btn btn-dark" role="button">Open tool</a>
+            </div>
+        </div>
+    </div>
 
     <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
         <p>Given a wave propagating through a medium with characteristic impedance Z<sub>0</sub>, the reflection coefficient indicates how much of the power is reflected back because of the change in the charateristic impedance.
@@ -26,7 +37,7 @@
     </div>
 
     <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
-        On the other hand, the return loss and the SWR are calculated as:
+        On the other hand, the return loss is calculated as:
     </div>
 
     <div class= "d-flex flex-row justify-content-center">
@@ -34,8 +45,45 @@
     </div>
 
     <div class= "d-flex flex-row justify-content-center">
+        <p> $${\vert \Gamma \vert} = 10^{{S_{11} } \over 20} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        The standing wave ratio (SWR) is given by:
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
         <p> $$SWR = {1+ \vert \Gamma| \over 1 - \vert \Gamma \vert} \tag{3}$$</p>
     </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        Then:
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $${SWR - SWR · \vert \Gamma \vert} = {1 + \vert \Gamma \vert} \Rightarrow {SWR - 1} = {\vert \Gamma \vert + SWR · \vert \Gamma \vert} \tag{4}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        so,
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $${\vert \Gamma \vert}  = { {SWR - 1} \over {SWR + 1} } \tag{5}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        Finally,
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $${S_{11}} = 20 · log_{10} \left( {SWR - 1} \over {SWR + 1}\right) \tag{6}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <a href="{% url 'reflection_coeff_tool' %}" class="btn btn-dark" role="button">Open tool</a>
+      </div>
+    
   </div> 
 
 {% endblock %} 

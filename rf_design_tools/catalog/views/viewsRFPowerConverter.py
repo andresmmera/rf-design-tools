@@ -1,3 +1,9 @@
+def RFPowerConversionDocs(request):
+    """View function for home page of site."""
+
+    # Render the HTML template index.html with the data in the context variable
+    return render(request, 'RF_Power_Converter/docs/RF_power_converter_doc.html')
+
 ################################################################################################
 #
 #      FORM #2 - RF POWER CONVERTER
@@ -72,7 +78,7 @@ def CalculatePowerConverterView(request):
             context['Pnew'] = round(power, 2)
             context['new_units'] =  RF_PowerConversionForm.CHOICES_Units[int(new_units)][1]
             context['form'] = form
-            return render(request, 'RF_power_converter.html', context)
+            return render(request, 'RF_Power_Converter/tool/RF_power_converter.html', context)
     else:
         form = RF_PowerConversionForm()
     

@@ -46,6 +46,7 @@ def CalculateReflectionCoefficientView(request):
             ZL = Z0*(1+gamma)/(1-gamma)
             ZLR = str(round(ZL.real, 2))
             ZLI = str(round(abs(ZL.imag), 2))
+            SWR = str(round((1 + gamma_mag)/(1 - gamma_mag), 2))
 
             if ZL.imag > 0:
                 result = ZLR + ' + j ' + ZLI
@@ -57,10 +58,11 @@ def CalculateReflectionCoefficientView(request):
             # Assign context for HTML processing
             context['ZL'] = result
             context['S11'] = S11
+            context['SWR'] = SWR
 
             context['form_RtoZ'] = form_RtoZ
             context['form_ZtoR'] = ImpedanceToReflectionCoefficientForm()
-            return render(request, 'reflection_coeff.html', context)
+            return render(request, 'Reflection_Coefficient/tool/reflection_coeff.html', context)
 
         if form_ZtoR.is_valid():
             # Process ZtoR form
@@ -79,6 +81,8 @@ def CalculateReflectionCoefficientView(request):
             gamma_mag = round(math.sqrt(gamma.real*gamma.real + gamma.imag*gamma.imag), 2)
             gamma_ang = round((180/math.pi)*math.atan(gamma.imag / gamma.real), 2)
 
+            SWR = str(round((1 + gamma_mag)/(1 - gamma_mag), 2))
+
             if (gamma_mag < 1e-3):
                 S11 = -1e3
             else:
@@ -88,10 +92,11 @@ def CalculateReflectionCoefficientView(request):
             context['gamma_mag'] = gamma_mag
             context['gamma_ang'] = gamma_ang
             context['S11'] = S11
+            context['SWR'] = SWR
 
             context['form_ZtoR'] = form_ZtoR
             context['form_RtoZ'] = ReflectionCoefficientToImpedanceForm()   
-            return render(request, 'reflection_coeff.html', context)
+            return render(request, 'Reflection_Coefficient/tool/reflection_coeff.html', context)
     else:
         form_RtoZ = ReflectionCoefficientToImpedanceForm()
         form_ZtoR = ImpedanceToReflectionCoefficientForm()
