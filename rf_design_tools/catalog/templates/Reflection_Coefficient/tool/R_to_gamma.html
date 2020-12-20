@@ -1,0 +1,49 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+  <!-- SWR to reflection coefficient -->
+  <div class="container-fluid" style="border:5px solid #cecece;">
+    <div class="row">
+        <div class="mx-auto">
+          <h2 class="tool-name">SWR to |&#915;| and S<sub>11</sub></h2>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="mx-auto">
+        <!-- Instantiate the form -->
+        <form method="POST"> 
+          {% csrf_token %}          
+          {{ form_SWRtoR.as_p }} 
+
+          <!-- BUTTONS -->
+          <div class="d-flex flex-row justify-content-center">
+            <div class="p-2">
+              <input type = "submit" value = "Calculate">
+            </div>
+
+            <div class="p-2">
+              <a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a>
+            </div>
+          </div> 
+        </form>
+
+        <!-- Present the result -->
+        {% if gamma_mag != None%} <!-- Result from calculations -->
+        <div class="card">
+          <div class="card-body">
+            <p> &#915;  = {{ gamma_mag}} </p>
+              {% if S11 == -1e3 %}
+                  <p> S<sub>11</sub> = -&#8734; dB </p>
+              {%else%}
+                  <p> S<sub>11</sub> = {{S11}} dB </p>
+              {% endif %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
