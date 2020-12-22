@@ -59,3 +59,41 @@ class RF_PowerConversionForm(forms.Form):
 
         return data
 
+# FORM 3 - Calculation of the reflection coefficient and S11 given the SWR
+
+class ParallelResistorForm(forms.Form):
+    CHOICES = (
+        ('0', "4.7"),
+        ('1', "10"),
+        ('2', "18"),
+        ('3', "33"),
+        ('4', "47"),
+        ('5', "100"),
+        ('6', "220"),
+        ('7', "330"),
+        ('8', "470"),
+        ('9', "680"),
+        ('10', "1k"),
+        ('11', "2k2"),
+        ('12', "3k3"),
+        ('13', "4k7"),
+        ('14', "6k8"),
+        ('15', "10k"),
+        ('16', "18k"),
+        ('17', "22k"),
+        ('18', "27k"),
+        ('19', "33k"),
+        ('20', "68k"),
+        ('21', "100k"),
+    )
+
+    R1 = forms.CharField(label='R\u2081', max_length=6, initial='1k')
+    R2 = forms.CharField(label='R\u2082', max_length=6, initial='3k3')
+
+    def clean_R1(self):
+        R1 = self.cleaned_data['R1']
+        return R1
+
+    def clean_R2(self):
+        R2 = self.cleaned_data['R2']
+        return R2

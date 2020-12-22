@@ -12,4 +12,7 @@ urlpatterns = [
     
     path('tool/rf_power_converter', CalculatePowerConverterView, name='rf_power_converter_tool'),
     path('tool/rf_power_converter/docs', RFPowerConversionDocs, name='rf_power_converter_docs'),
+
+    path('tool/parallel_resistor', RparallelView, name='rparallel_tool'),
+    path('tool/parallel_resistor/docs', RparallelDocs, name='rparallel_docs'),
 ]
