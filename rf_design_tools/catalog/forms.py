@@ -30,7 +30,11 @@ class ImpedanceToReflectionCoefficientForm(forms.Form):
 
 # FORM 1.3 - Calculation of the reflection coefficient and S11 given the SWR
 class SWRToReflectionCoefficientForm(forms.Form):
-    SWR = forms.FloatField(initial=1.3,  label='SWR')      
+    SWR = forms.FloatField(initial=1.3,  label='SWR')
+
+    def __init__(self, *args, **kwargs):
+        super(SWRToReflectionCoefficientForm, self).__init__(*args, **kwargs)
+        self.fields['SWR'].widget.attrs['min'] = 1    
 
 # FORM 2 - RF POWER CONVERTER
 class RF_PowerConversionForm(forms.Form):

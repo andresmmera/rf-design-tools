@@ -33,7 +33,11 @@
           {% if Pnew != None %}
           <div class="card">
             <div class="card-body">
-              <p> P = {{Pnew}} {{new_units}} </p>
+              {% if prefix_unit != None %}
+                <p> P = {{Pnew}} {{prefix_unit}}{{new_units}} </p>
+              {% else %}
+                <p> P = {{Pnew}} {{new_units}} </p>
+              {% endif %}
             </div>
           </div>
           {% endif %}

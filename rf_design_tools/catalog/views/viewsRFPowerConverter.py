@@ -74,8 +74,28 @@ def CalculatePowerConverterView(request):
                                     if new_units == '6': # To dBpW
                                         power = 10*math.log10(P) + 120
 
+            if abs(power < 0.5):
+                power *= 1e3
+                prefix_unit = 'm'
+                if abs(power < 0.5):
+                    power *= 1e3
+                    prefix_unit = '\u00B5'
+                    if abs(power < 0.5):
+                        power *= 1e3
+                        prefix_unit = 'n'
+                        if abs(power < 0.5):
+                            power *= 1e3
+                            prefix_unit = 'p'
+                            if abs(power < 0.5):
+                                power *= 1e3
+                                prefix_unit = 'f'
+            else:
+                prefix_unit=''
 
+            
+            
             context['Pnew'] = round(power, 2)
+            context['prefix_unit'] = prefix_unit
             context['new_units'] =  RF_PowerConversionForm.CHOICES_Units[int(new_units)][1]
             context['form'] = form
             return render(request, 'RF_Power_Converter/tool/RF_power_converter.html', context)
