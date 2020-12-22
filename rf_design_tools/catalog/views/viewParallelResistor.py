@@ -24,7 +24,6 @@ def RparallelDocs(request):
 def parseRstring(R):
     L = len(R)
     index=R.find('k')
-
     if index != -1:
         a = float(R[0:index])
         if L > index+1:
@@ -32,6 +31,16 @@ def parseRstring(R):
             return a*1e3+b*1e2
         else:
             return a*1e3
+
+    index=R.find('m')
+    if index != -1:
+        a = float(R[0:index])
+        if L > index+1:
+            b = float(R[index+1:L])
+            return a*1e6+b*1e3
+        else:
+            return a*1e6
+    
     return float(R)
 
 def RparallelView(request):
