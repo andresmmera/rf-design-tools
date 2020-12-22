@@ -7,7 +7,7 @@
   <div class="container-fluid" style="border:5px solid #cecece;">
     <div class="row">
         <div class="mx-auto">
-          <h2 class="tool-name">Equivalent resistance of two parallel resistors</h2>
+          <h2 class="tool-name">Equivalent Resistance of Two Parallel Resistors</h2>
         </div>
     </div>
 
@@ -34,7 +34,15 @@
         {% if Req != None %}
         <div class="card">
           <div class="card-body">
+            {% if Req >= 0 %}
             <p> R<sub>eq</sub> = {{Req}} &#937; </p>
+            {% else %}
+                {% if Req == -1 %}
+                  <p style="color:#ff0000;"> Enter a valid value for R<sub>1</sub> </p>
+                {% else %}
+                  <p style="color:#ff0000;"> Enter a valid value for R<sub>2</sub> </p>
+                {% endif %}
+            {% endif %}
           </div>
         </div>
         {% endif %}

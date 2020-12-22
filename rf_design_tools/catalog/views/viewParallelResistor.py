@@ -24,22 +24,42 @@ def RparallelDocs(request):
 def parseRstring(R):
     L = len(R)
     index=R.find('k')
-    if index != -1:
-        a = float(R[0:index])
-        if L > index+1:
-            b = float(R[index+1:L])
-            return a*1e3+b*1e2
-        else:
-            return a*1e3
 
-    index=R.find('m')
-    if index != -1:
-        a = float(R[0:index])
-        if L > index+1:
-            b = float(R[index+1:L])
-            return a*1e6+b*1e3
-        else:
-            return a*1e6
+    try:
+        if index != -1:
+            a = float(R[0:index])
+            if L > index+1:
+                b = float(R[index+1:L])
+                if (a < 0 or b < 0):
+                    return -1
+                else:
+                    return a*1e3+b*1e2
+            else:
+                if a < 0:
+                    return -1
+                else:
+                    return a*1e3
+
+        index=R.find('m')
+        if index != -1:
+            a = float(R[0:index])
+            if L > index+1:
+                b = float(R[index+1:L])
+                if (a < 0 or b < 0):
+                    return -1
+                else:
+                    return a*1e6+b*1e5
+            else:
+                if a < 0:
+                    return -1
+                else:
+                    return a*1e6
+
+        R = float(R)
+        if R < 0:
+            R = -1
+    except:
+        R = -1
     
     return float(R)
 
@@ -62,7 +82,20 @@ def RparallelView(request):
             R2 = parseRstring(R2_)
 
             # Calculations
-            Req = (R1*R2)/(R1+R2)
+            if (R1 == -1):
+                #Error: Problem in R1
+                Req = -1
+            else:
+                if (R2 == -1):
+                    #Error: Problem in R2
+                    Req = -2
+                else:
+                    if (R1 == 0 and R2 == 0):
+                        # Then, the equivalent is 0
+                        Req = 0
+                    else:
+                        # It's OK
+                        Req = (R1*R2)/(R1+R2)
 
             # Assign context for HTML processing
             context['Req'] = round(Req,1)
