@@ -17,4 +17,5 @@ urlpatterns = [
     path('tool/parallel_resistor/docs', RparallelDocs, name='rparallel_docs'),
 
     path('tool/series_capacitor', CseriesView, name='cseries_tool'),
+    path('tool/series_capacitor/docs', CseriesDocs, name='cseries_docs'),
 ]

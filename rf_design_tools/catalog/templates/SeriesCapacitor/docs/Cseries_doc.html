@@ -1,0 +1,59 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="container-fluid">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Series Capacitors Equations</h1>
+        </div>
+    
+        <div class="col-6 align-self-center text-right">
+            <div class=”card card-inverse card-danger”>
+                <a href="{% url 'cseries_tool' %}" class="btn btn-dark" role="button">Series Capacitors Calculator</a>
+            </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>Given n capacitors in series (C<sub>1</sub>, C<sub>2</sub>, ..., C<sub>n</sub>), the current through them is the same whereas the voltage divides depending on the capacitance of each cap.</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>The equivalent impedance of a series arrangement is the sum of the impedances, so:</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ Z_{eq} = {-j · \left( { {1} \over {\omega · C_1} } + { {1} \over {\omega · C_2} } + ... + { {1} \over {\omega · C_n} }\right)} = -j · { {1} \over {\omega · C_{eq}} } \tag{1}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>Taking out, the common terms:</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ Z_{eq} =  { {-j} \over {\omega} } · { \color{red}{ \left( { {1} \over {C_1} } + { {1} \over {C_2} } + ... + { {1} \over {C_n} }\right)} }= -{ {j} \over {\omega} } · \color{red}{ {1} \over {C_{eq}} } \tag{2}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>By comparison, we get:</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ C_{eq} =  \left( { {1} \over {C_1} } + { {1} \over {C_2} } + ... + { {1} \over {C_n} }\right)^{-1} \tag{3}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>If n=2, Eq. (3) gets simplified as:</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ C_{eq} =  { {C_1 · C_2} \over {C_1 + C_2} } \tag{4}$$</p>
+    </div>
+
+    
+  </div> 
+{% endblock %}

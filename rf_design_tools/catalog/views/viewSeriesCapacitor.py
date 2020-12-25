@@ -52,7 +52,7 @@ def parseCstring(C):
                 if (a < 0 or b < 0):
                     return -1
                 else:
-                    return a*1e-9+b*pow(10, (-10-(Lb-1)))
+                    return a*1e-9+b*pow(10, (-7-(Lb-1)))
             else:
                 if a < 0:
                     return -1
