@@ -1,6 +1,22 @@
 from django.urls import path
-from catalog import views
-from catalog.views import *
+
+from catalog.views import GammaToZView
+from catalog.views import tools_catalog
+from catalog.views import ZToGammaView
+from catalog.views import SWRtoRView
+from catalog.views import ReflectionCoefficientDocs
+
+from catalog.views import CalculatePowerConverterView
+from catalog.views import RFPowerConversionDocs
+
+from catalog.views import RparallelView
+from catalog.views import RparallelDocs
+
+from catalog.views import CseriesView
+from catalog.views import CseriesDocs
+
+from catalog.views import BWOctavesView
+from catalog.views import BWOctavesDocs
 
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
