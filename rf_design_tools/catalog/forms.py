@@ -63,7 +63,7 @@ class RF_PowerConversionForm(forms.Form):
 
         return data
 
-# FORM 3 - Calculation of the reflection coefficient and S11 given the SWR
+# FORM 3 - Equivalent resistance of two parallel resistors
 
 class ParallelResistorForm(forms.Form):
 
@@ -78,6 +78,8 @@ class ParallelResistorForm(forms.Form):
         R2 = self.cleaned_data['R2']
         return R2
 
+# FORM 4 - Equivalent capacitance of two series capacitors
+
 class SeriesCapacitorForm(forms.Form):
 
     C1 = forms.CharField(label='C\u2081', max_length=6, initial='10p')
@@ -90,3 +92,16 @@ class SeriesCapacitorForm(forms.Form):
     def clean_C2(self):
         C2 = self.cleaned_data['C2']
         return C2
+
+
+# FORM 5 - Calculate bandwidth in octaves
+
+class BandwidthOctavesForm(forms.Form):
+
+    f1 = forms.FloatField(initial=54,  label='f\u2081 (MHz)')
+    f2 = forms.FloatField(initial=1006,  label='f\u2082 (MHz)')
+
+    def __init__(self, *args, **kwargs):
+        super(BandwidthOctavesForm, self).__init__(*args, **kwargs)
+        self.fields['f1'].widget.attrs['min'] = 0.1
+        self.fields['f2'].widget.attrs['min'] = 0.1

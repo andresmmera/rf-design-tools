@@ -18,4 +18,7 @@ urlpatterns = [
 
     path('tool/series_capacitor', CseriesView, name='cseries_tool'),
     path('tool/series_capacitor/docs', CseriesDocs, name='cseries_docs'),
+
+    path('tool/bw_octaves', BWOctavesView, name='bw_octaves_tool'),
+    path('tool/bw_octaves/docs', BWOctavesDocs, name='bw_octaves_docs'),
 ]

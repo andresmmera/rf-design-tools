@@ -1,0 +1,46 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+  <!-- Reflection coefficient to impedance -->
+
+  <div class="container-fluid" style="border:5px solid #cecece;">
+    <div class="row">
+        <div class="mx-auto">
+          <h2 class="tool-name">Bandwidth in Octaves & Q factor</h2>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="mx-auto">
+        <!-- Instantiate the form -->
+        <form method="POST"> 
+          {% csrf_token %}          
+          {{ form_bw_oct.as_p }} 
+
+          <!-- BUTTONS -->
+          <div class="d-flex flex-row justify-content-center">
+            <div class="p-2">
+              <input type = "submit" value = "Calculate">
+            </div>
+
+            <div class="p-2">
+              <a href="{% url 'bw_octaves_docs' %}" class="btn btn-info" role="button">See docs</a>
+            </div>
+          </div>
+        </form>
+
+        <!-- Present the result -->
+        {% if BW_OCT != None %}
+        <div class="card">
+          <div class="card-body">
+            <p> BW<sub>octaves</sub> = {{BW_OCT}} </p>
+            <p> Q = {{Q}} </p>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
