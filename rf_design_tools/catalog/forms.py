@@ -105,3 +105,29 @@ class BandwidthOctavesForm(forms.Form):
         super(BandwidthOctavesForm, self).__init__(*args, **kwargs)
         self.fields['f1'].widget.attrs['min'] = 0.1
         self.fields['f2'].widget.attrs['min'] = 0.1
+
+# FORM 6 - IP3 and noisefloor diagram
+
+class IP3_NF_diagramForm(forms.Form):
+    # Amplifier parameters
+    G = forms.FloatField(initial=16,  label='G (dB)')
+    Pout = forms.FloatField(initial=20,  label='Pcarrier (dBm)')
+    Delta = forms.FloatField(initial=40,  label='\u0394 (dB)')
+    n = forms.IntegerField(initial=3,  label='IM\u2099')
+    CPo = forms.FloatField(initial=22,  label='P1dB (dBm)')
+    SImin = forms.FloatField(initial=35,  label='S/I (dB)')
+
+    # Noise figure
+    NF = forms.FloatField(initial=2,  label='NF (dB)')
+    BW = forms.FloatField(initial=1200,  label='BW (MHz)')
+    T = forms.FloatField(initial=290,  label='T (K)')
+
+
+    def __init__(self, *args, **kwargs):
+        super(IP3_NF_diagramForm, self).__init__(*args, **kwargs)
+        self.fields['G'].widget.attrs['min'] = 0.1
+        self.fields['Delta'].widget.attrs['min'] = 10
+        self.fields['n'].widget.attrs['min'] = 2
+        self.fields['NF'].widget.attrs['min'] = 0.1
+        self.fields['BW'].widget.attrs['min'] = 0.1 # 100 kHz
+        self.fields['T'].widget.attrs['min'] = 0.1

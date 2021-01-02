@@ -1,0 +1,106 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+
+  <!-- ADD CHARTJS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+  <div class="container-fluid" style="border:5px solid #cecece;">
+    <div class="row">
+        <div class="mx-auto">
+          <h2 class="tool-name">IP<sub>n</sub>, noise floor and dynamic range diagram</h2>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-9 col-md-4" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+        <!-- Instantiate the form -->
+        <form method="POST">
+          <h5> Amplifier parameters</h5>
+          {% csrf_token %}          
+          {{ form_ip3_diag.as_p }} 
+
+          <!-- BUTTONS -->
+          <div class="d-flex flex-row justify-content-center">
+            <div class="p-2">
+              <input type = "submit" value = "Calculate">
+            </div>
+
+            <div class="p-2">
+              <a href="{% url 'rparallel_docs' %}" class="btn btn-info" role="button">See docs</a>
+            </div>
+          </div>
+        </form>
+
+      </div>
+
+      <div class="col-xs-9 col-md-8" style="border: 10px solid white">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="card shadow-sm">
+                      <div class="card-body" >
+                          <canvas id="chLine">
+                            <script type="text/javascript" 
+                                    id="InterceptDiagram"
+                                    // INPUT POWER
+                                    data-Pin = {{Pin|default:-23}}
+
+                                    // FUNDAMENTAL OUTPUT POWER
+                                    data-Pout = {{Pout|default:34}}
+
+                                    // IMN OUTPUT POWER
+                                    data-IMn = {{IMn|default:34}}
+
+                                    // Noise Floor
+                                    data-Noise_Floor = {{Noise_Floor|default:34}}
+                                    data-No_dBm = {{No_dBm|default:34}}
+
+                                    // IPn
+                                    data-IIPn = {{IIPn}}
+                                    data-OIPn = {{OIPn}}
+
+                                    // Compression Point
+                                    data-CPi = {{CPi}}
+                                    data-CPo = {{CPo}}
+
+                                    // Minimum SI
+                                    data-Pin_Upper_Limit = {{Pin_Upper_Limit}}
+                                    data-Pout_Upper_Limit = {{Pout_Upper_Limit}}
+                                    data-SI = {{SI}}
+
+                                    src="{% static 'js/InterceptDiagram.js' %}">
+                            </script>                     
+                          </canvas>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+               
+      <!-- Present the result -->
+      {%if Pin != None%}
+      <div class="col-xs-9 col-md-4" style="border: 10px solid white">
+        <div class="card-body">
+            <p>Dynamic Range = {{DR}} dB </p>
+            <p>Noise floor = {{No_dBm}} dBm</p>
+            <p>IIP<sub>{{n}}</sub>= {{IIPn}} dBm </p>
+            <p>OIP<sub>{{n}}</sub>= {{OIPn}} dBm </p>
+          </div>
+      </div>
+      {% else %}
+      <div class="col-xs-9 col-md-4" style="border: 10px solid white">
+        <div class="card-body">
+            <p>Dynamic Range = 75.6 dB </p>
+            <p>Noise floor = -69.14 dBm</p>
+            <p>IIP<sub>3</sub>= 24 dBm </p>
+            <p>OIP<sub>3</sub>= 40 dBm </p>
+          </div>
+      </div>
+      {%endif%}
+      
+
+    </div>
+  </div>
+
+{% endblock %}
