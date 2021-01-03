@@ -208,7 +208,8 @@ if (chLine) {
   {
     type: 'line',
     data: chartData,
-    options: {
+    options: {responsive: true,
+      maintainAspectRatio:false,
                 elements: {
                           point:{
                                   radius: 0
