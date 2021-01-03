@@ -12,11 +12,38 @@
     </div>
 
     <div class="row">
-      <div class="mx-auto">
+      <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
         <!-- Instantiate the form -->
         <form method="POST"> 
           {% csrf_token %}          
-          {{ form_RtoZ.as_p }} 
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!--gamma magnitude -->
+                <td>
+                  {{form_RtoZ.gamma_mag.label}}
+                </td>
+                <td>{{form_RtoZ.gamma_mag}}</td>
+              </tr>
+              <tr> <!--gamma angle -->
+                <td>
+                  {{form_RtoZ.gamma_ang.label}}
+                </td>
+                <td>{{form_RtoZ.gamma_ang}}</td>
+              </tr>
+              <tr> <!--Z0 -->
+                <td>
+                  {{form_RtoZ.Z0.label}}
+                </td>
+                <td>{{form_RtoZ.Z0}}</td>
+              </tr>
+            </tbody>
+          </table>
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
@@ -29,23 +56,68 @@
             </div>
           </div>
         </form>
-
-        <!-- Present the result -->
-        {% if ZL != None %}
-        <div class="card">
-          <div class="card-body">
-            <p> Z<sub>L</sub> = {{ZL}} &#937; </p>
-            <p>SWR = {{SWR}}</p>
-            {% if S11 == -1e3 %}
-              <p> S<sub>11</sub> = -&#8734; dB </p>
-            {%else%}
-              <p> S<sub>11</sub> = {{S11}} dB </p>
-            {% endif %}
-          </div>
-        </div>
-        {% endif %}
       </div>
     </div>
+    <div class="row">
+      <div class="mx-auto">
+            <!-- Present the result -->
+              <div class="card-body">
+                {% if ZL != None %}
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th colspan="2"><h5 align="center">Results</h5></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr> 
+                            <td>Z<sub>L</sub></td>
+                            <td>{{ZL}} &#937;</td>
+                          </tr>
+                          <tr>
+                            <td>SWR</td>
+                            {% if SWR == 1e6 %}
+                              <td>&#8734;</td>
+                            {%else%}
+                              <td>{{SWR}}</td>
+                            {% endif %}
+                          </tr>
+                            <tr> 
+                              <td>S<sub>11</sub></td>
+                              {% if S11 == -1e3 %}
+                                <td>-&#8734; dB</td>
+                              {%else%}
+                                <td>{{S11}} dB</td>
+                              {% endif %}
+                            </tr>
+                        </tbody>
+                    </table>
+                {% else %}
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th colspan="2"><h5 align="center">Results</h5></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr> 
+                          <td>Z<sub>L</sub></td>
+                          <td>73.44 + j 7.92 &#937;</td>
+                        </tr>
+                        <tr> 
+                          <td>SWR</td>
+                          <td>1.5</td>
+                        </tr>
+                        <tr> 
+                          <td>S<sub>11</sub></td>
+                          <td>-13.98 dB</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                {% endif %}
+              </div>
+            </div>
+      </div>
   </div>
 
-  {% endblock %}
+{% endblock %}

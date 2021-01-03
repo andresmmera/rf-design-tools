@@ -43,14 +43,21 @@ def GammaToZView(request):
             ZL = Z0*(1+gamma)/(1-gamma)
             ZLR = str(round(ZL.real, 2))
             ZLI = str(round(abs(ZL.imag), 2))
-            SWR = str(round((1 + gamma_mag)/(1 - gamma_mag), 3))
+            if gamma_mag == 1:
+                SWR = 1e6
+            else:
+                SWR = str(round((1 + gamma_mag)/(1 - gamma_mag), 3))
 
             if ZL.imag > 0:
-                result = ZLR + ' + j ' + ZLI
+                result = ZLR + ' + j' + ZLI
             if ZL.imag < 0:
-                result = ZLR + ' - j ' + ZLI
+                result = ZLR + ' - j' + ZLI
             if abs(ZL.imag) < 1e-3:
                 result = ZLR
+            if abs(ZL.real) < 1e-3 and ZL.imag > 0:
+                result = 'j' + ZLI
+            if abs(ZL.real) < 1e-3 and ZL.imag < 0:
+                result = '-j' + ZLI
 
             # Assign context for HTML processing
             context['ZL'] = result

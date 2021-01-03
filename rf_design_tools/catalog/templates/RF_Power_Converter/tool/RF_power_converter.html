@@ -10,11 +10,38 @@
     </div>
 
     <div class="row">
-        <div class="mx-auto">
+        <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
           <!-- Instantiate the form -->
           <form method="POST"> 
             {% csrf_token %}          
-            {{ form.as_p }} 
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr> <!--Power -->
+                  <td>
+                    {{form.P.label}}
+                  </td>
+                  <td>{{form.P}}</td>
+                </tr>
+                <tr> <!--Old units -->
+                  <td>
+                    {{form.old_units.label}}
+                  </td>
+                  <td>{{form.old_units}}</td>
+                </tr>
+                <tr> <!--New units -->
+                  <td>
+                    {{form.new_units.label}}
+                  </td>
+                  <td>{{form.new_units}}</td>
+                </tr>
+              </tbody>
+            </table>
   
             <!-- BUTTONS -->
             <div class="d-flex flex-row justify-content-center">

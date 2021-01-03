@@ -12,11 +12,32 @@
     </div>
 
     <div class="row">
-      <div class="mx-auto">
+      <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
         <!-- Instantiate the form -->
         <form method="POST"> 
           {% csrf_token %}          
-          {{ form_Cseries.as_p }} 
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!--C1 -->
+                <td>
+                  {{form_Cseries.C1.label}}
+                </td>
+                <td>{{form_Cseries.C1}}</td>
+              </tr>
+              <tr> <!--R2 -->
+                <td>
+                  {{form_Cseries.C2.label}}
+                </td>
+                <td>{{form_Cseries.C2}}</td>
+              </tr>
+            </tbody>
+          </table>
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
@@ -29,25 +50,53 @@
             </div>
           </div>
         </form>
-
-        <!-- Present the result -->
-        {% if Ceq != None %}
-        <div class="card">
-          <div class="card-body">
-              {% if Ceq == '-1' %}
-                <p style="color:#ff0000;"> Enter a valid value for C<sub>1</sub> </p>
-              {% else %}
-                {% if Ceq == '-2' %}
-                <p style="color:#ff0000;"> Enter a valid value for C<sub>2</sub> </p>
-                {% else %}
-                <p> C<sub>eq</sub> = {{Ceq}} </p>
-                {% endif %}
-              {% endif %}
-          </div>
-        </div>
-        {% endif %}
       </div>
     </div>
+
+    <div class="row">
+      <div class="mx-auto">
+            <!-- Present the result -->
+              <div class="card-body">
+                {% if Ceq != None %}
+                  {% if Ceq != "-1" and Ceq != "-2" %}
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th colspan="2"><h5 align="center">Result</h5></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr> 
+                            <td>C<sub>eq</sub></td>
+                            <td>{{Ceq}}</td>
+                          </tr>
+                        </tbody>
+                    </table>
+                  {% else %}
+                     {% if Ceq == "-1" %}
+                       <p style="color:#ff0000;"> Enter a valid value for C<sub>1</sub> </p>
+                     {% else %}
+                       <p style="color:#ff0000;"> Enter a valid value for C<sub>2</sub> </p>
+                     {% endif %}
+                  {% endif %}
+                {% else %}
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th colspan="2"><h5 align="center">Result</h5></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr> 
+                          <td>C<sub>eq</sub></td>
+                          <td>0.91 pF</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                {% endif %}
+              </div>
+            </div>
+      </div>
   </div>
 
 {% endblock %}

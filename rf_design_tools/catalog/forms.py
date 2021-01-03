@@ -15,6 +15,13 @@ class ReflectionCoefficientToImpedanceForm(forms.Form):
         self.fields['gamma_mag'].widget.attrs['min'] = 1e-6
         self.fields['gamma_mag'].widget.attrs['max'] = 1
 
+        # Set the width of the boxes
+        box_width = 5
+        self.fields['gamma_mag'].widget.attrs['size'] = box_width
+        self.fields['gamma_ang'].widget.attrs['size'] = box_width
+        self.fields['Z0'].widget.attrs['size'] = box_width
+
+
 
 # FORM 1.2 - Calculation of the reflection coefficient given the load impedance
 class ImpedanceToReflectionCoefficientForm(forms.Form):
@@ -28,13 +35,23 @@ class ImpedanceToReflectionCoefficientForm(forms.Form):
         self.fields['Z0'].widget.attrs['min'] = 1e-6
         self.fields['ZR'].widget.attrs['min'] = 1e-6
 
+        # Set the width of the boxes
+        box_width = 5
+        self.fields['ZR'].widget.attrs['size'] = box_width
+        self.fields['ZI'].widget.attrs['size'] = box_width
+        self.fields['Z0'].widget.attrs['size'] = box_width
+
 # FORM 1.3 - Calculation of the reflection coefficient and S11 given the SWR
 class SWRToReflectionCoefficientForm(forms.Form):
     SWR = forms.FloatField(initial=1.3,  label='SWR')
 
     def __init__(self, *args, **kwargs):
         super(SWRToReflectionCoefficientForm, self).__init__(*args, **kwargs)
-        self.fields['SWR'].widget.attrs['min'] = 1    
+        self.fields['SWR'].widget.attrs['min'] = 1
+        
+        # Set the width of the boxes
+        box_width = 5
+        self.fields['SWR'].widget.attrs['size'] = box_width
 
 # FORM 2 - RF POWER CONVERTER
 class RF_PowerConversionForm(forms.Form):
@@ -63,6 +80,13 @@ class RF_PowerConversionForm(forms.Form):
 
         return data
 
+    def __init__(self, *args, **kwargs):
+        super(RF_PowerConversionForm, self).__init__(*args, **kwargs)
+        # Set the width of the boxes
+        box_width = 5
+        self.fields['P'].widget.attrs['size'] = box_width
+
+
 # FORM 3 - Equivalent resistance of two parallel resistors
 
 class ParallelResistorForm(forms.Form):
@@ -78,6 +102,13 @@ class ParallelResistorForm(forms.Form):
         R2 = self.cleaned_data['R2']
         return R2
 
+    def __init__(self, *args, **kwargs):
+        super(ParallelResistorForm, self).__init__(*args, **kwargs)
+        # Set the width of the boxes
+        box_width = 5
+        self.fields['R1'].widget.attrs['size'] = box_width
+        self.fields['R2'].widget.attrs['size'] = box_width
+
 # FORM 4 - Equivalent capacitance of two series capacitors
 
 class SeriesCapacitorForm(forms.Form):
@@ -92,6 +123,13 @@ class SeriesCapacitorForm(forms.Form):
     def clean_C2(self):
         C2 = self.cleaned_data['C2']
         return C2
+    
+    def __init__(self, *args, **kwargs):
+        super(SeriesCapacitorForm, self).__init__(*args, **kwargs)
+        # Set the width of the boxes
+        box_width = 5
+        self.fields['C1'].widget.attrs['size'] = box_width
+        self.fields['C2'].widget.attrs['size'] = box_width
 
 
 # FORM 5 - Calculate bandwidth in octaves
@@ -103,6 +141,11 @@ class BandwidthOctavesForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(BandwidthOctavesForm, self).__init__(*args, **kwargs)
+        # Set the width of the boxes
+        box_width = 5
+        self.fields['f1'].widget.attrs['size'] = box_width
+        self.fields['f2'].widget.attrs['size'] = box_width
+
         self.fields['f1'].widget.attrs['min'] = 0.1
         self.fields['f2'].widget.attrs['min'] = 0.1
 

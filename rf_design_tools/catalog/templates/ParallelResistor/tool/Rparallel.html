@@ -12,11 +12,32 @@
     </div>
 
     <div class="row">
-      <div class="mx-auto">
+      <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
         <!-- Instantiate the form -->
         <form method="POST"> 
           {% csrf_token %}          
-          {{ form_Rparallel.as_p }} 
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!--R1 -->
+                <td>
+                  {{form_Rparallel.R1.label}}
+                </td>
+                <td>{{form_Rparallel.R1}}</td>
+              </tr>
+              <tr> <!--R2 -->
+                <td>
+                  {{form_Rparallel.R2.label}}
+                </td>
+                <td>{{form_Rparallel.R2}}</td>
+              </tr>
+            </tbody>
+          </table>
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
@@ -29,25 +50,53 @@
             </div>
           </div>
         </form>
-
-        <!-- Present the result -->
-        {% if Req != None %}
-        <div class="card">
-          <div class="card-body">
-            {% if Req >= 0 %}
-            <p> R<sub>eq</sub> = {{Req}} &#937; </p>
-            {% else %}
-                {% if Req == -1 %}
-                  <p style="color:#ff0000;"> Enter a valid value for R<sub>1</sub> </p>
-                {% else %}
-                  <p style="color:#ff0000;"> Enter a valid value for R<sub>2</sub> </p>
-                {% endif %}
-            {% endif %}
-          </div>
-        </div>
-        {% endif %}
       </div>
     </div>
+
+    <div class="row">
+      <div class="mx-auto">
+            <!-- Present the result -->
+              <div class="card-body">
+                {% if Req != None %}
+                  {% if Req >= 0 %}
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th colspan="2"><h5 align="center">Result</h5></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr> 
+                            <td>R<sub>eq</sub></td>
+                            <td>{{Req}} &#937;</td>
+                          </tr>
+                        </tbody>
+                    </table>
+                  {% else %}
+                     {% if Req == -1 %}
+                       <p style="color:#ff0000;"> Enter a valid value for R<sub>1</sub> </p>
+                     {% else %}
+                       <p style="color:#ff0000;"> Enter a valid value for R<sub>2</sub> </p>
+                     {% endif %}
+                  {% endif %}
+                {% else %}
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th colspan="2"><h5 align="center">Result</h5></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr> 
+                          <td>R<sub>eq</sub></td>
+                          <td>767.4 &#937;</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                {% endif %}
+              </div>
+            </div>
+      </div>
   </div>
 
 {% endblock %}

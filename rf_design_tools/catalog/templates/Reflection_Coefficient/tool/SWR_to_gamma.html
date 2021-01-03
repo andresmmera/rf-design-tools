@@ -11,11 +11,26 @@
     </div>
 
     <div class="row">
-      <div class="mx-auto">
+      <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
         <!-- Instantiate the form -->
         <form method="POST"> 
           {% csrf_token %}          
-          {{ form_SWRtoR.as_p }} 
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!--gamma magnitude -->
+                <td>
+                  {{form_SWRtoR.SWR.label}}
+                </td>
+                <td>{{form_SWRtoR.SWR}}</td>
+              </tr>
+            </tbody>
+          </table>
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
@@ -28,22 +43,57 @@
             </div>
           </div> 
         </form>
-
-        <!-- Present the result -->
-        {% if gamma_mag != None%} <!-- Result from calculations -->
-        <div class="card">
-          <div class="card-body">
-            <p> &#124;&#915;&#124;  = {{ gamma_mag}} </p>
-              {% if S11 == -1e3 %}
-                  <p> S<sub>11</sub> = -&#8734; dB </p>
-              {%else%}
-                  <p> S<sub>11</sub> = {{S11}} dB </p>
-              {% endif %}
-          </div>
-        </div>
-        {% endif %}
       </div>
     </div>
+
+    <div class="row">
+      <div class="mx-auto">
+            <!-- Present the result -->
+              <div class="card-body">
+                {% if gamma_mag != None %}
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th colspan="2"><h5 align="center">Results</h5></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr> 
+                            <td>&#124;&#915;&#124</td>
+                            <td>{{gamma_mag}}</td>
+                          </tr>
+                          <tr> 
+                            <td>S<sub>11</sub></td>
+                            {% if S11 == -1e3 %}
+                              <td>-&#8734; dB</td>
+                            {%else%}
+                              <td>{{S11}} dB</td>
+                            {% endif %}
+                          </tr>
+                        </tbody>
+                    </table>
+                {% else %}
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th colspan="2"><h5 align="center">Results</h5></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr> 
+                          <td>&#124;&#915;&#124</td>
+                          <td>0.13</td>
+                        </tr>
+                        <tr> 
+                          <td>S<sub>11</sub></td>
+                          <td>-17.69 dB</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                {% endif %}
+              </div>
+            </div>
+      </div>
   </div>
 
 {% endblock %}

@@ -12,11 +12,32 @@
     </div>
 
     <div class="row">
-      <div class="mx-auto">
+      <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
         <!-- Instantiate the form -->
         <form method="POST"> 
           {% csrf_token %}          
-          {{ form_bw_oct.as_p }} 
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!--f1 -->
+                <td>
+                  {{form_bw_oct.f1.label}}
+                </td>
+                <td>{{form_bw_oct.f1}}</td>
+              </tr>
+              <tr> <!--f2 -->
+                <td>
+                  {{form_bw_oct.f2.label}}
+                </td>
+                <td>{{form_bw_oct.f2}}</td>
+              </tr>
+            </tbody>
+          </table>
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
@@ -29,17 +50,57 @@
             </div>
           </div>
         </form>
-
-        <!-- Present the result -->
-        {% if BW_OCT != None %}
-        <div class="card">
-          <div class="card-body">
-            <p> BW<sub>octaves</sub> = {{BW_OCT}} </p>
-            <p> Q = {{Q}} </p>
-          </div>
-        </div>
-        {% endif %}
       </div>
+    </div>
+    <div class="row">
+      <div class="mx-auto">
+             <!-- Present the result -->
+             {%if BW_OCT != None%}
+             <div class="col-xs-12 col-md-6">
+               <div class="card-body">
+                   
+                   <table class="table table-bordered table-hover">
+                     <thead>
+                       <tr>
+                         <th colspan="2"><h5 align="center">Result</h5></th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       <tr> 
+                         <td>BW<sub>octaves</sub></td>
+                         <td>{{BW_OCT}}</td>
+                       </tr>
+                       <tr> 
+                         <td>Q</td>
+                         <td>{{Q}}</td>
+                       </tr>
+                   </tbody>
+                 </table>
+             </div>
+             {% else %}
+             <div class="col-xs-9 col-md-4">
+               <div class="card-body">
+                     <table class="table table-bordered table-striped">
+                       <thead>
+                         <tr>
+                           <th colspan="2"><h5 align="center">Results</h5></th>
+                         </tr>
+                       </thead>
+                       <tbody>
+                         <tr> 
+                           <td>BW<sub>octaves</sub></td>
+                           <td>24 dBm</td>
+                         </tr>
+                         <tr> 
+                           <td>Q</td>
+                           <td>1.1</td>
+                         </tr>
+                       </tbody>
+                     <table>
+                 </div>
+             </div>
+           {%endif%}
+          </div>
     </div>
   </div>
 
