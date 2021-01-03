@@ -81,7 +81,7 @@
           <!-- {{ form_ipn_diag.as_p }}  -->
 
           <table class="table table-hover">
-            <h5> IP<sub>n</sub> calculation</h5>
+            <h5 align="center"> IP<sub>n</sub> calculation</h5>
             <thead>
               <tr>
                 <th>Parameter</th>
@@ -130,7 +130,7 @@
           </table>
 
           <table class="table table-hover">
-            <h5> Dynamic range and noise floor</h5>
+            <h5 align="center"> Dynamic range and noise floor</h5>
             <thead>
               <tr>
                 <th>Parameter</th>
@@ -178,7 +178,7 @@
           </table>
 
           <table class="table table-hover">
-            <h5> Compression</h5>
+            <h5 align="center">Compression</h5>
             <thead>
               <tr>
                 <th>Parameter</th>
@@ -256,25 +256,71 @@
           </div>
                 <!-- Present the result -->
       {%if Pin != None%}
-      <div class="col-xs-9 col-md-4">
+      <div class="col-xs-12 col-md-6">
         <div class="card-body">
-            <h5>Results</h5>
-            <p>IIP<sub>{{n}}</sub>= {{IIPn}} dBm </p>
-            <p>OIP<sub>{{n}}</sub>= {{OIPn}} dBm </p>
-            <p>Maximum P<sub>out</sub> for S/I = {{SI}} dB: {{Pout_Upper_Limit}} dBm</p>
-            <p>Dynamic Range = {{DR}} dB </p>
-            <p>Noise floor = {{No_dBm}} dBm</p>
-          </div>
+            
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th colspan="2"><h5 align="center">Results</h5></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr> 
+                  <td>IIP<sub>{{n}}</sub></td>
+                  <td>{{IIPn}} dBm</td>
+                </tr>
+                <tr> 
+                  <td>OIP<sub>{{n}}</sub></td>
+                  <td>{{OIPn}} dBm</td>
+                </tr>
+                <tr> 
+                  <td>P<sub>out</sub> @ S/I = {{SI}} dB</td>
+                  <td>{{Pout_Upper_Limit}} dBm</td>
+                </tr>
+                <tr> 
+                  <td>Dynamic Range</td>
+                  <td>{{DR}} dB</td>
+                </tr>
+                <tr> 
+                  <td>Noise floor</td>
+                  <td>{{No_dBm}} dBm</td>
+                </tr>
+            </tbody>
+          </table>
       </div>
       {% else %}
       <div class="col-xs-9 col-md-4">
         <div class="card-body">
-            <h5>Results</h5>
-            <p>IIP<sub>3</sub>= 24 dBm </p>
-            <p>OIP<sub>3</sub>= 40 dBm </p>
-            <p>Maximum P<sub>out</sub> for S/I = 35 dB: 22.5 dBm</p>
-            <p>Dynamic Range = 75.6 dB </p>
-            <p>Noise floor = -69.14 dBm</p>
+               <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th colspan="2"><h5 align="center">Results</h5></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr> 
+                    <td>IIP<sub>3</sub></td>
+                    <td>24 dBm</td>
+                  </tr>
+                  <tr> 
+                    <td>OIP<sub>3</sub></td>
+                    <td>40 dBm</td>
+                  </tr>
+                  <tr> 
+                    <td>P<sub>out</sub> @ S/I = 35 dB</td>
+                    <td>22.5 dBm</td>
+                  </tr>
+                  <tr> 
+                    <td>Dynamic Range</td>
+                    <td>75.6 dB</td>
+                  </tr>
+                  <tr> 
+                    <td>Noise floor</td>
+                    <td>-69.14 dBm</td>
+                  </tr>
+                </tbody>
+              <table>
           </div>
       </div>
       {%endif%}

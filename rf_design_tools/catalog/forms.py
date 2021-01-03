@@ -127,6 +127,19 @@ class IPn_NF_diagramForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(IPn_NF_diagramForm, self).__init__(*args, **kwargs)
+        # Set the width of the boxes
+        box_width = 5
+        self.fields['G'].widget.attrs['size'] = box_width
+        self.fields['Pout'].widget.attrs['size'] = box_width
+        self.fields['Delta'].widget.attrs['size'] = box_width
+        self.fields['n'].widget.attrs['size'] = box_width
+        self.fields['CPo'].widget.attrs['size'] = box_width
+        self.fields['SImin'].widget.attrs['size'] = box_width
+        self.fields['NF'].widget.attrs['size'] = box_width
+        self.fields['BW'].widget.attrs['size'] = box_width
+        self.fields['T'].widget.attrs['size'] = box_width
+
+        # Set the minimum values
         self.fields['Delta'].widget.attrs['min'] = 10
         self.fields['n'].widget.attrs['min'] = 2
         self.fields['NF'].widget.attrs['min'] = 0.1
