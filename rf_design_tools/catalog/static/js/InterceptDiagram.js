@@ -13,8 +13,9 @@ var IMn = StringToArray(document.getElementById("InterceptDiagram").getAttribute
 var Noise_Floor = StringToArray(document.getElementById("InterceptDiagram").getAttribute("data-Noise_Floor"));
 
 // Intercept point
-var IIP3 = document.getElementById("InterceptDiagram").getAttribute("data-IIPn");
-var OIP3 = document.getElementById("InterceptDiagram").getAttribute("data-OIPn");
+var IIPn = document.getElementById("InterceptDiagram").getAttribute("data-IIPn");
+var OIPn = document.getElementById("InterceptDiagram").getAttribute("data-OIPn");
+var n = document.getElementById("InterceptDiagram").getAttribute("data-n");
 
 // Compression point
 var CPi = document.getElementById("InterceptDiagram").getAttribute("data-CPi");
@@ -24,23 +25,6 @@ var CPo = document.getElementById("InterceptDiagram").getAttribute("data-CPo");
 var Pin_Upper_Limit = document.getElementById("InterceptDiagram").getAttribute("data-Pin_Upper_Limit");
 var Pout_Upper_Limit = document.getElementById("InterceptDiagram").getAttribute("data-Pout_Upper_Limit");
 var SI = document.getElementById("InterceptDiagram").getAttribute("data-SI");
-
-//////////////////////////////////////////////////////////////////////////////////////////
-// Check if there's input data available, otherwise generate default data
-if (Pin.length <= 1) {
-  Pin = [-20.0,-17.0,-14.0,-11.0,-8.0,-6.0,-3.0,0.0,3.0,6.0,9.0,12.0,15.0,18.0,21.0,23.0,26.0,29.0,32.0,35.0];
-  Pout = [-4.0,-1.0,2.0,5.0,8.0,10.0,13.0,16.0,19.0,22.0,25.0,28.0,31.0,34.0,37.0,39.0,42.0,45.0,48.0,51.0];
-  IMn = [-92.0,-83.0,-74.0,-65.0,-56.0,-50.0,-41.0,-32.0,-23.0,-14.0,-5.0,4.0,13.0,22.0,31.0,37.0,46.0,55.0,64.0,73.0];
-  Noise_Floor = [-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14];
-  IIP3 = 24.0;
-  OIP3 = 40;
-  CPi = 4;
-  CPo = 22;
-  Pin_Upper_Limit = 6.5;
-  Pout_Upper_Limit = 22.5;
-  SI = 35;
-}  
-//////////////////////////////////////////////////////////////////////////////////////////
 
 
 var xmin = Pin[0]
@@ -54,14 +38,14 @@ ymax = Math.ceil(ymax / 5) * 5 // Round to 5dB
 
 
 // Put data in pairs (Pin, Pout) for the chart representation
-Pout_data = [];
-IMn_data = [];
-NF_data = [];
-IIPn = [];
-OIPn = [];
-ICP = [];
-OCP = [];
-SImin = [];
+Pout_data = []; // Fundamental output power
+IMn_data = []; // IMn output power
+NF_data = []; // Noise floor data
+IIPn_data = []; // Input intercept point line
+OIPn_data = []; // Output intercept point line
+ICP = [];  // 1dB compression point at the input
+OCP = [];  // 1dB compression
+SImin = []; // Minimum S/I required line
 
 for (var t = 0; t < Pin.length; t++) {
     Pout_data.push({
@@ -80,15 +64,15 @@ for (var t = 0; t < Pin.length; t++) {
     })
     
     // Intercept point (input)
-    IIPn.push({
-      x: IIP3,
-      y : ymin + t*(OIP3-ymin)/(Pin.length-1)
+    IIPn_data.push({
+      x: IIPn,
+      y : ymin + t*(OIPn-ymin)/(Pin.length-1)
     })
     
     // Intercept point (output)
-    OIPn.push({
-      x: 1.*xmin + t*(IIP3-xmin)/(Pin.length-1),
-      y : OIP3
+    OIPn_data.push({
+      x: 1.*xmin + t*(IIPn-xmin)/(Pin.length-1),
+      y : OIPn
     })
     
     // Compression point (input)
@@ -148,8 +132,8 @@ var chartData = {
 
               // IIPn
               {
-                label: "IIP3",
-                data: IIPn,
+                label: "IIPn",
+                data: IIPn_data,
                 backgroundColor: 'transparent',
                 borderColor: '#000000', // Black
                 borderWidth: 2,
@@ -159,8 +143,8 @@ var chartData = {
 
               // OIPn
               {
-                label: "IP3",
-                data: OIPn,
+                label: "IP".concat(n.toString()),
+                data: OIPn_data,
                 backgroundColor: 'transparent',
                 borderColor: '#000000', // Black
                 borderWidth: 2,
@@ -250,7 +234,7 @@ if (chLine) {
                               filter: function(item, chart) 
                               {
                                   // Logic to remove a particular legend item goes here
-                                  return !item.text.includes('IIP3') & !item.text.includes('CPo');
+                                  return !item.text.includes('IIPn') & !item.text.includes('CPo');
                               }
                             }
                           }

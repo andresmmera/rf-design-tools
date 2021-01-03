@@ -18,7 +18,7 @@ from catalog.views import CseriesDocs
 from catalog.views import BWOctavesView
 from catalog.views import BWOctavesDocs
 
-from catalog.views import IP3_DiagramView
+from catalog.views import IPn_DiagramView
 
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
@@ -38,7 +38,7 @@ urlpatterns = [
     path('tool/bw_octaves/docs', BWOctavesDocs, name='bw_octaves_docs'),
 
     # IP3 AND NOISE-FLOOR DIAGRAM
-    path('tool/IP3_NF_diagram', IP3_DiagramView, name='ip3_nf_diagram'),
+    path('tool/IPn_NF_diagram', IPn_DiagramView, name='ipn_nf_diagram'),
 
     # PARALLEL RESISTOR EQUIVALENT
     path('tool/parallel_resistor', RparallelView, name='rparallel_tool'),

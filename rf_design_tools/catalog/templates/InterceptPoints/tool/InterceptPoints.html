@@ -19,7 +19,7 @@
         <form method="POST">
           <h5> Amplifier parameters</h5>
           {% csrf_token %}          
-          {{ form_ip3_diag.as_p }} 
+          {{ form_ipn_diag.as_p }} 
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
@@ -59,6 +59,7 @@
                                     // IPn
                                     data-IIPn = {{IIPn}}
                                     data-OIPn = {{OIPn}}
+                                    data-n = {{n}}
 
                                     // Compression Point
                                     data-CPi = {{CPi}}
@@ -82,19 +83,23 @@
       {%if Pin != None%}
       <div class="col-xs-9 col-md-4" style="border: 10px solid white">
         <div class="card-body">
-            <p>Dynamic Range = {{DR}} dB </p>
-            <p>Noise floor = {{No_dBm}} dBm</p>
+            <h5>Results</h5>
             <p>IIP<sub>{{n}}</sub>= {{IIPn}} dBm </p>
             <p>OIP<sub>{{n}}</sub>= {{OIPn}} dBm </p>
+            <p>Maximum P<sub>out</sub> for S/I = {{SI}} dB: {{Pout_Upper_Limit}} dBm</p>
+            <p>Dynamic Range = {{DR}} dB </p>
+            <p>Noise floor = {{No_dBm}} dBm</p>
           </div>
       </div>
       {% else %}
       <div class="col-xs-9 col-md-4" style="border: 10px solid white">
         <div class="card-body">
-            <p>Dynamic Range = 75.6 dB </p>
-            <p>Noise floor = -69.14 dBm</p>
+            <h5>Results</h5>
             <p>IIP<sub>3</sub>= 24 dBm </p>
             <p>OIP<sub>3</sub>= 40 dBm </p>
+            <p>Maximum P<sub>out</sub> for S/I = 35 dB: 22.5 dBm</p>
+            <p>Dynamic Range = 75.6} dB </p>
+            <p>Noise floor = -69.14 dBm</p>
           </div>
       </div>
       {%endif%}
