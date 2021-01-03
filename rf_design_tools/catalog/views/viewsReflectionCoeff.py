@@ -3,10 +3,10 @@ from django.shortcuts import render
 from catalog.models import Tool
 
 def ReflectionCoefficientDocs(request):
-    """View function for home page of site."""
-
-    # Render the HTML template index.html with the data in the context variable
     return render(request, 'Reflection_Coefficient/docs/reflection_coeff_docs.html')
+
+def ReflectionToolsCatalogView(request):
+    return render(request, 'Reflection_Coefficient/tool/reflection_coeff_catalog.html')
 
 
 ################################################################################################

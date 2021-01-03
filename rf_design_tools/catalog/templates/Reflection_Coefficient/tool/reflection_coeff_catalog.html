@@ -1,0 +1,70 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <h2 class="tool-list">Reflection Coefficient Calculators</h2>
+    
+    <div class="row">
+      <div class="col-xs-9 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+         <!-- REFLECTION COEFFICIENT TO IMPEDANCE TOOL -->
+        <!-- TOOL TITLE -->
+        <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+          <a href="{% url 'RtoZ_tool' %}"><h5 class="tool_title">&#915; &#8594; Z<sub>L</sub>, S<sub>11</sub> and SWR</h5></a>
+        </div>
+        
+        <!-- TOOL DESCRIPTION -->
+        <div class="d-flex flex-row justify-content-center"">
+          <p>Calculate the load impedance given &#915; and Z<sub>0</sub></p>
+        </div>
+          
+        <!-- BUTTONS -->
+        <div class="d-flex flex-row justify-content-center">
+          <div class="p-2"><a href="{% url 'RtoZ_tool' %}" class="btn btn-dark" role="button">Go!</a></div>
+          <div class="p-2"><a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+        </div>
+
+      </div>
+
+      <div class="col-xs-3 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+        <!-- IMPEDANCE TO REFLECTION COEFFICIENT TOOL -->
+        
+        <!-- TOOL TITLE -->
+        <div class= "d-flex flex-row justify-content-center">
+          <a href="{% url 'ZtoR_tool' %}"><h5 class="tool_title" style="margin-top: 10px">Z &#8594; &#915;, S<sub>11</sub> and SWR</h5></a>
+        </div>
+        
+        <!-- TOOL DESCRIPTION -->
+        <div class="d-flex flex-row justify-content-center"">
+          <p>Calculate the reflection coefficient given Z<sub>L</sub> and Z<sub>0</sub></p>
+        </div>
+          
+        <!-- BUTTONS -->
+        <div class="d-flex flex-row justify-content-center">
+          <div class="p-2"><a href="{% url 'ZtoR_tool' %}" class="btn btn-dark" role="button">Go!</a></div>
+          <div class="p-2"><a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+        </div>
+      </div>
+
+      <div class="col-xs-3 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+        <!-- SWR TO REFLECTION COEFFICIENT -->
+        
+        <!-- TOOL TITLE -->
+        <div class= "d-flex flex-row justify-content-center">
+          <a href="{% url 'SWRtoR_tool' %}"><h5 class="tool_title" style="margin-top: 10px">SWR &#8594; &#124;&#915;&#124; and S<sub>11</sub></h5></a>
+        </div>
+        
+        <!-- TOOL DESCRIPTION -->
+        <div class="d-flex flex-row justify-content-center"">
+          <p>Convert SWR to &#124;&#915;&#124; and S<sub>11</p>
+        </div>
+          
+        <!-- BUTTONS -->
+        <div class="d-flex flex-row justify-content-center">
+          <div class="p-2"><a href="{% url 'SWRtoR_tool' %}" class="btn btn-dark" role="button">Go!</a></div>
+          <div class="p-2"><a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
