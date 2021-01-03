@@ -3,6 +3,67 @@
 
 {% block content %}
 
+<style>
+  /* Popup container - can be anything you want */
+  .popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* The actual popup */
+  .popup .popuptext {
+    visibility: hidden;
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+  }
+  
+  /* Popup arrow */
+  .popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  /* Toggle this class - hide and show the popup */
+  .popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+  }
+  
+  /* Add animation (fade in the popup) */
+  @-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+  }
+  
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+  }
+  </style>
+
+
+
   <!-- ADD CHARTJS -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
@@ -12,14 +73,130 @@
           <h2 class="tool-name">IP<sub>n</sub>, noise floor and dynamic range diagram</h2>
         </div>
     </div>
-
     <div class="row">
-      <div class="col-xs-9 col-md-4" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+      <div class="col-xs-9 col-md-4" style="background-color:rgb(151, 176, 255); border: 30px solid white">
         <!-- Instantiate the form -->
         <form method="POST">
-          <h5> Amplifier parameters</h5>
           {% csrf_token %}          
-          {{ form_ipn_diag.as_p }} 
+          <!-- {{ form_ipn_diag.as_p }}  -->
+
+          <table class="table table-hover">
+            <h5> IP<sub>n</sub> calculation</h5>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!-- GAIN -->
+                <td>
+                  <div class="popup" onclick="help_gain()">
+                    {{form_ipn_diag.G.label}}
+                    <span class="popuptext" id="Pop-up-Gain">Linear gain</span>
+                  </div>
+                </td>
+                <td>{{form_ipn_diag.G}}</td>
+   
+              </tr>
+              <tr> <!-- Pout -->
+                <td>
+                  <div class="popup" onclick="help_Pout()">
+                    P<sub>out</sub> (dBm)
+                    <span class="popuptext" id="Pop-up-Pout">Power of the carrier at the two-tone test</span>
+                  </div>
+                </td>
+                <td>{{form_ipn_diag.Pout}}</td>
+              </tr>
+              <tr> <!-- DELTA IMD -->
+                <td>
+                  <div class="popup" onclick="help_delta()">
+                    {{form_ipn_diag.Delta.label}}
+                    <span class="popuptext" id="Pop-up-delta">Range between the intermodulation products and the carrier</span>
+                  </div>
+                </td>
+                <td>{{form_ipn_diag.Delta}}</td>
+              </tr>
+              <tr> <!-- Order IMD -->
+                <td>
+                  <div class="popup" onclick="help_IMn()">
+                    {{form_ipn_diag.n.label}}
+                    <span class="popuptext" id="Pop-up-IMn">Order of the intermodulation products</span>
+                  </div>
+                </td>
+                <td>{{form_ipn_diag.n}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-hover">
+            <h5> Dynamic range and noise floor</h5>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!-- Minimim S/I -->
+                <td>
+                  <div class="popup" onclick="help_SImin()">
+                    {{form_ipn_diag.SImin.label}}
+                    <span class="popuptext" id="Pop-up-SImin">Minimum S/I required</span>
+                  </div>
+                </td>
+                <td>{{form_ipn_diag.SImin}}</td>
+              </tr>
+              <tr> <!-- Noise Figure -->
+                <td>
+                  <div class="popup" onclick="help_NF()">
+                    {{form_ipn_diag.NF.label}}
+                    <span class="popuptext" id="Pop-up-NF">Noise Figure of the amplifier</span>
+                  </div>
+                </td>
+                <td>{{form_ipn_diag.NF}}</td>
+              </tr>
+              <tr> <!-- Bandwidth -->
+                <td>
+                  <div class="popup" onclick="help_BW()">
+                    {{form_ipn_diag.BW.label}}
+                    <span class="popuptext" id="Pop-up-BW">Bandwidth of the amplifier</span>
+                  </div>
+                </td>
+                <td>{{form_ipn_diag.BW}}</td>
+              </tr>
+              <tr> <!-- Temperature -->
+                <td>
+                  <div class="popup" onclick="help_T()">
+                    {{form_ipn_diag.T.label}}
+                    <span class="popuptext" id="Pop-up-T">Temperature of the system</span>
+                  </div>
+                </td>
+                <td>{{form_ipn_diag.T}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-hover">
+            <h5> Compression</h5>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!-- P1dB -->
+                <td>
+                  <div class="popup" onclick="help_P1dB()">
+                    P<sub>1dB</sub>
+                    <span class="popuptext" id="Pop-up-P1dB">Output level at which the actual fundamental power deviates 1dB from ideal (linear) output power</span>
+                  </div></td>
+                <td>{{form_ipn_diag.CPo}}</td>
+              </tr>
+              </tr>
+            </tbody>
+          </table>
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
@@ -35,7 +212,7 @@
 
       </div>
 
-      <div class="col-xs-12 col-md-8" style="border: 10px solid white">
+      <div class="col-xs-12 col-md-8" style="border: 10px">
           <div class="row">
               <div class="col-xs-12 col-md-12" >
                   <div class="card shadow-sm">
@@ -77,11 +254,9 @@
                   </div>
               </div>
           </div>
-      </div>
-               
-      <!-- Present the result -->
+                <!-- Present the result -->
       {%if Pin != None%}
-      <div class="col-xs-9 col-md-4" style="border: 10px solid white">
+      <div class="col-xs-9 col-md-4">
         <div class="card-body">
             <h5>Results</h5>
             <p>IIP<sub>{{n}}</sub>= {{IIPn}} dBm </p>
@@ -92,20 +267,79 @@
           </div>
       </div>
       {% else %}
-      <div class="col-xs-9 col-md-4" style="border: 10px solid white">
+      <div class="col-xs-9 col-md-4">
         <div class="card-body">
             <h5>Results</h5>
             <p>IIP<sub>3</sub>= 24 dBm </p>
             <p>OIP<sub>3</sub>= 40 dBm </p>
             <p>Maximum P<sub>out</sub> for S/I = 35 dB: 22.5 dBm</p>
-            <p>Dynamic Range = 75.6} dB </p>
+            <p>Dynamic Range = 75.6 dB </p>
             <p>Noise floor = -69.14 dBm</p>
           </div>
       </div>
       {%endif%}
-      
-
+      </div>
+               
     </div>
   </div>
 
+
+<script>
+  // Pop-up helpers
+  function help_gain() {
+    // Linear gain
+    var popup = document.getElementById("Pop-up-Gain");
+    popup.classList.toggle("show");
+  }
+
+  function help_Pout(){
+    // Fundamental output power
+    var popup = document.getElementById("Pop-up-Pout");
+    popup.classList.toggle("show");
+  }
+
+  function help_delta(){
+    // IM delta
+    var popup = document.getElementById("Pop-up-delta");
+    popup.classList.toggle("show");
+  }
+
+  function help_IMn(){
+    // Order of the intermodulation distortion
+    var popup = document.getElementById("Pop-up-IMn");
+    popup.classList.toggle("show");
+  }
+
+  function help_SImin(){
+    // Minimum S/I required
+    var popup = document.getElementById("Pop-up-SImin");
+    popup.classList.toggle("show");
+  }
+
+  function help_NF(){
+    // Noise Figure of the amplifier
+    var popup = document.getElementById("Pop-up-NF");
+    popup.classList.toggle("show");
+  }
+
+  function help_BW(){
+    // Bandwidth of the amplifier
+    var popup = document.getElementById("Pop-up-BW");
+    popup.classList.toggle("show");
+  }
+
+  function help_T(){
+    // System temperature
+    var popup = document.getElementById("Pop-up-T");
+    popup.classList.toggle("show");
+  }
+
+  function help_P1dB(){
+    // P1dB
+    var popup = document.getElementById("Pop-up-P1dB");
+    popup.classList.toggle("show");
+  }
+
+  </script>
 {% endblock %}
+
