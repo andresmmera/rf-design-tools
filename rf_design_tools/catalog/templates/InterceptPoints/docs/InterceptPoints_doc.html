@@ -1,0 +1,91 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="container-fluid">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Intercept Point</h1>
+        </div>
+    
+        <div class="col-6 align-self-center text-right">
+            <div class=”card card-inverse card-danger”>
+                <a href="{% url 'ipn_nf_diagram' %}" class="btn btn-dark" role="button">IP<sub>n</sub> Tool</a>
+            </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>The intercept point, IP<sub>n</sub> = (IIP<sub>n</sub>, OIP<sub>n</sub>), is the point in the {P<sub>in</sub>, P<sub>out</sub>} plane where the ideal fundamental output power
+             (P<sub>out</sub>) intersects with the output power of the intermodulation product of order n (IM<sub>n</sub>). In this sense, the
+             IP<sub>n</sub> quantifies the linearity of the system against intermodulation distortion of order n, so, the higher IP, the higher system linearity.</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>It is important to note that the intercept point cannot be achieved in a real experiment since the output power suffers from AM/AM distortion (compression) and it becomes
+            saturated at some high drive level.</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>This is a linear method for solving a nonlinear problem, but it is a simple and intuitive tool, and it is widely used for designing nonlinear RF circuits, 
+            since it allows us to predict the level of the IM products.</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>The power of the n-th intermodulation product at the output of the nonlinear device is given by:</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ P_{out, IMn} = {n·P_{in}} - { (n-1)·IIP_{n} } + G \tag{1} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>and, obviously, the fundamental output power is related to the input as:</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ P_{out} = { P_{in} + G} \tag{2} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>The IP<sub>n</sub> can be estimated from the two-tone test as [1]:</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$OIP_{n} = P_{out} + {\Delta \over {n-1} } \tag{3}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$IIP_{n} = P_{out} - G + {\Delta \over {n-1} } \tag{4}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>where P<sub>out</sub> is the power of the carrier, G is the (linear) gain of the amplifier and &#916; is the level (in dB) between P<sub>out</sub>
+        and the power level of the intermodulation products of n order. Notice that OIP<sub>n</sub> = IIP<sub>n</sub> + G</p>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>Compression</h5>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>The compression point indicates the output power at which the actual output power coming from the device deviates n dBs (typically 1, but also 3 or 5dBs) from its ideal linear gain.
+            As an amplifier enters in the saturation region, the actual gain is reduced because of its AM/AM nonlinear behavior. It is important to
+            note that this kind of nonlinerity is not related to the intermodulated distortion. Also notice that the IP<sub>3</sub> is a fictitious point, but the P<sub>1dB</sub>
+            can be measured with a network analyzer doing a power sweep.
+        </p>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>References</h5>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-right">
+        <p>[1] P. Vizmuller, RF design guide: systems, circuits, and equations. Boston u.a.: Artech House, 1995.</p>
+    </div>
+    
+  </div> 
+{% endblock %}
