@@ -8,7 +8,7 @@
 
    <div class="row">
         <div class="col-6 align-self-right">
-            <h1 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Intercept Point</h1>
+            <h1 style = "margin: 0.5cm 0.4cm 0.5cm; vertical-align: middle;">Intercept Point</h1>
         </div>
     
         <div class="col-6 align-self-center text-right">
@@ -18,39 +18,39 @@
         </div>
     </div>
 
-    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
-        <p>The intercept point, IP<sub>n</sub> = (IIP<sub>n</sub>, OIP<sub>n</sub>), is the point in the {P<sub>in</sub>, P<sub>out</sub>} plane where the ideal fundamental output power
-             (P<sub>out</sub>) intersects with the output power of the intermodulation product of order n (IM<sub>n</sub>). In this sense, the
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>The intercept point, IP<sub>n</sub> = (IIP<sub>n</sub>, OIP<sub>n</sub>), is the point in the {P<sub>in</sub>, P<sub>out</sub>} plane where the (linear) fundamental output power
+             (P<sub>out</sub>) intersects with the (linear) output power of the intermodulation product of order n (IM<sub>n</sub>). In this sense, the
              IP<sub>n</sub> quantifies the linearity of the system against intermodulation distortion of order n, so, the higher IP, the higher system linearity.</p>
     </div>
 
-    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
-        <p>It is important to note that the intercept point cannot be achieved in a real experiment since the output power suffers from AM/AM distortion (compression) and it becomes
-            saturated at some high drive level.</p>
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>It is important to note that the intercept point cannot be achieved in a real experiment since nonlinear devices suffer from AM/AM distortion (i.e. compression) and it becomes
+            saturated at some high drive level. The idea is to ignore saturation and predict the intermodulation level based on the two-tone test done at certain S/I. Notice that this diagram
+        only applies for one single frequency, so severals diagrams are needed for broadband systems.</p>
     </div>
 
-    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
-        <p>This is a linear method for solving a nonlinear problem, but it is a simple and intuitive tool, and it is widely used for designing nonlinear RF circuits, 
-            since it allows us to predict the level of the IM products.</p>
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>The IP<sub>n</sub> method is a linear tool for solving a nonlinear problem, but it is simple and intuitive.</p>
     </div>
 
-    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
-        <p>The power of the n-th intermodulation product at the output of the nonlinear device is given by:</p>
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>The power of the n-th intermodulation product at the output (P<sub>out, IMn</sub>) is given by:</p>
     </div>
 
     <div class= "d-flex flex-row justify-content-center">
         <p> $$ P_{out, IMn} = {n·P_{in}} - { (n-1)·IIP_{n} } + G \tag{1} $$</p>
     </div>
 
-    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
-        <p>and, obviously, the fundamental output power is related to the input as:</p>
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>and, obviously, the fundamental output power (P<sub>out</sub>) is related to the input (P<sub>in</sub>) as:</p>
     </div>
 
     <div class= "d-flex flex-row justify-content-center">
         <p> $$ P_{out} = { P_{in} + G} \tag{2} $$</p>
     </div>
 
-    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
         <p>The IP<sub>n</sub> can be estimated from the two-tone test as [1]:</p>
     </div>
 
@@ -59,10 +59,10 @@
     </div>
 
     <div class= "d-flex flex-row justify-content-center">
-        <p> $$IIP_{n} = P_{out} - G + {\Delta \over {n-1} } \tag{4}$$</p>
+        <p> $$IIP_{n} = P_{out}  + {\Delta \over {n-1} - G} \tag{4}$$</p>
     </div>
 
-    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
         <p>where P<sub>out</sub> is the power of the carrier, G is the (linear) gain of the amplifier and &#916; is the level (in dB) between P<sub>out</sub>
         and the power level of the intermodulation products of n order. Notice that OIP<sub>n</sub> = IIP<sub>n</sub> + G</p>
     </div>
@@ -71,7 +71,7 @@
         <h5>Compression</h5>
     </div>
 
-    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
         <p>The compression point indicates the output power at which the actual output power coming from the device deviates n dBs (typically 1, but also 3 or 5dBs) from its ideal linear gain.
             As an amplifier enters in the saturation region, the actual gain is reduced because of its AM/AM nonlinear behavior. It is important to
             note that this kind of nonlinerity is not related to the intermodulated distortion. Also notice that the IP<sub>3</sub> is a fictitious point, but the P<sub>1dB</sub>
@@ -80,10 +80,112 @@
     </div>
 
     <div class="col-6 align-self-right">
+        <h5>Dynamic Range</h5>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p> The dynamic range is limited by the noise floor at the lower end en by the minimim S/I ratio required and at the higher end. In the latter case, the power of the intermodulation
+            distorion rises N dB for the increase in 1 dB in the input power, so at some point the S/I turns to be unbearable for the system. In order to find that point, we need to find the 
+            input power for what the difference between the output power and the intermodulation products is equal to the minimum S/I., So, taking into account Eqs. (1) and (2), we get:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ SI_{min} = \color{red}{P_{out} } - \color{blue}{P_{out, IMn} } \tag{5}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ SI_{min} = \color{red}{(P_{in} + G)} - \color{blue}{({n·P_{in}} - { (n-1)·IIP_{n} } + G) } \tag{6}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p> After solving Eq. (6), we find:</p>
+    </div>
+    
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ P_{in} = IIP_{n} - { {SI_{min}} \over {n-1} } \tag{7}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p> and, obviously: </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ P_{out} = { P_{in} + G }=  IIP_{n} + G - { {SI_{min}} \over {n-1} } = {OIP_{n} - { {SI_{min}} \over {n-1} }} \tag{8}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p> Usually, n=3, so</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ P_{in} = IIP_{3} - { {SI_{min}} \over {2} } \tag{9}$$</p>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>Noise floor</h5>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p> As said, the lower end of the dynamic range is determined by the noise floor at the output of the amplifier. It can be calculated as follows:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ N_{o} = k·T·BW·10^{ {(NF + G) \over 10} } \tag{10}$$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p> where k is the Boltzmann's constant (1.3806503 · 10<sup>-23</sup> m<sup>2</sup>·kg·s<sup>-2</sup>·K<sup>-1</sup>), T is the temperature of the environment, BW is the bandwidth of the amplifier (in Hz), G is the gain of the
+            amplifier (in dB) and NF is the noise figure (in dB too).
+        </p>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>Summary Table</h5>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th colspan="1"><h5 align="center"></h5></th>
+                    <th colspan="1"><h5 align="center">n = 2</h5></th>
+                    <th colspan="1"><h5 align="center">n = 3</h5></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr> 
+                    <td>P<sub>out, IMn</sub></td>
+                    <td>2·P<sub>in</sub> - IIP<sub>2</sub> + G</td>
+                    <td>3·P<sub>in</sub> - 2·IIP<sub>3</sub> + G</td>
+                </tr>
+                <tr> 
+                    <td>IIP<sub>n</sub></td>
+                    <td> P<sub>out</sub> + &#916; - G</td>
+                    <td> P<sub>out</sub> + &#916;/2 - G</td>
+                </tr>
+                <tr> 
+                    <td>OIP<sub>n</sub></td>
+                    <td> P<sub>out</sub> + &#916;</td>
+                    <td> P<sub>out</sub> + &#916;/2</td>
+                </tr>
+                <tr> 
+                    <td>P<sub>out</sub> @ S/I<sub>min</sub></td>
+                    <td> OIP<sub>2</sub> - SI<sub>min</sub></td>
+                    <td> OIP<sub>3</sub> - SI<sub>min</sub>/2</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-6 align-self-right">
         <h5>References</h5>
     </div>
 
-    <div class= "d-flex flex-row justify-content-right">
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
         <p>[1] P. Vizmuller, RF design guide: systems, circuits, and equations. Boston u.a.: Artech House, 1995.</p>
     </div>
     
