@@ -17,9 +17,9 @@ class ReflectionCoefficientToImpedanceForm(forms.Form):
 
         # Set the width of the boxes
         box_width = 5
-        self.fields['gamma_mag'].widget.attrs['size'] = box_width
-        self.fields['gamma_ang'].widget.attrs['size'] = box_width
-        self.fields['Z0'].widget.attrs['size'] = box_width
+        self.fields['gamma_mag'].widget.attrs['style'] = "width:75px"
+        self.fields['gamma_ang'].widget.attrs['style'] = "width:75px"
+        self.fields['Z0'].widget.attrs['style'] = "width:75px"
 
 
 
@@ -37,9 +37,9 @@ class ImpedanceToReflectionCoefficientForm(forms.Form):
 
         # Set the width of the boxes
         box_width = 5
-        self.fields['ZR'].widget.attrs['size'] = box_width
-        self.fields['ZI'].widget.attrs['size'] = box_width
-        self.fields['Z0'].widget.attrs['size'] = box_width
+        self.fields['ZR'].widget.attrs['style'] = "width:75px"
+        self.fields['ZI'].widget.attrs['style'] = "width:75px"
+        self.fields['Z0'].widget.attrs['style'] = "width:75px"
 
 # FORM 1.3 - Calculation of the reflection coefficient and S11 given the SWR
 class SWRToReflectionCoefficientForm(forms.Form):
@@ -51,7 +51,7 @@ class SWRToReflectionCoefficientForm(forms.Form):
         
         # Set the width of the boxes
         box_width = 5
-        self.fields['SWR'].widget.attrs['size'] = box_width
+        self.fields['SWR'].widget.attrs['style'] = "width:75px"
 
 # FORM 2 - RF POWER CONVERTER
 class RF_PowerConversionForm(forms.Form):
@@ -84,7 +84,7 @@ class RF_PowerConversionForm(forms.Form):
         super(RF_PowerConversionForm, self).__init__(*args, **kwargs)
         # Set the width of the boxes
         box_width = 5
-        self.fields['P'].widget.attrs['size'] = box_width
+        self.fields['P'].widget.attrs['style'] = "width:75px"
 
 
 # FORM 3 - Equivalent resistance of two parallel resistors
@@ -106,8 +106,8 @@ class ParallelResistorForm(forms.Form):
         super(ParallelResistorForm, self).__init__(*args, **kwargs)
         # Set the width of the boxes
         box_width = 5
-        self.fields['R1'].widget.attrs['size'] = box_width
-        self.fields['R2'].widget.attrs['size'] = box_width
+        self.fields['R1'].widget.attrs['style'] = "width:75px"
+        self.fields['R2'].widget.attrs['style'] = "width:75px"
 
 # FORM 4 - Equivalent capacitance of two series capacitors
 
@@ -128,8 +128,8 @@ class SeriesCapacitorForm(forms.Form):
         super(SeriesCapacitorForm, self).__init__(*args, **kwargs)
         # Set the width of the boxes
         box_width = 5
-        self.fields['C1'].widget.attrs['size'] = box_width
-        self.fields['C2'].widget.attrs['size'] = box_width
+        self.fields['C1'].widget.attrs['style'] = "width:75px"
+        self.fields['C2'].widget.attrs['style'] = "width:75px"
 
 
 # FORM 5 - Calculate bandwidth in octaves
@@ -143,8 +143,8 @@ class BandwidthOctavesForm(forms.Form):
         super(BandwidthOctavesForm, self).__init__(*args, **kwargs)
         # Set the width of the boxes
         box_width = 5
-        self.fields['f1'].widget.attrs['size'] = box_width
-        self.fields['f2'].widget.attrs['size'] = box_width
+        self.fields['f1'].widget.attrs['style'] = "width:75px"
+        self.fields['f2'].widget.attrs['style'] = "width:75px"
 
         self.fields['f1'].widget.attrs['min'] = 0.1
         self.fields['f2'].widget.attrs['min'] = 0.1
@@ -172,15 +172,15 @@ class IPn_NF_diagramForm(forms.Form):
         super(IPn_NF_diagramForm, self).__init__(*args, **kwargs)
         # Set the width of the boxes
         box_width = 5
-        self.fields['G'].widget.attrs['size'] = box_width
-        self.fields['Pout'].widget.attrs['size'] = box_width
-        self.fields['Delta'].widget.attrs['size'] = box_width
-        self.fields['n'].widget.attrs['size'] = box_width
-        self.fields['CPo'].widget.attrs['size'] = box_width
-        self.fields['SImin'].widget.attrs['size'] = box_width
-        self.fields['NF'].widget.attrs['size'] = box_width
-        self.fields['BW'].widget.attrs['size'] = box_width
-        self.fields['T'].widget.attrs['size'] = box_width
+        self.fields['G'].widget.attrs['style'] = "width:75px"
+        self.fields['Pout'].widget.attrs['style'] = "width:75px"
+        self.fields['Delta'].widget.attrs['style'] = "width:75px"
+        self.fields['n'].widget.attrs['style'] = "width:75px"
+        self.fields['CPo'].widget.attrs['style'] = "width:75px"
+        self.fields['SImin'].widget.attrs['style'] = "width:75px"
+        self.fields['NF'].widget.attrs['style'] = "width:75px"
+        self.fields['BW'].widget.attrs['style'] = "width:75px"
+        self.fields['T'].widget.attrs['style'] = "width:75px"
 
         # Set the minimum values
         self.fields['Delta'].widget.attrs['min'] = 10
