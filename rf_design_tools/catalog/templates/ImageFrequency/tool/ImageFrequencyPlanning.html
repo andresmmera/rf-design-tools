@@ -1,0 +1,202 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  /* Popup container - can be anything you want */
+  .popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* The actual popup */
+  .popup .popuptext {
+    visibility: hidden;
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+  }
+  
+  /* Popup arrow */
+  .popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  /* Toggle this class - hide and show the popup */
+  .popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+  }
+  
+  /* Add animation (fade in the popup) */
+  @-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+  }
+  
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+  }
+  </style>
+
+
+
+  <!-- ADD CHARTJS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+  <div class="container-fluid" style="border:5px solid #cecece;">
+    <div class="row">
+        <div class="mx-auto">
+          <h2 class="tool-name">Image Frequency and IF Diagram</h2>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-9 col-md-4" style="background-color:rgb(151, 176, 255); border: 30px solid white">
+        <!-- Instantiate the form -->
+        <form method="POST">
+          {% csrf_token %}          
+          <table class="table table-hover">
+            <h5 align="center"> Carrier</h5>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!-- RF frequency -->
+                <td>
+                  <div class="popup" onclick="help_gain()">
+                    f<sub>RF</sub> (MHz)
+                    <span class="popuptext" id="Pop-up-Carrier">Carrier frequency</span>
+                  </div>
+                </td>
+                <td>{{form_im.f_RF}}</td>
+   
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-hover">
+            <h5 align="center"> LO sweep</h5>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!-- Lowest LO -->
+                <td>
+                  <div class="popup" onclick="help_Pout()">
+                    Lowest LO (MHz)
+                    <span class="popuptext" id="Pop-up-LO1">Lowest LO possible</span>
+                  </div>
+                </td>
+                <td>{{form_im.f_LO1}}</td>
+              </tr>
+              <tr> <!-- Highest LO -->
+                <td>
+                  <div class="popup" onclick="help_delta()">
+                    Highest LO (MHz)
+                    <span class="popuptext" id="Pop-up-LO2">Highest LO possible</span>
+                  </div>
+                </td>
+                <td>{{form_im.f_LO2}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- BUTTONS -->
+          <div class="d-flex flex-row justify-content-center">
+            <div class="p-2">
+              <input type = "submit" value = "Calculate">
+            </div>
+
+            <div class="p-2">
+              <a href="{% url 'ipn_nf_docs' %}" class="btn btn-info" role="button">See docs</a>
+            </div>
+          </div>
+        </form>
+
+      </div>
+
+      <div class="col-xs-12 col-md-8" style="border: 10px">
+          <div class="row">
+              <div class="col-xs-12 col-md-12" >
+                  <div class="card shadow-sm">
+                      <div class="card-body" >
+                          <canvas id="chLine" width="300" height="400" >
+                            <script type="text/javascript" 
+                                    id="IM_IF_Diagram"
+                                    // LO FREQUENCY
+                                    data-f_LO = {{f_LO|default:-23}}
+
+                                    // IMAGE FREQUENCY
+                                    data-f_IM = {{f_IM|default:34}}
+
+                                    // IF FREQUENCY
+                                    data-f_IF = {{f_IF|default:34}}
+
+                                    // RF FREQUENCY
+                                    data-f_RF = {{f_RF|default:34}}
+
+                                    // DELTA IM-IF
+                                    data-delta_IM_IF = {{delta_IM_IF|default:34}}
+
+                                    src="{% static 'js/IM_IF_Diagram.js' %}">
+                            </script>                     
+                          </canvas>
+                      </div>
+                  </div>
+              </div>
+          </div>
+    </div>
+  </div>
+
+
+<script>
+  // Pop-up helpers
+  function help_gain() {
+    // Carrier
+    var popup = document.getElementById("Pop-up-Carrier");
+    popup.classList.toggle("show");
+  }
+
+  function help_Pout(){
+    // Lowest LO
+    var popup = document.getElementById("Pop-up-LO1");
+    popup.classList.toggle("show");
+  }
+
+  function help_delta(){
+    // Highest LO
+    var popup = document.getElementById("Pop-up-LO2");
+    popup.classList.toggle("show");
+  }
+  </script>
+{% endblock %}
+

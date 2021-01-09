@@ -22,6 +22,9 @@ from catalog.views import BWOctavesDocs
 from catalog.views import IPn_DiagramView
 from catalog.views import IPn_DiagramDocs
 
+from catalog.views import ImageFrequencyCatalogView
+from catalog.views import ImageFrequencyView
+
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
     
@@ -51,4 +54,8 @@ urlpatterns = [
     # SERIES CAPACITOR EQUIVALENT
     path('tool/series_capacitor', CseriesView, name='cseries_tool'),
     path('tool/series_capacitor/docs', CseriesDocs, name='cseries_docs'),
+
+    # IMAGE FREQUENCY TOOLS
+    path('tool/image_frequency', ImageFrequencyCatalogView, name='image_frequency_catalog'),
+    path('tool/image_frequency/image_planning', ImageFrequencyView, name='image_frequency_planning'),
 ]

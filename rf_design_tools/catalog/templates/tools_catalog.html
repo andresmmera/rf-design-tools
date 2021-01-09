@@ -27,21 +27,21 @@
       </div>
 
       <div class="col-xs-3 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
-        <!-- IMAGE FREQUENCY GRAPH -->
+        <!-- IMAGE FREQUENCY TOOLS -->
         
         <!-- TOOL TITLE -->
         <div class= "d-flex flex-row justify-content-center">
-          <a href='tool/reflection_coefficient/ZtoR'><h5 class="tool_title" style="margin-top: 10px">Image Frequency Diagram</h5></a>
+          <a href="{% url 'image_frequency_catalog' %}"><h5 class="tool_title" style="margin-top: 10px">Image Frequency Tools</h5></a>
         </div>
         
         <!-- TOOL DESCRIPTION -->
         <div class="d-flex flex-row justify-content-center"">
-          <p>Plot the image frequency diagram</p>
+          <p>Plot the image frequency planning and calculate the secondary image frequencies</p>
         </div>
           
         <!-- BUTTONS -->
         <div class="d-flex flex-row justify-content-center">
-          <div class="p-2"><a href="tool/reflection_coefficient/ZtoR" class="btn btn-dark" role="button">Go!</a></div>
+          <div class="p-2"><a href="{% url 'image_frequency_catalog' %}" class="btn btn-dark" role="button">Go!</a></div>
           <div class="p-2"><a href="tool/reflection_coefficient/docs" class="btn btn-info" role="button">See docs</a></div>
         </div>
       </div>

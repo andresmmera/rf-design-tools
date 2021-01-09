@@ -1,0 +1,50 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <h2 class="tool-list">Image Frequency Tools</h2>
+    
+    <div class="row">
+      <div class="col-xs-9 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+         <!-- IMAGE FREQUENCY PLANNING -->
+        <!-- TOOL TITLE -->
+        <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+          <a href="{% url 'image_frequency_planning' %}"><h5 class="tool_title">Image Frequency Planning</h5></a>
+        </div>
+        
+        <!-- TOOL DESCRIPTION -->
+        <div class="d-flex flex-row justify-content-center"">
+          <p>Calculate the image frequency and the IF for a range of LO frequencies</p>
+        </div>
+          
+        <!-- BUTTONS -->
+        <div class="d-flex flex-row justify-content-center">
+          <div class="p-2"><a href="{% url 'image_frequency_planning' %}" class="btn btn-dark" role="button">Go!</a></div>
+          <div class="p-2"><a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+        </div>
+
+      </div>
+
+      <div class="col-xs-3 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+        <!-- SECONDARY IMAGE PROBLEM -->
+        
+        <!-- TOOL TITLE -->
+        <div class= "d-flex flex-row justify-content-center">
+          <a href="{% url 'ZtoR_tool' %}"><h5 class="tool_title" style="margin-top: 10px">Secondary Image Calculator</h5></a>
+        </div>
+        
+        <!-- TOOL DESCRIPTION -->
+        <div class="d-flex flex-row justify-content-center"">
+          <p>Calculate the secondary image frequencies in a two-step heterodyne conversion</p>
+        </div>
+          
+        <!-- BUTTONS -->
+        <div class="d-flex flex-row justify-content-center">
+          <div class="p-2"><a href="{% url 'ZtoR_tool' %}" class="btn btn-dark" role="button">Go!</a></div>
+          <div class="p-2"><a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

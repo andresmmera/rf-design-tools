@@ -10,9 +10,6 @@ import numpy as np
 import json as simplejson
 
 def IPn_DiagramDocs(request):
-    """View function for home page of site."""
-
-    # Render the HTML template index.html with the data in the context variable
     return render(request, 'InterceptPoints/docs/InterceptPoints_doc.html')
 
 
@@ -100,7 +97,7 @@ def IPn_DiagramView(request):
 
             # Define x-axis (Input Power)
             Pin = np.linspace(xmin, xmax, num=20, retstep=True)
-            Pin = np.round(Pin[0]) # Round to 1 decimal
+            Pin = np.round(Pin[0]) # Round to integer
 
             # Fundamental
             Pout = Pin + G*np.ones(len(Pin))
