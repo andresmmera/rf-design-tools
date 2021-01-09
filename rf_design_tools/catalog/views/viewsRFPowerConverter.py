@@ -74,7 +74,7 @@ def CalculatePowerConverterView(request):
                                     if new_units == '6': # To dBpW
                                         power = 10*math.log10(P) + 120
 
-            if abs(power < 0.5):
+            if abs(power < 0.5) and (new_units == '0'): # The prefixes are only used for linear units (W)
                 power *= 1e3
                 prefix_unit = 'm'
                 if abs(power < 0.5):
