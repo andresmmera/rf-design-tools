@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="container-fluid">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.4cm 0.5cm; vertical-align: middle;">Image Frequency Docs</h1>
+        </div>
+    </div>
+
+    <ul class="list-group">
+      <li class="list-group-item"><a href="{% url 'image_frequency_planning_docs' %}" >Image frequency notes</a></li>
+      <li class="list-group-item"><a href="{% url 'hartley_irm_docs' %}" >Hartley Image Rejection Mixer</a></li>
+      <li class="list-group-item"><a href="{% url 'weaver_irm_docs' %}" >Weaver Image Rejection Mixer</a></li>
+      <li class="list-group-item"><a href="{% url 'ssb_mixer_notes' %}" >SSB Mixer</a></li>
+    </ul>
+
+  </div> 
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="container-fluid">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.4cm 0.5cm; vertical-align: middle;">Image Frequency</h1>
+        </div>
+    
+        <div class="col-6 align-self-center text-right">
+            <div class=”card card-inverse card-danger”>
+                <a href="{% url 'image_frequency_planning' %}" class="btn btn-dark" role="button">f<sub>IM</sub> Tool</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>Frequency Conversion</h5>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+        The RF mixer plays a critical role in the RF system design since it performs the frequency conversion 
+        (up- or downconversion), where the output frequency is related to the frequency of the input ports:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ f_{out} = f_{1} &#177; f_{2}\tag{1} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+        Ideally, a mixer performs a time domain multiplication, equivalent to a convolution in the spectrum domain.
+        The signal at the LO port is typically a single tone (a delta function in the spectrum) what makes possible to translate a modulated (IF or RF) signal to another frequency:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/image_frequency/freq_conversion_delta_conv.png' %}" style="width:50%" alt="Upconversion">
+            <div class="caption">
+                <p>Fig. 1: Frequency conversion as the convolution between a modulated signal and a single tone</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-6 align-self-right">
+        <h6>Upconversion</h6>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+        The upconversion process (Fig. 2) is used in transmitters to translate a relatively low frequency IF to the RF band using a high frequency LO tone.
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/image_frequency/Upconversion.png' %}" style="width:50%" alt="Upconversion">
+            <div class="caption">
+                <p>Fig. 2: Upconversion process</p>
+            </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Without loss of generality, we may regard the modulated data as a single tone.
+            Thus, the time domain waveforms of the LO and IF signals are the followings:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ v_{LO}(t) = { cos(2·\pi·f_{LO}·t) }; v_{IF}(t) = { cos(2·\pi·f_{IF}·t) }\tag{2} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Ideally, the product of the LO and IF voltage waveforms should appear at the third port of the mixer:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ v_{RF}(t) = { K·v_{LO}(t)·v_{IF}(t) }  = { K·cos(2·\pi·f_{LO}·t)·cos(2·\pi·f_{IF}·t) }\tag{3} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            where K accounts for the conversion loss of the mixer. Provided that 2·cos(&#945;)·cos(&#946;) = cos(&#945;-&#946;) + cos(&#945;+&#946;), then:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ v_{ RF }( t ) = { K \over 2 } · \left({ cos(2·\pi · t · (f_{LO} - f_{IF})) + \color {green} { cos(2·\pi · t · (f_{LO} + f_{IF})) } } \right)   \tag{4} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            At the light of Eq. (4), we see that the RF port of the ideal upconverting mixer have spectral components in f<sub>LO</sub> + f<sub>IF</sub> and f<sub>LO</sub> – f<sub>IF</sub>. Usually, 
+            the desired RF signal is f<sub>LO</sub> + f<sub>IF</sub> and it can be selected by using a high pass filter, as shown in Fig. 2.
+        </p>
+    </div>
+
+
+    <div class="col-6 align-self-right">
+        <h6>Downconversion</h6>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/image_frequency/Upconversion.png' %}" style="width:50%" alt="Downconversion">
+            <div class="caption">
+                <p>Fig. 3: Downconversion process</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Figure 3 illustrate the downconversion of high frequency RF signal by using a relatively high LO tone. 
+            At the IF port, they are found two signals at f<sub>RF</sub> + f<sub>LO</sub> and f<sub>RF</sub> – f<sub>LO</sub>. 
+            Usually, a lowpass filter is placed at the IF in order to get the lower band, f<sub>RF</sub> – f<sub>LO</sub>, since lower frequencies 
+            ease the implementation of high rejection filters, 
+            achieving higher adjacent channel rejection.
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            The heterodyne architecture (f<sub>IF</sub> &#8800; 0) suffers from interference with the image frequency.
+             As Fig. 4 shows, -f<sub>IM</sub> = -(f<sub>LO</sub> – f<sub>IF</sub>) is translated to the IF band after downconversion.
+              Since the spectrum of a real signal is symmetric, f<sub>IM</sub> = -f<sub>IM</sub>, so the presence of an interferer 
+              at this frequency will superpose over the desired signal from the RF band (f<sub>RF</sub>) degrading the reception quality:
+        </p>
+    </div>
+   
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ -f_{IM} = -( f_{LO}-f_{IF} ) \rightarrow (downconversion) \rightarrow  -f_{IM} + f_{LO} = -( f_{LO} - f_{IF} ) + f_{LO} =  \color {red} {f_{IF} }  \tag{5} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            The most obvious solution to the image problem is to place a filter before the mixer (Figure 5). 
+            Nowadays, SAW filters are used as image rejection filters [2] because of their high rejection capability
+             and their low cost. A SAW filter consist of a chip with several external connections for matching the 
+             internal resonators. They usually have very low passband ripple and very high image rejection. 
+             Unfortunately, they typically have an insertion loss about 2-4dB which may have a significant impact on the NF. 
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/image_frequency/image_frequency_problem.png' %}" style="width:50%" alt="ImageFrequency">
+            <div class="caption">
+                <p>Fig. 4: The problem of the image frequency</p>
+            </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/image_frequency/traditional_image_rejection.png' %}" style="width:50%" alt="ImageFrequency">
+            <div class="caption">
+                <p>Fig. 5: Traditional image rejection architecture</p>
+            </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            In contrast with the traditional image rejection strategy based on the implementation of an image rejection filter, 
+             there are other image-rejection strategies that do not require an RF filter. Take a look to the posts on the
+             image rejection mixer topic.
+             
+        </p>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>See also</h5>
+    </div>
+
+    <ul class="list-group ">
+        <li class="list-group-item"><a href="{% url 'hartley_irm_docs' %}" >Hartley Image Rejection Mixer</a></li>
+        <li class="list-group-item"><a href="{% url 'weaver_irm_docs' %}" >Weaver Image Rejection Mixer</a></li>
+        <li class="list-group-item"><a href="{% url 'ssb_mixer_notes' %}" >SSB Mixer</a></li>
+      </ul>
+
+     <div class="col-6 align-self-right">
+        <h5>References</h5>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>[1] P. Vizmuller, RF design guide: systems, circuits, and equations. Boston u.a.: Artech House, 1995.</p>
+    </div>
+    
+  </div> 
+{% endblock %}

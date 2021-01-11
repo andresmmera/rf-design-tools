@@ -1,0 +1,188 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="container-fluid">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.4cm 0.5cm; vertical-align: middle;">SSB Mixer</h1>
+        </div>
+    
+        <div class="col-6 align-self-center text-right">
+            <div class=”card card-inverse card-danger”>
+                <a href="{% url 'image_frequency_planning' %}" class="btn btn-dark" role="button">f<sub>IM</sub> Tool</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            An interesting modification of the Hartley architecture is the single sideband mixer (SSB) described in [4]. 
+            The use of 90&#176; hybrids makes possible to get both sides of the spectrum fLSB and fUSB at IF frequency 
+            in two different ports at the output:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/image_frequency/SSB_mixer.png' %}" style="width:50%" alt="SSBmixer">
+            <div class="caption">
+                <p>Fig. 1: SSB mixer</p>
+            </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            The working principle of this mixer can be analyzed using the small signal analysis. 
+            As it was seen before, the signal coming from the RF port is the sum of the LSB and the USB spectral components:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$  v_{ RF }( t ) = V_{ USB } · cos( \omega_{USB} · t  ) + V_{ LSB } · cos( \omega_{LSB} · t  )  \tag{1} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Provided that,
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ \omega_{USB} = \omega_{LO} + \omega_{IF} \tag{2} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            and,
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ \omega_{LSB} = \omega_{LO} - \omega_{IF} \tag{3} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Then,
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ v_{ RF }( t ) = V_{ USB } · cos( (\omega_{LO} + \omega_{IF}) · t  ) + V_{ LSB } · cos( (\omega_{LO} - \omega_{IF}) · t  ) \tag{4} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            At the upper end of the first 90&#176; hybrid we get:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ v_{ A } ( t ) = {1 \over \sqrt {2} } · \left( V_{USB} · cos (\omega_{LO} · t + \omega_{IF} · t - \pi/2) + V_{LSB} · cos (\omega_{LO} · t - \omega_{IF} · t - \pi/2) \right)  \tag{5} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ v_{ A } ( t ) = {1 \over \sqrt{2} } · \left( V_{USB} · sin((\omega_{LO} + \omega_{IF}) · t) + V_{LSB} · sin((\omega_{LO} - \omega_{IF}) · t) \right)  \tag{6} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Similarly, for the other end of the first hybrid:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ v_{ B } ( t ) = {1 \over \sqrt{2} } · \left( V_{USB} · cos (\omega_{LO} · t + \omega_{IF} · t - \pi) + V_{LSB} · cos (\omega_{LO} · t - \omega_{IF} · t - \pi) \right)   \tag{7} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ v_{ B } ( t ) = -{1 \over \sqrt{2} } · \left( V_{USB} · cos((\omega_{LO} + \omega_{IF}) · t) + V_{LSB} · cos((\omega_{LO} - \omega_{IF}) · t) \right)     \tag{8} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Then, each branch is mixed with the same LO signal and low-pass filtered, so at the upper arm of the second hybrid we get:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ IF_{ A } ( t ) = {K · V_{LO} \over 2 · \sqrt{2} } · ( V_{USB} - V_{LSB} ) · sin( \omega_{IF} · t )  \tag{9} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Similarly, for the lower arm of the hybrid:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ IF_{ B } ( t ) = -{K · V_{LO} \over 2 · \sqrt{2}} · ( V_{USB} + V_{LSB} ) · cos( \omega_{IF} · t )   \tag{10} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Where K is a constant which stands for the conversion loss of the mixer.
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Thus, the phasor representation of Eqs. (9) and (10) is the following:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ IF_{ A } = -j · { K · V_{LO} \over  2 · \sqrt{2} } · ( V_{USB} - V_{LSB} );  \tag{11} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ IF_{ B } ( t ) = {-K · V_{LO} \over 2 · \sqrt{2}} · ( V_{USB} + V_{LSB} ) · cos( \omega_{IF} · t )   \tag{12} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Consequently, at the output ports of the 90&#176; hybrid, we get:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$  V_1 = -j · {IF_A \over \sqrt{ 2 } }- {IF_B \over \sqrt{ 2} } = { K · V_{LO} · V_{LSB}  \over 2}  \tag{13} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$  V_2 = - {IF_A \over \sqrt{ 2} } - {IF_B \over \sqrt{ 2} } = -j· { K · V_{LO} · V_{USB}  \over 2}  \tag{14} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Equations (13) and (14) show that the output ports 1 and 2 contain the LSB and the USB information at IF frequency, so for image_frequency
+            rejection applications, the LSB port is terminated by 75&#937; so the image frequency is dissipated into the load and the USB signal is free from image signal corruption.
+        </p>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>See also</h5>
+    </div>
+
+    <ul class="list-group">
+        <li class="list-group-item"><a href="{% url 'image_frequency_planning_docs' %}" >Image frequency notes</a></li>
+        <li class="list-group-item"><a href="{% url 'hartley_irm_docs' %}" >Hartley Image Rejection Mixer</a></li>
+        <li class="list-group-item"><a href="{% url 'weaver_irm_docs' %}" >Weaver Image Rejection Mixer</a></li>
+      </ul>
+
+    <div class="col-6 align-self-right">
+        <h5>References</h5>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>[1] David M. Pozar, Microwave Engineering, 2012</p>
+    </div>
+    
+  </div> 
+{% endblock %}

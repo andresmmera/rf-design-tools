@@ -11,7 +11,19 @@ import json as simplejson
 from .utilities import ArrayToString
 
 def ImageFrequencyDocs(request):
-    return render(request, 'BandwidthOctaves/docs/BandwidthOctaves_doc.html')
+    return render(request, 'ImageFrequency/docs/ImageFrequency_doc.html')
+
+def SSBMixerNotes(request):
+    return render(request, 'ImageFrequency/docs/SSB_Mixer_doc.html')
+
+def ImageFrequency_CatalogNotes(request):
+    return render(request, 'ImageFrequency/docs/ImageFrequency_Catalog_doc.html')
+
+def HartleyImageRejectionMixersDocs(request):
+    return render(request, 'ImageFrequency/docs/Hartley_Image_Rejection_Mixer_doc.html')
+
+def WeaverImageRejectionMixersDocs(request):
+    return render(request, 'ImageFrequency/docs/Weaver_Image_Rejection_Mixer_doc.html')
 
 def ImageFrequencyCatalogView(request):
     return render(request, 'ImageFrequency/tool/ImageFrequency_catalog.html')
@@ -69,7 +81,7 @@ def ImageFrequencyView(request):
         context['f_IM'] = ArrayToString(f_IM)
         context['f_IF'] = ArrayToString(f_IF)
         context['delta_IM_IF'] = ArrayToString(delta_IM_IF)
-        
+
         form_im = ImageFrequency_diagramForm()
 
     context['form_im']= form_im

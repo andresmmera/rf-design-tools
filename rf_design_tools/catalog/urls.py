@@ -24,6 +24,11 @@ from catalog.views import IPn_DiagramDocs
 
 from catalog.views import ImageFrequencyCatalogView
 from catalog.views import ImageFrequencyView
+from catalog.views import ImageFrequencyDocs
+from catalog.views import ImageFrequency_CatalogNotes
+from catalog.views import HartleyImageRejectionMixersDocs
+from catalog.views import WeaverImageRejectionMixersDocs
+from catalog.views import SSBMixerNotes
 
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
@@ -58,4 +63,10 @@ urlpatterns = [
     # IMAGE FREQUENCY TOOLS
     path('tool/image_frequency', ImageFrequencyCatalogView, name='image_frequency_catalog'),
     path('tool/image_frequency/image_planning', ImageFrequencyView, name='image_frequency_planning'),
+    path('tool/image_frequency/image_planning/docs/image_frequency', ImageFrequencyDocs, name='image_frequency_planning_docs'),
+    path('tool/image_frequency/image_planning/docs', ImageFrequency_CatalogNotes, name='image_frequency_docs'),
+    # Image rejection notes
+    path('tool/image_frequency/image_planning/docs/hartley_irm', HartleyImageRejectionMixersDocs, name='hartley_irm_docs'),
+    path('tool/image_frequency/image_planning/docs/ssb_mixer', SSBMixerNotes, name='ssb_mixer_notes'),
+    path('tool/image_frequency/image_planning/docs/weaver_irm', WeaverImageRejectionMixersDocs, name='weaver_irm_docs'),
 ]

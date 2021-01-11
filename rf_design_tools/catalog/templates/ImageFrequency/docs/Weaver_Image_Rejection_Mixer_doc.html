@@ -1,0 +1,127 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="container-fluid">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.4cm 0.5cm; vertical-align: middle;">Weaver Image Rejection Mixer</h1>
+        </div>
+    
+        <div class="col-6 align-self-center text-right">
+            <div class=”card card-inverse card-danger”>
+                <a href="{% url 'image_frequency_planning' %}" class="btn btn-dark" role="button">f<sub>IM</sub> Tool</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            The implementation of the phase shifter in the Hartley architecture degrades the image rejection figure 
+            because of the impairments in the manufacturing process of the RC-CR network. In this sense, the Weaver
+             architecture improves the Hartley structure by replacing the phase shifter by two mixers as shown below [1]:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/image_frequency/Weaver_Architecure.png' %}" style="width:50%" alt="SSBmixer">
+            <div class="caption">
+                <p>Fig. 1: Weaver Image Rejection Mixer</p>
+            </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            The IF voltage waveforms at the points A and B are the same as in the analysis of the <a href="{% url 'hartley_irm_docs' %}">Hartley architecture</a>, so:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$  IF_A( t ) = { A_{SIG}  \over  2 } · cos( (\omega_{SIG} - \omega_{LO1}) · t ) + { A_{IM}  \over  2 } · cos( (\omega_{LO1} - \omega_{IM}) · t )  \tag{1} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$  IF_B( t ) = -{ A_{SIG}  \over  2 } · sin( (\omega_{SIG} - \omega_{LO1}) · t ) + { A_{IM}  \over  2 } · sin( (\omega_{LO1} - \omega_{IM}) · t ) \tag{2} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            As seen in the block diagram above, the previous signals are again downconverted using another LO frequency, f<sub>LO2</sub>, so:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ IF_C( t ) = { A_{SIG}  \over 4} · cos( (\omega_{SIG} - \omega_{LO1} + \omega_{LO2}) · t) + { A_{SIG}  \over 4} · cos( (\omega_{SIG} - \omega_{LO1} - \omega_{LO2}) · t)  $$</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ + { A_{IM}  \over 4} · cos( (\omega_{LO1} - \omega_{IM} + \omega_{LO2}) · t)
+            +  { A_{IM}  \over 4} · cos( (\omega_{LO1} - \omega_{IM} - \omega_{LO2}) · t)  \tag{3} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ IF_D( t ) = { A_{SIG}  \over 4} · cos( (\omega_{SIG} - \omega_{LO1} + \omega_{LO2}) · t) + { A_{SIG} \over 4} · cos( (\omega_{SIG} - \omega_{LO1} - \omega_{LO2}) · t) $$</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ - { A_{IM}  \over 4} · cos( (\omega_{LO1} - \omega_{IM} + \omega_{LO2}) · t)
+            +  { A_{IM} \over 4} · cos( (\omega_{LO1} - \omega_{IM} - \omega_{LO2}) · t) \tag{4} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Finally, the output is obtained by inverting IF<sub>D</sub> and adding it to IF<sub>C</sub>:
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ IF_{OUT} ( t ) = { A_{SIG} \over 2} · cos( (\omega_{SIG} - \omega_{LO1} - \omega_{LO2}) · t ) + { A_{IM} \over 2} · cos( (\omega_{LO1} - \omega_{IM} - \omega_{LO2}) · t ) \tag{5} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Equation (5) shows that the spectral component coming from the image frequency is pushed to higher frequencies, 
+            so the desired signal is obtained after a low-pass filtering.
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            As mentioned before, the Weaver architecture reduce the impairments caused by the lumped components in the Hartley architecture.
+            However, both signal paths must be as similar as possible to obtain a good image rejection.
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>
+            Another counterpart of the Weaver architecture is that it suffers from the secondary images problem because 
+            it implements a two-step downconversion. This issue is covered in the secondary image post.
+        </p>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>See also</h5>
+    </div>
+
+    <ul class="list-group">
+        <li class="list-group-item"><a href="{% url 'image_frequency_planning_docs' %}" >Image frequency notes</a></li>
+        <li class="list-group-item"><a href="{% url 'hartley_irm_docs' %}" >Hartley Image Rejection Mixer</a></li>
+        <li class="list-group-item"><a href="{% url 'ssb_mixer_notes' %}" >SSB Mixer</a></li>
+      </ul>
+
+    <div class="col-6 align-self-right">
+        <h5>References</h5>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>[1] Supisa Lerstaveesin, An Image Rejection Circuit with Sign Detection Only, University of California, San Diego, 2006</p>
+    </div>
+    
+  </div> 
+{% endblock %}
