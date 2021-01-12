@@ -97,6 +97,10 @@ if (chLine) {
     data: chartData,
     options: {responsive: true,
       maintainAspectRatio:false,
+                title: {
+                  display: true,
+                  text: 'Image Frequency Diagram for RF = ' + f_RF.toString() + ' MHz'
+                },
                 elements: {
                           point:{
                                   radius: 0
