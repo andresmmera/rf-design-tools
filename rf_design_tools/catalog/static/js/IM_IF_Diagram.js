@@ -78,7 +78,7 @@ var chartData = {
 
               // Delta IM-IF
                {
-                label: "|IM-IF|",
+                label: "|RF-IM|",
                 data: delta_IM_IF_data,
                 backgroundColor: 'transparent',
                 borderColor: '#FF8000', // Orange
