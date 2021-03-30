@@ -11,7 +11,7 @@ def RparallelDocs(request):
     """View function for home page of site."""
 
     # Render the HTML template index.html with the data in the context variable
-    return render(request, 'ParallelResistor/docs/Rparallel_doc.html')
+    return render(request, 'Capacitor_Resistor_Calculators/ParallelResistor/docs/Rparallel_doc.html')
 
 
 
@@ -101,11 +101,11 @@ def RparallelView(request):
             context['Req'] = round(Req,1)
 
             context['form_Rparallel'] = form_Rparallel
-            return render(request, 'ParallelResistor/tool/Rparallel.html', context)
+            return render(request, 'Capacitor_Resistor_Calculators/ParallelResistor/tool/Rparallel.html', context)
     else:
         form_Rparallel = ParallelResistorForm()
 
     context['form_Rparallel']= form_Rparallel
 
 
-    return render(request, 'ParallelResistor/tool/Rparallel.html', context)
+    return render(request, 'Capacitor_Resistor_Calculators/ParallelResistor/tool/Rparallel.html', context)

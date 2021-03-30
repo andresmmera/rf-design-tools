@@ -1,0 +1,48 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <h2 class="tool-list">Capacitor and Resistor Calculators</h2>
+    
+    <div class="row">
+      <div class="col-xs-9 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+        <!-- PARALLEL RESISTOR TOOL -->
+       <!-- TOOL TITLE -->
+       <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+         <a href='Capacitor_Resistor_Calculators/parallel_resistor'><h5 class="tool_title">Parallel resistors</h5></a>
+       </div>
+       
+       <!-- TOOL DESCRIPTION -->
+       <div class="d-flex flex-row justify-content-center">
+         <p>Calculate R<sub>eq</sub> of two parallel resistors</p>
+       </div>
+         
+       <!-- BUTTONS -->
+       <div class="d-flex flex-row justify-content-center">
+         <div class="p-2"><a href="Capacitor_Resistor_Calculators/parallel_resistor" class="btn btn-dark" role="button">Go!</a></div>
+         <div class="p-2"><a href="Capacitor_Resistor_Calculators/parallel_resistor/docs" class="btn btn-info" role="button">See docs</a></div>
+       </div>
+     </div>
+
+     <div class="col-xs-9 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+       <!-- SERIES CAPACITORS TOOL -->
+      <!-- TOOL TITLE -->
+      <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+        <a href='Capacitor_Resistor_Calculators/series_capacitor'><h5 class="tool_title">Series Capacitors</h5></a>
+      </div>
+      
+      <!-- TOOL DESCRIPTION -->
+      <div class="d-flex flex-row justify-content-center">
+        <p>Calculate C<sub>eq</sub> of two series caps</p>
+      </div>
+        
+      <!-- BUTTONS -->
+      <div class="d-flex flex-row justify-content-center">
+        <div class="p-2"><a href="Capacitor_Resistor_Calculators/series_capacitor" class="btn btn-dark" role="button">Go!</a></div>
+        <div class="p-2"><a href="Capacitor_Resistor_Calculators/series_capacitor/docs" class="btn btn-info" role="button">See docs</a></div>
+      </div>
+     </div>
+    </div>
+</div>
+{% endblock %}

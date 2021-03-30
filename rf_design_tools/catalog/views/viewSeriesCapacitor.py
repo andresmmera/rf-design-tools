@@ -12,7 +12,7 @@ def CseriesDocs(request):
     """View function for home page of site."""
 
     # Render the HTML template index.html with the data in the context variable
-    return render(request, 'SeriesCapacitor/docs/Cseries_doc.html')
+    return render(request, 'Capacitor_Resistor_Calculators/SeriesCapacitor/docs/Cseries_doc.html')
 
 
 
@@ -200,11 +200,11 @@ def CseriesView(request):
                     context['Ceq'] = getValueWithUnits(Ceq, 'F')
 
             context['form_Cseries'] = form_Cseries
-            return render(request, 'SeriesCapacitor/tool/Cseries.html', context)
+            return render(request, 'Capacitor_Resistor_Calculators/SeriesCapacitor/tool/Cseries.html', context)
     else:
         form_Cseries = SeriesCapacitorForm()
 
     context['form_Cseries']= form_Cseries
 
 
-    return render(request, 'SeriesCapacitor/tool/Cseries.html', context)
+    return render(request, 'Capacitor_Resistor_Calculators/SeriesCapacitor/tool/Cseries.html', context)

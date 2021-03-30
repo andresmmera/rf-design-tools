@@ -27,16 +27,16 @@
       </div>
 
       <div class="col-xs-3 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
-        <!-- IMAGE FREQUENCY TOOLS -->
+        <!-- FREQUENCY PLANNING TOOLS -->
         
         <!-- TOOL TITLE -->
         <div class= "d-flex flex-row justify-content-center">
-          <a href="{% url 'image_frequency_catalog' %}"><h5 class="tool_title" style="margin-top: 10px">Image Frequency Tools</h5></a>
+          <a href="{% url 'image_frequency_catalog' %}"><h5 class="tool_title" style="margin-top: 10px">Frequency Planning Tools</h5></a>
         </div>
         
         <!-- TOOL DESCRIPTION -->
         <div class="d-flex flex-row justify-content-center"">
-          <p>Plot the image frequency diagram and calculate the secondary image frequencies</p>
+          <p>Plot the image frequency diagram, calculate the secondary image frequencies and the half-IF spurious</p>
         </div>
           
         <!-- BUTTONS -->
@@ -128,49 +128,23 @@
        </div>
       </div>
 
-
       <div class="col-xs-9 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
-         <!-- PARALLEL RESISTOR TOOL -->
-        <!-- TOOL TITLE -->
-        <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
-          <a href='tool/parallel_resistor'><h5 class="tool_title">Parallel resistors</h5></a>
-        </div>
-        
-        <!-- TOOL DESCRIPTION -->
-        <div class="d-flex flex-row justify-content-center">
-          <p>Calculate R<sub>eq</sub> of two parallel resistors</p>
-        </div>
-          
-        <!-- BUTTONS -->
-        <div class="d-flex flex-row justify-content-center">
-          <div class="p-2"><a href="tool/parallel_resistor" class="btn btn-dark" role="button">Go!</a></div>
-          <div class="p-2"><a href="tool/parallel_resistor/docs" class="btn btn-info" role="button">See docs</a></div>
-        </div>
-      </div>
-
-      <div class="col-xs-9 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
-        <!-- SERIES CAPACITORS TOOL -->
+        <!-- SERIES CAPACITOR AND PARALLEL RESISTOR CALCULATOR -->
        <!-- TOOL TITLE -->
        <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
-         <a href='tool/series_capacitor'><h5 class="tool_title">Series Capacitors</h5></a>
+         <a href='tool/Capacitor_Resistor_Calculators'><h5 class="tool_title">Series Capacitors & Parallel resistors</h5></a>
        </div>
        
        <!-- TOOL DESCRIPTION -->
        <div class="d-flex flex-row justify-content-center">
-         <p>Calculate C<sub>eq</sub> of two series caps</p>
+         <p>Calculate R<sub>eq</sub> of two parallel resistors and C<sub>eq</sub> of two series capacitors</p>
        </div>
          
        <!-- BUTTONS -->
        <div class="d-flex flex-row justify-content-center">
-         <div class="p-2"><a href="tool/series_capacitor" class="btn btn-dark" role="button">Go!</a></div>
-         <div class="p-2"><a href="tool/series_capacitor/docs" class="btn btn-info" role="button">See docs</a></div>
+         <div class="p-2"><a href="tool/Capacitor_Resistor_Calculators" class="btn btn-dark" role="button">See Tools</a></div>
+         <div class="p-2"><a href="tool/Capacitor_Resistor_Calculators/parallel_resistor/docs" class="btn btn-info" role="button">See docs</a></div>
        </div>
-      </div>
-
-    </div>
-
-    
-      
-
+     </div>
   </div>
 {% endblock %}

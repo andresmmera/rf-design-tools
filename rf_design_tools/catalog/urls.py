@@ -10,9 +10,9 @@ from catalog.views import ReflectionToolsCatalogView
 from catalog.views import CalculatePowerConverterView
 from catalog.views import RFPowerConversionDocs
 
+from catalog.views import CapRes_CatalogView
 from catalog.views import RparallelView
 from catalog.views import RparallelDocs
-
 from catalog.views import CseriesView
 from catalog.views import CseriesDocs
 
@@ -52,21 +52,26 @@ urlpatterns = [
     path('tool/IPn_NF_diagram', IPn_DiagramView, name='ipn_nf_diagram'),
     path('tool/IPn_NF_diagram/docs', IPn_DiagramDocs, name='ipn_nf_docs'),
 
-    # PARALLEL RESISTOR EQUIVALENT
-    path('tool/parallel_resistor', RparallelView, name='rparallel_tool'),
-    path('tool/parallel_resistor/docs', RparallelDocs, name='rparallel_docs'),
+    ###############################################################################
+    # CAPACITOR AND RESISTOR CALCULATORS
+    path('tool/Capacitor_Resistor_Calculators', CapRes_CatalogView, name='CapRes_Catalog'),
 
-    # SERIES CAPACITOR EQUIVALENT
-    path('tool/series_capacitor', CseriesView, name='cseries_tool'),
-    path('tool/series_capacitor/docs', CseriesDocs, name='cseries_docs'),
+    ## PARALLEL RESISTOR EQUIVALENT
+    path('tool/Capacitor_Resistor_Calculators/parallel_resistor', RparallelView, name='rparallel_tool'),
+    path('tool/Capacitor_Resistor_Calculators/parallel_resistor/docs', RparallelDocs, name='rparallel_docs'),
 
-    # IMAGE FREQUENCY TOOLS
-    path('tool/image_frequency', ImageFrequencyCatalogView, name='image_frequency_catalog'),
-    path('tool/image_frequency/image_planning', ImageFrequencyView, name='image_frequency_planning'),
-    path('tool/image_frequency/image_planning/docs/image_frequency', ImageFrequencyDocs, name='image_frequency_planning_docs'),
-    path('tool/image_frequency/image_planning/docs', ImageFrequency_CatalogNotes, name='image_frequency_docs'),
+    ## SERIES CAPACITOR EQUIVALENT
+    path('tool/Capacitor_Resistor_Calculators/series_capacitor', CseriesView, name='cseries_tool'),
+    path('tool/Capacitor_Resistor_Calculators/series_capacitor/docs', CseriesDocs, name='cseries_docs'),
+    #################################################################################
+
+    # FREQUENCY PLANNING TOOLS
+    path('tool/frequency_planning', ImageFrequencyCatalogView, name='image_frequency_catalog'),
+    path('tool/frequency_planning/image_planning', ImageFrequencyView, name='image_frequency_planning'),
+    path('tool/frequency_planning/image_planning/docs/image_frequency', ImageFrequencyDocs, name='image_frequency_planning_docs'),
+    path('tool/frequency_planning/image_planning/docs', ImageFrequency_CatalogNotes, name='image_frequency_docs'),
     # Image rejection notes
-    path('tool/image_frequency/image_planning/docs/hartley_irm', HartleyImageRejectionMixersDocs, name='hartley_irm_docs'),
-    path('tool/image_frequency/image_planning/docs/ssb_mixer', SSBMixerNotes, name='ssb_mixer_notes'),
-    path('tool/image_frequency/image_planning/docs/weaver_irm', WeaverImageRejectionMixersDocs, name='weaver_irm_docs'),
+    path('tool/frequency_planning/image_planning/docs/hartley_irm', HartleyImageRejectionMixersDocs, name='hartley_irm_docs'),
+    path('tool/frequency_planning/image_planning/docs/ssb_mixer', SSBMixerNotes, name='ssb_mixer_notes'),
+    path('tool/frequency_planning/image_planning/docs/weaver_irm', WeaverImageRejectionMixersDocs, name='weaver_irm_docs'),
 ]

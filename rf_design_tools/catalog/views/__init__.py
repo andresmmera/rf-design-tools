@@ -6,3 +6,4 @@ from .viewSeriesCapacitor import *
 from .viewBandwidthOctaves import *
 from .viewIPn_diagram import *
 from .viewImageFrequency import *
+from .viewCapRes_Calculators import *

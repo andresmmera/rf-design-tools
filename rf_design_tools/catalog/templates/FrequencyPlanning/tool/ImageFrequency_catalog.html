@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container-fluid">
-    <h2 class="tool-list">Image Frequency Tools</h2>
+    <h2 class="tool-list">Frequency Planning Tools</h2>
     
     <div class="row">
       <div class="col-xs-9 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
@@ -45,6 +45,27 @@
           <div class="p-2"><a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a></div>
         </div>
       </div>
+
+      <div class="col-xs-3 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+        <!-- HALF IF SPURIOUS -->
+        
+        <!-- TOOL TITLE -->
+        <div class= "d-flex flex-row justify-content-center">
+          <a href="{% url 'ZtoR_tool' %}"><h5 class="tool_title" style="margin-top: 10px">Half IF Spurious Calculator</h5></a>
+        </div>
+        
+        <!-- TOOL DESCRIPTION -->
+        <div class="d-flex flex-row justify-content-center"">
+          <p>Calculate the half IF frequencies in a two-step heterodyne conversion</p>
+        </div>
+          
+        <!-- BUTTONS -->
+        <div class="d-flex flex-row justify-content-center">
+          <div class="p-2"><a href="{% url 'ZtoR_tool' %}" class="btn btn-dark" role="button">Go!</a></div>
+          <div class="p-2"><a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+        </div>
+      </div>
+
     </div>
 </div>
 {% endblock %}

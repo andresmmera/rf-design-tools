@@ -21,22 +21,22 @@ from bokeh.models import Arrow, NormalHead
 from bokeh.models import ColumnDataSource, LabelSet
 
 def ImageFrequencyDocs(request):
-    return render(request, 'ImageFrequency/docs/ImageFrequency_doc.html')
+    return render(request, 'FrequencyPlanning/docs/ImageFrequency_doc.html')
 
 def SSBMixerNotes(request):
-    return render(request, 'ImageFrequency/docs/SSB_Mixer_doc.html')
+    return render(request, 'FrequencyPlanning/docs/SSB_Mixer_doc.html')
 
 def ImageFrequency_CatalogNotes(request):
-    return render(request, 'ImageFrequency/docs/ImageFrequency_Catalog_doc.html')
+    return render(request, 'FrequencyPlanning/docs/ImageFrequency_Catalog_doc.html')
 
 def HartleyImageRejectionMixersDocs(request):
-    return render(request, 'ImageFrequency/docs/Hartley_Image_Rejection_Mixer_doc.html')
+    return render(request, 'FrequencyPlanning/docs/Hartley_Image_Rejection_Mixer_doc.html')
 
 def WeaverImageRejectionMixersDocs(request):
-    return render(request, 'ImageFrequency/docs/Weaver_Image_Rejection_Mixer_doc.html')
+    return render(request, 'FrequencyPlanning/docs/Weaver_Image_Rejection_Mixer_doc.html')
 
 def ImageFrequencyCatalogView(request):
-    return render(request, 'ImageFrequency/tool/ImageFrequency_catalog.html')
+    return render(request, 'FrequencyPlanning/tool/ImageFrequency_catalog.html')
 
 # ################################################################################################
 # #
@@ -101,7 +101,7 @@ def ImageFrequencyView(request):
             context['script'] = script
             context['div'] = div
 
-            return render(request, 'ImageFrequency/tool/ImageFrequencyPlanning.html', context)
+            return render(request, 'FrequencyPlanning/tool/ImageFrequencyPlanning.html', context)
     else:
         ## Bokeh plot
         plot = getPlot(200, 1500, 1000)
@@ -116,4 +116,4 @@ def ImageFrequencyView(request):
     context['form_im']= form_im
 
 
-    return render(request, 'ImageFrequency/tool/ImageFrequencyPlanning.html', context)
+    return render(request, 'FrequencyPlanning/tool/ImageFrequencyPlanning.html', context)
