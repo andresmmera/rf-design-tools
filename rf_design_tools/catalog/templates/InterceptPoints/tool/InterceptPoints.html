@@ -1,4 +1,9 @@
 {% extends "base_generic.html" %}
+<!-- Add Bokeh headers -->
+<head>
+  <link href="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.css" rel="stylesheet" type="text/css">
+  <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.css" rel="stylesheet" type="text/css">
+</head>
 {% load static %}
 
 {% block content %}
@@ -62,11 +67,6 @@
   }
   </style>
 
-
-
-  <!-- ADD CHARTJS -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-
   <div class="container-fluid" style="border:5px solid #cecece;">
     <div class="row">
         <div class="mx-auto">
@@ -78,8 +78,6 @@
         <!-- Instantiate the form -->
         <form method="POST">
           {% csrf_token %}          
-          <!-- {{ form_ipn_diag.as_p }}  -->
-
           <table class="table table-hover">
             <h5 align="center"> IP<sub>n</sub> calculation</h5>
             <thead>
@@ -217,39 +215,10 @@
               <div class="col-xs-12 col-md-12" >
                   <div class="card shadow-sm">
                       <div class="card-body" >
-                          <canvas id="chLine" width="300" height="400" >
-                            <script type="text/javascript" 
-                                    id="InterceptDiagram"
-                                    // INPUT POWER
-                                    data-Pin = {{Pin|default:-23}}
-
-                                    // FUNDAMENTAL OUTPUT POWER
-                                    data-Pout = {{Pout|default:34}}
-
-                                    // IMN OUTPUT POWER
-                                    data-IMn = {{IMn|default:34}}
-
-                                    // Noise Floor
-                                    data-Noise_Floor = {{Noise_Floor|default:34}}
-                                    data-No_dBm = {{No_dBm|default:34}}
-
-                                    // IPn
-                                    data-IIPn = {{IIPn}}
-                                    data-OIPn = {{OIPn}}
-                                    data-n = {{n}}
-
-                                    // Compression Point
-                                    data-CPi = {{CPi}}
-                                    data-CPo = {{CPo}}
-
-                                    // Minimum SI
-                                    data-Pin_Upper_Limit = {{Pin_Upper_Limit}}
-                                    data-Pout_Upper_Limit = {{Pout_Upper_Limit}}
-                                    data-SI = {{SI}}
-
-                                    src="{% static 'js/InterceptDiagram.js' %}">
-                            </script>                     
-                          </canvas>
+                        {{ div | safe }}
+                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
+                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
+                        {{ script | safe }}
                       </div>
                   </div>
               </div>
@@ -328,7 +297,10 @@
                
     </div>
   </div>
-
+<!-- Add Bokeh scripts -->
+<script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
+<script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
+{{ script | safe }
 
 <script>
   // Pop-up helpers
@@ -387,5 +359,7 @@
   }
 
   </script>
+
+
 {% endblock %}
 

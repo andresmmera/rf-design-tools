@@ -10,10 +10,10 @@ import numpy as np
 import json as simplejson
 from .utilities import ArrayToString
 
+# Bokeh
 from django.shortcuts import render
 from bokeh.plotting import figure, output_file, show 
 from bokeh.embed import components
-
 from bokeh.io import output_notebook, show
 from bokeh.plotting import figure
 from bokeh.models import Legend, LegendItem
