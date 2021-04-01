@@ -167,6 +167,9 @@ class IPn_NF_diagramForm(forms.Form):
     BW = forms.FloatField(initial=1200,  label='BW (MHz)')
     T = forms.FloatField(initial=290,  label='T (K)')
 
+    # DUT and frequency
+    DUT = forms.CharField(initial='PHA-1H+', label='DUT')
+    freq = forms.FloatField(initial=500,  label='Freq (MHz)')
 
     def __init__(self, *args, **kwargs):
         super(IPn_NF_diagramForm, self).__init__(*args, **kwargs)
@@ -181,6 +184,8 @@ class IPn_NF_diagramForm(forms.Form):
         self.fields['NF'].widget.attrs['style'] = "width:75px"
         self.fields['BW'].widget.attrs['style'] = "width:75px"
         self.fields['T'].widget.attrs['style'] = "width:75px"
+        self.fields['DUT'].widget.attrs['style'] = "width:100px"
+        self.fields['freq'].widget.attrs['style'] = "width:75px"
 
         # Set the minimum values
         self.fields['Delta'].widget.attrs['min'] = 10
@@ -188,6 +193,7 @@ class IPn_NF_diagramForm(forms.Form):
         self.fields['NF'].widget.attrs['min'] = 0.1
         self.fields['BW'].widget.attrs['min'] = 0.1 # 100 kHz
         self.fields['T'].widget.attrs['min'] = 0.1
+        self.fields['freq'].widget.attrs['min'] = 0.1
 
 
 # FORM - Image Frequency Planning

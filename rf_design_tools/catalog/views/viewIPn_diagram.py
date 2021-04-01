@@ -54,9 +54,9 @@ def IIP(P_out, G, Delta, n):
 def PoutIMN(P_in, n, G, IIPN):
     return n*P_in - (n-1)*IIPN + G
 
-def getPlot(Pin_Upper_Limit, Pout_Upper_Limit, No_dBm, SImin, n, G, CPo, IIPn, OIPn):
+def getPlot(Pin_Upper_Limit, Pout_Upper_Limit, No_dBm, SImin, n, G, CPo, IIPn, OIPn, DUT, freq):
     #Plot intercept diagram
-    title = "Interception diagram " ;
+    title = "Interception diagram: " + DUT + ' @ ' + str(freq) + ' MHz' ;
     plot = figure(plot_width=800, plot_height=400, title=title)
 
     # Plot settings
@@ -119,7 +119,7 @@ def getPlot(Pin_Upper_Limit, Pout_Upper_Limit, No_dBm, SImin, n, G, CPo, IIPn, O
     # Labels without rotation
     source = ColumnDataSource(data=dict(y=[CPo+2, OIPn+2],
                                         x=[CPi-1, IIPn-1],
-                                        names=['CP', 'IPn']))
+                                        names=['CP', 'IP'+str(n)]))
     labels = LabelSet(x='x', y='y', text='names', source=source, render_mode='canvas')
     plot.add_layout(labels)
     return plot
@@ -142,6 +142,8 @@ def IPn_DiagramView(request):
             NF = form_ipn_diag.cleaned_data['NF']
             BW = form_ipn_diag.cleaned_data['BW']*1e6 # MHz
             T = form_ipn_diag.cleaned_data['T']
+            DUT = form_ipn_diag.cleaned_data['DUT']
+            freq = form_ipn_diag.cleaned_data['freq'] # MHz
 
             context['n'] = n
  
@@ -170,7 +172,7 @@ def IPn_DiagramView(request):
             context['SI'] = SImin
 
             ## Bokeh plot
-            plot = getPlot(Pin_Upper_Limit, Pout_Upper_Limit, No_dBm, SImin, n, G, CPo, IIPn, OIPn)
+            plot = getPlot(Pin_Upper_Limit, Pout_Upper_Limit, No_dBm, SImin, n, G, CPo, IIPn, OIPn, DUT, freq)
 
             #Store components 
             script, div = components(plot)
@@ -181,10 +183,6 @@ def IPn_DiagramView(request):
             return render(request, 'InterceptPoints/tool/InterceptPoints.html', context)
     else:
         # Generate default data
-        Pin = [-20.0,-17.0,-14.0,-11.0,-8.0,-6.0,-3.0,0.0,3.0,6.0,9.0,12.0,15.0,18.0,21.0,23.0,26.0,29.0,32.0,35.0]
-        Pout = [-4.0,-1.0,2.0,5.0,8.0,10.0,13.0,16.0,19.0,22.0,25.0,28.0,31.0,34.0,37.0,39.0,42.0,45.0,48.0,51.0]
-        IMn = [-92.0,-83.0,-74.0,-65.0,-56.0,-50.0,-41.0,-32.0,-23.0,-14.0,-5.0,4.0,13.0,22.0,31.0,37.0,46.0,55.0,64.0,73.0]
-        Noise_Floor = [-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14,-69.14]
         IIPn = 24.0
         OIPn = 40
         CPi = 4
@@ -196,6 +194,8 @@ def IPn_DiagramView(request):
         DR = 71.7
         n=3
         G = 16
+        DUT = 'PHA-1H+'
+        freq = 500;
 
         # Assign default data for the first run
         context['No_dBm'] = No_dBm # Noise floor (scalar) for presenting the data in the HTML template
@@ -208,7 +208,7 @@ def IPn_DiagramView(request):
         form_ipn_diag = IPn_NF_diagramForm()
 
         ## Bokeh plot
-        plot = getPlot(Pin_Upper_Limit, Pout_Upper_Limit, No_dBm, SImin, n, G, CPo, IIPn, OIPn)
+        plot = getPlot(Pin_Upper_Limit, Pout_Upper_Limit, No_dBm, SImin, n, G, CPo, IIPn, OIPn, DUT, freq)
 
         #Store components 
         script, div = components(plot)

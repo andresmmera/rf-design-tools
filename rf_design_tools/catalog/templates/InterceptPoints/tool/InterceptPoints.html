@@ -91,7 +91,7 @@
                 <td>
                   <div class="popup" onclick="help_gain()">
                     {{form_ipn_diag.G.label}}
-                    <span class="popuptext" id="Pop-up-Gain">Linear gain</span>
+                    <span class="popuptext" id="Pop-up-Gain">Linear gain of the amplifier</span>
                   </div>
                 </td>
                 <td>{{form_ipn_diag.G}}</td>
@@ -110,7 +110,7 @@
                 <td>
                   <div class="popup" onclick="help_delta()">
                     {{form_ipn_diag.Delta.label}}
-                    <span class="popuptext" id="Pop-up-delta">Range between the intermodulation products and the carrier</span>
+                    <span class="popuptext" id="Pop-up-delta">Difference between the intermodulation products and the carrier at the two-tone test</span>
                   </div>
                 </td>
                 <td>{{form_ipn_diag.Delta}}</td>
@@ -140,7 +140,7 @@
                 <td>
                   <div class="popup" onclick="help_SImin()">
                     {{form_ipn_diag.SImin.label}}
-                    <span class="popuptext" id="Pop-up-SImin">Minimum S/I required</span>
+                    <span class="popuptext" id="Pop-up-SImin">Minimum S/I required for the modulation</span>
                   </div>
                 </td>
                 <td>{{form_ipn_diag.SImin}}</td>
@@ -167,7 +167,7 @@
                 <td>
                   <div class="popup" onclick="help_T()">
                     {{form_ipn_diag.T.label}}
-                    <span class="popuptext" id="Pop-up-T">Temperature of the system</span>
+                    <span class="popuptext" id="Pop-up-T">System Temperature</span>
                   </div>
                 </td>
                 <td>{{form_ipn_diag.T}}</td>
@@ -194,6 +194,31 @@
               </tr>
               </tr>
             </tbody>
+            <table class="table table-hover">
+              <h5 align="center">DUT & Frequency</h5>
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr> <!-- DUT -->
+                  <td>
+                    <div class="popup" onclick="help_DUT()">DUT</sub>
+                      <span class="popuptext" id="Pop-up-DUT">Name or ID of the device under test (DUT)</span>
+                    </div></td>
+                  <td>{{form_ipn_diag.DUT}}</td>
+                </tr>
+                <tr> <!-- Frequency -->
+                  <td>
+                    <div class="popup" onclick="help_freq()">Frequency (MHz)</sub>
+                      <span class="popuptext" id="Pop-up-freq">Frequency at which the above data was measured</span>
+                    </div></td>
+                  <td>{{form_ipn_diag.freq}}</td>
+                </tr>
+                </tr>
+              </tbody>
           </table>
 
           <!-- BUTTONS -->
@@ -259,7 +284,7 @@
           </table>
       </div>
       {% else %}
-      <div class="col-xs-9 col-md-4">
+      <div class="col-xs-12 col-md-6">
         <div class="card-body">
                <table class="table table-bordered table-striped">
                 <thead>
@@ -297,10 +322,7 @@
                
     </div>
   </div>
-<!-- Add Bokeh scripts -->
-<script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
-<script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
-{{ script | safe }
+
 
 <script>
   // Pop-up helpers
@@ -355,6 +377,18 @@
   function help_P1dB(){
     // P1dB
     var popup = document.getElementById("Pop-up-P1dB");
+    popup.classList.toggle("show");
+  }
+
+  function help_DUT(){
+    // DUT
+    var popup = document.getElementById("Pop-up-DUT");
+    popup.classList.toggle("show");
+  }
+
+  function help_freq(){
+    // DUT
+    var popup = document.getElementById("Pop-up-freq");
     popup.classList.toggle("show");
   }
 
