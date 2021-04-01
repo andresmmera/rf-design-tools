@@ -25,47 +25,7 @@
         </div>
 
       </div>
-
-      <div class="col-xs-3 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
-        <!-- FREQUENCY PLANNING TOOLS -->
-        
-        <!-- TOOL TITLE -->
-        <div class= "d-flex flex-row justify-content-center">
-          <a href="{% url 'image_frequency_catalog' %}"><h5 class="tool_title" style="margin-top: 10px">Frequency Planning Tools</h5></a>
-        </div>
-        
-        <!-- TOOL DESCRIPTION -->
-        <div class="d-flex flex-row justify-content-center"">
-          <p>Plot the image frequency diagram, calculate the secondary image frequencies and the half-IF spurious</p>
-        </div>
-          
-        <!-- BUTTONS -->
-        <div class="d-flex flex-row justify-content-center">
-          <div class="p-2"><a href="{% url 'image_frequency_catalog' %}" class="btn btn-dark" role="button">See Tools</a></div>
-          <div class="p-2"><a href="{% url 'image_frequency_docs' %}" class="btn btn-info" role="button">See docs</a></div>
-        </div>
-      </div>
-
-      <div class="col-xs-3 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
-        <!-- Half-IF -->
-        
-        <!-- TOOL TITLE -->
-        <div class= "d-flex flex-row justify-content-center">
-          <a href='tool/reflection_coefficient/SWRtoR'><h5 class="tool_title" style="margin-top: 10px">Half-IF Spurious</h5></a>
-        </div>
-        
-        <!-- TOOL DESCRIPTION -->
-        <div class="d-flex flex-row justify-content-center"">
-          <p>Calculate the half-IF and the IIP2 requirement of a receiver</p>
-        </div>
-          
-        <!-- BUTTONS -->
-        <div class="d-flex flex-row justify-content-center">
-          <div class="p-2"><a href="tool/reflection_coefficient/SWRtoR" class="btn btn-dark" role="button">Go!</a></div>
-          <div class="p-2"><a href="tool/reflection_coefficient/docs" class="btn btn-info" role="button">See docs</a></div>
-        </div>
-      </div>
-
+      
       <div class="col-xs-3 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
         <!-- RF POWER CONVERSION TOOL -->
         
@@ -86,9 +46,24 @@
         </div>
       </div>
 
-    </div>
-
-    <div class="row">
+      <div class="col-xs-9 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+        <!-- SERIES CAPACITOR AND PARALLEL RESISTOR CALCULATOR -->
+       <!-- TOOL TITLE -->
+       <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+         <a href='tool/Capacitor_Resistor_Calculators'><h5 class="tool_title">Series Capacitors & Parallel resistors</h5></a>
+       </div>
+       
+       <!-- TOOL DESCRIPTION -->
+       <div class="d-flex flex-row justify-content-center">
+         <p>Calculate R<sub>eq</sub> of two parallel resistors and C<sub>eq</sub> of two series capacitors</p>
+       </div>
+         
+       <!-- BUTTONS -->
+       <div class="d-flex flex-row justify-content-center">
+         <div class="p-2"><a href="tool/Capacitor_Resistor_Calculators" class="btn btn-dark" role="button">See Tools</a></div>
+         <div class="p-2"><a href="tool/Capacitor_Resistor_Calculators/parallel_resistor/docs" class="btn btn-info" role="button">See docs</a></div>
+       </div>
+     </div>
 
       <div class="col-xs-9 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
         <!-- CALCULATE BANDWIDTH IN OCTAVES -->
@@ -108,43 +83,48 @@
          <div class="p-2"><a href="tool/bw_octaves/docs" class="btn btn-info" role="button">See docs</a></div>
        </div>
       </div>
-
-      <div class="col-xs-9 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
-      <!-- INTERCEPT POINT DIAGRAM -->
-       <!-- TOOL TITLE -->
-       <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
-         <a href='tool/IPn_NF_diagram'><h5 class="tool_title">IP<sub>n</sub> diagram</h5></a>
-       </div>
-       
-       <!-- TOOL DESCRIPTION -->
-       <div class="d-flex flex-row justify-content-center">
-         <p>Plot the IP<sub>n</sub> diagram, the noise floor and calculate the dynamic range from two-tone test and NF data</p>
-       </div>
-         
-       <!-- BUTTONS -->
-       <div class="d-flex flex-row justify-content-center">
-         <div class="p-2"><a href="tool/IPn_NF_diagram" class="btn btn-dark" role="button">Go!</a></div>
-         <div class="p-2"><a href="{% url 'ipn_nf_docs'%}" class="btn btn-info" role="button">See docs</a></div>
-       </div>
-      </div>
-
-      <div class="col-xs-9 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
-        <!-- SERIES CAPACITOR AND PARALLEL RESISTOR CALCULATOR -->
-       <!-- TOOL TITLE -->
-       <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
-         <a href='tool/Capacitor_Resistor_Calculators'><h5 class="tool_title">Series Capacitors & Parallel resistors</h5></a>
-       </div>
-       
-       <!-- TOOL DESCRIPTION -->
-       <div class="d-flex flex-row justify-content-center">
-         <p>Calculate R<sub>eq</sub> of two parallel resistors and C<sub>eq</sub> of two series capacitors</p>
-       </div>
-         
-       <!-- BUTTONS -->
-       <div class="d-flex flex-row justify-content-center">
-         <div class="p-2"><a href="tool/Capacitor_Resistor_Calculators" class="btn btn-dark" role="button">See Tools</a></div>
-         <div class="p-2"><a href="tool/Capacitor_Resistor_Calculators/parallel_resistor/docs" class="btn btn-info" role="button">See docs</a></div>
-       </div>
-     </div>
   </div>
+
+  <h2 class="tool-list">System Design Tools</h2>
+     <div class="row">
+      <div class="col-xs-9 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+        <!-- INTERCEPT POINT DIAGRAM -->
+         <!-- TOOL TITLE -->
+         <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+           <a href='tool/IPn_NF_diagram'><h5 class="tool_title">IP<sub>n</sub> diagram</h5></a>
+         </div>
+         
+         <!-- TOOL DESCRIPTION -->
+         <div class="d-flex flex-row justify-content-center">
+           <p>Plot the IP<sub>n</sub> diagram, the noise floor and calculate the dynamic range from two-tone test and NF data</p>
+         </div>
+           
+         <!-- BUTTONS -->
+         <div class="d-flex flex-row justify-content-center">
+           <div class="p-2"><a href="tool/IPn_NF_diagram" class="btn btn-dark" role="button">Go!</a></div>
+           <div class="p-2"><a href="{% url 'ipn_nf_docs'%}" class="btn btn-info" role="button">See docs</a></div>
+         </div>
+        </div>
+
+        <div class="col-xs-3 col-md-3" style="background-color:rgb(151, 176, 255); border: 10px solid white">
+          <!-- FREQUENCY PLANNING TOOLS -->
+          
+          <!-- TOOL TITLE -->
+          <div class= "d-flex flex-row justify-content-center">
+            <a href="{% url 'image_frequency_catalog' %}"><h5 class="tool_title" style="margin-top: 10px">Frequency Planning Tools</h5></a>
+          </div>
+          
+          <!-- TOOL DESCRIPTION -->
+          <div class="d-flex flex-row justify-content-center"">
+            <p>Plot the image frequency diagram, calculate the secondary image frequencies and the half-IF spurious</p>
+          </div>
+            
+          <!-- BUTTONS -->
+          <div class="d-flex flex-row justify-content-center">
+            <div class="p-2"><a href="{% url 'image_frequency_catalog' %}" class="btn btn-dark" role="button">See Tools</a></div>
+            <div class="p-2"><a href="{% url 'image_frequency_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+          </div>
+        </div>
+  
+     </div>
 {% endblock %}
