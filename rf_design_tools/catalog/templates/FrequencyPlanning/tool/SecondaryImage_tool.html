@@ -1,0 +1,127 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+  <!-- Secondary image calculator -->
+
+  <div class="container-fluid" style="border:5px solid #cecece;">
+    <div class="row">
+        <div class="mx-auto">
+          <h2 class="tool-name">Secondary Image Calculator</h2>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
+        <!-- Instantiate the form -->
+        <form method="POST"> 
+          {% csrf_token %}          
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!-- 1st IF -->
+                <td>
+                  {{form_2nd_Image.f_IF1.label}}
+                </td>
+                <td>{{form_2nd_Image.f_IF1}}</td>
+              </tr>
+              <tr> <!-- 2nd IF -->
+                <td>
+                  {{form_2nd_Image.f_IF2.label}}
+                </td>
+                <td>{{form_2nd_Image.f_IF2}}</td>
+              </tr>
+              <tr> <!-- RF -->
+                <td>
+                  {{form_2nd_Image.f_RF.label}}
+                </td>
+                <td>{{form_2nd_Image.f_RF}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- BUTTONS -->
+          <div class="d-flex flex-row justify-content-center">
+            <div class="p-2">
+              <input type = "submit" value = "Calculate">
+            </div>
+
+            <div class="p-2">
+              <a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="mx-auto">
+            <!-- Present the result -->
+              <div class="card-body">
+                {% if f_IM1 != None %}
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th colspan="4"><h5 align="center">Results</h5></th>
+                          </tr>
+                          <tr>
+                            <th>Step</th>
+                            <th>Downconversion</th>
+                            <th>LO</th>
+                            <th>Image</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr> 
+                            <td>1<sup>st</sup></td>
+                            <td>{{f_RF}} &#8669; {{f_IF1}} MHz</td>
+                            <td>{{f_LO1}} MHz</td>
+                            <td>{{f_IM1}} MHz</td>
+                          </tr>
+                          <tr>
+                            <td>2<sup>nd</sup></td>
+                            <td>{{f_IF1}} &#8669; {{f_IF2}} MHz</td>
+                            <td>{{f_LO2}} MHz</td>
+                            <td>{{f_IM2}} MHz</td>
+                          </tr>
+                        </tbody>
+                    </table>
+                {% else %}
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th colspan="4"><h5 align="center">Results</h5></th>
+                    </tr>
+                    <tr>
+                      <th>Step</th>
+                      <th>Downconversion</th>
+                      <th>LO</th>
+                      <th>Image</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr> 
+                      <td>1<sup>st</sup></td>
+                      <td>800.0 &#8669; 200.0 MHz</td>
+                      <td>600.0 MHz</td>
+                      <td>780.0 MHz</td>
+                    </tr>
+                    <tr>
+                      <td>2<sup>nd</sup></td>
+                      <td>200.0 &#8669; 10.0 MHz</td>
+                      <td>190.0 MHz</td>
+                      <td>420.0 MHz</td>
+                    </tr>
+                  </tbody>
+              </table>
+                {% endif %}
+              </div>
+            </div>
+      </div>
+  </div>
+
+{% endblock %}

@@ -212,3 +212,50 @@ class ImageFrequency_diagramForm(forms.Form):
         self.fields['f_RF'].widget.attrs['min'] = 1
         self.fields['f_LO1'].widget.attrs['min'] = 1
         self.fields['f_LO2'].widget.attrs['min'] = 1
+
+class HalfIFForm(forms.Form):
+    # Half IF Calculation
+    IF = forms.FloatField(initial=100,  label='IF frequency (MHz)')
+    RF = forms.FloatField(initial=900,  label='RF frequency (MHz)')
+
+    # Half-IF Rejection
+    R = forms.FloatField(initial=35,  label='Half-IF Rejection (dB)')
+    S = forms.FloatField(initial=-110,  label='Receiver Sensitivity (dBm)')
+    CI = forms.FloatField(initial=35,  label='C/I (dB)')
+
+    def __init__(self, *args, **kwargs):
+        super(HalfIFForm, self).__init__(*args, **kwargs)
+        # Set the width of the boxes
+        box_width = 5
+        self.fields['IF'].widget.attrs['style'] = "width:75px"
+        self.fields['RF'].widget.attrs['style'] = "width:75px"
+        self.fields['R'].widget.attrs['style'] = "width:75px"
+        self.fields['S'].widget.attrs['style'] = "width:75px"
+        self.fields['CI'].widget.attrs['style'] = "width:75px"
+
+        # Set the minimum values
+        self.fields['IF'].widget.attrs['min'] = 0
+        self.fields['RF'].widget.attrs['min'] = 10
+        self.fields['R'].widget.attrs['min'] = 5
+        self.fields['S'].widget.attrs['min'] = -300
+        self.fields['CI'].widget.attrs['min'] = 0
+
+
+
+class SecondaryImageForm(forms.Form):
+    # Secondary Image Calculation
+    f_IF1 = forms.FloatField(initial=200,  label='First IF (MHz)')
+    f_IF2 = forms.FloatField(initial=10,  label='Second IF (MHz)')
+    f_RF = forms.FloatField(initial=800,  label='RF frequency (MHz)')
+
+    def __init__(self, *args, **kwargs):
+        super(SecondaryImageForm, self).__init__(*args, **kwargs)
+        # Set the width of the boxes
+        self.fields['f_IF1'].widget.attrs['style'] = "width:75px"
+        self.fields['f_IF2'].widget.attrs['style'] = "width:75px"
+        self.fields['f_RF'].widget.attrs['style'] = "width:75px"
+
+        # Set the minimum values
+        self.fields['f_IF1'].widget.attrs['min'] = 0
+        self.fields['f_IF2'].widget.attrs['min'] = 0
+        self.fields['f_RF'].widget.attrs['min'] = 0

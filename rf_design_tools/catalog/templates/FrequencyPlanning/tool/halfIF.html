@@ -1,0 +1,266 @@
+{% extends "base_generic.html" %}
+<!-- Add Bokeh headers -->
+<head>
+  <link href="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.css" rel="stylesheet" type="text/css">
+  <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.css" rel="stylesheet" type="text/css">
+</head>
+{% load static %}
+
+{% block content %}
+
+<style>
+  /* Popup container - can be anything you want */
+  .popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* The actual popup */
+  .popup .popuptext {
+    visibility: hidden;
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+  }
+  
+  /* Popup arrow */
+  .popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  /* Toggle this class - hide and show the popup */
+  .popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+  }
+  
+  /* Add animation (fade in the popup) */
+  @-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+  }
+  
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+  }
+  </style>
+
+  <div class="container-fluid" style="border:5px solid #cecece;">
+    <div class="row">
+        <div class="mx-auto">
+          <h2 class="tool-name">Half-IF Spurious Rejection</h2>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-9 col-md-4" style="background-color:rgb(151, 176, 255); border: 30px solid white">
+        <!-- Instantiate the form -->
+        <form method="POST">
+          {% csrf_token %}          
+          <table class="table table-hover">
+            <h5 align="center"> Half-IF calculation</h5>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!-- IF -->
+                <td>
+                  <div class="popup" onclick="help_IF()">
+                    {{form_halfIF.IF.label}}
+                    <span class="popuptext" id="Pop-up-IF">Intermediate Frequency (MHz)</span>
+                  </div>
+                </td>
+                <td>{{form_halfIF.IF}}</td>
+   
+              </tr>
+              <tr> <!-- RF -->
+                <td>
+                  <div class="popup" onclick="help_RF()">
+                    {{form_halfIF.RF.label}}
+                    <span class="popuptext" id="Pop-up-RF">Carrier frequency (MHz)</span>
+                  </div>
+                </td>
+                <td>{{form_halfIF.RF}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-hover">
+            <h5 align="center"> Receiver IIP2 Calculation</h5>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr> <!-- R -->
+                    <td>
+                        {{form_halfIF.R.label}}
+                    </td>
+                    <td>{{form_halfIF.R}}</td>
+                  </tr>
+                  <tr> <!-- Sensitivity -->
+                    <td>
+                        {{form_halfIF.S.label}}
+                    </td>
+                    <td>{{form_halfIF.S}}</td>
+                  </tr>
+              <tr> <!-- Cochannel Rejection -->
+                <td>
+                  <div class="popup" onclick="help_CI()">
+                    {{form_halfIF.CI.label}}
+                    <span class="popuptext" id="Pop-up-CI">Carrier to interference ratio</span>
+                  </div>
+                </td>
+                <td>{{form_halfIF.CI}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- BUTTONS -->
+          <div class="d-flex flex-row justify-content-center">
+            <div class="p-2">
+              <input type = "submit" value = "Calculate">
+            </div>
+
+            <div class="p-2">
+              <a href="{% url 'ipn_nf_docs' %}" class="btn btn-info" role="button">See docs</a>
+            </div>
+          </div>
+        </form>
+
+      </div>
+
+      <div class="col-xs-12 col-md-8" style="border: 10px">
+          <div class="row">
+              <div class="col-xs-12 col-md-12" >
+                  <div class="card shadow-sm">
+                      <div class="card-body" >
+                        {{ div | safe }}
+                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
+                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
+                        {{ script | safe }}
+                      </div>
+                  </div>
+              </div>
+          </div>
+      <!-- Present the result -->
+      {%if IIP2 != None%}
+      <div class="col-xs-12 col-md-6">
+        <div class="card-body">
+            
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th colspan="4"><h5 align="center">Results</h5></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr> 
+                    <td></sub></td>
+                    <td> <b> LO (MHz) </b> </td>
+                    <td> <b> Half-IF (MHz) </b> </td>
+                    <td> <b> Receiver IIP2 (dBm) </b> </td>
+                  </tr>
+                <tr> 
+                  <td>Low-side injection</sub></td>
+                  <td>{{ f_LO_low }}</td>
+                  <td>{{ half_IF_low_injection }}</td>
+                  <td>{{ IIP2 }}</td>
+                </tr>
+                <tr> 
+                  <td>High-side injection</sub></td>
+                  <td>{{ f_LO_high }}</td>
+                  <td>{{ half_IF_high_injection }}</td>
+                  <td>{{ IIP2 }}</td>
+                </tr>
+            </tbody>
+          </table>
+      </div>
+      {% else %}
+      <div class="col-xs-12 col-md-6">
+        <div class="card-body">
+               <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th colspan="4"><h5 align="center">Results</h5></th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr> 
+                        <td></sub></td>
+                        <td> <b> LO (MHz) </b> </td>
+                        <td> <b> Half-IF (MHz) </b> </td>
+                        <td> <b> Receiver IIP2 (dBm) </b> </td>
+                      </tr>
+                    <tr> 
+                      <td>Low-side injection</sub></td>
+                      <td>800.0</td>
+                      <td>850.0</td>
+                      <td>-5.0</td>
+                    </tr>
+                    <tr> 
+                      <td>High-side injection</sub></td>
+                      <td>1000.0</td>
+                      <td>950.0</td>
+                      <td>-5.0</td>
+                    </tr>
+                </tbody>
+              <table>
+          </div>
+      </div>
+      {%endif%}
+      </div>
+               
+    </div>
+  </div>
+
+<script>
+  // Pop-up helpers
+  function help_IF() {
+    // Intermediate Frequency
+    var popup = document.getElementById("Pop-up-IF");
+    popup.classList.toggle("show");
+  }
+
+  function help_RF(){
+    // RF Carrier
+    var popup = document.getElementById("Pop-up-RF");
+    popup.classList.toggle("show");
+  }
+
+  function help_CI(){
+    // C/I
+    var popup = document.getElementById("Pop-up-CI");
+    popup.classList.toggle("show");
+  }
+  </script>
+
+
+{% endblock %}
+
