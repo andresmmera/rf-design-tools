@@ -1,6 +1,5 @@
 {% extends "base_generic.html" %}
 {% load static %}
-
 {% block content %}
 
   <!-- Reflection coefficient to impedance -->
@@ -82,22 +81,22 @@
                         <tbody>
                           <tr> 
                             <td>Z<sub>L</sub></td>
-                            <td>{{ZL}} &#937;</td>
+                            <td align="center">{{ZL}} &#937;</td>
                           </tr>
                           <tr>
                             <td>SWR</td>
                             {% if SWR == 1e6 %}
-                              <td>&#8734;</td>
+                              <td align="center">&#8734;</td>
                             {%else%}
-                              <td>{{SWR}}</td>
+                              <td align="center">{{SWR}}</td>
                             {% endif %}
                           </tr>
                             <tr> 
                               <td>S<sub>11</sub></td>
                               {% if S11 == -1e3 %}
-                                <td>-&#8734; dB</td>
+                                <td align="center">-&#8734; dB</td>
                               {%else%}
-                                <td>{{S11}} dB</td>
+                                <td align="center">{{S11}} dB</td>
                               {% endif %}
                             </tr>
                         </tbody>
@@ -112,15 +111,15 @@
                       <tbody>
                         <tr> 
                           <td>Z<sub>L</sub></td>
-                          <td>73.44 + j 7.92 &#937;</td>
+                          <td align="center">73.44 + j 7.92 &#937;</td>
                         </tr>
                         <tr> 
                           <td>SWR</td>
-                          <td>1.5</td>
+                          <td align="center"> 1.5</td>
                         </tr>
                         <tr> 
                           <td>S<sub>11</sub></td>
-                          <td>-13.98 dB</td>
+                          <td align="center">-13.98 dB</td>
                         </tr>
                       </tbody>
                     </table>

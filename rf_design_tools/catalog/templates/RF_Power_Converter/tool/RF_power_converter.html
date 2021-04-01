@@ -1,5 +1,5 @@
 {% extends "base_generic.html" %}
-
+{% load static %}
 {% block content %}
 
 <div class="container-fluid" style="border:5px solid #cecece;">
@@ -10,6 +10,7 @@
     </div>
 
     <div class="row">
+      <div class="col-sm-4">
         <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
           <!-- Instantiate the form -->
           <form method="POST"> 
@@ -53,25 +54,52 @@
                 <a href="{% url 'rf_power_converter_docs' %}" class="btn btn-info" role="button">See docs</a>
               </div>
             </div>
-          
-          </form>
-  
-          <!-- Present the result -->
-          {% if Pnew != None %}
-          <div class="card">
-            <div class="card-body">
-              {% if prefix_unit != None %}
-                <p> P = {{Pnew}} {{prefix_unit}}{{new_units}} </p>
-              {% else %}
-                <p> P = {{Pnew}} {{new_units}} </p>
-              {% endif %}
-            </div>
-          </div>
-          {% endif %}
         </div>
       </div>
-    </div>
 
+      <div class= "col-sm-4 my-auto">
+        <div class="mx-auto" align="center">
+          <input type="image" src="{% static 'images/general/arrow.png' %}" value = "Calculate" style="width:50%">
+        </div>
+    </div>
+    </form>
+
+          
+        <div class="col-sm-4">
+            <div class="mx-auto">
+              <!-- Present the result -->
+              <div class="card-body">
+                {% if Pnew != None %}
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th colspan="2"><h5 align="center">Results</h5></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr> 
+                            <td align="center">{{Pnew}} {{prefix_unit}}{{new_units}}</td>
+                          </tr>
+                        </tbody>
+                    </table>
+                {% else %}
+                    <table class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th colspan="2"><h5 align="center">Results</h5></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr> 
+                          <td align="center">108.75 dB&#x00B5V (Z&#x2080 = 75 &#x03A9)</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+    </div>
 </div>
 
 {% endblock %}
