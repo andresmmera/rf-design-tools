@@ -4,15 +4,15 @@
 
   <!-- Reflection coefficient to impedance -->
 
-  <div class="container-fluid" style="border:5px solid #cecece;">
+  <div class="container-fluid">
     <div class="row">
-        <div class="mx-auto">
+        <div class="col-md-auto">
           <h2 class="tool-name">Bandwidth in Octaves & Q factor</h2>
         </div>
     </div>
 
     <div class="row">
-      <div class="col-sm-4">
+      <div class="col-md-auto">
       <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
         <!-- Instantiate the form -->
         <form method="POST"> 
@@ -50,24 +50,20 @@
               <a href="{% url 'bw_octaves_docs' %}" class="btn btn-info" role="button">See docs</a>
             </div>
           </div>
+        </form>
       </div>
     </div>
 
-    <div class= "col-sm-4 my-auto">
-      <div class="mx-auto" align="center">
-        <input type="image" src="{% static 'images/general/arrow.png' %}" value = "Calculate" style="width:50%">
-      </div>
-    </div>
-  </form>
 
-    <div class="col-sm-4">
+
+    <div class="col-md-auto">
       <div class="mx-auto">
              <!-- Present the result -->
              {%if BW_OCT != None%}
              <div class="col-xs-12 col-md-6">
                <div class="card-body">
                    
-                   <table class="table table-bordered table-striped">
+                   <table class="table table-light table-bordered table-striped">
                      <thead>
                        <tr>
                          <th colspan="2"><h5 align="center">Result</h5></th>
@@ -88,7 +84,7 @@
              {% else %}
              <div class="col-xs-9 col-md-4">
                <div class="card-body">
-                     <table class="table table-bordered table-striped">
+                     <table class="table table-light table-bordered table-striped">
                        <thead>
                          <tr>
                            <th colspan="2"><h5 align="center">Results</h5></th>

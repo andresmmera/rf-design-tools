@@ -1,3 +1,38 @@
+html * /* Character settings for the whole site */
+{
+   font-family: Lato Light !important;
+}
+
+.box{ /* Box margins for the tool catalogs */
+    box-sizing: border-box;
+    border: 10px solid transparent;
+    background-clip:padding-box;
+  }
+
+body {
+    padding-top: 80px; /*Padding for the fixed-top navbar*/
+    padding-bottom: 20px;
+
+    background:
+        linear-gradient(-90deg, rgba(0, 0, 0, .03) 1px, transparent 1px),
+        linear-gradient(rgba(0, 0, 0, .03) 1px, transparent 1px),
+        linear-gradient(-90deg, rgba(0, 0, 0, .03) 1px, transparent 1px),
+        linear-gradient(rgba(0, 0, 0, .03) 1px, transparent 1px),
+        linear-gradient(transparent 3px, transparent 3px, transparent 78px, transparent 78px),
+        linear-gradient(-90deg, transparent 1px, transparent 1px),
+        linear-gradient(-90deg, transparent 3px, transparent 3px, transparent 78px, transparent 78px),
+        linear-gradient(transparent 1px, transparent 1px), transparent;
+    background-size:
+        10px 10px,
+        10px 10px,
+        10px 10px,
+        10px 10px,
+        10px 10px,
+        10px 10px,
+        10px 10px,
+        10px 10px;
+}
+
 .sidebar-nav {
     margin-top: 20px;
     padding: 0;
@@ -12,18 +47,17 @@ h1.page-title {
     margin-left: 0;
     margin-right: 0;
     color: #C25100;
-    font-family: 'Lato', sans-serif;
 }
 
 
 h2.tool-list {
     color: #4d4845;
-    font-family: 'Lato', sans-serif;
+    font-weight: bold;
 }
 
-h5.tool_title{
+h5{
     color: #4d4845;
-    font-family: 'Lato', sans-serif;
+    font-weight: bold;
 }
 
 

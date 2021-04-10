@@ -66,14 +66,14 @@
   }
   </style>
 
-  <div class="container-fluid" style="border:5px solid #cecece;">
+  <div class="container-fluid">
     <div class="row">
-        <div class="mx-auto">
+        <div class="col-md-auto">
           <h2 class="tool-name">Image Frequency and IF Diagram</h2>
         </div>
     </div>
     <div class="row">
-      <div class="col-xs-9 col-md-4" style="background-color:rgb(151, 176, 255); border: 30px solid white">
+      <div class="col-md-auto" style="background-color:rgb(151, 176, 255);">
         <!-- Instantiate the form -->
         <form method="POST">
           {% csrf_token %}          
@@ -143,7 +143,7 @@
 
       </div>
 
-      <div class="col-xs-12 col-md-8" style="border: 10px">
+      <div class="col-md-auto" style="border: 10px">
           <div class="row">
               <div class="col-xs-12 col-md-12" >
                   <div class="card shadow-sm">

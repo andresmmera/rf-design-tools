@@ -67,19 +67,19 @@
   }
   </style>
 
-  <div class="container-fluid" style="border:5px solid #cecece;">
+  <div class="container-fluid">
     <div class="row">
-        <div class="mx-auto">
-          <h2 class="tool-name">IP<sub>n</sub>, noise floor and dynamic range diagram</h2>
+        <div class="col-md-auto">
+          <h2 class="tool-name">IP<sub>n</sub>, Noise Floor and Dynamic Range Diagram</h2>
         </div>
     </div>
     <div class="row">
-      <div class="col-xs-9 col-md-4" style="background-color:rgb(151, 176, 255); border: 30px solid white">
+      <div class="col-md-auto box" style="background-color:rgb(151, 176, 255);">
         <!-- Instantiate the form -->
         <form method="POST">
           {% csrf_token %}          
           <table class="table table-hover">
-            <h5 align="center"> IP<sub>n</sub> calculation</h5>
+            <h5 align="center"> IP<sub>n</sub> Calculation</h5>
             <thead>
               <tr>
                 <th>Parameter</th>
@@ -128,7 +128,7 @@
           </table>
 
           <table class="table table-hover">
-            <h5 align="center"> Dynamic range and noise floor</h5>
+            <h5 align="center"> Dynamic Range and Noise Floor</h5>
             <thead>
               <tr>
                 <th>Parameter</th>
@@ -235,7 +235,7 @@
 
       </div>
 
-      <div class="col-xs-12 col-md-8" style="border: 10px">
+      <div class="col-md-auto box">
           <div class="row">
               <div class="col-xs-12 col-md-12" >
                   <div class="card shadow-sm">
@@ -250,10 +250,10 @@
           </div>
                 <!-- Present the result -->
       {%if Pin != None%}
-      <div class="col-xs-12 col-md-6">
+      <div class="col-md-auto">
         <div class="card-body">
             
-            <table class="table table-bordered table-striped">
+            <table class="table table-light table-bordered table-striped">
               <thead>
                 <tr>
                   <th colspan="2"><h5 align="center">Results</h5></th>
@@ -284,9 +284,9 @@
           </table>
       </div>
       {% else %}
-      <div class="col-xs-12 col-md-6">
+      <div class="col-md-auto">
         <div class="card-body">
-               <table class="table table-bordered table-striped">
+               <table class="table table-light table-bordered table-striped">
                 <thead>
                   <tr>
                     <th colspan="2"><h5 align="center">Results</h5></th>

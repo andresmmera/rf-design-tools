@@ -4,15 +4,15 @@
 
   <!-- Secondary image calculator -->
 
-  <div class="container-fluid" style="border:5px solid #cecece;">
+  <div class="container-fluid">
     <div class="row">
-        <div class="mx-auto">
+        <div class="col-md-auto">
           <h2 class="tool-name">Secondary Image Calculator</h2>
         </div>
     </div>
 
     <div class="row">
-      <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
+      <div class="col-md-auto box" style="background-color:rgb(151, 176, 255);">
         <!-- Instantiate the form -->
         <form method="POST"> 
           {% csrf_token %}          
@@ -57,13 +57,13 @@
           </div>
         </form>
       </div>
-    </div>
-    <div class="row">
-      <div class="mx-auto">
+    
+
+      <div class="col-md-auto box">
             <!-- Present the result -->
               <div class="card-body">
                 {% if f_IM1 != None %}
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-light table-bordered table-striped">
                         <thead>
                           <tr>
                             <th colspan="4"><h5 align="center">Results</h5></th>
@@ -91,7 +91,7 @@
                         </tbody>
                     </table>
                 {% else %}
-                <table class="table table-bordered table-striped">
+                <table class="table table-light table-bordered table-striped">
                   <thead>
                     <tr>
                       <th colspan="4"><h5 align="center">Results</h5></th>
@@ -120,7 +120,6 @@
               </table>
                 {% endif %}
               </div>
-            </div>
       </div>
   </div>
 

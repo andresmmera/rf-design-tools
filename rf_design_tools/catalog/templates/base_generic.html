@@ -6,12 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   
   <!-- Add additional CSS in static file -->
   {% load static %}
+  <link rel="shortcut icon" href="{%  static '/images/logo/favicon.ico' %}"> <!-- Favicon path -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@1,900&display=swap" rel="stylesheet"> 
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
@@ -31,117 +32,110 @@
 </head>
 <body>
     
-    <div class="container">
-        <div class="jumbotron">
-            <a href='/'><h1 class="page-title">RF Design Tools</h1></a>
-        </div>    
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a href="{% url 'tools-catalog' %}" class="navbar-left"> <img src="{% static "/images/logo/logo.png"%}" width="204px" height="50px"></a>
+
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Calculators
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Reflection Coefficient Tools</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'RtoZ_tool' %}">&#915; &#8594; Z and S<sub>11</sub></a></li>
+                <li><a class="dropdown-item" href="{% url 'ZtoR_tool' %}">Z &#8594; &#915; and S<sub>11</sub></a></li>
+                <li><a class="dropdown-item" href="{% url 'SWRtoR_tool' %}">SWR &#8594; |&#915;| and S<sub>11</sub></a></li>
+              </ul>
+            </li>
+            <li><a class="dropdown-item"  href="{% url 'rf_power_converter_tool' %}">RF Power Unit Converter</a></li>
+            <li><a class="dropdown-item"  href="{% url 'bw_octaves_tool' %}">Octave Bandwidth Calculator</a></li>
+            <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Parallel/Series resistors and capacitors</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'cseries_tool' %}">Series Capacitors</a></li>
+                <li><a class="dropdown-item" href="{% url 'rparallel_tool' %}">Parallel Resistors</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            System Design Tools
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item"  href="{% url 'ipn_nf_diagram' %}">IP<sub>n</sub> Diagram</a></li>
+            <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Frequency Planning</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'image_frequency_planning' %}">Image Frequency</a></li>
+                <li><a class="dropdown-item" href="{% url 'half_IF_tool' %}">Half-IF Spurious</a></li>
+                <li><a class="dropdown-item" href="{% url 'Secondary_image_tool' %}">Secondary Image</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Docs
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item" href="{% url 'reflection_coeff_docs' %}">Reflection Coefficient</a></li>
+            <li><a class="dropdown-item" href="{% url 'rf_power_converter_docs' %}">RF Power Unit Conversion</a></li>
+
+            <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">R & C Parallel & Series Equivalent</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'rparallel_docs' %}">Resistances in Parallel</a></li>
+                <li><a class="dropdown-item" href="{% url 'cseries_docs' %}">Capacitors in Series</a></li>
+              </ul>
+            </li>
+
+            <li><a class="dropdown-item" href="{% url 'bw_octaves_docs' %}">Bandwidth in Octaves</a></li>
+            <li><a class="dropdown-item" href="{% url 'ipn_nf_docs' %}">IP<sub>n</sub> calculation</a></li>
+
+            <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Frequency Planning</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'image_frequency_planning_docs' %}">Image Frequency Notes</a></li>
+                <li><a class="dropdown-item" href="{% url 'image_frequency_docs' %}">Second Image</a></li>
+                <li><a class="dropdown-item" href="{% url 'image_frequency_docs' %}">Half-IF Spurious</a></li>
+                <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Image Rejection Mixers</a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'hartley_irm_docs' %}">Hartley IR Mixer</a></li>
+                    <li><a class="dropdown-item" href="{% url 'weaver_irm_docs' %}">Weaver IR Mixer</a></li>
+                    <li><a class="dropdown-item" href="{% url 'ssb_mixer_notes' %}">SSB Mixer</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+
+      </ul>
     </div>
-    <div class="row">
-    <nav class="navbar navbar-inverse">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="{% url 'tools-catalog' %}">RF Design Tools</a>
-        </div>
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home</a></li>
-          <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Calculators<span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li class="dropdown-submenu">
-                <a class="test" tabindex="-1" href="{% url 'reflection_coeff_tools' %}">Reflection Coefficient Tools<span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a tabindex="-1" href="{% url 'RtoZ_tool' %}">&#915; &#8594; Z and S<sub>11</sub></a></li>
-                  <li><a tabindex="-1" href="{% url 'ZtoR_tool' %}">Z &#8594; &#915; and S<sub>11</sub></a></li>
-                  <li><a tabindex="-1" href="{% url 'SWRtoR_tool' %}">SWR &#8594; |&#915;| and S<sub>11</sub></a></li>
-                </ul>
-              </li>
-              <li><a tabindex="-1" href="{% url 'rf_power_converter_tool' %}">RF Power Unit Converter</a></li>
-              <li><a tabindex="-1" href="{% url 'CapRes_Catalog' %}">Parallel/Series resistors and capacitors</a></li>
-              <li><a tabindex="-1" href="{% url 'bw_octaves_tool' %}">Octave Calculator</a></li>
-            </ul>
-          </li>
-          <!-- System Design -->
-          <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">System Design<span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a tabindex="-1" href="{% url 'ipn_nf_diagram' %}">IP<sub>n</sub> Diagram</a></li>
-              <li class="dropdown-submenu">
-                <a class="test" tabindex="-1" href="{% url 'image_frequency_catalog' %}">Frequency Planning<span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">Image Frequency</a></li>
-                  <li><a tabindex="-1" href="{% url 'half_IF_tool' %}">Half-IF Spurious</a></li>
-                  <li><a tabindex="-1" href="{% url 'Secondary_image_tool' %}">Secondary Image</a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li><a href="#">Circuit Design</a></li>
+  </nav>
 
-          <!-- Docs -->
-          <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Docs<span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <!-- Calculators -->
-              <li class="dropdown-submenu">
-                <a class="test" tabindex="-1" href="{% url 'image_frequency_catalog' %}">Calculators<span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">Reflection Coefficient</a></li>
-                  <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">RF Power Unit Conversion</a></li>
-                  <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">BW in Octaves</a></li>
-                  <li class="dropdown-submenu">
-                    <a class="test" href="#">Series & Parallel Calculator <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                      <li class="dropdown-submenu">
-                        <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">Parallel Resistors</a></li>
-                        <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">Series Capacitors</a></li>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
 
-              <!-- System Design -->
-              <li class="dropdown-submenu">
-                <a class="test" tabindex="-1" href="{% url 'image_frequency_catalog' %}">System Design Tools<span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">IP<sub>n</sub> calculation</a></li>
-                  <li class="dropdown-submenu">
-                    <a class="test" href="#">Frequency Planning <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                      <li class="dropdown-submenu">
-                        <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">Image Frequency Notes</a></li>
-                        <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">Second Image</a></li>
-                        <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">Half-IF Spurious</a></li>
-                      </li>
-                    </ul>
-                    <a class="test" href="#">Image Rejection Architectures <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                      <li class="dropdown-submenu">
-                        <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">Hartley IR Mixer</a></li>
-                        <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">Weaver IR Mixer</a></li>
-                        <li><a tabindex="-1" href="{% url 'image_frequency_planning' %}">SSB Mixer</a></li>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
 
-            </ul>
-          </li>
-        </ul>
-        
-      </div>
-    </nav>
-    </div>
+      <script>
+        $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
+          if (!$(this).next().hasClass('show')) {
+            $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+          }
+          var $subMenu = $(this).next(".dropdown-menu");
+          $subMenu.toggleClass('show');
 
-    <script>
-      $(document).ready(function(){
-        $('.dropdown-submenu a.test').on("click", function(e){
-          $(this).next('ul').toggle();
-          e.stopPropagation();
-          e.preventDefault();
+
+          $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+            $('.dropdown-submenu .show').removeClass("show");
+          });
+
+
+          return false;
         });
-      });
       </script>
 
     {% block content %}{% endblock %}

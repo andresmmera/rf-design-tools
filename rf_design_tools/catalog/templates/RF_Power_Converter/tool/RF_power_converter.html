@@ -2,15 +2,15 @@
 {% load static %}
 {% block content %}
 
-<div class="container-fluid" style="border:5px solid #cecece;">
+<div class="container-fluid" >
     <div class="row">
-        <div class="mx-auto">
+        <div class="col-sm-4">
           <h2 class="tool-name">RF Power Converter</h2>
         </div>
     </div>
 
     <div class="row">
-      <div class="col-sm-4">
+      <div class="col-md-auto">
         <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
           <!-- Instantiate the form -->
           <form method="POST"> 
@@ -22,7 +22,7 @@
                   <th>Value</th>
                 </tr>
               </thead>
-              <tbody>f
+              <tbody>
                 <tr> <!--Power -->
                   <td>
                     {{form.P.label}}
@@ -57,23 +57,23 @@
         </div>
       </div>
 
-      <div class= "col-sm-4 my-auto">
+      <!-- <div class= "col-sm-4 my-auto">
         <div class="mx-auto" align="center">
           <input type="image" src="{% static 'images/general/arrow.png' %}" value = "Calculate" style="width:50%">
         </div>
-    </div>
+    </div> -->
     </form>
 
           
-        <div class="col-sm-4">
+        <div class="col-md-auto">
             <div class="mx-auto">
               <!-- Present the result -->
               <div class="card-body">
                 {% if Pnew != None %}
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-light table-striped">
                         <thead>
                           <tr>
-                            <th colspan="2"><h5 align="center">Results</h5></th>
+                            <th colspan="2"><h5 align="center">Result</h5></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -83,10 +83,10 @@
                         </tbody>
                     </table>
                 {% else %}
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-light table-striped">
                       <thead>
                         <tr>
-                          <th colspan="2"><h5 align="center">Results</h5></th>
+                          <th colspan="2"><h5 align="center">Result</h5></th>
                         </tr>
                       </thead>
                       <tbody>

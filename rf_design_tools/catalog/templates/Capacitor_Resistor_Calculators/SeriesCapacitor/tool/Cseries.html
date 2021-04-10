@@ -4,15 +4,15 @@
 
   <!-- Reflection coefficient to impedance -->
 
-  <div class="container-fluid" style="border:5px solid #cecece;">
+  <div class="container-fluid">
     <div class="row">
-        <div class="mx-auto">
-          <h2 class="tool-name">Equivalent Capacitance of Two Series Capacitors</h2>
-        </div>
-    </div>
+      <div class="col-md-auto">
+        <h2 class="tool-name">Equivalent of Two Series Capacitors</h2>
+      </div>
+  </div>
 
     <div class="row">
-      <div class="col-sm-4">
+      <div class="col-md-auto">
       <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
         <!-- Instantiate the form -->
         <form method="POST"> 
@@ -50,23 +50,18 @@
               <a href="{% url 'cseries_docs' %}" class="btn btn-info" role="button">See docs</a>
             </div>
           </div>
+        </form>
       </div>
     </div>
+  
 
-    <div class= "col-sm-4 my-auto">
-      <div class="mx-auto" align="center">
-        <input type="image" src="{% static 'images/general/arrow.png' %}" value = "Calculate" style="width:50%">
-      </div>
-    </div>
-  </form>
-
-    <div class="col-sm-4">
+    <div class="col-md-auto">
       <div class="mx-auto">
             <!-- Present the result -->
               <div class="card-body">
                 {% if Ceq != None %}
                   {% if Ceq != "-1" and Ceq != "-2" %}
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-light table-bordered table-striped">
                         <thead>
                           <tr>
                             <th colspan="2"><h5 align="center">Result</h5></th>
@@ -87,7 +82,7 @@
                      {% endif %}
                   {% endif %}
                 {% else %}
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-light table-bordered table-striped">
                       <thead>
                         <tr>
                           <th colspan="2"><h5 align="center">Result</h5></th>

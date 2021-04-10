@@ -67,14 +67,14 @@
   }
   </style>
 
-  <div class="container-fluid" style="border:5px solid #cecece;">
+  <div class="container-fluid">
     <div class="row">
-        <div class="mx-auto">
+        <div class="col-md-auto">
           <h2 class="tool-name">Half-IF Spurious Rejection</h2>
         </div>
     </div>
     <div class="row">
-      <div class="col-xs-9 col-md-4" style="background-color:rgb(151, 176, 255); border: 30px solid white">
+      <div class="col-md-auto box" style="background-color:rgb(151, 176, 255)">
         <!-- Instantiate the form -->
         <form method="POST">
           {% csrf_token %}          
@@ -156,7 +156,7 @@
 
       </div>
 
-      <div class="col-xs-12 col-md-8" style="border: 10px">
+      <div class="col-md-auto box">
           <div class="row">
               <div class="col-xs-12 col-md-12" >
                   <div class="card shadow-sm">
@@ -171,10 +171,10 @@
           </div>
       <!-- Present the result -->
       {%if IIP2 != None%}
-      <div class="col-xs-12 col-md-6">
+      <div class="col-md-auto">
         <div class="card-body">
             
-            <table class="table table-bordered table-striped">
+            <table class="table table-light table-bordered table-striped">
               <thead>
                 <tr>
                   <th colspan="4"><h5 align="center">Results</h5></th>
@@ -203,9 +203,9 @@
           </table>
       </div>
       {% else %}
-      <div class="col-xs-12 col-md-6">
+      <div class="col-md-auto">
         <div class="card-body">
-               <table class="table table-bordered table-striped">
+               <table class="table table-light table-bordered table-striped">
                 <thead>
                   <tr>
                     <th colspan="4"><h5 align="center">Results</h5></th>
