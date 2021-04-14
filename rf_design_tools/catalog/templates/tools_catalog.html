@@ -121,6 +121,26 @@
             <div class="p-2"><a href="{% url 'image_frequency_docs' %}" class="btn btn-info" role="button">See docs</a></div>
           </div>
         </div>
+
+        <div class="col-xs-3 col-md-3 box" style="background-color:#ffffff">
+          <!-- SYSTEM BALANCE -->
+          
+          <!-- TOOL TITLE -->
+          <div class= "d-flex flex-row justify-content-center">
+            <a href="{% url 'system_balance_tool' %}"><h5 class="tool_title" style="margin-top: 10px">System Balance</h5></a>
+          </div>
+          
+          <!-- TOOL DESCRIPTION -->
+          <div class="d-flex flex-row justify-content-center"">
+            <p>Calculate the overall IP<sub>3</sub> and NF of a system</p>
+          </div>
+            
+          <!-- BUTTONS -->
+          <div class="d-flex flex-row justify-content-center">
+            <div class="p-2"><a href="{% url 'system_balance_tool' %}" class="btn btn-dark" role="button">Go!</a></div>
+            <div class="p-2"><a href="{% url 'image_frequency_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+          </div>
+        </div>
   
      </div>
 {% endblock %}

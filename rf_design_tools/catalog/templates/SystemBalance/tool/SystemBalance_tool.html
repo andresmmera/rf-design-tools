@@ -1,0 +1,156 @@
+{% extends "base_generic.html" %}
+<!-- Add Bokeh headers -->
+<head>
+  <link href="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.css" rel="stylesheet" type="text/css">
+  <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.css" rel="stylesheet" type="text/css">
+</head>
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-auto">
+          <h2 class="tool-name">System Balance</h2>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-auto box" style="background-color:rgb(151, 176, 255);">
+        <!-- Instantiate the form -->
+        <form method="POST">
+          {% csrf_token %}
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> <!-- Block Type -->
+                <td>
+                  Block Type:
+                </td>
+                <td>
+                  <select name="type" id="block_type">
+                    <option value="Active">Active</option>
+                    <option value="Passive">Passive</option>
+                  </select>
+                </td>
+              </tr>
+              <tr> <!-- Gain -->
+                <td>
+                  <label for="gain" id="gain_label">Gain (dB)</label>
+                </td>
+                <td>
+                  <input class="form-control" type="number" name="gain_input" id="gain_input" value="16">
+                </td>
+              </tr>
+              <tr> <!-- NF -->
+                <td>
+                  <label for="noise_figure" id="nf_label">NF (dB)</label>
+                </td>
+                <td>
+                  <input class="form-control" type="number" name="nf" id="nf_input" value="3">
+                </td>
+              </tr>
+              <tr> <!-- OIP3 -->
+                <td>
+                  <label for="oip3" id="oip3_label">OIP3 (dBm)</label>
+                </td>
+                <td>
+                  <input class="form-control" type="number" name="oip3" id="oip3_input" value="30">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="col-md-auto box" style="background-color:rgb(151, 176, 255);">
+            <div class="col-md-auto">
+            <input href="javascript:void(0);" id="add_button" class="btn btn-success" value="Add">
+            </div>
+            <div class="col-md-auto">
+            <input href="javascript:void(0);" id="remove_button" class="btn btn-danger" value="Remove Last">
+          </div>
+          </div>
+
+              <div class="row justify-content-center">
+                    <table class="table-light table-bordered table-striped">
+                    <thead style="text-align: center; vertical-align: middle;">
+                        <tr>
+                        <th>Item #</th>
+                        <th>Type</th>
+                        <th>Gain (dB)</th>
+                        <th>NF (dB)</th>
+                        <th>OIP3 (dBm)</th>
+                        </tr>
+                    </thead>
+                        <tr style="text-align: center; vertical-align: middle; height: 20px" id="system_table_0"><td></td><td></td><td></td><td></td><td></td></tr>
+                    </table>
+               </div>
+
+
+                    
+
+          <!-- BUTTONS -->
+          <div class="d-flex flex-row justify-content-center">
+            <div class="p-2">
+              <button type="button" id="send_to_django_button">Send to Django View</button>
+
+            </div>
+
+            <div class="p-2">
+              <a href="{% url 'ipn_nf_docs' %}" class="btn btn-info" role="button">See docs</a>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-auto box">
+        <div class="row">
+            <div class="col-xs-12 col-md-12" >
+                <div class="card shadow-sm">
+                    <div class="card-body" >
+                      <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.3.1.min.js" integrity="sha384-YF85VygJKMVnHE+lLv2AM93Vbstr0yo2TbIu5v8se5Rq3UQAUmcuh4aaJwNlpKwa" crossorigin="anonymous"></script>
+                      <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.3.1.min.js" integrity="sha384-KKuas3gevv3PvrlkyCMzffFeaMq5we/a2QsP5AUoS3mJ0jmaCL7jirFJN3GoE/lM" crossorigin="anonymous"></script>
+                      <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.3.1.min.js" integrity="sha384-MK/uFc3YT18pkvvXRl66tTHjP0/dxoSH2e/eiNMFIguKlun2+WVqaPTWmUy/zvh4" crossorigin="anonymous"></script>
+                      <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-api-2.3.1.min.js" integrity="sha384-jyWqZCuIw/BBpEFBT9+3kwaojU6Y/8TCPz7ZYtUbHVlUCwELcgX3qxx1dP1h12lB" crossorigin="anonymous"></script>
+    
+                      
+                      <div id="bokeh_plot">
+                        <script src="{%  static '/js/SystemBalance.js' %}"></script>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+<script>
+                
+</script>
+
+<!-- SUBMIT JAVASCRIPT DATA TO DJANGO -->
+<script type="text/javascript">
+  $(document).ready(function() {
+      var url = 5;
+      $("#send_to_django_button").click(function() {
+          $.ajax({
+              url: "{% url 'system_balance_tool' %}" ,
+              type: "POST",
+              dataType: "json",
+              data: {
+                  url: url,
+                  csrfmiddlewaretoken: '{{ csrf_token }}'
+                  },
+              success : function(json) {
+                  alert("Successfully sent the URL to Django");
+              },
+              error : function(xhr,errmsg,err) {
+                  alert("Esto fue mal... Could not send URL to Django. Error: " + xhr.status + ": " + xhr.responseText);
+              }
+          });
+      });
+  });
+</script>
+
+{% endblock %}
+

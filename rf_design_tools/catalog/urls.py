@@ -33,6 +33,8 @@ from catalog.views import HartleyImageRejectionMixersDocs
 from catalog.views import WeaverImageRejectionMixersDocs
 from catalog.views import SSBMixerNotes
 
+from catalog.views import SystemBalanceView
+
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
     
@@ -79,4 +81,8 @@ urlpatterns = [
     path('tool/frequency_planning/image_planning/docs/hartley_irm', HartleyImageRejectionMixersDocs, name='hartley_irm_docs'),
     path('tool/frequency_planning/image_planning/docs/ssb_mixer', SSBMixerNotes, name='ssb_mixer_notes'),
     path('tool/frequency_planning/image_planning/docs/weaver_irm', WeaverImageRejectionMixersDocs, name='weaver_irm_docs'),
+
+    #################################################################################
+    # SYSTEM BALANCE
+    path('tool/system_balance', SystemBalanceView, name='system_balance_tool'),
 ]

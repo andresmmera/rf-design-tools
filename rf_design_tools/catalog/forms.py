@@ -265,3 +265,9 @@ class SecondaryImageForm(forms.Form):
         self.fields['f_IF1'].widget.attrs['min'] = 0
         self.fields['f_IF2'].widget.attrs['min'] = 0
         self.fields['f_RF'].widget.attrs['min'] = 0
+
+class SystemBalanceForm(forms.Form):
+    # System Balance Calculation
+    G = forms.CharField()
+    IP3 = forms.CharField()
+    NF = forms.CharField()
