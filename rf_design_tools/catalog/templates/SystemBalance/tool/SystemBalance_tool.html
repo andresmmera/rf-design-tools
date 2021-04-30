@@ -8,92 +8,90 @@
 
 {% block content %}
 <div class="container-fluid">
+    <!-- Title -->
     <div class="row">
         <div class="col-md-auto">
           <h2 class="tool-name">System Balance</h2>
         </div>
     </div>
+
+    
     <div class="row">
-      <div class="col-md-auto box" style="background-color:rgb(151, 176, 255);">
+      <div class="col-md-5" style="background-color:rgb(151, 176, 255);overflow: scroll;">
         <!-- Instantiate the form -->
-        <form method="POST">
           {% csrf_token %}
-          <table class="table table-bordered table-striped">
-            <thead>
+          <h5 align="center"> System Blocks</h5>
+
+          <table id="table1" class="table table-hover table-bordered ">
+            
+            <thead style="text-align: center; vertical-align: middle;">
               <tr>
-                <th>Parameter</th>
-                <th>Value</th>
+                <th>Item #</th>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Gain (dB)</th>
+                <th>NF (dB)</th>
+                <th>OIP3 (dBm)</th>
+                <th colspan="2">Action</th>
               </tr>
             </thead>
-            <tbody>
-              <tr> <!-- Block Type -->
-                <td>
-                  Block Type:
-                </td>
-                <td>
-                  <select name="type" id="block_type">
-                    <option value="Active">Active</option>
-                    <option value="Passive">Passive</option>
-                  </select>
-                </td>
-              </tr>
-              <tr> <!-- Gain -->
-                <td>
-                  <label for="gain" id="gain_label">Gain (dB)</label>
-                </td>
-                <td>
-                  <input class="form-control" type="number" name="gain_input" id="gain_input" value="16">
-                </td>
-              </tr>
-              <tr> <!-- NF -->
-                <td>
-                  <label for="noise_figure" id="nf_label">NF (dB)</label>
-                </td>
-                <td>
-                  <input class="form-control" type="number" name="nf" id="nf_input" value="3">
-                </td>
-              </tr>
-              <tr> <!-- OIP3 -->
-                <td>
-                  <label for="oip3" id="oip3_label">OIP3 (dBm)</label>
-                </td>
-                <td>
-                  <input class="form-control" type="number" name="oip3" id="oip3_input" value="30">
-                </td>
-              </tr>
-            </tbody>
+            <tr>
+              <td class="tbl_id">1</td>
+                  <td class="ID_input"><input type="text" id="ID[1]" value = "Amplifier" size="8" onchange="ob_adRows.update(this)"/></td>
+                  <td class="block_input">
+                    <select id="block_type[1]" onclick="ob_adRows.ChangeBlockType(this)">
+                      <option selected="selected" value="Active">Active</option>
+                      <option value="Passive">Passive</option>
+                    </select>
+                  </td>
+                  <td class="gain_input"><input type="number" id="gain[1]" value = "10" style="width: 3em" onchange="ob_adRows.update(this)"/></td>
+                  <td class="nf_input"><input type="number" id="nf[1]" value = "3" style="width: 3em" onchange="ob_adRows.update(this)"/></td>
+                  <td class="oip3_input"><input type="number" id="oip3[1]" value = "30" style="width: 3em" onchange="ob_adRows.update(this)"/></td>
+              <td class="remove_button"><input type="button" value="-" id="remove_button1" class="btn btn-danger" onclick="ob_adRows.delRow(this)"/></td>
+              <td class="add_button"><input type="button" value="+" id="add_button1" class="btn btn-success" onclick="ob_adRows.addRow(this)"/></td>
+            </tr>
           </table>
-          <div class="col-md-auto box" style="background-color:rgb(151, 176, 255);">
-            <div class="col-md-auto">
-            <input href="javascript:void(0);" id="add_button" class="btn btn-success" value="Add">
-            </div>
-            <div class="col-md-auto">
-            <input href="javascript:void(0);" id="remove_button" class="btn btn-danger" value="Remove Last">
-          </div>
-          </div>
-
-              <div class="row justify-content-center">
-                    <table class="table-light table-bordered table-striped">
-                    <thead style="text-align: center; vertical-align: middle;">
-                        <tr>
-                        <th>Item #</th>
-                        <th>Type</th>
-                        <th>Gain (dB)</th>
-                        <th>NF (dB)</th>
-                        <th>OIP3 (dBm)</th>
-                        </tr>
-                    </thead>
-                        <tr style="text-align: center; vertical-align: middle; height: 20px" id="system_table_0"><td></td><td></td><td></td><td></td><td></td></tr>
-                    </table>
-               </div>
-
-
-                    
+        
+          <table class="table table-hover table-bordered" id="SystemParams">
+              <h5 align="center"> System Parameters</h5>
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr> 
+                  <!-- Minimum S/I -->
+                  <td>Minimum S/I (dB)</td>
+                  <td><input type="number" id="SImin" value = "35" style="width: 4em" onchange="ob_adRows.update(this)"/></td>
+                </tr>
+                <tr>
+                  <!-- Bandwidth -->
+                  <td>BW (MHz)</td>
+                  <td><input type="number" id="BW" value = "100" style="width: 4em" onchange="ob_adRows.update(this)"/></td>
+                </tr>
+                <tr>
+                  <!-- System Temperature -->
+                  <td>T (K)</td>
+                  <td><input type="number" id="T" value = "300" style="width: 4em" onchange="ob_adRows.update(this)"/></td>
+                </tr>
+                <tr>
+                  <!-- Frequency -->
+                  <td>Frequency (MHz)</td>
+                  <td><input type="number" id="freq" value = "500" style="width: 4em" onchange="ob_adRows.update(this)"/></td>
+                </tr>
+                <tr>
+                  <!-- System ID -->
+                  <td>System Name</td>
+                  <td><input type="text" id="system_name" value = "Prototype 1" size="8" onchange="ob_adRows.update(this)"/></td>
+                </tr>
+          </table>
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
             <div class="p-2">
-              <button type="button" id="send_to_django_button">Send to Django View</button>
+              <button type="button" onclick="ob_adRows.update(this)">Calculate</button>
 
             </div>
 
@@ -101,55 +99,416 @@
               <a href="{% url 'ipn_nf_docs' %}" class="btn btn-info" role="button">See docs</a>
             </div>
           </div>
-        </form>
       </div>
-      <div class="col-md-auto box">
-        <div class="row">
-            <div class="col-xs-12 col-md-12" >
-                <div class="card shadow-sm">
-                    <div class="card-body" >
-                      <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.3.1.min.js" integrity="sha384-YF85VygJKMVnHE+lLv2AM93Vbstr0yo2TbIu5v8se5Rq3UQAUmcuh4aaJwNlpKwa" crossorigin="anonymous"></script>
-                      <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.3.1.min.js" integrity="sha384-KKuas3gevv3PvrlkyCMzffFeaMq5we/a2QsP5AUoS3mJ0jmaCL7jirFJN3GoE/lM" crossorigin="anonymous"></script>
-                      <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.3.1.min.js" integrity="sha384-MK/uFc3YT18pkvvXRl66tTHjP0/dxoSH2e/eiNMFIguKlun2+WVqaPTWmUy/zvh4" crossorigin="anonymous"></script>
-                      <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-api-2.3.1.min.js" integrity="sha384-jyWqZCuIw/BBpEFBT9+3kwaojU6Y/8TCPz7ZYtUbHVlUCwELcgX3qxx1dP1h12lB" crossorigin="anonymous"></script>
-    
-                      
-                      <div id="bokeh_plot">
-                        <script src="{%  static '/js/SystemBalance.js' %}"></script>
-                      </div>
-                    </div>
-                </div>
-            </div>
+
+      
+      <div class="col-md-7">
+        <div class="row justify-content-md-center">
+          <script src="https://code.highcharts.com/highcharts.js"></script>
+          <div id="container" style="width: 800px"></div>
         </div>
+        <div class="row justify-content-md-center">
+          <table class="table table-light table-bordered table-striped" id="ResultsTable" style="width: 80%;">
+            <thead>
+              <tr>
+                <th colspan="2"><h5 align="center">Results</h5></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> 
+                <td>System Gain</td>
+                <td></td>
+              </tr>
+              <tr> 
+                <td>System NF</td>
+                <td></td>
+              </tr>
+              <tr> 
+                <td>System OIP<sub>3</sub></td>
+                <td> dBm</td>
+              </tr>
+              <tr> 
+                <td>Dynamic Range</td>
+                <td>dB</td>
+              </tr>
+              <tr> 
+                <td>Noise floor</td>
+                <td> dBm</td>
+              </tr>
+              <tr> 
+                <td>Minimum Detectable Signal</td>
+                <td> dBm</td>
+              </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
     </div>
-  </div>
+    
 
-<script>
-                
-</script>
+</div>
 
-<!-- SUBMIT JAVASCRIPT DATA TO DJANGO -->
+
 <script type="text/javascript">
-  $(document).ready(function() {
-      var url = 5;
-      $("#send_to_django_button").click(function() {
-          $.ajax({
-              url: "{% url 'system_balance_tool' %}" ,
-              type: "POST",
-              dataType: "json",
-              data: {
-                  url: url,
-                  csrfmiddlewaretoken: '{{ csrf_token }}'
-                  },
-              success : function(json) {
-                  alert("Successfully sent the URL to Django");
-              },
-              error : function(xhr,errmsg,err) {
-                  alert("Esto fue mal... Could not send URL to Django. Error: " + xhr.status + ": " + xhr.responseText);
-              }
-          });
-      });
-  });
+
+//Inspired by https://coursesweb.net/javascript/ 
+
+function adRowsTable(id){
+  var table = document.getElementById(id);
+  var me = this;
+
+  if(document.getElementById(id)){
+    var row1 = table.rows[1].outerHTML;
+
+    function plotChart(x, y1, y2, y3, title) {
+          $('#container').highcharts({
+            plotOptions: {
+		series: {
+			animation: false
+		}
+	},
+                title: {
+                          text: 'System Balance: ' + title
+                         },
+                xAxis: {
+                        categories: x,
+                        gridLineWidth: 1,
+                        },
+                yAxis: [{
+                  title: {
+                          text: 'Gain (dB), OIP3 (dBm)'
+                         },
+                        gridLineWidth: 1, 
+                        tickInterval: 5,
+                        tickPositioner: function(){
+                                                    var ticks = this.tickPositions;
+                                                    ticks.sort(function(a, b) {
+                                                     return a - b;
+                                                    });
+                                                  return ticks;
+                                                  }
+                                },
+                                {
+                  title: {
+                          text: 'NF (dB)'
+                         },
+                        gridLineWidth: 1,
+                        min: 0,
+                        tickInterval: 1,
+                        opposite: true,
+                        tickPositioner: function(){
+                                                    var ticks = this.tickPositions;
+                                                    ticks.sort(function(a, b) {
+                                                     return a - b;
+                                                    });
+                                                  return ticks;
+                                                  }
+                                },
+                        ],
+                                series: [{
+                                  name: 'Cumulative gain (dB)',
+                                  data: y1,
+                                  color: 'blue',
+                                  yAxis: 0
+                                },
+                                {
+                                  name: 'Cumulative Noise Figure (dB)',
+                                  data: y2,
+                                  color: 'red',
+                                  yAxis: 1
+                                },
+                                {
+                                  name: 'Cumulative OIP3 (dBm)',
+                                  data: y3,
+                                  color: 'green',
+                                  yAxis: 0
+                                }
+                              ]
+                            });
+                        };
+
+    function getID(string_id){
+      var index1 = string_id.indexOf("id=\"")
+      index1 += 4
+      var index2 = string_id.indexOf("\" ", index1)
+      return string_id.substr(index1, index2-index1)
+    }
+
+    function getValue(string_val){
+      var index1 = string_val.indexOf("value=\"")
+      index1 += 7
+      var index2 = string_val.indexOf("\" ", index1)
+      return string_val.substr(index1, index2-index1)
+    }
+
+    //adds index-id in cols with class .tbl_id
+    function setIds(add_after){
+      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
+      for(var i=0; i<tbl_id.length; i++) tbl_id[i].innerHTML = i+1;
+
+      
+
+      // Update IDs add_button
+      var add_button_id = document.querySelectorAll('#'+ id +' .add_button');
+      for(var i=0; i<tbl_id.length; i++){
+        var old_id = getID(add_button_id[i].innerHTML)
+        var tmp = add_button_id[i].innerHTML.replace(old_id, 'add_button'+ (i+1))
+        add_button_id[i].innerHTML = tmp
+      }
+
+      // Update IDs remove_button
+      var remove_button_id = document.querySelectorAll('#'+ id +' .remove_button');
+      for(var i=0; i<tbl_id.length; i++){
+        var old_id = getID(remove_button_id[i].innerHTML)
+        var tmp = remove_button_id[i].innerHTML.replace(old_id, 'remove_button'+ (i+1))
+        remove_button_id[i].innerHTML = tmp
+      }
+
+      // UPDATE NAME IDs
+      var ID_id = document.querySelectorAll('#'+ id +' .ID_input');
+      for(var i=0; i<tbl_id.length; i++){
+        var old_id = getID(ID_id[i].innerHTML)
+        var tmp = ID_id[i].innerHTML.replace(old_id, 'ID['+ (i+1) + ']')
+        ID_id[i].innerHTML = tmp
+      }
+
+      // UPDATE BLOCK TYPE IDs
+      var Block_id = document.querySelectorAll('#'+ id +' .block_input');
+      for(var i=0; i<tbl_id.length; i++){
+        var old_id = getID(Block_id[i].innerHTML)
+        var tmp = Block_id[i].innerHTML.replace(old_id, 'block_type['+ (i+1) + ']')
+        Block_id[i].innerHTML = tmp
+      }
+
+      // UPDATE GAIN IDs
+      var gain_id = document.querySelectorAll('#'+ id +' .gain_input');
+      for(var i=0; i<tbl_id.length; i++){
+        var old_id = getID(gain_id[i].innerHTML)
+        var tmp = gain_id[i].innerHTML.replace(old_id, 'gain['+ (i+1) + ']')
+        gain_id[i].innerHTML = tmp
+      }
+
+      // UPDATE NF IDs
+      var nf_id = document.querySelectorAll('#'+ id +' .nf_input');
+      for(var i=0; i<tbl_id.length; i++){
+        var old_id = getID(nf_id[i].innerHTML)
+        var tmp = nf_id[i].innerHTML.replace(old_id, 'nf['+ (i+1) + ']')
+        nf_id[i].innerHTML = tmp
+      }
+
+      // UPDATE GAIN IDs
+      var oip3_id = document.querySelectorAll('#'+ id +' .oip3_input');
+      for(var i=0; i<tbl_id.length; i++){
+        var old_id = getID(oip3_id[i].innerHTML)
+        var tmp = oip3_id[i].innerHTML.replace(old_id, 'oip3['+ (i+1) + ']')
+        oip3_id[i].innerHTML = tmp
+      }
+    }
+
+    me.ChangeBlockType = function(btn){
+           
+      var index1 = btn.id.indexOf("[")
+      var index2 = btn.id.indexOf("]")
+      var position = btn.id.substr(index1+1, index2-index1-1)
+
+      if (btn.value == "Active"){
+        document.getElementById("oip3[" + position +"]").disabled = false;
+        document.getElementById("nf[" + position +"]").disabled = false;
+      }
+      else { // Passive block
+        document.getElementById("oip3[" + position +"]").value = "100";
+        var gain = parseFloat(document.getElementById("gain[" + position +"]").value);
+        var nf = Math.abs(gain);
+        if (gain > 0) {
+          alert("Passive blocks cannot have gain greater than 0 dB")
+          document.getElementById("gain[" + position +"]").value = "-5";
+          document.getElementById("nf[" + position +"]").value = "5";
+        }else{
+          document.getElementById("nf[" + position +"]").value = nf.toString();
+        }
+        document.getElementById("oip3[" + position +"]").disabled = true;
+        document.getElementById("nf[" + position +"]").disabled = true;
+      }
+      me.update(btn)
+      
+    }
+
+    //add row after clicked row; receives clicked button in row
+    me.addRow = function(btn){
+      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
+      var add_after = parseInt(btn.id.replace('add_button', ''))
+      var new_row = row1.replaceAll("[1]", "["+ (add_after+1) + "]")
+      btn.parentNode.parentNode.insertAdjacentHTML('afterend', new_row)
+      setIds(add_after);
+      me.update(btn)
+    }
+
+    //delete clicked row; receives clicked button in row
+    me.delRow = function(btn){
+      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
+      if (tbl_id.length > 1)
+      {
+        btn.parentNode.parentNode.outerHTML ='';
+     //   alert('Remove: ' + btn.id)
+        setIds(-1);
+        me.update(btn)
+      }
+
+    }
+
+    //Update table content and recalculate the system balance
+     me.update = function(btn){
+      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
+      var ID_id = document.querySelectorAll('#'+ id +' .ID_input');
+      var gain_id = document.querySelectorAll('#'+ id +' .gain_input');
+      var nf_id = document.querySelectorAll('#'+ id +' .nf_input');
+      var oip3_id = document.querySelectorAll('#'+ id +' .oip3_input');
+      var type_id = document.querySelectorAll('#'+ id +' .block_input');
+      
+      var ID_array = [], gain = [], nf = [], oip3 = [], type = []// String
+      var gain_f = [], nf_f = [], oip3_f = [] // Float
+
+      var x = [] // x-axis
+
+      // Update values
+      for(var i=0; i<tbl_id.length; i++) {
+        // ID
+        var new_val = document.getElementById("ID["+(i+1)+"]").value;
+        var old_val = getValue(ID_id[i].innerHTML)
+        var tmp = ID_id[i].innerHTML.replace("value=\"" + old_val +"\"", 'value=\"' + new_val + '\"')
+        ID_id[i].innerHTML = tmp
+        ID_array.push(new_val)
+
+        // x axis definition
+        x.push('#'+(i+1) + ": " + ID_array[i])
+
+        // Block type
+        var new_val = document.getElementById("block_type["+(i+1)+"]").value;
+        var old_val = getValue(type_id[i].innerHTML)
+        var tmp = type_id[i].innerHTML.replace("selected=\"selected\"", '')
+        var index = tmp.indexOf(new_val)
+        tmp = tmp.substr(0, index-8) + " selected=\"selected\"" +tmp.substr(index-8)
+        type_id[i].innerHTML = tmp
+        type.push(new_val)
+
+        // Gain
+        var new_val = document.getElementById("gain["+(i+1)+"]").value;
+        var old_val = getValue(gain_id[i].innerHTML)
+        var tmp = gain_id[i].innerHTML.replace("value=\"" + old_val +"\"", 'value=\"' + new_val + '\"')
+        gain_id[i].innerHTML = tmp
+        gain.push(new_val)
+        gain_f.push(parseFloat(gain[i]));
+
+        // NF
+        var new_val = document.getElementById("nf["+(i+1)+"]").value;
+        var old_val = getValue(nf_id[i].innerHTML)
+
+        if (type[i] == 'Passive'){
+          // Check the gain is <= 0
+          if (gain > 0) {
+            alert("Passive blocks cannot have gain greater than 0 dB")
+            document.getElementById("gain[" + (i+1) +"]").value = "-5";
+            document.getElementById("nf[" + (i+1) +"]").value = "5";
+            gain[i] = -5;
+          }
+          // The NF of a passive block is -gain
+          new_val = -gain[i];
+        }else{
+          if (new_val < 0) {
+          alert("The Noise Figure cannot be lower than 0 dB")
+          new_val = 0;
+        }
+        }
+        var tmp = nf_id[i].innerHTML.replace("value=\"" + old_val +"\"", 'value=\"' + new_val + '\"')
+        nf_id[i].innerHTML = tmp
+        nf.push(new_val)
+        nf_f.push(parseFloat(nf[i]));
+
+        // OIP3
+        var new_val = document.getElementById("oip3["+(i+1)+"]").value;
+        var old_val = getValue(oip3_id[i].innerHTML)
+        var tmp = oip3_id[i].innerHTML.replace("value=\"" + old_val +"\"", 'value=\"' + new_val + '\"')
+        oip3_id[i].innerHTML = tmp
+        oip3.push(new_val)
+        oip3_f.push(parseFloat(oip3[i]));
+      }
+
+      // Cumulative gain calculation
+      var cum_gain_dB = []
+      cum_gain_dB[0] = parseFloat(gain[0])
+      for(var i=1; i<gain.length; i++) {
+        cum_gain_dB[i] = cum_gain_dB[i-1] + gain_f[i]
+      }
+      
+      // Cumulative noise figure calculation https://www.pasternack.com/t-calculator-noise-figure.aspx
+      // First of all, convert the vector to n.u.
+      var cum_gain_nu = [], nf_nu = [], oip3_nu = [], gain_nu = []
+      for(var i=0; i<nf_f.length; i++) {
+        nf_nu[i] = Math.pow(10, 0.1*nf_f[i]);
+        oip3_nu[i] = Math.pow(10, 0.1*(oip3_f[i] - 30)); //W
+        gain_nu[i] = Math.pow(10, 0.1*(gain_f[i])); //W
+        cum_gain_nu[i] = Math.pow(10, 0.1*cum_gain_dB[i]);
+        }
+
+      // Cummulative NF calculation
+      var cum_nf_dB = []
+      cum_nf_dB.push(10*Math.log10(nf_nu[0]))
+      for(var i=1; i<nf_nu.length; i++) {
+        var cum_nf = nf_nu[0];
+        for(var k=1; k<=i; k++) {
+          cum_nf += (nf_nu[k] - 1) / cum_gain_nu[k-1];
+        }
+        cum_nf_dB.push(10*Math.log10( cum_nf));
+      }
+
+      // Cummulative OIP3 calculation
+      var cum_oip3_dBm = [], cum_oip3_nu = [];
+      cum_oip3_nu.push(oip3_nu[0]);
+      cum_oip3_dBm.push(10*Math.log10(oip3_nu[0])+30)
+      for(var i=1; i<nf_nu.length; i++) {
+        var oip3_n = 1 / ( (1/(cum_oip3_nu[i-1] * gain_nu[i])) + (1/(oip3_nu[i])) );
+        cum_oip3_nu.push(oip3_n);
+        cum_oip3_dBm.push(10*Math.log10(oip3_n)+30 )
+      }
+
+      var system_name = document.getElementById("system_name").value;
+      // Update chart
+      plotChart(x, cum_gain_dB, cum_nf_dB, cum_oip3_dBm, system_name)
+
+      var system_gain = cum_gain_dB[cum_gain_dB.length - 1];
+      var system_oip3 = cum_oip3_dBm[cum_oip3_dBm.length - 1];
+      var system_nf = cum_nf_dB[cum_nf_dB.length - 1];
+
+      // Calculate Noise Floor
+      var BW = parseFloat(document.getElementById("BW").value);
+      var T = parseFloat(document.getElementById("T").value);
+      var k = 1.3806503e-23 // J/K
+      
+      var No = k*T*BW*Math.pow(10, .1*(system_nf+system_gain)) // W
+      var No_dBm = 10*Math.log10(No) + 30; // dBm
+
+      // Dynamic Range Calculation
+      var IIP3 = system_oip3 - system_gain;
+      var SImin = parseFloat(document.getElementById("SImin").value)
+      var Pin_Upper_Limit = (SImin - (2)*IIP3)/(-2);
+      var DR = Pin_Upper_Limit - No_dBm;
+
+      // Update table
+      var ResultsTable = document.getElementById("ResultsTable");
+      ResultsTable.rows[1].cells[1].textContent = system_gain.toFixed(2) + " dB"; // System Gain
+      ResultsTable.rows[2].cells[1].textContent = system_nf.toFixed(2) + " dB"; // System Noise Figure
+      ResultsTable.rows[3].cells[1].textContent = system_oip3.toFixed(2) + " dBm"; // System OIP3
+      ResultsTable.rows[4].cells[1].textContent = DR.toFixed(2) + " dB"; // System Dynamic Range
+      ResultsTable.rows[5].cells[1].textContent = No_dBm.toFixed(2) + " dBm"; // Noise Floor
+      ResultsTable.rows[6].cells[1].textContent = (No_dBm + SImin).toFixed(2) + " dBm"; // MDS
+    }
+  }
+}
+//create object of adRowsTable(), pass the table id
+var ob_adRows = new adRowsTable('table1');
+ob_adRows.update()
+
 </script>
 
 {% endblock %}
