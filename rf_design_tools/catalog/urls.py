@@ -34,6 +34,7 @@ from catalog.views import WeaverImageRejectionMixersDocs
 from catalog.views import SSBMixerNotes
 
 from catalog.views import SystemBalanceView
+from catalog.views import SystemBalanceDocs
 
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
@@ -85,4 +86,5 @@ urlpatterns = [
     #################################################################################
     # SYSTEM BALANCE
     path('tool/system_balance', SystemBalanceView, name='system_balance_tool'),
+    path('tool/system_balance/docs', SystemBalanceDocs, name='system_balance_docs'),
 ]

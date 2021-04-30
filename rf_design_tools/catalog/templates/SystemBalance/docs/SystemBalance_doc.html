@@ -1,0 +1,102 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="container-fluid">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.4cm 0.5cm; vertical-align: middle;">System Balance</h1>
+        </div>
+    
+        <div class="col-6 align-self-center text-right">
+            <div class=”card card-inverse card-danger”>
+                <a href="{% url 'system_balance_tool' %}" class="btn btn-dark" role="button">System Balance Tool</a>
+            </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>In order to verify that the system requirements are met, it is necessary to calculate the gain, NF and OIP3 budget. In this sense, having the specifications of
+            each system block, it is possible to calculate the cascaded system parameters.</p> 
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <strong><font color="red">It is important to note that this calculation is only valid for uniteral blocks matched to the system impedance.</font></strong>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>Cascaded Gain</h5>
+    </div>
+
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>Provided that each block is matched, the system gain is equal to the product of the blocks' gain in natural units (the sum in dB):</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ G_{system} = { \prod_{i=1}^{n} g_i^{(n.u.)}} = { \sum_{i=1}^{n} G_i^{(dB)}} \tag{1} $$</p>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>Noise Figure</h5>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>The following equation relates the system noise figure with the NF of each block:</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ NF_{system} = NF_1 + { \sum_{i=2}^{n} \frac {NF_i^{(n.u.)}} {\prod_{k = 1}^{i-1} g_{k}^{n.u.}}} \tag{2} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>It is important to note that the insertion loss of any passive block before the first stage is directly added to the system NF. Consequently, 
+            the system designer must minimize loss at the input.</p>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>OIP3</h5>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>The cascaded OIP3 depends on the phase of the intermodulation products. In general, the designer should consider the case where the intermodulation products
+            are in-phase since the IMD will be maximum. 
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ OIP3_{system} = \frac{1}{\frac{1}{g_{n} · OIP3_{n-1}} + \frac{1}{OIP3_n}}\tag{3} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>As shown in Eq. (3), the system OIP3 is limitted by the block with the highest OIP3, but it may be lower if the PA is not properly driven. Also, it is important to Notes
+            that, despite the fact that passive blocks have a very high IP3, their insertion loss reduces the available IP3 at the output.
+        </p>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>Summary</h5>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <ul style="list-style-type: circle">
+            <li>Avoid lossy blocks at the input since it adds up to the system NF.</li>
+            <li>Avoid lossy blocks at the output since it reduces the system OIP3</li>
+            <li>If lossy interstage blocks are used, ensure that the last amplifier is properly driven, otherwise the system may exhibit less OIP3 than that specified by the PA.</li>
+          </ul>
+    </div>
+   
+    <div class="col-6 align-self-right">
+        <h5>References</h5>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>[1] William Egan, Practical RF System Design. John Wiley and Sons, 2003. ISBN 0-471-20023-9</p>
+        <p>[2] P. Vizmuller, RF design guide: systems, circuits, and equations. Boston u.a.: Artech House, 1995.</p>
+    </div>
+    
+  </div> 
+{% endblock %}
