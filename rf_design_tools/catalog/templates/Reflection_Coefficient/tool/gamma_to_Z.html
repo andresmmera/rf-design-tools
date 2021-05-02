@@ -2,6 +2,10 @@
 {% load static %}
 {% block content %}
 
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
+
+</head>
   <!-- Reflection coefficient to impedance -->
 
   <div class="container-fluid">
@@ -13,60 +17,64 @@
 
     <div class="row">
       <div class="col-md-auto">
-      <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
-        <!-- Instantiate the form -->
-        <form method="POST"> 
-          {% csrf_token %}          
-          <table class="table table-bordered table-hover">
-            <thead>
-              <tr>
-                <th>Parameter</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr> <!--gamma magnitude -->
-                <td>
-                  {{form_RtoZ.gamma_mag.label}}
-                </td>
-                <td>{{form_RtoZ.gamma_mag}}</td>
-              </tr>
-              <tr> <!--gamma angle -->
-                <td>
-                  {{form_RtoZ.gamma_ang.label}}
-                </td>
-                <td>{{form_RtoZ.gamma_ang}}</td>
-              </tr>
-              <tr> <!--Z0 -->
-                <td>
-                  {{form_RtoZ.Z0.label}}
-                </td>
-                <td>{{form_RtoZ.Z0}}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
+          <!-- Instantiate the form -->
+          <form method="POST"> 
+            {% csrf_token %}          
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr> <!--gamma magnitude -->
+                  <td>
+                    |&Gamma;|
+                  </td>
+                  <td>
+                    <input type="number" id="mag_gamma" step = '0.1' min='0' value="0.2" style="width: 5em" onchange="updateTable()">
+                  </td>
+                </tr>
+                <tr> <!--gamma angle -->
+                  <td>
+                    &angle; &Gamma;
+                  </td>
+                  <td>
+                    <input type="number" id="ang_gamma" value="15" style="width: 5em" onchange="updateTable()">
+                  </td>
+                </tr>
+                <tr> <!--Z0 -->
+                  <td>
+                    Z0
+                  </td>
+                  <td>
+                    <input type="number" id="Z0" value="50" style="width: 5em" onchange="updateTable()">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-          <!-- BUTTONS -->
-          <div class="d-flex flex-row justify-content-center">
-            <div class="p-2">
-              <input type = "submit" value = "Calculate">
-            </div>
+            <!-- BUTTONS -->
+            <div class="d-flex flex-row justify-content-center">
+              <div class="p-2">
+                <input type = "button" value = "Calculate" onclick="updateTable()">
+              </div>
 
-            <div class="p-2">
-              <a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a>
+              <div class="p-2">
+                <a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
   
-
-    <div class="col-md-auto">
-      <div class="mx-auto">
-            <!-- Present the result -->
-              <div class="card-body">
-                {% if ZL != None %}
-                    <table class="table table-bordered table-light table-striped">
+      <div class="col-md-auto">
+        <div class="mx-auto">
+              <!-- Present the result -->
+                <div class="card-body">
+                      <table class="table table-bordered table-light table-striped" id="ResultsTable">
                         <thead>
                           <tr>
                             <th colspan="2"><h5 align="center">Results</h5></th>
@@ -75,53 +83,84 @@
                         <tbody>
                           <tr> 
                             <td>Z<sub>L</sub></td>
-                            <td align="center">{{ZL}} &#937;</td>
+                            <td align="center">73.44 + j 7.92 &#937;</td>
                           </tr>
-                          <tr>
+                          <tr> 
                             <td>SWR</td>
-                            {% if SWR == 1e6 %}
-                              <td align="center">&#8734;</td>
-                            {%else%}
-                              <td align="center">{{SWR}}</td>
-                            {% endif %}
+                            <td align="center"> 1.5</td>
                           </tr>
-                            <tr> 
-                              <td>S<sub>11</sub></td>
-                              {% if S11 == -1e3 %}
-                                <td align="center">-&#8734; dB</td>
-                              {%else%}
-                                <td align="center">{{S11}} dB</td>
-                              {% endif %}
-                            </tr>
+                          <tr> 
+                            <td>S<sub>11</sub></td>
+                            <td align="center">-13.98 dB</td>
+                          </tr>
                         </tbody>
-                    </table>
-                {% else %}
-                    <table class="table table-bordered table-light table-striped">
-                      <thead>
-                        <tr>
-                          <th colspan="2"><h5 align="center">Results</h5></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr> 
-                          <td>Z<sub>L</sub></td>
-                          <td align="center">73.44 + j 7.92 &#937;</td>
-                        </tr>
-                        <tr> 
-                          <td>SWR</td>
-                          <td align="center"> 1.5</td>
-                        </tr>
-                        <tr> 
-                          <td>S<sub>11</sub></td>
-                          <td align="center">-13.98 dB</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                {% endif %}
-              </div>
-            </div>
-    </div>
+                      </table>
+                </div>
+        </div>
       </div>
+
+    </div>
   </div>
+
+  <script type="text/javascript">
+
+    function updateTable(){
+      // Get data
+      var gamma_mag = parseFloat(document.getElementById("mag_gamma").value)
+      var gamma_ang = parseFloat(document.getElementById("ang_gamma").value)
+      var Z0 = parseFloat(document.getElementById("Z0").value)
+     
+      // Calculations
+      var gamma_real = math.multiply(gamma_mag, math.cos(math.multiply((math.pi/180),gamma_ang)))
+      var gamma_imag = math.multiply(gamma_mag, math.sin(math.multiply((math.pi/180),gamma_ang)))
+      const gamma = math.complex(gamma_real, gamma_imag)
+
+      var S11=0
+      if (gamma_mag < 1e-3){
+        S11 = '-\u221E'
+      }
+      else{
+        S11 = 20*Math.log10(gamma_mag).toFixed(2) + " dB";
+      }
+
+      var num = math.add(math.complex(1,0), gamma)
+      var den = math.add(math.complex(1,0), math.multiply(math.complex(-1, 0), gamma))
+      var ZL = math.multiply(Z0, math.divide(num, den))
+      var ZLR = math.re(ZL)
+      var ZLI = math.im(ZL)
+
+      if (gamma_mag == 1){
+        SWR = '\u221E'
+      }
+      else{
+        SWR = math.divide(math.add(math.complex(1,0), gamma_mag), math.add(math.complex(1, 0), math.multiply(math.complex(-1, 0), gamma_mag)))
+        SWR = math.re(SWR).toFixed(2)
+      }
+      var result = ""
+      if (ZLI > 0){
+        result = ZLR.toFixed(2) + ' + j' + ZLI.toFixed(2)
+      }
+      if (ZLI < 0){
+        result = ZLR.toFixed(2) + ' - j' + ZLI.toFixed(2)
+      }
+      if (math.abs(ZLI) < 1e-3){
+        result = ZLR.toFixed(2)
+      }
+      if ((math.abs(ZLR) < 1e-3) && (ZLI > 0)){
+        result = 'j' + ZLI.toFixed(2)
+      }
+      if ((math.abs(ZLR) < 1e-3) && (ZLI < 0)){
+        result = '-j' + ZLI.toFixed(2)
+      }
+                
+      // Update table
+      var ResultsTable = document.getElementById("ResultsTable");
+      ResultsTable.rows[1].cells[1].textContent = result +" \u03A9"; // Impedance
+      ResultsTable.rows[2].cells[1].textContent = SWR; // SWR
+      ResultsTable.rows[3].cells[1].textContent = S11; // S11
+    }
+    
+    </script>
+
 
 {% endblock %}

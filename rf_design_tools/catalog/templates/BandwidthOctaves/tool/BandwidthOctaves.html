@@ -2,8 +2,6 @@
 {% load static %}
 {% block content %}
 
-  <!-- Reflection coefficient to impedance -->
-
   <div class="container-fluid">
     <div class="row">
         <div class="col-md-auto">
@@ -13,99 +11,100 @@
 
     <div class="row">
       <div class="col-md-auto">
-      <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
-        <!-- Instantiate the form -->
-        <form method="POST"> 
-          {% csrf_token %}          
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>Parameter</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr> <!--f1 -->
-                <td>
-                  {{form_bw_oct.f1.label}}
-                </td>
-                <td>{{form_bw_oct.f1}}</td>
-              </tr>
-              <tr> <!--f2 -->
-                <td>
-                  {{form_bw_oct.f2.label}}
-                </td>
-                <td>{{form_bw_oct.f2}}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
+          <!-- Instantiate the form -->
+          <form method="POST"> 
+            {% csrf_token %}          
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr> <!--f1 -->
+                  <td>
+                    <p>f<sub>1</sub> (MHz)</p>
+                  </td>
+                  <td>
+                    <input type="number" id="f1" min="0" value="54" style="width: 5em" onchange="updateTable()">
+                  </td>
+                </tr>
+                <tr> <!--f2 -->
+                  <td>
+                    <p>f<sub>2</sub> (MHz)</p>
+                  </td>
+                  <td>
+                    <input type="number" id="f2" min="0" value="1002" style="width: 5em" onchange="updateTable()">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-          <!-- BUTTONS -->
-          <div class="d-flex flex-row justify-content-center">
-            <div class="p-2">
-              <input type = "submit" value = "Calculate">
+            <!-- BUTTONS -->
+            <div class="d-flex flex-row justify-content-center">
+              <div class="p-2">
+                <input type = "button" value = "Calculate" onclick="updateTable()">
+              </div>
+
+              <div class="p-2">
+                <a href="{% url 'bw_octaves_docs' %}" class="btn btn-info" role="button">See docs</a>
+              </div>
             </div>
 
-            <div class="p-2">
-              <a href="{% url 'bw_octaves_docs' %}" class="btn btn-info" role="button">See docs</a>
-            </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
 
+      <div class="col-md-auto">
+        <div class="mx-auto">
+                  <div class="card-body">
+                    <table class="table table-bordered table-light table-striped" id="ResultsTable">
+                      <thead>
+                          <tr>
+                            <th colspan="2"><h5 align="center">Results</h5></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr> 
+                            <td>BW<sub>octaves</sub></td>
+                            <td>4.2</td>
+                          </tr>
+                          <tr> 
+                            <td>Q</td>
+                            <td>1.1</td>
+                          </tr>
+                        </tbody>
+                      <table>
+                  </div>
+        </div>
+      </div>
 
-
-    <div class="col-md-auto">
-      <div class="mx-auto">
-             <!-- Present the result -->
-             {%if BW_OCT != None%}
-             <div class="col-xs-12 col-md-6">
-               <div class="card-body">
-                   
-                   <table class="table table-light table-bordered table-striped">
-                     <thead>
-                       <tr>
-                         <th colspan="2"><h5 align="center">Result</h5></th>
-                       </tr>
-                     </thead>
-                     <tbody>
-                       <tr> 
-                         <td>BW<sub>octaves</sub></td>
-                         <td>{{BW_OCT}}</td>
-                       </tr>
-                       <tr> 
-                         <td>Q</td>
-                         <td>{{Q}}</td>
-                       </tr>
-                   </tbody>
-                 </table>
-             </div>
-             {% else %}
-             <div class="col-xs-9 col-md-4">
-               <div class="card-body">
-                     <table class="table table-light table-bordered table-striped">
-                       <thead>
-                         <tr>
-                           <th colspan="2"><h5 align="center">Results</h5></th>
-                         </tr>
-                       </thead>
-                       <tbody>
-                         <tr> 
-                           <td>BW<sub>octaves</sub></td>
-                           <td>4.2</td>
-                         </tr>
-                         <tr> 
-                           <td>Q</td>
-                           <td>1.1</td>
-                         </tr>
-                       </tbody>
-                     <table>
-                 </div>
-             </div>
-           {%endif%}
-          </div>
     </div>
   </div>
 
+<script type="text/javascript">
+
+  function updateTable(){
+    // Get data
+    var f1 = parseFloat(document.getElementById("f1").value)
+    var f2 = parseFloat(document.getElementById("f2").value)
+   
+    // Calculations
+    var maxf = Math.max(f1, f2)
+    var minf = Math.min(f1, f2)
+    var BW_OCT = Math.log10(maxf/minf)/Math.log10(2)
+    var Q = (minf + maxf) / (maxf - minf)
+  
+    // Update table
+    var ResultsTable = document.getElementById("ResultsTable");
+    ResultsTable.rows[1].cells[1].textContent = BW_OCT.toFixed(2); // Bandwidth in octaves
+    ResultsTable.rows[2].cells[1].textContent = Q.toFixed(2); // Quality factor
+  }
+  
+  </script>
+
+
 {% endblock %}
+

@@ -1,28 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-# FORM 1.1 - Calculation of the load impedance given the reflection coefficient
-
-class ReflectionCoefficientToImpedanceForm(forms.Form):
-    
-    gamma_mag = forms.FloatField(initial=0.2, label='|\u0393|')
-    gamma_ang = forms.FloatField(initial=15, label='\u2220 \u0393 (\u00B0)')   
-    Z0 = forms.FloatField(initial=50, label='Z\u2080')
-
-    def __init__(self, *args, **kwargs):
-        super(ReflectionCoefficientToImpedanceForm, self).__init__(*args, **kwargs)
-        self.fields['Z0'].widget.attrs['min'] = 1e-6
-        self.fields['gamma_mag'].widget.attrs['min'] = 1e-6
-        self.fields['gamma_mag'].widget.attrs['max'] = 1
-
-        # Set the width of the boxes
-        box_width = 5
-        self.fields['gamma_mag'].widget.attrs['style'] = "width:75px"
-        self.fields['gamma_ang'].widget.attrs['style'] = "width:75px"
-        self.fields['Z0'].widget.attrs['style'] = "width:75px"
-
-
-
 # FORM 1.2 - Calculation of the reflection coefficient given the load impedance
 class ImpedanceToReflectionCoefficientForm(forms.Form):
     
@@ -130,24 +108,6 @@ class SeriesCapacitorForm(forms.Form):
         box_width = 5
         self.fields['C1'].widget.attrs['style'] = "width:75px"
         self.fields['C2'].widget.attrs['style'] = "width:75px"
-
-
-# FORM 5 - Calculate bandwidth in octaves
-
-class BandwidthOctavesForm(forms.Form):
-
-    f1 = forms.FloatField(initial=54,  label='f\u2081 (MHz)')
-    f2 = forms.FloatField(initial=1006,  label='f\u2082 (MHz)')
-
-    def __init__(self, *args, **kwargs):
-        super(BandwidthOctavesForm, self).__init__(*args, **kwargs)
-        # Set the width of the boxes
-        box_width = 5
-        self.fields['f1'].widget.attrs['style'] = "width:75px"
-        self.fields['f2'].widget.attrs['style'] = "width:75px"
-
-        self.fields['f1'].widget.attrs['min'] = 0.1
-        self.fields['f2'].widget.attrs['min'] = 0.1
 
 # FORM 6 - IPn and noisefloor diagram
 
