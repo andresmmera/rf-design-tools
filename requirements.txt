@@ -8,7 +8,6 @@ MarkupSafe==1.1.1
 numpy==1.19.0
 packaging==20.9
 Pillow==8.1.2
-pkg-resources==0.0.0
 pyparsing==2.4.7
 python-dateutil==2.8.1
 python-decouple==3.4
