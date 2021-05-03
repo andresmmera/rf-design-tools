@@ -1,0 +1,213 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
+
+</head>
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-auto">
+          <h2 class="tool-name">Wavelength Converter</h2>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-auto">
+        <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
+          <!-- Instantiate the form -->
+          <form method="POST"> 
+            {% csrf_token %}          
+            <table class="table table-bordered table-hover" id="InputTable">
+              <thead>
+                <tr>
+                  <td colspan="2">
+                    <select name="mode" id="mode" onchange="changeMode()">
+                      <option value="f2l">Frequency to Wavelength</option>
+                      <option value="l2f">Wavelength to Frequency</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <p id = "mode_id">Frequency (MHz) </p>
+                  </td>
+                  <td>
+                    <input type="number" id="freq" step = '0.1' min='0' value="1000" style="width: 5em" onchange="updateTable()">
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    &epsilon; <sub>r</sub>
+                  </td>
+                  <td>
+                    <input type="number" id="er" value="4.7" min='1' step='0.1' style="width: 5em" onchange="updateTable()">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- BUTTONS -->
+            <div class="d-flex flex-row justify-content-center">
+              <div class="p-2">
+                <input type = "button" value = "Calculate" onclick="updateTable()">
+              </div>
+
+              <div class="p-2">
+                <a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+  
+      <div class="col-md-auto">
+        <div class="mx-auto">
+              <!-- Present the result -->
+                <div class="card-body">
+                      <table class="table table-bordered table-light table-striped" id="ResultsTable">
+                        <thead>
+                          <tr>
+                            <th colspan="2"><h5 align="center">Result</h5></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr> 
+                            <td>&lambda;</td>
+                            <td align="center">13.83 cm</td>
+                          </tr>
+                          <tr> 
+                            <td>&lambda;/2</td>
+                            <td align="center">6.91 cm</td>
+                          </tr>
+                          <tr> 
+                            <td>&lambda;/4</td>
+                            <td align="center">3.46 cm</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="text/javascript">
+
+    function getLength(len){
+      var units = ' m';
+
+      if (len <= 0.01){
+          // Use mm
+          len *= 1e3;
+          units = ' mm'
+          
+      }else{
+        if (len < 1){
+          // Use cm
+          len *= 100;
+          units = ' cm';
+        }
+      }
+      return len.toFixed(2) + units
+    }    
+
+    function changeMode(){
+      var mode = document.getElementById("mode").value;
+
+      var mode_id = document.getElementById("mode_id");
+      var val = document.getElementById("freq");
+      var ResultsTable = document.getElementById("ResultsTable");
+
+      if (mode == "f2l"){
+        mode_id.innerHTML = "Frequency (MHz)";
+        val.value = 1000;
+      }else{
+        mode_id.innerHTML = "&lambda; (m)";
+        val.value = 0.5;
+      }
+      updateTable()
+    }
+
+    function updateTable(){
+      // Get data
+      var freq = parseFloat(document.getElementById("freq").value)
+      var er = parseFloat(document.getElementById("er").value)
+      const c0 = 299792458; // Speed of light (m/s)
+
+      // Check the data is valid
+      if (freq <= 0){
+        alert("Frequency must be positive")
+        document.getElementById("freq").value = 1000;
+        return
+      }
+      if (er < 1){
+        alert("\u03B5\u1D63 must be equal or greater than 1")
+        document.getElementById("er").value = 4.7;
+        return
+      }
+
+                   
+      // Update table
+      var ResultsTable = document.getElementById("ResultsTable");
+      var mode = document.getElementById("mode").value;
+
+      if (mode == "f2l"){
+        // Frequency to wavelength
+
+        // Calculations
+        var lambda = c0/(Math.sqrt(er)*(freq*1e6))
+
+        ResultsTable.rows[1].cells[0].innerHTML = "&lambda;";
+        ResultsTable.rows[1].cells[1].textContent = getLength(lambda);
+
+        if (ResultsTable.rows.length == 2){
+          // It is needed to add two more
+          var row = ResultsTable.insertRow(2);
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+          cell1.innerHTML = "&lambda;/2";
+          cell2.innerHTML = getLength(lambda/2);
+
+          var row = ResultsTable.insertRow(3);
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+          cell1.innerHTML = "&lambda;/4";
+          cell2.innerHTML = getLength(lambda/4);
+        }else{
+          ResultsTable.rows[2].cells[0].innerHTML = "&lambda;/2";
+          ResultsTable.rows[2].cells[1].textContent = getLength(lambda/2);
+          ResultsTable.rows[3].cells[0].innerHTML = "&lambda;/4";
+          ResultsTable.rows[3].cells[1].textContent = getLength(lambda/4);
+        }
+
+      }
+      else{
+        // Wavelength to frequency
+        // Calculations
+        var freq = 1e-6*c0/(Math.sqrt(er)*(freq))
+
+        ResultsTable.rows[1].cells[0].textContent = "Frequency";
+        ResultsTable.rows[1].cells[1].textContent = freq.toFixed(2) + " MHz";
+
+        if (ResultsTable.rows.length == 4){
+          ResultsTable.deleteRow(2)
+          ResultsTable.deleteRow(2)
+        }
+      }
+
+
+    }
+    
+    </script>
+
+
+{% endblock %}

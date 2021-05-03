@@ -19,6 +19,8 @@ from catalog.views import CseriesDocs
 from catalog.views import BWOctavesView
 from catalog.views import BWOctavesDocs
 
+from catalog.views import WavelengthFrequencyView
+
 from catalog.views import IPn_DiagramView
 from catalog.views import IPn_DiagramDocs
 
@@ -69,6 +71,11 @@ urlpatterns = [
     ## SERIES CAPACITOR EQUIVALENT
     path('tool/Capacitor_Resistor_Calculators/series_capacitor', CseriesView, name='cseries_tool'),
     path('tool/Capacitor_Resistor_Calculators/series_capacitor/docs', CseriesDocs, name='cseries_docs'),
+    #################################################################################
+
+    ## WAVELENGTH AND FREQUENCY CALCULATOR
+    path('tool/wavelength_and_frequency', WavelengthFrequencyView, name='wavelength_frequency_tool'),
+
     #################################################################################
 
     # FREQUENCY PLANNING TOOLS
