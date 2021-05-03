@@ -20,6 +20,7 @@ from catalog.views import BWOctavesView
 from catalog.views import BWOctavesDocs
 
 from catalog.views import WavelengthFrequencyView
+from catalog.views import WavelengthFrequencyDocs
 
 from catalog.views import IPn_DiagramView
 from catalog.views import IPn_DiagramDocs
@@ -75,6 +76,7 @@ urlpatterns = [
 
     ## WAVELENGTH AND FREQUENCY CALCULATOR
     path('tool/wavelength_and_frequency', WavelengthFrequencyView, name='wavelength_frequency_tool'),
+    path('tool/wavelength_and_frequency/docs', WavelengthFrequencyDocs, name='wavelength_frequency_docs'),
 
     #################################################################################
 

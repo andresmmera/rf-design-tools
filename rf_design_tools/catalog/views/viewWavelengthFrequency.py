@@ -9,7 +9,7 @@ def WavelengthFrequencyDocs(request):
     """View function for home page of site."""
 
     # Render the HTML template index.html with the data in the context variable
-    return render(request, 'Capacitor_Resistor_Calculators/SeriesCapacitor/docs/Cseries_doc.html')
+    return render(request, 'WavelengthCalculator/docs/WavelengthCalculator_doc.html')
 
 def WavelengthFrequencyView(request):
     return render(request, 'WavelengthCalculator/tool/WavelengthCalculator.html')
