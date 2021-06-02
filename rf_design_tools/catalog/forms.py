@@ -226,8 +226,60 @@ class SecondaryImageForm(forms.Form):
         self.fields['f_IF2'].widget.attrs['min'] = 0
         self.fields['f_RF'].widget.attrs['min'] = 0
 
-class SystemBalanceForm(forms.Form):
-    # System Balance Calculation
-    G = forms.CharField()
-    IP3 = forms.CharField()
-    NF = forms.CharField()
+
+
+FILTER_STRUCTURES =(
+("1", "LC Ladder"),
+("2", "Two"),
+("3", "Three"),
+("4", "Four"),
+("5", "Five"),
+)
+
+FIRST_SHUNT_SERIES =(
+    ("1", "First Shunt"),
+    ("2", "First Series"),
+)
+
+RESPONSE_TYPE =(
+    ("1", "Chebyshev"),
+    ("2", "Butterworth"),
+    ("3", "Elliptic"),
+)
+
+MASK_TYPE =(
+    ("1", "Lowpass"),
+    ("2", "Highpass"),
+    ("3", "Bandpass"),
+    ("4", "Bandstop"),
+)
+
+
+class FilterDesignForm(forms.Form):
+
+    Structure = forms.ChoiceField(choices = FILTER_STRUCTURES, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))
+    FirstElement = forms.ChoiceField(choices = FIRST_SHUNT_SERIES, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))
+    Response = forms.ChoiceField(choices = RESPONSE_TYPE, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))
+    Mask = forms.ChoiceField(choices = MASK_TYPE, widget = forms.Select(attrs = {'onchange' : "updateMask(this.value);"}))
+    Order = forms.IntegerField(initial=3, min_value=1, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+    Cutoff = forms.FloatField(initial=1000, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"})) # LPF and HPF
+    f1 = forms.FloatField(initial=200, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"})) # BPF and BSF
+    f2 = forms.FloatField(initial=400, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"})) # BPF and BSF
+    Ripple = forms.FloatField(initial=0.01, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+    ZS = forms.FloatField(initial=50, min_value=0.1, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+    f_start = forms.FloatField(initial=50, min_value=0.1, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+    f_stop = forms.FloatField(initial=1000, min_value=0.1, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+    n_points = forms.IntegerField(initial=201, min_value=50, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+   
+    def __init__(self, *args, **kwargs):
+        super(FilterDesignForm, self).__init__(*args, **kwargs)
+        # Set the width of the boxes
+        self.fields['Order'].widget.attrs['style'] = "width:75px"
+        self.fields['Cutoff'].widget.attrs['style'] = "width:75px" # LPF and HPF
+        self.fields['f1'].widget.attrs['style'] = "width:75px" # BPF and BSF
+        self.fields['f2'].widget.attrs['style'] = "width:75px" # BPF and BSF
+        self.fields['Ripple'].widget.attrs['style'] = "width:75px"
+        self.fields['ZS'].widget.attrs['style'] = "width:75px"
+        self.fields['f_start'].widget.attrs['style'] = "width:75px"
+        self.fields['f_stop'].widget.attrs['style'] = "width:75px"
+        self.fields['n_points'].widget.attrs['style'] = "width:75px"

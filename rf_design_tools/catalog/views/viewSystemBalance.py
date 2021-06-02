@@ -4,8 +4,6 @@ from django.http import HttpResponse
 from django.template import loader
 
 from catalog.models import Tool
-from catalog.forms import SystemBalanceForm
-
 
 from django.template.loader import render_to_string
 

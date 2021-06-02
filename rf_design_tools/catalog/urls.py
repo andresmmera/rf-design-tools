@@ -39,6 +39,8 @@ from catalog.views import SSBMixerNotes
 from catalog.views import SystemBalanceView
 from catalog.views import SystemBalanceDocs
 
+from catalog.views import FilterDesignToolView
+
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
     
@@ -96,4 +98,8 @@ urlpatterns = [
     # SYSTEM BALANCE
     path('tool/system_balance', SystemBalanceView, name='system_balance_tool'),
     path('tool/system_balance/docs', SystemBalanceDocs, name='system_balance_docs'),
+
+    #################################################################################
+    # FILTER DESIGN TOOL
+    path('tool/filter_design', FilterDesignToolView, name='filter_design_tool'),
 ]

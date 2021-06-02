@@ -9,3 +9,4 @@ from .viewImageFrequency import *
 from .viewCapRes_Calculators import *
 from .viewSystemBalance import *
 from .viewWavelengthFrequency import *
+from .viewFilterDesignTool import *

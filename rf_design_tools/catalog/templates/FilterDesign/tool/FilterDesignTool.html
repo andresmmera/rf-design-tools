@@ -1,0 +1,278 @@
+{% extends "base_generic.html" %}
+<!-- Add Bokeh headers -->
+<head>
+  <link href="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.css" rel="stylesheet" type="text/css">
+  <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.css" rel="stylesheet" type="text/css">
+</head>
+{% load static %}
+
+{% block content %}
+
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-auto">
+          <h2 class="tool-name">Filter Design</h2>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-auto box" style="background-color:rgb(151, 176, 255);">
+        <!-- Instantiate the form -->
+        <form id="FilterDesign_form" method="POST">
+          {% csrf_token %}          
+          <table class="table table-hover">
+            <h5 align="center"> Filter Type</h5>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                    Structure
+                </td>
+                <td>                 
+                    <select id="Structure" onchange="submit_form(this)">
+                      <option selected="selected" value="1">LC Ladder</option>
+                    </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    First Element
+                </td>
+                <td>                 
+                    <select id="FirstElement" onchange="submit_form(this)">
+                      <option value="1"> First Shunt</option>
+                      <option selected="selected" value="2">First Series</option>
+                    </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    Response Type
+                </td>
+                <td>
+                  <select id="Response" onchange="submit_form(this)">
+                    <option selected="selected" value="1">Chebyshev</option>
+                    <option value="2">Butterworth</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Ripple (dB)
+                </td>
+                <td>
+                  <input type="number" id="Ripple" value = "0.05" step="0.05" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Filtering Mask Type
+                </td>
+                <td>                    
+                  <select id="Mask" onclick="MaskChanged(this)">
+                    <option selected="selected" value="1">Lowpass</option>
+                    <option value="2">Highpass</option>
+                    <option value="3">Bandpass</option>
+                    <option value="4">Bandstop</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Order
+                </td>
+                <td>
+                  <input type="number" id="Order" value = "3" min="3" step="1" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr class="fc_input">
+                <td>
+                  Cutoff Freq (MHz)
+                </td>
+                <td>
+                  <input type="number" id="Cutoff" value = "500" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr class="fBPF_input">
+                <td>
+                  Lower Cutoff Freq (MHz)
+                </td>
+                <td>
+                  <input type="number" id="f1" value = "400" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr class="fBPF_input">
+                <td>
+                  Higher Cutoff Freq (MHz)
+                </td>
+                <td>
+                  <input type="number" id="f2" value = "600" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Z<sub>source</sub> (&Omega;)
+                </td>
+                <td>
+                  <input type="number" id="ZS" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-hover">
+            <h5 align="center"> Simulation</h5>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Start Freq (MHz)
+                </td>
+                <td>
+                  <input type="number" id="f_start" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  End Freq (MHz)
+                </td>
+                <td>
+                  <input type="number" id="f_stop" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Points
+                </td>
+                <td>
+                  <input type="number" id="Points" value = "201" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- BUTTONS -->
+<!--           <div class="d-flex flex-row justify-content-center">
+            <div class="p-2">
+              <input type="button" id="submit_button" value = "Calculate" onclick="submit_form()">
+            </div>
+
+            <div class="p-2">
+              <a href="{% url 'ipn_nf_docs' %}" class="btn btn-info" role="button">See docs</a>
+            </div>
+          </div> -->
+        </form>
+
+      </div>
+
+      
+      <div class="col-md-auto box">
+          <div class="row">
+              <div class="col-xs-12 col-md-12" >
+                  <div class="card shadow-sm">
+                    <div id='id1'>
+                      {{ div | safe }}
+                    </div>
+                        
+                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
+                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
+                        <div id='id2'>
+                        {{ script | safe }}
+                      </div>
+                  </div>
+              </div>
+          </div>
+        
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Schematic</h5>
+              <div class="card-text text-center">
+                <script src="https://unpkg.com/svg-pan-zoom-container"></script>
+                <!-- https://www.cssscript.com/svg-pan-zoom-container/ -->
+                <div data-zoom-on-wheel data-pan-on-drag>
+                  <svg id='svg_display' height = 500 width = 1000>
+                    {{ svg | safe }}
+                  </svg>
+              </div>
+
+            </div>
+          </div>
+          </div>
+      </div>
+  </div>
+
+<script>
+  // It's called just when the page is loaded
+  $(document).ready(function () {
+    $('.fc_input').show();
+    $('.fBPF_input').hide();
+  })
+
+  function MaskChanged(select) {
+    if (select.value <= 2){
+      // LPF of HPF
+      $('.fc_input').show();
+      $('.fBPF_input').hide();
+    }else{
+      //BPF or HPF  
+      $('.fc_input').hide();
+      $('.fBPF_input').show();
+    }
+    submit_form()
+  }
+  function submit_form(){
+    // Get variables from the form
+    var Structure = document.getElementById("Structure").value;
+    var FirstElement = document.getElementById("FirstElement").value;
+    var ResponseType = document.getElementById("Response").value;
+    var Ripple = document.getElementById("Ripple").value;
+    var Mask = document.getElementById("Mask").value;
+    var Order = document.getElementById("Order").value;
+    var Cutoff = document.getElementById("Cutoff").value;
+    var f1 = document.getElementById("f1").value;
+    var f2 = document.getElementById("f2").value;
+    var ZS = document.getElementById("ZS").value;
+    var f_start = document.getElementById("f_start").value;
+    var f_stop = document.getElementById("f_stop").value;
+    var Points = document.getElementById("Points").value;
+
+    $.ajax({
+        type: "POST",
+        url: 'filter_design',
+        data: {
+            "Structure": Structure,
+            "FirstElement": FirstElement,
+            "Response": ResponseType,
+            "Ripple": Ripple,
+            "Mask": Mask,
+            "Order": Order,
+            "Cutoff": Cutoff,
+            "f1": f1,
+            "f2": f2,
+            "ZS": ZS,
+            "f_start": f_start,
+            "f_stop": f_stop,
+            "n_points": Points,
+        },
+        dataType: "json",
+        success: function (data) {
+            $("#id1").html(data['div'])
+            $("#id2").html(data['script'])
+            $("#svg_display").html(data['svg'])
+        },
+        failure: function () {
+            alert("failure");
+        }
+    });
+  }
+</script>
+{% endblock %}
+
