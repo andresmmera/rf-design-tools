@@ -34,3 +34,9 @@ def getUnitsWithScale(value, units):
     if (units == "Capacitance"):
         return str(value) + " " + c + "F"
     elif (units == "Inductance"): return str(value) + " " + c + "H"
+
+
+def find_nearest(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return array[idx]

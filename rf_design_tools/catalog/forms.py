@@ -244,7 +244,11 @@ FIRST_SHUNT_SERIES =(
 RESPONSE_TYPE =(
     ("1", "Chebyshev"),
     ("2", "Butterworth"),
-    ("3", "Elliptic"),
+    ("3", "Bessel"),
+    ("4", "Legendre"),
+    ("5", "Gegenbauer"),
+    ("6", "LinearPhase"),
+    ("7", "Gaussian"),
 )
 
 MASK_TYPE =(
@@ -266,7 +270,9 @@ class FilterDesignForm(forms.Form):
     f1 = forms.FloatField(initial=200, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"})) # BPF and BSF
     f2 = forms.FloatField(initial=400, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"})) # BPF and BSF
     Ripple = forms.FloatField(initial=0.01, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+    PhaseError = forms.FloatField(initial=0.05, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
     ZS = forms.FloatField(initial=50, min_value=0.1, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+    ZL = forms.FloatField(initial=50, min_value=0.1, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
     f_start = forms.FloatField(initial=50, min_value=0.1, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
     f_stop = forms.FloatField(initial=1000, min_value=0.1, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
     n_points = forms.IntegerField(initial=201, min_value=50, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
@@ -279,7 +285,9 @@ class FilterDesignForm(forms.Form):
         self.fields['f1'].widget.attrs['style'] = "width:75px" # BPF and BSF
         self.fields['f2'].widget.attrs['style'] = "width:75px" # BPF and BSF
         self.fields['Ripple'].widget.attrs['style'] = "width:75px"
+        self.fields['PhaseError'].widget.attrs['style'] = "width:75px" # Just for Linear Phase Error filters
         self.fields['ZS'].widget.attrs['style'] = "width:75px"
+        self.fields['ZL'].widget.attrs['style'] = "width:75px"
         self.fields['f_start'].widget.attrs['style'] = "width:75px"
         self.fields['f_stop'].widget.attrs['style'] = "width:75px"
         self.fields['n_points'].widget.attrs['style'] = "width:75px"

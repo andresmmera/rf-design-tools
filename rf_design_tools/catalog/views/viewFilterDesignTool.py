@@ -71,6 +71,8 @@ def FilterDesignToolView(request):
             print("Response Type:", Response)
             Ripple = request.POST.get('Ripple', None)
             print("Ripple: ", Ripple, " dB")
+            PhaseError = request.POST.get('PhaseError', None)
+            print("PhaseError: ", PhaseError, " deg")
             index = request.POST.get('Mask', None)
             Mask = MASK_TYPE[int(index)-1][1]
             print("Mask: ", Mask)
@@ -84,6 +86,8 @@ def FilterDesignToolView(request):
             print("f2: ", f2, " MHz")
             ZS = request.POST.get('ZS', None)
             print("ZS = ", ZS)
+            ZL = request.POST.get('ZL', None)
+            print("ZL = ", ZL)
             f_start = request.POST.get('f_start', None)
             print(f_start)
             f_stop = request.POST.get('f_stop', None)
@@ -97,15 +101,20 @@ def FilterDesignToolView(request):
             designer.FirstElement = int(FirstElement)
             designer.Response = Response
             designer.Ripple = float(Ripple)
+            designer.PhaseError = float(PhaseError)
             designer.Mask = Mask
             designer.N = int(N)
             designer.fc = float(Cutoff)
             designer.f1 = float(f1)
             designer.f2 = float(f2)
             designer.ZS = float(ZS)
+            designer.ZL = float(ZL)
             designer.f_start = float(f_start)
             designer.f_stop = float(f_stop)
             designer.n_points = int(n_points)
+
+            # Calculate the lowpass prototype coefficients
+            designer.getLowpassCoefficients()
 
             # Drawing
             Schematic = designer.getCanonicalFilterSchematic()
@@ -118,16 +127,18 @@ def FilterDesignToolView(request):
             ## Bokeh plot
             plot = getPlot(freq, S21, S11, Response, Mask, Cutoff)
 
+            # Get warnings
+            warning = designer.warning
+
             #Store components 
             response_data = {}
             script, div = components(plot)
             response_data['script'] = script
             response_data['div'] = div
+            response_data['warning'] = warning
             response_data['svg'] = svgcode.decode('utf-8')
             context['form_filter_design'] = form_filter_design
             return JsonResponse(response_data)
-            #return HttpResponseRedirect(request, 'FilterDesign/tool/FilterDesignTool.html', context)
-            #return render(request, 'FilterDesign/tool/FilterDesignTool.html', context )
 
     else:
         # Generate default data
@@ -139,14 +150,19 @@ def FilterDesignToolView(request):
         designer = Filter()
         designer.Structure = "LC Ladder"
         designer.Response = Response
+        designer.FirstElement = 2 # First series
         designer.Ripple = 0.01
         designer.Mask = Mask
         designer.N = 3
         designer.fc = fc
-        designer.ZS = 75
+        designer.ZS = 50
+        designer.ZL = 50
         designer.f_start = 50
         designer.f_stop = 1000
         designer.n_points = 201
+
+        # Calculate the lowpass prototype coefficients
+        designer.getLowpassCoefficients()
 
         # Drawing
         Schematic = designer.getCanonicalFilterSchematic()

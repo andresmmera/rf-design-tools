@@ -54,18 +54,31 @@
                     Response Type
                 </td>
                 <td>
-                  <select id="Response" onchange="submit_form(this)">
+                  <select id="Response" onchange="ResponseChanged(this)">
                     <option selected="selected" value="1">Chebyshev</option>
                     <option value="2">Butterworth</option>
+                    <option value="3">Bessel</option>
+                    <option value="4">Legendre</option>
+                    <option value="5">Gegenbauer</option>
+                    <option value="6">Linear Phase</option>
+                    <option value="7">Gaussian</option>
                   </select>
                 </td>
               </tr>
-              <tr>
+              <tr class="Ripple_input">
                 <td>
                   Ripple (dB)
                 </td>
                 <td>
                   <input type="number" id="Ripple" value = "0.05" step="0.05" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr class="PhaseError_input">
+                <td>
+                  Phase Error (deg)
+                </td>
+                <td>
+                  <input type="number" id="PhaseError" value = "0.05" step="0.05" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
               </tr>
               <tr>
@@ -86,7 +99,7 @@
                   Order
                 </td>
                 <td>
-                  <input type="number" id="Order" value = "3" min="3" step="1" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="Order" value = "3" min="3" max=10 step="1" style="width: 4em" onchange="submit_form(this)" oninput="validity.valid||(value='');"/>
                 </td>
               </tr>
               <tr class="fc_input">
@@ -119,6 +132,14 @@
                 </td>
                 <td>
                   <input type="number" id="ZS" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Z<sub>load</sub> (&Omega;)
+                </td>
+                <td>
+                  <input type="number" id="ZL" value = "50" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
               </tr>
             </tbody>
@@ -214,6 +235,7 @@
   $(document).ready(function () {
     $('.fc_input').show();
     $('.fBPF_input').hide();
+    $('.PhaseError_input').hide();
   })
 
   function MaskChanged(select) {
@@ -228,18 +250,40 @@
     }
     submit_form()
   }
+
+  // This function takes control over the displayed fields depending on the filter type (e.g. ripple and phase error)
+  function ResponseChanged(select) {
+    // Ripple visibility
+    if ((select.value == 1) || (select.value == 5)){
+      // Chebyshev and Gegenbauer have ripple, the other don't
+      $('.Ripple_input').show();
+    }
+    else{
+      $('.Ripple_input').hide();
+    }
+    // Linear Phase visibility
+    if (select.value == 6){
+      $('.PhaseError_input').show();
+    }
+    else{
+      $('.PhaseError_input').hide();
+    }
+    submit_form()
+  }
   function submit_form(){
     // Get variables from the form
     var Structure = document.getElementById("Structure").value;
     var FirstElement = document.getElementById("FirstElement").value;
     var ResponseType = document.getElementById("Response").value;
     var Ripple = document.getElementById("Ripple").value;
+    var PhaseError = document.getElementById("PhaseError").value;
     var Mask = document.getElementById("Mask").value;
     var Order = document.getElementById("Order").value;
     var Cutoff = document.getElementById("Cutoff").value;
     var f1 = document.getElementById("f1").value;
     var f2 = document.getElementById("f2").value;
     var ZS = document.getElementById("ZS").value;
+    var ZL = document.getElementById("ZL").value;
     var f_start = document.getElementById("f_start").value;
     var f_stop = document.getElementById("f_stop").value;
     var Points = document.getElementById("Points").value;
@@ -252,12 +296,14 @@
             "FirstElement": FirstElement,
             "Response": ResponseType,
             "Ripple": Ripple,
+            "PhaseError": PhaseError,
             "Mask": Mask,
             "Order": Order,
             "Cutoff": Cutoff,
             "f1": f1,
             "f2": f2,
             "ZS": ZS,
+            "ZL": ZL,
             "f_start": f_start,
             "f_stop": f_stop,
             "n_points": Points,
@@ -267,6 +313,9 @@
             $("#id1").html(data['div'])
             $("#id2").html(data['script'])
             $("#svg_display").html(data['svg'])
+            if (data['warning']){
+              alert(data['warning'])
+            }
         },
         failure: function () {
             alert("failure");
