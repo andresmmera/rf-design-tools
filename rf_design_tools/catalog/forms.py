@@ -242,13 +242,21 @@ FIRST_SHUNT_SERIES =(
 )
 
 RESPONSE_TYPE =(
-    ("1", "Chebyshev"),
-    ("2", "Butterworth"),
-    ("3", "Bessel"),
-    ("4", "Legendre"),
-    ("5", "Gegenbauer"),
-    ("6", "LinearPhase"),
-    ("7", "Gaussian"),
+    ("1", "Elliptic"),
+    ("2", "Chebyshev"),
+    ("3", "Butterworth"),
+    ("4", "Bessel"),
+    ("5", "Legendre"),
+    ("6", "Gegenbauer"),
+    ("7", "LinearPhase"),
+    ("8", "Gaussian"),
+)
+
+ELLIPTIC_TYPE = (
+    ("1", "Type S"),
+    ("2", "Type A"),
+    ("3", "Type B"),
+    ("4", "Type C"),
 )
 
 MASK_TYPE =(
@@ -259,17 +267,21 @@ MASK_TYPE =(
 )
 
 
+
+
 class FilterDesignForm(forms.Form):
 
     Structure = forms.ChoiceField(choices = FILTER_STRUCTURES, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))
     FirstElement = forms.ChoiceField(choices = FIRST_SHUNT_SERIES, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))
     Response = forms.ChoiceField(choices = RESPONSE_TYPE, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))
+    EllipticType = forms.ChoiceField(choices = ELLIPTIC_TYPE, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))
     Mask = forms.ChoiceField(choices = MASK_TYPE, widget = forms.Select(attrs = {'onchange' : "updateMask(this.value);"}))
     Order = forms.IntegerField(initial=3, min_value=1, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
     Cutoff = forms.FloatField(initial=1000, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"})) # LPF and HPF
     f1 = forms.FloatField(initial=200, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"})) # BPF and BSF
     f2 = forms.FloatField(initial=400, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"})) # BPF and BSF
     Ripple = forms.FloatField(initial=0.01, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+    a_s = forms.FloatField(initial=35, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
     PhaseError = forms.FloatField(initial=0.05, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
     ZS = forms.FloatField(initial=50, min_value=0.1, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
     ZL = forms.FloatField(initial=50, min_value=0.1, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
@@ -285,6 +297,7 @@ class FilterDesignForm(forms.Form):
         self.fields['f1'].widget.attrs['style'] = "width:75px" # BPF and BSF
         self.fields['f2'].widget.attrs['style'] = "width:75px" # BPF and BSF
         self.fields['Ripple'].widget.attrs['style'] = "width:75px"
+        self.fields['a_s'].widget.attrs['style'] = "width:75px"
         self.fields['PhaseError'].widget.attrs['style'] = "width:75px" # Just for Linear Phase Error filters
         self.fields['ZS'].widget.attrs['style'] = "width:75px"
         self.fields['ZL'].widget.attrs['style'] = "width:75px"

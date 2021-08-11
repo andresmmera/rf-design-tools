@@ -4,7 +4,8 @@ import schemdraw.elements as elm
 from skrf.mathFunctions import find_closest
 
 # Get units with scale, etc.
-from .utilities import *
+from ..utilities import *
+from .EllipticFilters import *
 
 import numpy as np
 
@@ -52,8 +53,10 @@ class Filter:
         self.w0 = 2*np.pi*self.fc*1e6 # rad/s
         self.Mask = 'Bandstop'
         self.Response = 'Chebyshev'
+        self.EllipticType = "Type S"
         self.N = 7 # Order
         self.Ripple = 0.1 #dB
+        self.a_s = 35 #dB
         self.Structure = 'LC Ladder'
         self.FirstElement = 0
         self.PhaseError = 0.05
@@ -529,6 +532,26 @@ class Filter:
         S21 = 20*np.log10(np.abs(S[:,1][:,0]))
         return freq, S11, S21
     
+    def synthesize(self):
+        if (self.Response == 'Elliptic'):
+            
+            if (self.EllipticType == "Type S"):
+                Lseries, Cseries, Cshunt = EllipticTypeS_Coefficients(self.a_s, self.Ripple, self.N)
+                Lseries, Cseries, Cshunt = RearrangeTypeS(Lseries, Cseries, Cshunt)
+                RS = self.ZS
+                RL = RS
+            else:
+                Lseries, Cseries, Cshunt, RL = EllipticTypeABC_Coefficients(self.a_s, self.Ripple, self.N, self.ZS, self.EllipticType)
+                Lseries, Cseries, Cshunt = RearrangeTypesABC(Lseries, Cseries, Cshunt, self.EllipticType)
+
+            Schematic, freq, S11, S21 = SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, self.EllipticType, self.Mask, self.FirstElement, self.ZS, RL, self.fc*1e6, (self.f2-self.f1)*1e6, self.f_start, self.f_stop, self.n_points);
+        else:
+            self.getLowpassCoefficients()
+            Schematic = self.getCanonicalFilterSchematic()
+            freq, S11, S21 = self.getCanonicalFilterNetwork()
+        return Schematic, freq, S11, S21
+
+
     def getResponse(self):
         pool = ThreadPool(processes=1)
         async_result = pool.apply_async(self.getCanonicalFilterNetwork, (self,)) # tuple of args for foo

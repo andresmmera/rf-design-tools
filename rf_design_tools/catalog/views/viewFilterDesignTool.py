@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.template import loader
 
 from catalog.models import Tool
-from catalog.forms import FILTER_STRUCTURES, RESPONSE_TYPE, MASK_TYPE, FilterDesignForm
+from catalog.forms import FILTER_STRUCTURES, RESPONSE_TYPE, MASK_TYPE, ELLIPTIC_TYPE, FilterDesignForm
 
 # Bokeh
 from django.shortcuts import render
@@ -18,7 +18,7 @@ from bokeh.models import ColumnDataSource, LabelSet
 
 from django.views.decorators.csrf import csrf_exempt
 
-from .FilterDesigner import Filter
+from .FilterDesign.FilterDesigner import *
 
 from django.http import JsonResponse
 
@@ -69,8 +69,13 @@ def FilterDesignToolView(request):
             index = request.POST.get('Response', None)
             Response = RESPONSE_TYPE[int(index)-1][1]
             print("Response Type:", Response)
+            index = request.POST.get('EllipticType', None)
+            EllipticType = ELLIPTIC_TYPE[int(index)-1][1]
+            print("Elliptic Type:", EllipticType)
             Ripple = request.POST.get('Ripple', None)
             print("Ripple: ", Ripple, " dB")
+            a_s = request.POST.get('a_s', None)
+            print("a_s: ", a_s, " dB")
             PhaseError = request.POST.get('PhaseError', None)
             print("PhaseError: ", PhaseError, " deg")
             index = request.POST.get('Mask', None)
@@ -100,7 +105,9 @@ def FilterDesignToolView(request):
             designer.Structure = Structure
             designer.FirstElement = int(FirstElement)
             designer.Response = Response
+            designer.EllipticType = EllipticType
             designer.Ripple = float(Ripple)
+            designer.a_s = float(a_s)
             designer.PhaseError = float(PhaseError)
             designer.Mask = Mask
             designer.N = int(N)
@@ -114,14 +121,15 @@ def FilterDesignToolView(request):
             designer.n_points = int(n_points)
 
             # Calculate the lowpass prototype coefficients
-            designer.getLowpassCoefficients()
+            #designer.getLowpassCoefficients()
 
             # Drawing
-            Schematic = designer.getCanonicalFilterSchematic()
+            #Schematic = designer.getCanonicalFilterSchematic()
             
             # Filter response
-            freq, S11, S21 = designer.getCanonicalFilterNetwork()
+            #freq, S11, S21 = designer.getCanonicalFilterNetwork()
             
+            Schematic, freq, S11, S21 = designer.synthesize()
             svgcode = Schematic.get_imagedata('svg')
             Schematic.save('schematic.svg')
             ## Bokeh plot
