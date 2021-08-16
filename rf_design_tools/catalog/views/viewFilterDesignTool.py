@@ -1,10 +1,11 @@
+# Copyright 2020-2021 Andrés Martínez Mera - andresmartinezmera@gmail.com
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 
 from catalog.models import Tool
-from catalog.forms import FILTER_STRUCTURES, RESPONSE_TYPE, MASK_TYPE, ELLIPTIC_TYPE, FilterDesignForm
+from catalog.forms import FILTER_STRUCTURES, RESPONSE_TYPE, MASK_TYPE, ELLIPTIC_TYPE, DC_TYPE, FilterDesignForm
 
 # Bokeh
 from django.shortcuts import render
@@ -63,46 +64,70 @@ def FilterDesignToolView(request):
             index = request.POST.get('Structure', None)
             Structure = FILTER_STRUCTURES[int(index)-1][1]
             print("Structure:", Structure)
+            
+            index = request.POST.get('DC_Type', None)
+            DC_Type = DC_TYPE[int(index)-1][1]
+            print("DC_Type:", DC_Type)
+
             index = request.POST.get('FirstElement', None)
             FirstElement = index
             print("FirstElement:", FirstElement)
+            
             index = request.POST.get('Response', None)
             Response = RESPONSE_TYPE[int(index)-1][1]
             print("Response Type:", Response)
+            
             index = request.POST.get('EllipticType', None)
             EllipticType = ELLIPTIC_TYPE[int(index)-1][1]
             print("Elliptic Type:", EllipticType)
+            
             Ripple = request.POST.get('Ripple', None)
             print("Ripple: ", Ripple, " dB")
+            
             a_s = request.POST.get('a_s', None)
             print("a_s: ", a_s, " dB")
+            
             PhaseError = request.POST.get('PhaseError', None)
             print("PhaseError: ", PhaseError, " deg")
+            
             index = request.POST.get('Mask', None)
             Mask = MASK_TYPE[int(index)-1][1]
             print("Mask: ", Mask)
+            
             N = request.POST.get('Order', None)
             print("Order: ", N)
+            
             Cutoff = request.POST.get('Cutoff', None)
             print("Cutoff: ", Cutoff, " MHz")
+            
             f1 = request.POST.get('f1', None)
             print("f1: ", f1, " MHz")
+            
             f2 = request.POST.get('f2', None)
             print("f2: ", f2, " MHz")
+            
             ZS = request.POST.get('ZS', None)
             print("ZS = ", ZS)
+            
             ZL = request.POST.get('ZL', None)
             print("ZL = ", ZL)
+            
             f_start = request.POST.get('f_start', None)
             print(f_start)
+            
             f_stop = request.POST.get('f_stop', None)
             print(f_stop)
+            
             n_points = request.POST.get('n_points', None)
             print(n_points)
+
+            Xres = request.POST.getlist('Xres[]')
+            print(Xres)
 
             # Filter Design
             designer = Filter()
             designer.Structure = Structure
+            designer.DC_Type = DC_Type
             designer.FirstElement = int(FirstElement)
             designer.Response = Response
             designer.EllipticType = EllipticType
@@ -119,15 +144,7 @@ def FilterDesignToolView(request):
             designer.f_start = float(f_start)
             designer.f_stop = float(f_stop)
             designer.n_points = int(n_points)
-
-            # Calculate the lowpass prototype coefficients
-            #designer.getLowpassCoefficients()
-
-            # Drawing
-            #Schematic = designer.getCanonicalFilterSchematic()
-            
-            # Filter response
-            #freq, S11, S21 = designer.getCanonicalFilterNetwork()
+            designer.Xres = Xres
             
             Schematic, freq, S11, S21 = designer.synthesize()
             svgcode = Schematic.get_imagedata('svg')
@@ -157,6 +174,7 @@ def FilterDesignToolView(request):
         fc = 500
         designer = Filter()
         designer.Structure = "LC Ladder"
+        designer.DC_Type = "C-coupled shunt resonators"
         designer.Response = Response
         designer.FirstElement = 2 # First series
         designer.Ripple = 0.01
@@ -168,6 +186,7 @@ def FilterDesignToolView(request):
         designer.f_start = 50
         designer.f_stop = 1000
         designer.n_points = 201
+        designer.Xres = []
 
         # Calculate the lowpass prototype coefficients
         designer.getLowpassCoefficients()

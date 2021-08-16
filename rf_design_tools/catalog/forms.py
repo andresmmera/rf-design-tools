@@ -1,3 +1,4 @@
+# Copyright 2020-2021 Andrés Martínez Mera - andresmartinezmera@gmail.com
 from django import forms
 from django.core.exceptions import ValidationError
 
@@ -230,10 +231,18 @@ class SecondaryImageForm(forms.Form):
 
 FILTER_STRUCTURES =(
 ("1", "LC Ladder"),
-("2", "Two"),
+("2", "Direct Coupled"),
 ("3", "Three"),
 ("4", "Four"),
 ("5", "Five"),
+)
+
+DC_TYPE =(
+("1", "C-coupled shunt resonators"),
+("2", "L-coupled shunt resonators"),
+("3", "L-coupled series resonators"),
+("4", "C-coupled series resonators"),
+("5", "Magnetic coupled resonators")
 )
 
 FIRST_SHUNT_SERIES =(
@@ -272,6 +281,7 @@ MASK_TYPE =(
 class FilterDesignForm(forms.Form):
 
     Structure = forms.ChoiceField(choices = FILTER_STRUCTURES, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))
+    DC_Type = forms.ChoiceField(choices = DC_TYPE, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))
     FirstElement = forms.ChoiceField(choices = FIRST_SHUNT_SERIES, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))
     Response = forms.ChoiceField(choices = RESPONSE_TYPE, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))
     EllipticType = forms.ChoiceField(choices = ELLIPTIC_TYPE, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))

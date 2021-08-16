@@ -40,6 +40,7 @@
       <a href="{% url 'tools-catalog' %}" class="navbar-left"> <img src="{% static "/images/logo/logo.png"%}" width="204px" height="50px"></a>
 
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <!-- CALCULATORS -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Calculators
@@ -62,7 +63,7 @@
             </li>
           </ul>
         </li>
-
+        <!-- SYSTEM DESIGN -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             System Design Tools
@@ -79,7 +80,19 @@
             </li>
           </ul>
         </li>
-
+        <!-- CIRCUIT DESIGN -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Circuit Design Tools
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item"  href="{% url 'filter_design_tool' %}">Filter Design</a></li>
+            <li><a class="dropdown-item"  href="{% url 'filter_design_tool' %}">Matching Network Design</a></li>
+            <li><a class="dropdown-item"  href="{% url 'filter_design_tool' %}">Attenuator Design</a></li>
+            <li><a class="dropdown-item"  href="{% url 'filter_design_tool' %}">Power Combiner Design</a></li>
+          </ul>
+        </li>
+        <!-- DOCS -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Docs

@@ -1,3 +1,4 @@
+# Copyright 2020-2021 Andrés Martínez Mera - andresmartinezmera@gmail.com
 # Schematic drawing
 import schemdraw as schem
 import schemdraw.elements as elm
@@ -6,6 +7,7 @@ from skrf.mathFunctions import find_closest
 # Get units with scale, etc.
 from ..utilities import *
 from .EllipticFilters import *
+from .DirectCoupledFilters import *
 
 import numpy as np
 
@@ -20,27 +22,6 @@ import mysql.connector # MySQL connection for getting the filter coefficient fro
 
 
 class Filter:
-
-    FILTER_STRUCTURES =(
-    ("1", "LC Ladder"),
-    ("2", "Two"),
-    ("3", "Three"),
-    ("4", "Four"),
-    ("5", "Five"),
-    )
-
-    RESPONSE_TYPE =(
-    ("1", "Chebyshev"),
-    ("2", "Butterworth"),
-    ("3", "Bessel"),
-    )
-
-    MASK_TYPE =(
-        ("1", "Lowpass"),
-        ("2", "Highpass"),
-        ("3", "Bandpass"),
-        ("4", "Bandstop"),
-    )
 
     def __init__(self):
         # FILTER SPECIFICATIONS
@@ -58,9 +39,11 @@ class Filter:
         self.Ripple = 0.1 #dB
         self.a_s = 35 #dB
         self.Structure = 'LC Ladder'
+        self.DC_Type = 'C-coupled shunt resonators'
         self.FirstElement = 0
         self.PhaseError = 0.05
         self.warning = ''
+        self.Xres = [] # Reactances selected by the user for the direct coupled filter design
 
         if (self.Mask =='Bandpass' or self.Mask =='Bandstop'):
             self.w1 = 2*np.pi*self.f1*1e6 # rad/s
@@ -248,11 +231,12 @@ class Filter:
         ##################################################
         # Draw circuit
         schem.use('svg')
-        d = schem.Drawing()
-        _fontsize = 12
+        d = schem.Drawing(inches_per_unit = 0.3)
+        _fontsize = 8
         
         # Draw the source port and the first line (if needed)
-        d += elm.Dot().label('ZS = ' + str(self.ZS) + " Ohm", fontsize=_fontsize).linewidth(1)
+        d += elm.Line(color='white').length(2).linewidth(0)
+        d += elm.Dot().label('ZS = ' + str(self.ZS) + " \u03A9", fontsize=_fontsize).linewidth(1)
         d += elm.Line().length(2).linewidth(1)
                 
         # Draw the filter components
@@ -266,7 +250,7 @@ class Filter:
                     d += elm.Capacitor().down().label(getUnitsWithScale(self.gi[i+1]/(self.ZS*self.w0), 'Capacitance'), fontsize=_fontsize).linewidth(1)
                     d += elm.Ground().linewidth(1)
                 elif (self.Mask == 'Highpass'):
-                    d += elm.Inductor().down().label(getUnitsWithScale(self.ZS/(self.gi[i+1]*self.w0), 'Inductance'), fontsize=_fontsize).linewidth(1)
+                    d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(self.ZS/(self.gi[i+1]*self.w0), 'Inductance'), fontsize=_fontsize).linewidth(1)
                     d += elm.Ground().linewidth(1)
                 elif (self.Mask == 'Bandpass'):
                     d.push()
@@ -278,13 +262,13 @@ class Filter:
                     d += elm.Ground().linewidth(1)
                     d.pop()
                     d += elm.Line().right().length(1).linewidth(1)
-                    d += elm.Inductor().down().label(getUnitsWithScale(self.ZS*self.Delta/(self.gi[i+1]*self.w0*self.w0), 'Inductance'), fontsize=_fontsize).linewidth(1)
+                    d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(self.ZS*self.Delta/(self.gi[i+1]*self.w0*self.w0), 'Inductance'), fontsize=_fontsize).linewidth(1)
                     d += elm.Ground().linewidth(1)
                     d.pop()
                 elif (self.Mask == 'Bandstop'):
                     d += elm.Dot()
                     d.push()
-                    d += elm.Inductor().down().label(getUnitsWithScale(self.ZS/(self.gi[i+1]*self.Delta), 'Inductance'), fontsize=_fontsize).linewidth(1)
+                    d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(self.ZS/(self.gi[i+1]*self.Delta), 'Inductance'), fontsize=_fontsize).linewidth(1)
                     d += elm.Capacitor().down().label(getUnitsWithScale(self.gi[i+1]*self.Delta/(self.ZS*self.w0*self.w0), 'Capacitance'), fontsize=_fontsize).linewidth(1)
                     d += elm.Ground().linewidth(1)
                     d.pop()
@@ -293,15 +277,15 @@ class Filter:
             else:
                 # Mask-type transformation
                 if (self.Mask == 'Lowpass'):
-                    d += elm.Inductor().label(getUnitsWithScale(self.ZS*self.gi[i+1]/self.w0, 'Inductance'), fontsize=_fontsize).linewidth(1)
+                    d += elm.Inductor2(loops=2).label(getUnitsWithScale(self.ZS*self.gi[i+1]/self.w0, 'Inductance'), fontsize=_fontsize).linewidth(1)
                 elif (self.Mask == 'Highpass'):
                     d += elm.Capacitor().label(getUnitsWithScale(1/(self.gi[i+1]*self.w0*self.ZS), 'Capacitance'), fontsize=_fontsize).linewidth(1)
                 elif (self.Mask == 'Bandpass'):
-                    d += elm.Inductor().label(getUnitsWithScale(self.ZS*self.gi[i+1]/(self.Delta), 'Inductance'), fontsize=_fontsize).linewidth(1)
+                    d += elm.Inductor2(loops=2).label(getUnitsWithScale(self.ZS*self.gi[i+1]/(self.Delta), 'Inductance'), fontsize=_fontsize).linewidth(1)
                     d += elm.Capacitor().label(getUnitsWithScale(self.Delta/(self.ZS*self.w0*self.w0*self.gi[i+1]), 'Capacitance'), fontsize=_fontsize).linewidth(1)
                 elif (self.Mask == 'Bandstop'):
                     d.push()
-                    d += elm.Inductor().right().label(getUnitsWithScale(self.gi[i+1]*self.ZS*self.Delta/(self.w0*self.w0), 'Inductance'), fontsize=_fontsize).linewidth(1)
+                    d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(self.gi[i+1]*self.ZS*self.Delta/(self.w0*self.w0), 'Inductance'), fontsize=_fontsize).linewidth(1)
                     d.pop()
                     d += elm.Line().up().length(2).linewidth(1)
                     d += elm.Capacitor().right().label(getUnitsWithScale(1/(self.ZS*self.Delta*self.gi[i+1]), 'Capacitance'), fontsize=_fontsize).linewidth(1)
@@ -310,7 +294,8 @@ class Filter:
         # Draw the last line (if needed) and the load port
         d += elm.Line().right().length(2).linewidth(1)
 
-        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(self.ZS*self.gi[-1]))) + " Ohm", fontsize=_fontsize).linewidth(1)
+        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(self.ZS*self.gi[-1]))) + " \u03A9", fontsize=_fontsize).linewidth(1)
+        d += elm.Line(color='white').length(2).linewidth(0)
         
         return d
 
@@ -533,26 +518,65 @@ class Filter:
         return freq, S11, S21
     
     def synthesize(self):
-        if (self.Response == 'Elliptic'):
-            
-            if (self.EllipticType == "Type S"):
-                Lseries, Cseries, Cshunt = EllipticTypeS_Coefficients(self.a_s, self.Ripple, self.N)
-                Lseries, Cseries, Cshunt = RearrangeTypeS(Lseries, Cseries, Cshunt)
-                RS = self.ZS
-                RL = RS
-            else:
-                Lseries, Cseries, Cshunt, RL = EllipticTypeABC_Coefficients(self.a_s, self.Ripple, self.N, self.ZS, self.EllipticType)
-                Lseries, Cseries, Cshunt = RearrangeTypesABC(Lseries, Cseries, Cshunt, self.EllipticType)
+        if (self.Structure == 'LC Ladder'):
+            if (self.Response == 'Elliptic'):
+                
+                if (self.EllipticType == "Type S"):
+                    Lseries, Cseries, Cshunt = EllipticTypeS_Coefficients(self.a_s, self.Ripple, self.N)
+                    Lseries, Cseries, Cshunt = RearrangeTypeS(Lseries, Cseries, Cshunt)
+                    RS = self.ZS
+                    RL = RS
+                else:
+                    Lseries, Cseries, Cshunt, RL = EllipticTypeABC_Coefficients(self.a_s, self.Ripple, self.N, self.ZS, self.EllipticType)
+                    Lseries, Cseries, Cshunt = RearrangeTypesABC(Lseries, Cseries, Cshunt, self.EllipticType)
 
-            Schematic, freq, S11, S21 = SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, self.EllipticType, self.Mask, self.FirstElement, self.ZS, RL, self.fc*1e6, (self.f2-self.f1)*1e6, self.f_start, self.f_stop, self.n_points);
-        else:
+                Schematic, freq, S11, S21 = SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, self.EllipticType, self.Mask, self.FirstElement, self.ZS, RL, self.fc*1e6, (self.f2-self.f1)*1e6, self.f_start, self.f_stop, self.n_points);
+            else:
+                self.getLowpassCoefficients()
+                Schematic = self.getCanonicalFilterSchematic()
+                freq, S11, S21 = self.getCanonicalFilterNetwork()
+            
+
+        elif(self.Structure == 'Direct Coupled'):
             self.getLowpassCoefficients()
-            Schematic = self.getCanonicalFilterSchematic()
-            freq, S11, S21 = self.getCanonicalFilterNetwork()
+            BW = self.f2 - self.f1
+            if (self.DC_Type == 'C-coupled shunt resonators'):
+                if (not self.Xres):
+                    Lres = [100e-9] * self.N
+                else:
+                    Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
+                Schematic, freq, S11, S21 = DirectCoupled_C_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, self.f_start, self.f_stop, self.n_points)
+            elif (self.DC_Type == 'L-coupled shunt resonators'):
+                if (not self.Xres):
+                    Cres = [10e-12] * self.N
+                else:
+                    Cres = np.asarray(self.Xres, dtype='float64')*1e-12 # pF
+                Schematic, freq, S11, S21 = DirectCoupled_L_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Cres, self.f_start, self.f_stop, self.n_points)
+            elif (self.DC_Type == 'L-coupled series resonators'):
+                # N+2 Coupling inductances
+                if (not self.Xres):
+                    Lres = [10e-9] * (self.N+2)
+                else:
+                    Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
+                    Lres = np.insert(Lres, 0, Lres[0], axis=0)
+                    Lres = np.append(Lres, Lres[-1])
+                Schematic, freq, S11, S21 = DirectCoupled_L_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, 0, self.f_start, self.f_stop, self.n_points)
+            elif (self.DC_Type == 'C-coupled series resonators'):
+                if (not self.Xres):
+                    Lres = [100e-9] * self.N
+                else:
+                    Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
+                port_match = ['C', 'C']
+                Schematic, freq, S11, S21 = DirectCoupled_C_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, port_match, self.f_start, self.f_stop, self.n_points)
+            elif (self.DC_Type == 'Magnetic coupled resonators'):
+                # N+2 Coupling inductances
+                if (not self.Xres):
+                    Lres = [10e-9] * (self.N+2)
+                else:
+                    Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
+                    Lres = np.insert(Lres, 0, Lres[0], axis=0)
+                    Lres = np.append(Lres, Lres[-1])
+                Schematic, freq, S11, S21 = DirectCoupled_L_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, 1, self.f_start, self.f_stop, self.n_points)
+
         return Schematic, freq, S11, S21
 
-
-    def getResponse(self):
-        pool = ThreadPool(processes=1)
-        async_result = pool.apply_async(self.getCanonicalFilterNetwork, (self,)) # tuple of args for foo
-        return async_result.get()

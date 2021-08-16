@@ -1,3 +1,4 @@
+# Copyright 2020-2021 Andrés Martínez Mera - andresmartinezmera@gmail.com
 import numpy as np
 
 # Schematic drawing
@@ -106,8 +107,8 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
     
     # Draw circuit
     schem.use('svg')
-    d = schem.Drawing()
-    _fontsize = 12
+    d = schem.Drawing(inches_per_unit = 0.3)
+    _fontsize = 8
     
     # Network
     rf.stylely()
@@ -128,7 +129,8 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
     
     # Source port
     # Drawing: Source port and the first line
-    d += elm.Dot().label('ZS = ' + str(RS) + " Ohm", fontsize=_fontsize).linewidth(1)
+    d += elm.Line(color='white').length(2).linewidth(0)
+    d += elm.Dot().label('ZS = ' + str(RS) + " \u03A9", fontsize=_fontsize).linewidth(1)
     d += elm.Line().length(2).linewidth(1)
 
     # Network: Port 1
@@ -159,7 +161,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d.pop()
             d.push()
             Lseries_ = Lseries[i] * RS / (2 * np.pi * fc);
-            d += elm.Inductor().right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             
             # Network
             count_L += 1
@@ -220,7 +222,8 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
         # Load port
         # Drawing
         d += elm.Line().right().length(2).linewidth(1)
-        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " Ohm", fontsize=_fontsize).linewidth(1)
+        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
+        d += elm.Line(color='white').length(2).linewidth(0)
         
         # Network
         Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
@@ -238,7 +241,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             ## Series inductor
             # Drawing
             Lseries_ = RS / (2 * np.pi * fc) * Cshunt[i]
-            d += elm.Inductor().right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             
             # Network
             count_L += 1
@@ -258,7 +261,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
                 ## Shunt inductor
                 # Drawing
                 Lshunt_ = RS / (2 * np.pi * fc) * Cseries[i];
-                d += elm.Inductor().down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+                d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
                 d += elm.Ground().linewidth(1)
 
                 # Network
@@ -284,7 +287,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
         if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
             # Drawing
             Lseries_ = RS / (2 * np.pi * fc) * Cshunt[-1]
-            d += elm.Inductor().right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
 
             # Network
             count_L += 1
@@ -303,7 +306,8 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
         # Drawing
         d += elm.Line().right().length(2).linewidth(1)
-        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " Ohm", fontsize=_fontsize).linewidth(1)
+        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
+        d += elm.Line(color='white').length(2).linewidth(0)
 
         # Network
         Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
@@ -332,7 +336,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             ## Shunt inductor
             d.push() # Save the drawing point for later
             Lshunt_ = RS / (2 * np.pi * fc * Lseries[i]);
-            d += elm.Inductor().down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             
             # Network
             count_L += 1
@@ -388,7 +392,8 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
         
         # Drawing
         d += elm.Line().right().length(2).linewidth(1)
-        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " Ohm", fontsize=_fontsize).linewidth(1)
+        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
+        d += elm.Line(color='white').length(2).linewidth(0)
 
         # Network
         Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
@@ -406,7 +411,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             # Drawing
             d.push() # Save the drawing point for later
             Lshunt_ = RS / (2 * np.pi * fc * Cshunt[i]);
-            d += elm.Inductor().down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             d += elm.Ground().linewidth(1)
             
             # Network
@@ -434,7 +439,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
                 d += elm.Line().up().length(2).linewidth(1)
                 d += elm.Line().right().length(0).linewidth(1)
                 Lseries_ = RS / (2 * np.pi * fc * Cseries[i])
-                d += elm.Inductor().right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+                d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
                 d += elm.Line().right().length(0).linewidth(1)
                 d += elm.Line().down().length(2).linewidth(1)
                 d += elm.Dot()
@@ -468,7 +473,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
         if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
             # Drawing
             Lshunt_ = RS / (2 * np.pi * fc * Cshunt[-1])
-            d += elm.Inductor().down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             d += elm.Ground().linewidth(1)
             d.pop()
             
@@ -481,7 +486,8 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
         # Load port
         # Drawing
         d += elm.Line().right().length(2).linewidth(1)
-        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " Ohm", fontsize=_fontsize).linewidth(1)
+        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
+        d += elm.Line(color='white').length(2).linewidth(0)
         
         # Network
         Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
@@ -515,7 +521,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d += elm.Line().down().length(1).linewidth(1)
             d += elm.Line().right().length(1).linewidth(1)
             d += elm.Line().down().length(1).linewidth(1)
-            d += elm.Inductor().down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             d += elm.Ground().linewidth(1)
             
             # Network
@@ -534,7 +540,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d.pop()
             d.push()
             Lseries_ = Kl * Lseries[i] / delta;
-            d += elm.Inductor().right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             Cseries_ = Kc * delta / Lseries[i];
             d += elm.Capacitor().right().label(getUnitsWithScale(Cseries_, 'Capacitance'), fontsize=_fontsize).linewidth(1)
 
@@ -563,7 +569,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
                 d += elm.Line().up().length(2).linewidth(1)
                 d += elm.Line().right().length(1.5).linewidth(1)
                 Lseries_ = Kl * delta / Cseries[i];
-                d += elm.Inductor().right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+                d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
                 d += elm.Line().right().length(1.5).linewidth(1)
                 d += elm.Line().down().length(2).linewidth(1)
                 d += elm.Line().down().length(2).linewidth(1)
@@ -621,7 +627,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d += elm.Line().down().length(1).linewidth(1)
             d += elm.Line().right().length(1).linewidth(1)
             d += elm.Line().down().length(1).linewidth(1)
-            d += elm.Inductor().down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             d += elm.Ground().linewidth(1)
             d.pop()
             
@@ -639,7 +645,8 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
         # Load port
         # Drawing
         d += elm.Line().right().length(2).linewidth(1)
-        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " Ohm", fontsize=_fontsize).linewidth(1)
+        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
+        d += elm.Line(color='white').length(2).linewidth(0)
         
         # Network
         Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
@@ -662,7 +669,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             ## Upper-branch series resonator
             # Drawing
             Lseries_ = Kl * Cshunt[i] / delta
-            d += elm.Inductor().right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             
             Cseries_ = Kc * delta / Cshunt[i]
             d += elm.Capacitor().right().label(getUnitsWithScale(Cseries_, 'Capacitance'), fontsize=_fontsize).linewidth(1)
@@ -687,7 +694,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d += elm.Line().down().length(1).linewidth(1)
             d += elm.Line().right().length(1).linewidth(1)
             Lshunt_ = Kl * delta / Lseries[i]
-            d += elm.Inductor().down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize, loc='bottom').linewidth(1)
+            d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize, loc='bottom').linewidth(1)
             d += elm.Line().left().length(1).linewidth(1)
             
             # Network
@@ -701,7 +708,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
                 ## Lower-branch series resonator
                 # Drawing
                 Lseries_ = Kl * Cseries[i] / delta;
-                d += elm.Inductor().down().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+                d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
                 
                 Cseries_ = Kc * delta / Cseries[i]
                 d += elm.Capacitor().down().label(getUnitsWithScale(Cseries_, 'Capacitance'), fontsize=_fontsize).linewidth(1)
@@ -743,7 +750,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             # Last upper-branch series resonator
             # Drawing
             Lseries_ = Kl * Cshunt[-1] / delta
-            d += elm.Inductor().right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             
             Cseries_ = Kc * delta / Cshunt[-1]
             d += elm.Capacitor().right().label(getUnitsWithScale(Cseries_, 'Capacitance'), fontsize=_fontsize).linewidth(1)
@@ -766,7 +773,8 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
           
         # Drawing
         d += elm.Line().right().length(2).linewidth(1)
-        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " Ohm", fontsize=_fontsize).linewidth(1)
+        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
+        d += elm.Line(color='white').length(2).linewidth(0)
 
         # Network
         Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
@@ -791,7 +799,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d.push() # Save the drawing point for later
       
             Lshunt_ =  Kl / (delta * Cshunt[i])
-            d += elm.Inductor().down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             
             Cshunt_ = Kc * Cshunt[i] * delta
             d += elm.Capacitor().down().label(getUnitsWithScale(Cshunt_, 'Capacitance'), fontsize=_fontsize).linewidth(1)
@@ -814,7 +822,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d.push()
             Lseries_ = Kl * Lseries[i] * delta
             d += elm.Line().right().length(1.5).linewidth(1)
-            d += elm.Inductor().right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             d += elm.Line().right().length(1.5).linewidth(1)
             
             d.pop()
@@ -842,7 +850,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
                 Lseries_ = Kl / (Cseries[i] * delta);
                 d += elm.Line().up().length(2).linewidth(1)
                 d += elm.Capacitor().right().label(getUnitsWithScale(Cseries_, 'Capacitance'), fontsize=_fontsize).linewidth(1)
-                d += elm.Inductor().right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+                d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
                 d += elm.Line().down().length(2).linewidth(1)
                 
                 # Network
@@ -887,7 +895,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d.push()
             
             Lshunt_ =  Kl / (delta * Cshunt[-1]);
-            d += elm.Inductor().down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             
             Cshunt_ = Kc * Cshunt[-1] * delta;
             d += elm.Capacitor().down().label(getUnitsWithScale(Cshunt_, 'Capacitance'), fontsize=_fontsize).linewidth(1)
@@ -908,7 +916,8 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
         # Drawing
         
         d += elm.Line().right().length(2).linewidth(1)
-        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " Ohm", fontsize=_fontsize).linewidth(1)
+        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
+        d += elm.Line(color='white').length(2).linewidth(0)
         
         # Network
         Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
@@ -934,7 +943,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
       
             Lshunt_ =  Kl * Cshunt[i] * delta
             d += elm.Line().right().length(1).linewidth(1)
-            d += elm.Inductor().right().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             d += elm.Line().right().length(1).linewidth(1)
             
             Cshunt_ = Kc / (delta * Cshunt[i]);
@@ -957,7 +966,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d.push()
             d.push()
             Lseries_ = Kl / (delta * Lseries[i]);
-            d += elm.Inductor().down().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             
             Cseries_ = Kc * Lseries[i] * delta
             d += elm.Capacitor().down().label(getUnitsWithScale(Cseries_, 'Capacitance'), fontsize=_fontsize).linewidth(1)
@@ -981,7 +990,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
                 
                 d.pop()
                 d += elm.Line().right().length(1).linewidth(1)
-                d += elm.Inductor().down().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)    
+                d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)    
                 d += elm.Ground().linewidth(1)
                 d.pop()
                 
@@ -1038,7 +1047,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d.pop()
             d.push()
             Lshunt_ =   Kl * Cshunt[-1] * delta
-            d += elm.Inductor().right().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             
             d.pop()
             d += elm.Line().up().length(1).linewidth(1)
@@ -1061,7 +1070,8 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
         # Drawing
         
         d += elm.Line().right().length(2).linewidth(1)
-        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " Ohm", fontsize=_fontsize).linewidth(1)
+        d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
+        d += elm.Line(color='white').length(2).linewidth(0)
         
         # Network
         Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
