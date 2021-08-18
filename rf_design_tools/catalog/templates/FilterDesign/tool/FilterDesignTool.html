@@ -34,8 +34,8 @@
                 </td>
                 <td>                 
                     <select id="Structure" onchange="StructureChanged(this)">
-                      <option selected="selected" value="1">LC Ladder</option>
-                      <option value="2">Direct Coupled</option>
+                      <option selected="selected" value="1">Conventional LC</option>
+                      <option value="2">Direct Coupled LC</option>
                     </select>
                 </td>
               </tr>
@@ -50,6 +50,7 @@
                     <option value="3">L-coupled series resonators</option>
                     <option value="4">C-coupled series resonators</option>
                     <option value="5">Magnetic coupled resonators</option>
+                    <option value="6">Quarter-Wave coupled resonators</option>
                   </select>
               </td>
               </tr>
@@ -275,7 +276,7 @@
   $(document).ready(function () {
     $('.EllipticType_input').hide(); // Hide elliptic type
     $('.as_input').hide();// Hide stopband attenuation
-    $('.DC_Type_input').hide(); //Hide direct coupled type
+    $('.DC_Type_input').hide(); //Hide Direct Coupled LC type
     $('.fc_input').show();
     $('.fBPF_input').hide();
     $('.PhaseError_input').hide();
@@ -298,9 +299,9 @@
 
   function StructureChanged(select) {
     if (select.value == 1){
-    // LC Ladder
+    // Conventional LC
     $('.FirstElement_input').show() // Make visible first shunt / series
-    $('.DC_Type_input').hide(); // Hide direct coupled type
+    $('.DC_Type_input').hide(); // Hide Direct Coupled LC type
     $('.Mask_input').show(); //Show mask choice
     $('.inductance_input').hide()// Hide inductance values
 
@@ -319,12 +320,12 @@
     }
 
     if (select.value == 2){
-      // Direct Coupled
+      // Direct Coupled LC
       document.getElementById("Mask").value = 3 // Only Bandpass
       $('.Mask_input').hide(); //Hide mask choice
       
       document.getElementById("Response").value = 2 // Force Chebyshev response by default
-      document.getElementById("Response").options[0].disabled = true // Disable elliptic response. It cannot be implemented using direct coupled techniques
+      document.getElementById("Response").options[0].disabled = true // Disable elliptic response. It cannot be implemented using Direct Coupled LC techniques
 
       // Put a narrowband setup
       document.getElementById("f1").value = 495;
@@ -333,7 +334,7 @@
       document.getElementById("f_start").value = 480;
       document.getElementById("f_stop").value = 520;
       
-      $('.DC_Type_input').show(); // Show direct coupled type
+      $('.DC_Type_input').show(); // Show Direct Coupled LC type
       $('.FirstElement_input').hide()// Hide first shunt/series
       $('.EllipticType_input').hide();// Hide Elliptic type
       $('.as_input').hide();// Hide stopband attenuation
@@ -353,18 +354,25 @@
   function DC_Type_changed(select){
     var N = document.getElementById("Order").value;
     if ((select.value == 1) || (select.value == 4) ){
+      $('.inductance_input').show()// Show resonator values
       CreateTableDirectCoupled(N, 'L')
     }
 
     if ((select.value == 2) || (select.value == 3) || (select.value == 5)){
+      $('.inductance_input').show()// Show resonator values
       CreateTableDirectCoupled(N, 'C')
     }
+
+    if (select.value == 6){ // Quarter wavelength coupling
+      $('.inductance_input').hide()// Hide resonator values
+    }
+
 
     submit_form()
   }
 
   function Order_changed(N){
-    // If direct coupled, rebuild table, otherwise, ignore
+    // If Direct Coupled LC, rebuild table, otherwise, ignore
     if (document.getElementById("Structure").value == 2){
       CreateTableDirectCoupled(N.value, '-')
     }
@@ -428,7 +436,7 @@
     var f_stop = document.getElementById("f_stop").value;
     var Points = document.getElementById("Points").value;
 
-    // Get the reactances for the Direct Coupled filter
+    // Get the reactances for the Direct Coupled LC filter
     var Xres = [];
     if (DC_Type == 2){
       for(var i=0; i<Order; i++) {

@@ -38,12 +38,12 @@ class Filter:
         self.N = 7 # Order
         self.Ripple = 0.1 #dB
         self.a_s = 35 #dB
-        self.Structure = 'LC Ladder'
+        self.Structure = 'Conventional LC'
         self.DC_Type = 'C-coupled shunt resonators'
         self.FirstElement = 0
         self.PhaseError = 0.05
         self.warning = ''
-        self.Xres = [] # Reactances selected by the user for the direct coupled filter design
+        self.Xres = [] # Reactances selected by the user for the Direct Coupled LC filter design
 
         if (self.Mask =='Bandpass' or self.Mask =='Bandstop'):
             self.w1 = 2*np.pi*self.f1*1e6 # rad/s
@@ -518,7 +518,7 @@ class Filter:
         return freq, S11, S21
     
     def synthesize(self):
-        if (self.Structure == 'LC Ladder'):
+        if (self.Structure == 'Conventional LC'):
             if (self.Response == 'Elliptic'):
                 
                 if (self.EllipticType == "Type S"):
@@ -537,7 +537,7 @@ class Filter:
                 freq, S11, S21 = self.getCanonicalFilterNetwork()
             
 
-        elif(self.Structure == 'Direct Coupled'):
+        elif(self.Structure == 'Direct Coupled LC'):
             self.getLowpassCoefficients()
             BW = self.f2 - self.f1
             if (self.DC_Type == 'C-coupled shunt resonators'):
@@ -577,6 +577,8 @@ class Filter:
                     Lres = np.insert(Lres, 0, Lres[0], axis=0)
                     Lres = np.append(Lres, Lres[-1])
                 Schematic, freq, S11, S21 = DirectCoupled_L_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, 1, self.f_start, self.f_stop, self.n_points)
+            elif(self.DC_Type == 'Quarter-Wave coupled resonators'):
+                Schematic, freq, S11, S21 = DirectCoupled_QW_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, self.f_start, self.f_stop, self.n_points)
 
         return Schematic, freq, S11, S21
 

@@ -230,8 +230,8 @@ class SecondaryImageForm(forms.Form):
 
 
 FILTER_STRUCTURES =(
-("1", "LC Ladder"),
-("2", "Direct Coupled"),
+("1", "Conventional LC"),
+("2", "Direct Coupled LC"),
 ("3", "Three"),
 ("4", "Four"),
 ("5", "Five"),
@@ -242,7 +242,8 @@ DC_TYPE =(
 ("2", "L-coupled shunt resonators"),
 ("3", "L-coupled series resonators"),
 ("4", "C-coupled series resonators"),
-("5", "Magnetic coupled resonators")
+("5", "Magnetic coupled resonators"),
+("6", "Quarter-Wave coupled resonators")
 )
 
 FIRST_SHUNT_SERIES =(

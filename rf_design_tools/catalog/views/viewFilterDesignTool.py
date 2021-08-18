@@ -173,7 +173,7 @@ def FilterDesignToolView(request):
         Mask = "Lowpass"
         fc = 500
         designer = Filter()
-        designer.Structure = "LC Ladder"
+        designer.Structure = "Conventional LC"
         designer.DC_Type = "C-coupled shunt resonators"
         designer.Response = Response
         designer.FirstElement = 2 # First series

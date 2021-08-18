@@ -8,6 +8,7 @@ from skrf.mathFunctions import find_closest
 
 # Get units with scale, etc.
 from ..utilities import *
+from ..components import TransmissionLine
 
 # standard imports
 import skrf as rf
@@ -1281,6 +1282,162 @@ def DirectCoupled_C_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, port_matc
         connections.append([(C[-1], 1), (ground[-1], 0)])
         connections.append([(L[-1], 1), (Port2, 0)])
 
+    
+    # Build network and get the frequency response
+    circuit = rf.Circuit(connections)
+    a = network2.Network.from_ntwkv1(circuit.network)
+    S = a.s.val[:]
+    freq = a.frequency.f*1e-6
+    S11 = 20*np.log10(np.abs(S[:,1][:,1]))
+    S21 = 20*np.log10(np.abs(S[:,1][:,0]))
+
+    
+    return d, freq, S11, S21
+
+# gi: Normalized lowpass coefficients
+# RS: Source impedance
+# RL: Load impedance
+# f0: Center frequency
+# BW: Bandwidth
+
+# Reference: 
+# [1] "Microwave Filters, Impedance-Matching Networks, and Coupling Structures", George L. Matthaei, L. Young, E. M. Jones, Artech House pg. 482
+def DirectCoupled_QW_Coupled_ShuntResonators(gi, RS, RL, f0, BW, fstart, fstop, npoints):
+    Nres = len(gi) - 2 # Number of resonators
+    bw = BW / f0
+    
+    # Calculation of w1, w2, w - 8.11-1 (15)
+    f1 = f0 - BW / 2
+    f2 = f0 + BW / 2
+    
+    w1 = 2*np.pi*f1
+    w2 = 2*np.pi*f2
+    
+    w0 = np.sqrt(w1*w2)
+    w = (w2 - w1) / w0
+    
+    # Calculation of GA and GB
+    Y0 = 1/RS
+    
+    # Draw circuit
+    schem.use('svg')
+    d = schem.Drawing()
+    _fontsize = 12
+    
+    # Network
+    rf.stylely()
+    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
+    line = rf.media.DefinedGammaZ0(frequency=freq)
+    
+    # Component counter
+    count_C = 0
+    count_L = 0
+    count_TL = 0
+    count_gnd = 0
+    
+    # Array of components
+    J = []
+    
+    # Bi/Y0
+    by = []
+    Cres = []
+    Lres = []
+    by.append(gi[0]*gi[1]/w - np.pi/4) # [1] b1/Y0 Fig. 8.10-1 (1)
+    Cres.append(by[0]*Y0/w0)
+    Lres.append(1/(w0*w0*Cres[0]))
+    
+    for i in range(1, Nres-1):
+        if (i % 2 == 1): # Even 
+            by.append(gi[i+1]/(w * gi[0]) - np.pi/2) # [1] Fig. 8.10-1 (3)
+        else: # Odd
+            by.append(gi[i+1] * gi[0]/w  - np.pi/2) # [1] Fig. 8.10-1 (2)
+            
+        Cres.append(by[i]*Y0/w0)
+        Lres.append(1/(w0*w0*Cres[i]))
+    by.append(by[0]) # [1] Fig. 8.10-1 (4)
+    Cres.append(Cres[0])
+    Lres.append(Lres[0])
+    
+    C0 = 299792458 # m/s
+    wavelength = C0/f0
+    qw = wavelength / 4 # lambda / 4
+    
+        
+    # Source port
+    # Drawing: Source port and the first line
+    d += elm.Dot().label('ZS = ' + str(RS) + " \u03A9", fontsize=_fontsize).linewidth(1)
+    d += elm.Line().length(1).linewidth(1)
+    
+    # Network: Port 1
+    connections = [] # Network connections
+    L = []
+    C = []
+    TL = []
+    ground = []
+    
+    Port1 = rf.Circuit.Port(frequency=freq, name='port1', z0=RS)
+    
+    # Quarter wavelength line
+    beta = freq.w/rf.c
+    Z0_line = rf.media.DefinedGammaZ0(frequency=freq, Z0=RS, gamma=0+beta*1j)
+    
+    d += elm.Line().right().length(1).linewidth(1)
+        
+    for i in range (0, Nres):
+        # Resonator
+        
+        # Drawing
+        d.push()
+        d += elm.Line().down().length(1).linewidth(1)
+        d.push()
+        d += elm.Line().left().length(1).linewidth(1)
+        d += elm.Capacitor().down().label(getUnitsWithScale(Cres[i], 'Capacitance'), fontsize=_fontsize).linewidth(1)
+        d += elm.Ground().linewidth(1)
+
+        d.pop()
+        d += elm.Line().right().length(1).linewidth(1)
+        d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lres[i], 'Inductance'), fontsize=_fontsize).linewidth(1)
+        d += elm.Ground().linewidth(1)
+        
+        # Network
+        count_C += 1
+        C.append(line.capacitor(Cres[i], name='C' + str(count_C)))
+        count_gnd += 1
+        ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+        
+        count_L += 1
+        L.append(line.inductor(Lres[i], name='L' + str(count_L)))
+        count_gnd += 1
+        ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+        
+        # Coupling line
+        # Drawing
+        d.pop()
+        d += elm.Line().right().length(1).linewidth(1)
+        d += TransmissionLine().right().label("l = " + getUnitsWithScale(qw, 'Distance'), fontsize=_fontsize, loc = 'bottom').label("Z\u2080 = " + str(RS) + " \u03A9 ", loc = 'top').linewidth(1)
+        d += elm.Line().right().length(1).linewidth(1)
+        
+        count_TL += 1
+        TL.append(Z0_line.line(Z0_line.theta_2_d(90, deg=True), unit='m', name='TL' + str(count_TL)))
+        
+        if (i == 0):
+            # Connect to the source port
+            connections.append([(Port1, 0), (L[0], 0), (C[0], 0), (TL[0], 0)])
+        else:
+            # Connect to the previous TL
+            connections.append([(TL[i-1], 1), (L[i], 0), (C[i], 0), (TL[i], 0)])
+            
+        connections.append([(C[i], 1), (ground[2*i], 0)])
+        connections.append([(L[i], 1), (ground[2*i+1], 0)])          
+        
+    # Load port
+    # Drawing
+    d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
+    # Network
+    Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
+    
+    # Connections
+    connections.append([(Port2, 0), (TL[-1], 1)])
     
     # Build network and get the frequency response
     circuit = rf.Circuit(connections)
