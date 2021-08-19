@@ -190,13 +190,12 @@ def FilterDesignToolView(request):
 
         # Calculate the lowpass prototype coefficients
         designer.getLowpassCoefficients()
-
-        # Drawing
-        Schematic = designer.getCanonicalFilterSchematic()
-        svgcode = Schematic.get_imagedata('svg')
         
         # Filter response
-        freq, S11, S21 = designer.getCanonicalFilterNetwork()
+        Schematic, freq, S11, S21 = designer.synthesize()
+
+        # Drawing
+        svgcode = Schematic.get_imagedata('svg')
 
         ## Bokeh plot
         plot = getPlot(freq, S21, S11, Response, Mask, fc)
