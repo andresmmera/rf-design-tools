@@ -222,14 +222,16 @@ def getCanonicalFilterNetwork(gi, N, ZS, ZL, fc, f1, f2, FirstElement, Mask, f_s
                 
             for i in range(1, N, 2):
                 connections.append([(C[i], 1), (ground[int((i+1)/2)-1], 0)])
-    circuit = rf.Circuit(connections)
-    d = circuit.network
-    a = network2.Network.from_ntwkv1(circuit.network)
-    S = a.s.val[:]
-    freq = a.frequency.f*1e-6
-    S11 = 20*np.log10(np.abs(S[:,1][:,1]))
-    S21 = 20*np.log10(np.abs(S[:,1][:,0]))
-    return freq, S11, S21
+    # circuit = rf.Circuit(connections)
+    # d = circuit.network
+    # a = network2.Network.from_ntwkv1(circuit.network)
+    # S = a.s.val[:]
+    # freq = a.frequency.f*1e-6
+    # S11 = 20*np.log10(np.abs(S[:,1][:,1]))
+    # S21 = 20*np.log10(np.abs(S[:,1][:,0]))
+    # return freq, S11, S21
+
+    return connections
 
 
 def getCanonicalFilterSchematic(gi, N, ZS, ZL, fc, f1, f2, FirstElement, Mask, f_start, f_stop, n_points):

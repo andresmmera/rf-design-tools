@@ -1,5 +1,6 @@
 # Copyright 2020-2021 Andrés Martínez Mera - andresmartinezmera@gmail.com
 # Schematic drawing
+from mysql.connector import connection
 import schemdraw as schem
 import schemdraw.elements as elm
 from skrf.mathFunctions import find_closest
@@ -233,12 +234,11 @@ class Filter:
                     Lseries, Cseries, Cshunt, RL = EllipticTypeABC_Coefficients(self.a_s, self.Ripple, self.N, self.ZS, self.EllipticType)
                     Lseries, Cseries, Cshunt = RearrangeTypesABC(Lseries, Cseries, Cshunt, self.EllipticType)
 
-                Schematic, freq, S11, S21 = SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, self.EllipticType, self.Mask, self.FirstElement, self.ZS, RL, self.fc*1e6, (self.f2-self.f1)*1e6, self.f_start, self.f_stop, self.n_points);
+                Schematic, connections = SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, self.EllipticType, self.Mask, self.FirstElement, self.ZS, RL, self.fc*1e6, (self.f2-self.f1)*1e6, self.f_start, self.f_stop, self.n_points);
             else:
                 self.getLowpassCoefficients()
                 Schematic = getCanonicalFilterSchematic(self.gi, self.N, self.ZS, self.ZL, self.fc, self.f1, self.f2, self.FirstElement, self.Mask, self.f_start, self.f_stop, self.n_points)
-                freq, S11, S21 = getCanonicalFilterNetwork(self.gi, self.N, self.ZS, self.ZL, self.fc, self.f1, self.f2, self.FirstElement, self.Mask, self.f_start, self.f_stop, self.n_points)
-            
+                connections = getCanonicalFilterNetwork(self.gi, self.N, self.ZS, self.ZL, self.fc, self.f1, self.f2, self.FirstElement, self.Mask, self.f_start, self.f_stop, self.n_points)
 
         elif(self.Structure == 'Direct Coupled LC'):
             self.getLowpassCoefficients()
@@ -248,13 +248,13 @@ class Filter:
                     Lres = [100e-9] * self.N
                 else:
                     Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
-                Schematic, freq, S11, S21 = DirectCoupled_C_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, self.f_start, self.f_stop, self.n_points)
+                Schematic, connections = DirectCoupled_C_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, self.f_start, self.f_stop, self.n_points)
             elif (self.DC_Type == 'L-coupled shunt resonators'):
                 if (not self.Xres):
                     Cres = [10e-12] * self.N
                 else:
                     Cres = np.asarray(self.Xres, dtype='float64')*1e-12 # pF
-                Schematic, freq, S11, S21 = DirectCoupled_L_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Cres, self.f_start, self.f_stop, self.n_points)
+                Schematic, connections = DirectCoupled_L_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Cres, self.f_start, self.f_stop, self.n_points)
             elif (self.DC_Type == 'L-coupled series resonators'):
                 # N+2 Coupling inductances
                 if (not self.Xres):
@@ -263,14 +263,14 @@ class Filter:
                     Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
                     Lres = np.insert(Lres, 0, Lres[0], axis=0)
                     Lres = np.append(Lres, Lres[-1])
-                Schematic, freq, S11, S21 = DirectCoupled_L_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, 0, self.f_start, self.f_stop, self.n_points)
+                Schematic, connections = DirectCoupled_L_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, 0, self.f_start, self.f_stop, self.n_points)
             elif (self.DC_Type == 'C-coupled series resonators'):
                 if (not self.Xres):
                     Lres = [100e-9] * self.N
                 else:
                     Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
                 port_match = ['C', 'C']
-                Schematic, freq, S11, S21 = DirectCoupled_C_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, port_match, self.f_start, self.f_stop, self.n_points)
+                Schematic, connections = DirectCoupled_C_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, port_match, self.f_start, self.f_stop, self.n_points)
             elif (self.DC_Type == 'Magnetic coupled resonators'):
                 # N+2 Coupling inductances
                 if (not self.Xres):
@@ -279,9 +279,17 @@ class Filter:
                     Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
                     Lres = np.insert(Lres, 0, Lres[0], axis=0)
                     Lres = np.append(Lres, Lres[-1])
-                Schematic, freq, S11, S21 = DirectCoupled_L_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, 1, self.f_start, self.f_stop, self.n_points)
+                Schematic, connections = DirectCoupled_L_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, 1, self.f_start, self.f_stop, self.n_points)
             elif(self.DC_Type == 'Quarter-Wave coupled resonators'):
-                Schematic, freq, S11, S21 = DirectCoupled_QW_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, self.f_start, self.f_stop, self.n_points)
+                Schematic, connections = DirectCoupled_QW_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, self.f_start, self.f_stop, self.n_points)
+        
+        # Calculate S-parameters
+        circuit = rf.Circuit(connections)
+        a = network2.Network.from_ntwkv1(circuit.network)
+        S = a.s.val[:]
+        freq = a.frequency.f*1e-6
+        S11 = 20*np.log10(np.abs(S[:,1][:,1]))
+        S21 = 20*np.log10(np.abs(S[:,1][:,0]))
 
         return Schematic, freq, S11, S21
 

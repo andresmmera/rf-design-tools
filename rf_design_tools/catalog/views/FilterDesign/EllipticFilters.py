@@ -1088,18 +1088,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             connections.append([(L[-1], 1), (C[-1], 0)])
             connections.append([(C[-1], 1), (ground[-1], 0)])
           
-    #print (connections)
-        
-    # Build network and get the frequency response
-    circuit = rf.Circuit(connections)
-    a = network2.Network.from_ntwkv1(circuit.network)
-    S = a.s.val[:]
-    freq = a.frequency.f*1e-6
-    S11 = 20*np.log10(np.abs(S[:,1][:,1]))
-    S21 = 20*np.log10(np.abs(S[:,1][:,0]))
-
-    
-    return d, freq, S11, S21
+    return d, connections
     
 # This function is used to rearrange the coefficients from the synthesis function.
 def RearrangeTypeS(Lseries, Cseries, Cshunt):
