@@ -220,6 +220,24 @@ class Filter:
 
             self.gi = gi
 
+    def getParams(self):
+        # Pack the design parameters into a dictionary to pass it to external functions
+        params = {}
+        params['gi'] = self.gi
+        params['N'] = self.N
+        params['ZS'] = self.ZS
+        params['ZL'] = self.ZL
+        params['fc'] = self.fc
+        params['f1'] = self.f1
+        params['f2'] = self.f2
+        params['FirstElement'] = self.FirstElement
+        params['Mask'] = self.Mask
+        params['f_start'] = self.f_start
+        params['f_stop'] = self.f_stop
+        params['n_points'] = self.n_points
+        params['Response'] = self.Response
+        params['Ripple'] = self.Ripple
+        return params
 
     def synthesize(self):
         if (self.Structure == 'Conventional LC'):
@@ -235,10 +253,11 @@ class Filter:
                     Lseries, Cseries, Cshunt = RearrangeTypesABC(Lseries, Cseries, Cshunt, self.EllipticType)
 
                 Schematic, connections = SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, self.EllipticType, self.Mask, self.FirstElement, self.ZS, RL, self.fc*1e6, (self.f2-self.f1)*1e6, self.f_start, self.f_stop, self.n_points);
-            else:
+            else: # Conventional LC filters
                 self.getLowpassCoefficients()
-                Schematic = getCanonicalFilterSchematic(self.gi, self.N, self.ZS, self.ZL, self.fc, self.f1, self.f2, self.FirstElement, self.Mask, self.f_start, self.f_stop, self.n_points)
-                connections = getCanonicalFilterNetwork(self.gi, self.N, self.ZS, self.ZL, self.fc, self.f1, self.f2, self.FirstElement, self.Mask, self.f_start, self.f_stop, self.n_points)
+                params = self.getParams()
+                Schematic = getCanonicalFilterSchematic(params)
+                connections = getCanonicalFilterNetwork(params)
 
         elif(self.Structure == 'Direct Coupled LC'):
             self.getLowpassCoefficients()
@@ -282,14 +301,11 @@ class Filter:
                 Schematic, connections = DirectCoupled_L_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, 1, self.f_start, self.f_stop, self.n_points)
             elif(self.DC_Type == 'Quarter-Wave coupled resonators'):
                 Schematic, connections = DirectCoupled_QW_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, self.f_start, self.f_stop, self.n_points)
-        
-        # Calculate S-parameters
-        circuit = rf.Circuit(connections)
-        a = network2.Network.from_ntwkv1(circuit.network)
-        S = a.s.val[:]
-        freq = a.frequency.f*1e-6
-        S11 = 20*np.log10(np.abs(S[:,1][:,1]))
-        S21 = 20*np.log10(np.abs(S[:,1][:,0]))
 
-        return Schematic, freq, S11, S21
+        return Schematic, connections
 
+    def getQucsSchematic(self):
+        params = self.getParams()
+        if (self.Structure == 'Conventional LC'):
+            QucsSchematic, QucsSchematicFile = getCanonicalFilterQucsSchematic(params)
+        return QucsSchematic

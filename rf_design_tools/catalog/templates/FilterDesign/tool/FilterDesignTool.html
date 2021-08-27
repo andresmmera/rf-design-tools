@@ -3,6 +3,9 @@
 <head>
   <link href="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.css" rel="stylesheet" type="text/css">
   <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Add icon library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 {% load static %}
 
@@ -139,7 +142,7 @@
                   Order
                 </td>
                 <td>
-                  <input type="number" id="Order" value = "3" min="1" max=10 step="1" style="width: 4em" onchange="Order_changed(this)" oninput="validity.valid||(value='');"/>
+                  <input type="number" id="Order" value = "5" min="1" max=10 step="1" style="width: 4em" onchange="Order_changed(this)" oninput="validity.valid||(value='');"/>
                 </td>
               </tr>
               <tr class="fc_input">
@@ -238,31 +241,58 @@
       
       <div class="col-md-auto box">
           <div class="row">
-              <div class="col-xs-12 col-md-12" >
+              <div class="col-xs-6 col-md-6" >
                   <div class="card shadow-sm">
                     <div id='id1'>
-                      {{ div | safe }}
+                      {{ divResponse | safe }}
                     </div>
                         
                         <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
                         <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
                         <div id='id2'>
-                        {{ script | safe }}
-                      </div>
+                        {{ scriptResponse | safe }}
+                        </div>
                   </div>
               </div>
+
+              <div class="col-xs-6 col-md-6" >
+                <div class="card shadow-sm">
+                  <div id='id3'>
+                    {{ divGroupDelay | safe }}
+                  </div>
+                      
+                      <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
+                      <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
+                      <div id='id4'>
+                      {{ scriptGroupDelay | safe }}
+                      </div>
+                </div>
+            </div>
           </div>
         
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Schematic</h5>
-              <div class="card-text text-center">
-                <script src="https://unpkg.com/svg-pan-zoom-container"></script>
-                <!-- https://www.cssscript.com/svg-pan-zoom-container/ -->
-                <div data-zoom-on-wheel data-pan-on-drag>
-                  <svg id='svg_display' height = 500 width = 1000>
-                    {{ svg | safe }}
-                  </svg>
+              <div class='row'>
+                <div class="col-xs-9 col-md-9" >
+                  <h5 class="card-title">Schematic</h5>
+                </div>
+
+                <div class="col-xs-1 col-md-1" > 
+                  <a href="{% url 'svg_download' %}" class="btn btn-light" role="button">Download SVG</a>
+                </div>
+
+                <div class="col-xs-2 col-md-2" > 
+                  <a href="{% url 'qucs_filter_download' %}" class="btn btn-warning" role="button">Download Qucs Schematic</a>
+                </div>
+              </div>
+            </div>
+            <div class="card-text text-center">
+              <script src="https://unpkg.com/svg-pan-zoom-container"></script>
+              <!-- https://www.cssscript.com/svg-pan-zoom-container/ -->
+              <div data-zoom-on-wheel data-pan-on-drag>
+                <svg id='svg_display' height = 500 width = 1000>
+                  {{ svg | safe }}
+                </svg>
               </div>
 
             </div>
@@ -313,7 +343,7 @@
     document.getElementById("f_start").value = 10;
     document.getElementById("f_stop").value = 1000;
     document.getElementById("Response").options[0].disabled = false // Enable elliptic response.
-
+    document.getElementById("Order").value = 5;
 
     submit_form()
     }
@@ -332,6 +362,8 @@
 
       document.getElementById("f_start").value = 480;
       document.getElementById("f_stop").value = 520;
+
+      document.getElementById("Order").value = 3;
       
       $('.DC_Type_input').show(); // Show Direct Coupled LC type
       $('.FirstElement_input').hide()// Hide first shunt/series
@@ -437,7 +469,7 @@
 
     // Get the reactances for the Direct Coupled LC filter
     var Xres = [];
-    if (DC_Type == 2){
+    if (Structure == 2){
       for(var i=0; i<Order; i++) {
       Xres.push(document.getElementById("X[" + i + "]").value);
     }
@@ -469,8 +501,10 @@
         },
         dataType: "json",
         success: function (data) {
-            $("#id1").html(data['div'])
-            $("#id2").html(data['script'])
+            $("#id1").html(data['divResponse'])
+            $("#id2").html(data['scriptResponse'])
+            $("#id3").html(data['divGroupDelay'])
+            $("#id4").html(data['scriptGroupDelay'])
             $("#svg_display").html(data['svg'])
             if (data['warning']){
               alert(data['warning'])

@@ -35,7 +35,7 @@ def getUnitsWithScale(value, units):
         return str(value) + " " + c + "F"
     elif (units == "Inductance"): return str(value) + " " + c + "H"
     elif(units == "Distance"): return str(value) + " " + c + "m"
-
+    elif(units == "Frequency"): return str(value) + " " + c + "Hz"
 
 def find_nearest(array, value):
     array = np.asarray(array)

@@ -40,6 +40,8 @@ from catalog.views import SystemBalanceView
 from catalog.views import SystemBalanceDocs
 
 from catalog.views import FilterDesignToolView
+from catalog.views import QucsFilterDownload
+from catalog.views import SchematicSVGDownload
 
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
@@ -102,4 +104,6 @@ urlpatterns = [
     #################################################################################
     # FILTER DESIGN TOOL
     path('tool/filter_design', FilterDesignToolView, name='filter_design_tool'),
+    path('tool/filter_design/download/schematic', QucsFilterDownload, name='qucs_filter_download'),
+    path('tool/filter_design/download/svg/', SchematicSVGDownload, name='svg_download'),
 ]

@@ -16,6 +16,8 @@ from bokeh.plotting import figure
 from bokeh.models import Legend, LegendItem
 from bokeh.models import Arrow, NormalHead
 from bokeh.models import ColumnDataSource, LabelSet
+from bokeh.models import LinearAxis, Range1d
+
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -28,30 +30,17 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg') # Set the backend here
 
+# Import modules for file download
+import mimetypes
+import os
+from django.http.response import HttpResponse
+
+schematic_drawing = None # Global variable storing the schematic. By doing this, the schematic file is generated just when the user clicks download
+design_global = None
+
 def FilterDesignDocs(request):
     return render(request, 'FilterDesign/docs/FilterDesignTool.html')
 
-
-def getPlot(freq, S21, S11, Response, Mask, fc):
-    #Plot intercept diagram
-    title = "Filter Response: " + Response + ',  ' + Mask + ', fc = '+ str(fc) + ' MHz' 
-    plot = figure(plot_width=800, plot_height=400, title=title)
-
-    S21_min = 10*np.floor(np.min(S21)/10)
-    if (S21_min > -30):
-        S21_min = -30
-    plot.y_range.start = S21_min
-    plot.y_range.end = 0
-    plot.yaxis.ticker = np.linspace(S21_min, 0, round(-S21_min/5)+1)
-    # Lines
-    plot.line(freq, S21, line_width=2, color="red", legend_label="S21") # S21
-    plot.line(freq, S11, line_width=2, color="navy", legend_label="S11") # S11
-
-    plot.xaxis.axis_label = 'frequency (MHz)'
-    plot.yaxis.axis_label = 'Response (dB)'
-    plot.legend.location = 'bottom_right'
-
-    return plot
 
 @csrf_exempt
 def FilterDesignToolView(request):
@@ -146,20 +135,64 @@ def FilterDesignToolView(request):
             designer.n_points = int(n_points)
             designer.Xres = Xres
             
-            Schematic, freq, S11, S21 = designer.synthesize()
+            Schematic, connections = designer.synthesize()
             svgcode = Schematic.get_imagedata('svg')
-            Schematic.save('schematic.svg')
-            ## Bokeh plot
-            plot = getPlot(freq, S21, S11, Response, Mask, Cutoff)
+            
+            # The schematic drawing is stored in a global variable so that the file is generated when the user clicks the download button
+            global schematic_drawing
+            schematic_drawing = Schematic
+
+            # The design object is stored as a local variable so that the Qucs schematic is generated just when the user clicks the download button
+            global design_global
+            design_global = designer
+
+
+            # Calculate S-parameters
+            circuit = rf.Circuit(connections)
+            a = network2.Network.from_ntwkv1(circuit.network)
+            S = a.s.val[:]
+            freq = a.frequency.f*1e-6
+            S11 = 20*np.log10(np.abs(S[:,1][:,1]))
+            S21 = 20*np.log10(np.abs(S[:,1][:,0]))
+            
+            # Response
+            title = Response + " Bandpass Filter, N = "+ str(N) + ", Ripple = " + str(Ripple) + " dB" 
+            ResponsePlot = figure(plot_width=800, plot_height=400, title=title, y_range=[-50, 0])
+            ResponsePlot.line(freq, S11, line_width=2, color="navy", legend_label="S11")
+            ResponsePlot.line(freq, S21, line_width=2, color="red", legend_label="S21")
+            ResponsePlot.xaxis.axis_label = 'Frequency (MHz)';
+            ResponsePlot.yaxis.axis_label = 'Response (dB)';
+            ResponsePlot.legend.location = 'bottom_right';
+
+            # Group delay
+            gd = abs(circuit.network.s21.group_delay[:, 0][:, 0]) *1e9 # in ns
+            title = "Group Delay " + Response + " Bandpass Filter, N = "+ str(N) + ", Ripple = " + str(Ripple) + " dB" 
+            GroupDelayPlot = figure(plot_width=800, plot_height=400, title=title, y_range=[0, 1.1*max(gd)])
+            GroupDelayPlot.line(freq, gd, line_width=2, color="navy", legend_label="Group Delay")
+            GroupDelayPlot.xaxis.axis_label = 'Frequency (MHz)';
+            GroupDelayPlot.yaxis.axis_label = 'Group Delay (ns)';
+            GroupDelayPlot.legend.location = 'bottom_right';
+
+            phase = (180/np.pi)*np.angle(S[:,1][:,0])
+            GroupDelayPlot.extra_y_ranges = {"phase": Range1d(start=-180, end=180)}
+            GroupDelayPlot.add_layout(LinearAxis(y_range_name="phase", axis_label="Phase (deg)"), 'right')
+            GroupDelayPlot.line(x=freq, y=phase, legend_label='Phase', 
+            y_range_name="phase", color="green")
 
             # Get warnings
             warning = designer.warning
 
-            #Store components 
             response_data = {}
-            script, div = components(plot)
-            response_data['script'] = script
-            response_data['div'] = div
+            
+            # Prepare objects for the html 
+            scriptResponse, divResponse = components(ResponsePlot)
+            response_data['scriptResponse'] = scriptResponse
+            response_data['divResponse'] = divResponse
+
+            scriptGroupDelay, divGroupDelay = components(GroupDelayPlot)
+            response_data['scriptGroupDelay'] = scriptGroupDelay
+            response_data['divGroupDelay'] = divGroupDelay
+
             response_data['warning'] = warning
             response_data['svg'] = svgcode.decode('utf-8')
             context['form_filter_design'] = form_filter_design
@@ -179,7 +212,7 @@ def FilterDesignToolView(request):
         designer.FirstElement = 2 # First series
         designer.Ripple = 0.01
         designer.Mask = Mask
-        designer.N = 3
+        designer.N = 5
         designer.fc = fc
         designer.ZS = 50
         designer.ZL = 50
@@ -192,21 +225,116 @@ def FilterDesignToolView(request):
         designer.getLowpassCoefficients()
         
         # Filter response
-        Schematic, freq, S11, S21 = designer.synthesize()
+        Schematic, connections = designer.synthesize()
 
         # Drawing
         svgcode = Schematic.get_imagedata('svg')
+        schematic_drawing = Schematic # The schematic drawing is stored in a global variable so that the file is generated when the user clicks the download button
+        design_global = designer # The design object is stored as a local variable so that the Qucs schematic is generated just when the user clicks the download button
 
-        ## Bokeh plot
-        plot = getPlot(freq, S21, S11, Response, Mask, fc)
 
-        #Store components 
-        script, div = components(plot)
-        context['script'] = script
-        context['div'] = div
-        context['svg'] = svgcode
+        # Calculate S-parameters
+        circuit = rf.Circuit(connections)
+        a = network2.Network.from_ntwkv1(circuit.network)
+        S = a.s.val[:]
+        freq = a.frequency.f*1e-6
+        S11 = 20*np.log10(np.abs(S[:,1][:,1]))
+        S21 = 20*np.log10(np.abs(S[:,1][:,0]))
+        
+        # Response
+        title = Response + " Bandpass Filter, N = "+ str(designer.N) + ", Ripple = " + str(designer.Ripple) + " dB" 
+        ResponsePlot = figure(plot_width=800, plot_height=400, title=title, y_range=[-50, 0])
+        ResponsePlot.line(freq, S11, line_width=2, color="navy", legend_label="S11")
+        ResponsePlot.line(freq, S21, line_width=2, color="red", legend_label="S21")
+        ResponsePlot.xaxis.axis_label = 'Frequency (MHz)';
+        ResponsePlot.yaxis.axis_label = 'Response (dB)';
+        ResponsePlot.legend.location = 'bottom_right';
+
+        # Group delay
+        gd = abs(circuit.network.s21.group_delay[:, 0][:, 0]) *1e9 # in ns
+        title = "Group Delay " + Response + " Bandpass Filter, N = "+ str(designer.N) + ", Ripple = " + str(designer.Ripple) + " dB" 
+        GroupDelayPlot = figure(plot_width=800, plot_height=400, title=title, y_range=[0, max(gd)+10])
+        GroupDelayPlot.line(freq, gd, line_width=2, color="navy", legend_label="Group Delay")
+        GroupDelayPlot.xaxis.axis_label = 'Frequency (MHz)';
+        GroupDelayPlot.yaxis.axis_label = 'Group Delay (ns)';
+        GroupDelayPlot.legend.location = 'bottom_right';
+
+        phase = (180/np.pi)*np.angle(S[:,1][:,0])
+        GroupDelayPlot.extra_y_ranges = {"phase": Range1d(start=-180, end=180)}
+        GroupDelayPlot.add_layout(LinearAxis(y_range_name="phase", axis_label="Phase (deg)"), 'right')
+        GroupDelayPlot.line(x=freq, y=phase, legend_label='Phase', 
+        y_range_name="phase", color="green")
+
+        # Prepare objets for the html 
+        scriptResponse, divResponse = components(ResponsePlot)
+        context['scriptResponse'] = scriptResponse
+        context['divResponse'] = divResponse
+
+        scriptGroupDelay, divGroupDelay = components(GroupDelayPlot)
+        context['scriptGroupDelay'] = scriptGroupDelay
+        context['divGroupDelay'] = divGroupDelay
+
+        context['svg'] = svgcode # Schematic
 
     context['form_filter_design']= form_filter_design
 
 
     return render(request, 'FilterDesign/tool/FilterDesignTool.html', context)
+
+# Source: https://linuxhint.com/download-the-file-in-django/
+@csrf_exempt
+def QucsFilterDownload(request):
+    # Create the Qucs schematic from the designer specs
+    global design_global
+    QucsSchematic = design_global.getQucsSchematic()
+
+    # Save schematic to file
+    filename = "QucsSchematic-export.sch"
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    filepath = BASE_DIR + '/templates/download/' + filename
+    schematic_name = filepath
+    schematic_file = open(schematic_name, "w")
+    n = schematic_file.write(QucsSchematic)
+    schematic_file.close()
+
+    # Open the file for reading content
+    path = open(filepath, 'r')
+    # Set the mime type
+    mime_type, _ = mimetypes.guess_type(filepath)
+    # Set the return value of the HttpResponse
+    response = HttpResponse(path, content_type=mime_type)
+    # Set the HTTP header for sending to browser
+    response['Content-Disposition'] = "attachment; filename=%s" % filename
+    # Return the response value
+    return response
+
+# Source: https://linuxhint.com/download-the-file-in-django/
+@csrf_exempt
+def SchematicSVGDownload(request):
+    global schematic_drawing # Take the schematic from the global button
+    # Generate the SVG file
+    filename = 'schematic.svg'
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    filepath = BASE_DIR + '/templates/download/' + filename
+    schematic_drawing.save(filepath)
+
+    # Prepare to download
+    ########################################################
+    # Define Django project base directory
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Define text file name
+    print("Location of the schematic:", BASE_DIR)
+    filename = 'schematic.svg'
+    # Define the full file path
+    filepath = BASE_DIR + '/templates/download/' + filename
+    # Open the file for reading content
+    path = open(filepath, 'r')
+    # Set the mime type
+    mime_type, _ = mimetypes.guess_type(filepath)
+    # Set the return value of the HttpResponse
+    response = HttpResponse(path, content_type=mime_type)
+    # Set the HTTP header for sending to browser
+    response['Content-Disposition'] = "attachment; filename=%s" % filename
+    # Return the response value
+    return response
+    
