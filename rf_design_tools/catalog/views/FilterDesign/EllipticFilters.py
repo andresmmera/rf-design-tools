@@ -13,6 +13,9 @@ from ..utilities import *
 import skrf as rf
 from skrf import network2
 
+# Import for the generation of the Qucs schematic
+from datetime import date
+
 # Reference:
 # [1] "Elliptic Approximation and Elliptic Filter Design on Small Computers",
 # Pierre Amstutz, IEEE Transactions on Circuits and Systems, vol. CAS-25, No 12, December 1978
@@ -124,8 +127,6 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
     C = []
     L = []
     ground = []
-    
-    posx = 0 # This index is used to draw the circuit
     
     # Source port
     # Drawing: Source port and the first line
@@ -1320,3 +1321,362 @@ def RearrangeTypesABC(Lseries, Cseries, Cshunt, Elliptic_Type):
     print(Cseries)
     
     return Lseries, Cseries, Cshunt
+
+# This function exports the filter as a Qucs schematic. Depending on the filter type it delegates the task into another function.
+def getEllipticFilterQucsSchematic(params):
+    Mask = params['Mask']
+    FirstElement = params['FirstElement']
+
+    if ((Mask == 'Lowpass') and (FirstElement == 2)):
+        QucsSchematic = getLowpassEllipticFirstSeriesFilterQucsSchematic(params)
+    if ((Mask == 'Highpass') and (FirstElement == 2)):
+        QucsSchematic = getHighpassEllipticFirstSeriesFilterQucsSchematic(params)
+
+    return QucsSchematic
+
+# This function exports the first series elliptic LPF
+def getLowpassEllipticFirstSeriesFilterQucsSchematic(params):
+    # Unpack the dictionary
+    Cshunt = params['Cshunt']
+    Cseries = params['Cseries']
+    Lseries = params['Lseries']
+    Elliptic_Type = params['EllipticType']
+    N =  params['N']
+    RS = params['ZS']
+    RL = params['ZL']
+    fc = params['fc']*1e6
+    Mask = params['Mask']
+    Response = params['Response']
+
+    count_L = 0
+    count_C = 0
+
+    # Set initial positions and text
+    x = 60 # Current x-position in the schematic
+    y = 150 # Current y-position in the schematic
+    ys = 60
+
+    # Position of the text in the lower branch components
+    xtext_lower = 17
+    ytext_lower = -26
+
+    # Position of the text in the upper branch components
+    xtext_upper = -35
+    ytext_upper = -65
+    
+    schematic = "<Qucs Schematic 0.0.20>\n"
+
+    # Size of the frame
+    frame_DIN = 3
+    if (((Mask == 'Bandpass') or (Mask == 'Bandstop')) and (N > 5)):
+        frame_DIN = 5
+
+    # Frame
+    datasetName = "sample.dat"
+    title = Response + " " + Mask + " Filter" + " - Order " + str(N)
+    today = date.today()
+    d = today.strftime("%B %d, %Y")
+    schematic += ("<Properties>\n<View=0,-60,800,800,0.683014,0,0>\n<Grid=10,10,1>\n<DataSet=" 
+                + datasetName
+                + ">\n<DataDisplay=sample.dpl>\n<OpenDisplay=0>\n<Script=sample.m>\n<RunScript=0>\n<showFrame=" + str(frame_DIN) + ">\n"
+                + "<FrameText0=" + title + ">\n<FrameText1=Drawn By: Andrés Martínez Mera>\n<FrameText2=Date: " 
+                + d + ">\n<FrameText3=Revision:>\n</Properties>\n<Symbol>\n</Symbol>\n")
+
+    components = "<Components>\n"
+    wires = "<Wires>\n"
+
+    # Source
+    components += "<Pac P1 1 " + str(x) + " " + str(y + 150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"1\" 1 \"" + str(RS) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 180) + " 0 0 0 0>\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x; y1 = y+120; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    step = 90
+
+    for i in range(N):
+            
+        x += step
+        ## Series inductor
+        L = getUnitsWithScale(RS / (2 * np.pi * fc) * Cshunt[i], 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        
+        # Wire to the previous component
+        x1 = x-step; x2 = x-30; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        x += step
+        ## Shunt capacitor
+        count_C += 1
+        C = getUnitsWithScale(1 / (2 * np.pi * fc * RS) * Lseries[i], 'Capacitance')
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y+60) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        # Capacitor to mainline
+        x1 = x; x2 = x; y1 = y+30; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Node to the previous component
+        x1 = x-step+30; x2 = x; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        
+        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
+            ## Shunt inductor
+
+            L = getUnitsWithScale(RS / (2 * np.pi * fc) * Cseries[i], 'Inductance')
+            count_L += 1
+            components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y+150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+            components += "<GND *1 5 " + str(x) + " " + str(y+180) + " 0 0 0 0>\n"
+
+            # Wire to the capacitor
+            x1 = x; x2 = x; y1 = y+120; y2 = y+90
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        else:
+            x1 = x; x2 = x+step+30; y1 = y; y2 = y
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+            components += "<GND *1 5 " + str(x) + " " + str(y+90) + " 0 0 0 0>\n"
+            
+    
+    x += step
+    if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):          
+        L = getUnitsWithScale(RS / (2 * np.pi * fc) * Cshunt[-1], 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        
+        # Wire to the previous component
+        x1 = x-step; x2 = x-30; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Load port
+    if ((Elliptic_Type != 'Type S') and (Elliptic_Type != 'Type C')):
+        RL = round(RS*RS/RL, 2)
+        
+    x += step
+    components += "<Pac P2 1 " + str(x) + " " + str(y + 150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"2\" 1 \"" + str(RL) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 180) + " 0 0 0 0>\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x; y1 = y+120; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Node to the previous component
+    x1 = x-step+30; x2 = x; y1 = y; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Add title, diagrams, S-parameter block and equations
+    comps, footer = getFooter(params, 400)
+    components += comps # Add S-parameter simulation block
+
+    # Close components block
+    components += "</Components>\n"
+    wires += "</Wires>\n"
+
+    schematic += components
+    schematic += wires
+    schematic += footer
+
+    return schematic
+
+# This function exports the first series elliptic LPF
+def getHighpassEllipticFirstSeriesFilterQucsSchematic(params):
+    # Unpack the dictionary
+    Cshunt = params['Cshunt']
+    Cseries = params['Cseries']
+    Lseries = params['Lseries']
+    Elliptic_Type = params['EllipticType']
+    N =  params['N']
+    RS = params['ZS']
+    RL = params['ZL']
+    fc = params['fc']*1e6
+    Mask = params['Mask']
+    Response = params['Response']
+
+    count_L = 0
+    count_C = 0
+
+    # Set initial positions and text
+    x = 60 # Current x-position in the schematic
+    y = 150 # Current y-position in the schematic
+    ys = 60
+
+    # Position of the text in the lower branch components
+    xtext_lower = 17
+    ytext_lower = -26
+
+    # Position of the text in the upper branch components
+    xtext_upper = -35
+    ytext_upper = -65
+    
+    schematic = "<Qucs Schematic 0.0.20>\n"
+
+    # Size of the frame
+    frame_DIN = 3
+    if (((Mask == 'Bandpass') or (Mask == 'Bandstop')) and (N > 5)):
+        frame_DIN = 5
+
+    # Frame
+    datasetName = "sample.dat"
+    title = Response + " " + Mask + " Filter" + " - Order " + str(N)
+    today = date.today()
+    d = today.strftime("%B %d, %Y")
+    schematic += ("<Properties>\n<View=0,-60,800,800,0.683014,0,0>\n<Grid=10,10,1>\n<DataSet=" 
+                + datasetName
+                + ">\n<DataDisplay=sample.dpl>\n<OpenDisplay=0>\n<Script=sample.m>\n<RunScript=0>\n<showFrame=" + str(frame_DIN) + ">\n"
+                + "<FrameText0=" + title + ">\n<FrameText1=Drawn By: Andrés Martínez Mera>\n<FrameText2=Date: " 
+                + d + ">\n<FrameText3=Revision:>\n</Properties>\n<Symbol>\n</Symbol>\n")
+
+    components = "<Components>\n"
+    wires = "<Wires>\n"
+
+    # Source
+    components += "<Pac P1 1 " + str(x) + " " + str(y + 150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"1\" 1 \"" + str(RS) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 180) + " 0 0 0 0>\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x; y1 = y+120; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    step = 90
+
+    for i in range(N):
+            
+        x += step
+        ## Series capacitor
+        C = getUnitsWithScale(1 / (2 * np.pi * fc * RS * Cshunt[i]), 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        
+        # Wire to the previous component
+        x1 = x-step; x2 = x-30; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        x += step
+        ## Shunt inductor
+        count_L += 1
+        L = getUnitsWithScale(RS / (2 * np.pi * fc * Lseries[i]), 'Inductance')
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y+60) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        # Capacitor to mainline
+        x1 = x; x2 = x; y1 = y+30; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Node to the previous component
+        x1 = x-step+30; x2 = x; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        
+        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
+            ## Shunt capacitor
+            C = getUnitsWithScale(1 / (2 * np.pi * fc * RS * Cseries[i]), 'Capacitance')
+            count_C += 1
+            components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y+150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+            components += "<GND *1 5 " + str(x) + " " + str(y+180) + " 0 0 0 0>\n"
+
+            # Wire to the capacitor
+            x1 = x; x2 = x; y1 = y+120; y2 = y+90
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        else:
+            x1 = x; x2 = x+step+30; y1 = y; y2 = y
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+            components += "<GND *1 5 " + str(x) + " " + str(y+90) + " 0 0 0 0>\n"
+            
+    
+    x += step
+    if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):          
+        C = getUnitsWithScale(1 / (2 * np.pi * fc * RS * Cshunt[-1]), 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        
+        # Wire to the previous component
+        x1 = x-step; x2 = x-30; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Load port
+    if ((Elliptic_Type != 'Type S') and (Elliptic_Type != 'Type C')):
+        RL = round(RS*RS/RL, 2)
+        
+    x += step
+    components += "<Pac P2 1 " + str(x) + " " + str(y + 150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"2\" 1 \"" + str(RL) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 180) + " 0 0 0 0>\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x; y1 = y+120; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Node to the previous component
+    x1 = x-step+30; x2 = x; y1 = y; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Add title, diagrams, S-parameter block and equations
+    comps, footer = getFooter(params, 400)
+    components += comps # Add S-parameter simulation block
+
+    # Close components block
+    components += "</Components>\n"
+    wires += "</Wires>\n"
+
+    schematic += components
+    schematic += wires
+    schematic += footer
+
+    return schematic
+
+# Returns a footer for the schematics containing the title, the simulation block, the equations and the diagrams
+def getFooter(params, y_offset):
+    f_start = params['f_start']
+    f_stop = params['f_stop']
+    n_points = params['n_points']
+    Response = params['Response']
+    N = params['N']
+    ZS = params['ZS']
+    Mask = params['Mask']
+    Ripple = params['Ripple']
+    fc = params['fc']
+
+    # S-parameter simulation block
+    x_block = 60
+    y_block = y_offset
+    components = ''
+    components += "<.SP SP1 1 " + str(x_block) + " " + str(y_block) + " 0 67 0 0 \"lin\" 1 \"" + str(f_start) + " MHz \" 1 \"" + str(f_stop) + " MHz \" 1 \"" + str(n_points) + "\" 1 \"no\" 0 \"1\" 0 \"2\" 0>\n"
+    components += "<Eqn Eqn1 1 " + str(x_block + 200) + " " + str(y_block) + " -28 15 0 0 \"S21_dB=dB(S[2,1])\" 1 \"S11_dB=dB(S[1,1])\" 1 \"S22_dB=dB(S[2,2])\" 1 \"yes\" 0>\n"
+    components += "<Eqn Eqn2 1 " + str(x_block + 400) + " " + str(y_block) + " -28 15 0 0 \"gd=groupdelay(S,2,1)\" 1 \"phase=(180/pi)*angle(S[2,1])\" 1 \"yes\" 0>\n"
+
+    # Text
+    y_title = str(50)
+    paintings = "<Paintings>\n"
+    today = date.today()
+    copyright = " - Copyright \u00A9 2020-" + str(today.year) + " Andrés Martínez Mera - GNU Public License Version 3"
+
+    paintings += ("<Text 50" + " " + y_title + " 15 #000000 0 \"" 
+                    + Response + " " + Mask + " Filter" + ", Order: " + str(N) + ", Ripple: " + str(Ripple) + " dB, "
+                    + str(fc) + " MHz, Z_0 = " + str(ZS) + " Ohm" + copyright + "\">\n")
+
+    
+    # Diagrams
+    x_size = 400
+    y_size = 300
+    x_pos = 170
+    y_pos = y_offset + 520
+    diagrams = "<Diagrams>\n"
+    # Response
+    paintings += ("<Text " + str(x_pos + round(x_size/2) - 50) + " " + str(y_pos - y_size - 40) + " 18 #000000 0 \"" + "Response\">\n")
+    diagrams += ("<Rect " + str(x_pos) + " " + str(y_pos) +" " + str(x_size) + " " + str(y_size) + " 3 #c0c0c0 1 00 1 0 0.2 1 0 -50 5 5 1 -0.1 0.5 1.1 315 0 225 \"\" \"\" \"\" \"\">\n")
+    diagrams += str("<\"S21_dB\" #ff0000 0 3 0 0 0>\n")
+    diagrams += str("<\"S11_dB\" #0000ff 0 3 0 0 0>\n")
+    diagrams += "</Rect>\n"
+    
+    # Group Delay and phase
+    paintings += ("<Text " + str(x_pos + x_size + 100 + round(x_size/2) - 120) + " " + str(y_pos - y_size - 40) + " 18 #000000 0 \"" + "Group Delay and Phase\">\n")
+    diagrams += ("<Rect " + str(x_pos + x_size + 100 ) + " " + str(y_pos) +" " + str(x_size) + " " + str(y_size) + " 3 #c0c0c0 1 00 1 0 0.2 1 1 -4 1 4 0 -180 90 180 315 0 225 \"\" \"\" \"\" \"\">\n")
+    diagrams += str("<\"gd\" #0000ff 0 3 0 0 0>\n")
+    diagrams += str("<\"phase\" #00aa00 0 3 0 0 1>\n")
+    diagrams += "</Rect>\n"
+
+    diagrams += "</Diagrams>\n"
+    paintings += "</Paintings>\n"
+
+    footer = diagrams + paintings
+
+    return components, footer

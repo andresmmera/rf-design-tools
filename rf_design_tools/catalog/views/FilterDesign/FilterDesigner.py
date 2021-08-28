@@ -46,6 +46,9 @@ class Filter:
         self.PhaseError = 0.05
         self.warning = ''
         self.Xres = [] # Reactances selected by the user for the Direct Coupled LC filter design
+        self.Lseries = []
+        self.Cseries = []
+        self.Cshunt = []
 
         if (self.Mask =='Bandpass' or self.Mask =='Bandstop'):
             self.w1 = 2*np.pi*self.f1*1e6 # rad/s
@@ -237,6 +240,11 @@ class Filter:
         params['n_points'] = self.n_points
         params['Response'] = self.Response
         params['Ripple'] = self.Ripple
+        params['Cseries'] = self.Cseries
+        params['Lseries'] = self.Lseries
+        params['Cshunt'] = self.Cshunt
+        params['EllipticType'] = self.EllipticType
+
         return params
 
     def synthesize(self):
@@ -251,6 +259,12 @@ class Filter:
                 else:
                     Lseries, Cseries, Cshunt, RL = EllipticTypeABC_Coefficients(self.a_s, self.Ripple, self.N, self.ZS, self.EllipticType)
                     Lseries, Cseries, Cshunt = RearrangeTypesABC(Lseries, Cseries, Cshunt, self.EllipticType)
+
+                # Save them into the class so that the export function can use them
+                self.Lseries = Lseries
+                self.Cseries = Cseries
+                self.Cshunt = Cshunt
+                self.ZL = RL
 
                 Schematic, connections = SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, self.EllipticType, self.Mask, self.FirstElement, self.ZS, RL, self.fc*1e6, (self.f2-self.f1)*1e6, self.f_start, self.f_stop, self.n_points);
             else: # Conventional LC filters
@@ -307,5 +321,10 @@ class Filter:
     def getQucsSchematic(self):
         params = self.getParams()
         if (self.Structure == 'Conventional LC'):
-            QucsSchematic, QucsSchematicFile = getCanonicalFilterQucsSchematic(params)
+            if (self.Response == 'Elliptic'):
+                QucsSchematic = getEllipticFilterQucsSchematic(params)
+            else:
+                QucsSchematic = getCanonicalFilterQucsSchematic(params)
+
+            
         return QucsSchematic

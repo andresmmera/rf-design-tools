@@ -364,8 +364,9 @@ def getCanonicalFilterQucsSchematic(params):
     count_L = 0
     count_C = 0
 
-    x = 60 # Current position in the schematic
-    y = 150 # Current position in the schematic
+    # Set initial positions and text
+    x = 60 # Current x-position in the schematic
+    y = 150 # Current y-position in the schematic
     xtext = 17
     ytext = -26
 
@@ -732,7 +733,5 @@ def getCanonicalFilterQucsSchematic(params):
     schematic += wires
     schematic += paintings
     schematic += diagrams
-
-    schematic_name = Response + " " + Mask + " Filter " + str(N) + ".sch"
     
-    return schematic, schematic_name
+    return schematic
