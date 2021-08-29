@@ -230,6 +230,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
         Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
         if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
             connections.append([(Port2, 0), (C[-2], 1), (C[-1], 0), (L[-1] , 1)])
+            connections.append([(C[-1], 1), (ground[-1] , 0)])
         else:
             connections.append([(Port2, 0), (L[-1] , 1)])
             
@@ -1327,10 +1328,18 @@ def getEllipticFilterQucsSchematic(params):
     Mask = params['Mask']
     FirstElement = params['FirstElement']
 
-    if ((Mask == 'Lowpass') and (FirstElement == 2)):
-        QucsSchematic = getLowpassEllipticFirstSeriesFilterQucsSchematic(params)
-    if ((Mask == 'Highpass') and (FirstElement == 2)):
-        QucsSchematic = getHighpassEllipticFirstSeriesFilterQucsSchematic(params)
+    if (FirstElement == 1): # First shunt
+        if (Mask == 'Lowpass'):
+            QucsSchematic = getLowpassEllipticFirstShuntFilterQucsSchematic(params)
+        elif(Mask == 'Highpass'):
+            QucsSchematic = getHighpassEllipticFirstShuntFilterQucsSchematic(params)
+        elif(Mask == 'Bandpass'):
+            QucsSchematic = getBandpassEllipticFirstShuntFilterQucsSchematic(params)
+    else: # First series
+        if (Mask == 'Lowpass'):
+            QucsSchematic = getLowpassEllipticFirstSeriesFilterQucsSchematic(params)
+        elif(Mask == 'Highpass'):
+            QucsSchematic = getHighpassEllipticFirstSeriesFilterQucsSchematic(params)
 
     return QucsSchematic
 
@@ -1611,6 +1620,599 @@ def getHighpassEllipticFirstSeriesFilterQucsSchematic(params):
 
     # Add title, diagrams, S-parameter block and equations
     comps, footer = getFooter(params, 400)
+    components += comps # Add S-parameter simulation block
+
+    # Close components block
+    components += "</Components>\n"
+    wires += "</Wires>\n"
+
+    schematic += components
+    schematic += wires
+    schematic += footer
+
+    return schematic
+
+
+# This function exports the first shunt elliptic LPF
+def getLowpassEllipticFirstShuntFilterQucsSchematic(params):
+    # Unpack the dictionary
+    Cshunt = params['Cshunt']
+    Cseries = params['Cseries']
+    Lseries = params['Lseries']
+    Elliptic_Type = params['EllipticType']
+    N =  params['N']
+    RS = params['ZS']
+    RL = params['ZL']
+    fc = params['fc']*1e6
+    Mask = params['Mask']
+    Response = params['Response']
+
+    count_L = 0
+    count_C = 0
+
+    # Set initial positions and text
+    x = 60 # Current x-position in the schematic
+    y = 150 # Current y-position in the schematic
+    ys = 60
+
+    # Position of the text in the lower branch components
+    xtext_lower = 18
+    ytext_lower = -25
+
+    # Position of the text in the upper branch components
+    xtext_upper = -30
+    ytext_upper = 10
+    
+    schematic = "<Qucs Schematic 0.0.20>\n"
+
+    # Size of the frame
+    frame_DIN = 3
+    if (N > 7):
+        frame_DIN = 5
+
+    # Frame
+    datasetName = "sample.dat"
+    title = Response + " " + Mask + " Filter" + " - Order " + str(N)
+    today = date.today()
+    d = today.strftime("%B %d, %Y")
+    schematic += ("<Properties>\n<View=0,-60,800,800,0.683014,0,0>\n<Grid=10,10,1>\n<DataSet=" 
+                + datasetName
+                + ">\n<DataDisplay=sample.dpl>\n<OpenDisplay=0>\n<Script=sample.m>\n<RunScript=0>\n<showFrame=" + str(frame_DIN) + ">\n"
+                + "<FrameText0=" + title + ">\n<FrameText1=Drawn By: Andrés Martínez Mera>\n<FrameText2=Date: " 
+                + d + ">\n<FrameText3=Revision:>\n</Properties>\n<Symbol>\n</Symbol>\n")
+
+    components = "<Components>\n"
+    wires = "<Wires>\n"
+
+    # Source
+    components += "<Pac P1 1 " + str(x) + " " + str(y + 150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"1\" 1 \"" + str(RS) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 180) + " 0 0 0 0>\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x; y1 = y+120; y2 = y + 60
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x+80; y1 = y+60; y2 = y + 60
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    x += 50
+    step = 90
+
+    for i in range(N):
+            
+        x += step
+        ## Shunt capacitor
+        C = getUnitsWithScale(Cshunt[i] / (2 * np.pi * fc * RS), 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y+150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        components += "<GND *1 5 " + str(x) + " " + str(y+180) + " 0 0 0 0>\n"
+
+
+        # Shunt capacitor to node
+        x1 = x; x2 = x; y1 = y+120; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Node to the previous series capacitor
+        x1 = x-step+30; x2 = x; y1 = y + 60; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Node
+        x1 = x; x2 = x; y1 = y+60; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        if (i > 0):
+            # Node to the previous series inductor
+            x1 = x-step+30; x2 = x; y1 = y; y2 = y
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        x += step
+        ## Series inductor
+        count_L += 1
+        L = getUnitsWithScale(Lseries[i] * RS / (2 * np.pi * fc), 'Inductance')
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y+60) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        # Current inductor to node
+        x1 = x-30; x2 = x-step; y1 = y + 60; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        
+        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
+            ## Series capacitor
+            C = getUnitsWithScale(Cseries[i] / (2 * np.pi * fc * RS), 'Capacitance')
+            count_C += 1
+            components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper-70) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+            # Current capacitor to node
+            x1 = x-30; x2 = x-step; y1 = y; y2 = y
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        else:
+            x1 = x+30; x2 = x+90; y1 = y+60; y2 = y+60
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+            
+    
+    x += step
+    if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):          
+        C = getUnitsWithScale(Cshunt[-1]/ (2 * np.pi * fc * RS), 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y+150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        components += "<GND *1 5 " + str(x) + " " + str(y+180) + " 0 0 0 0>\n"
+
+        # Shunt capacitor to node
+        x1 = x; x2 = x; y1 = y+120; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Node to the previous series capacitor
+        x1 = x-step+30; x2 = x; y1 = y + 60; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Node
+        x1 = x; x2 = x; y1 = y+60; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Node to the previous series inductor
+        x1 = x-step+30; x2 = x; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Load port
+    if ((Elliptic_Type != 'Type S') and (Elliptic_Type != 'Type C')):
+        RL = round(RS*RS/RL, 2)
+        
+    x += (step + 60)
+    components += "<Pac P2 1 " + str(x) + " " + str(y + 150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"2\" 1 \"" + str(RL) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 180) + " 0 0 0 0>\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x; y1 = y+120; y2 = y+60
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Node to the previous component
+    x1 = x-step-60; x2 = x; y1 = y+60; y2 = y+60
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Add title, diagrams, S-parameter block and equations
+    comps, footer = getFooter(params, 400)
+    components += comps # Add S-parameter simulation block
+
+    # Close components block
+    components += "</Components>\n"
+    wires += "</Wires>\n"
+
+    schematic += components
+    schematic += wires
+    schematic += footer
+
+    return schematic
+
+
+# This function exports the first shunt elliptic LPF
+def getHighpassEllipticFirstShuntFilterQucsSchematic(params):
+    # Unpack the dictionary
+    Cshunt = params['Cshunt']
+    Cseries = params['Cseries']
+    Lseries = params['Lseries']
+    Elliptic_Type = params['EllipticType']
+    N =  params['N']
+    RS = params['ZS']
+    RL = params['ZL']
+    fc = params['fc']*1e6
+    Mask = params['Mask']
+    Response = params['Response']
+
+    count_L = 0
+    count_C = 0
+
+    # Set initial positions and text
+    x = 60 # Current x-position in the schematic
+    y = 150 # Current y-position in the schematic
+    ys = 60
+
+    # Position of the text in the lower branch components
+    xtext_lower = 18
+    ytext_lower = -25
+
+    # Position of the text in the upper branch components
+    xtext_upper = -30
+    ytext_upper = 10
+    
+    schematic = "<Qucs Schematic 0.0.20>\n"
+
+    # Size of the frame
+    frame_DIN = 3
+    if (N > 7):
+        frame_DIN = 5
+
+    # Frame
+    datasetName = "sample.dat"
+    title = Response + " " + Mask + " Filter" + " - Order " + str(N)
+    today = date.today()
+    d = today.strftime("%B %d, %Y")
+    schematic += ("<Properties>\n<View=0,-60,800,800,0.683014,0,0>\n<Grid=10,10,1>\n<DataSet=" 
+                + datasetName
+                + ">\n<DataDisplay=sample.dpl>\n<OpenDisplay=0>\n<Script=sample.m>\n<RunScript=0>\n<showFrame=" + str(frame_DIN) + ">\n"
+                + "<FrameText0=" + title + ">\n<FrameText1=Drawn By: Andrés Martínez Mera>\n<FrameText2=Date: " 
+                + d + ">\n<FrameText3=Revision:>\n</Properties>\n<Symbol>\n</Symbol>\n")
+
+    components = "<Components>\n"
+    wires = "<Wires>\n"
+
+    # Source
+    components += "<Pac P1 1 " + str(x) + " " + str(y + 150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"1\" 1 \"" + str(RS) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 180) + " 0 0 0 0>\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x; y1 = y+120; y2 = y + 60
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x+80; y1 = y+60; y2 = y + 60
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    x += 50
+    step = 90
+
+    for i in range(N):
+        x += step
+        ## Shunt inductor
+        L = getUnitsWithScale(RS / (2 * np.pi * fc * Cshunt[i]), 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y+150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        components += "<GND *1 5 " + str(x) + " " + str(y+180) + " 0 0 0 0>\n"
+
+
+        # Shunt capacitor to node
+        x1 = x; x2 = x; y1 = y+120; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Node to the previous series capacitor
+        x1 = x-step+30; x2 = x; y1 = y + 60; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Node
+        x1 = x; x2 = x; y1 = y+60; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        if (i > 0):
+            # Node to the previous series inductor
+            x1 = x-step+30; x2 = x; y1 = y; y2 = y
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        x += step
+        ## Series capacitor
+        count_C += 1
+        C = getUnitsWithScale(1 / (2 * np.pi * fc * RS * Lseries[i]), 'Capacitance')
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y+60) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        # Current inductor to node
+        x1 = x-30; x2 = x-step; y1 = y + 60; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        
+        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
+            ## Series inductor
+            L = getUnitsWithScale(RS / (2 * np.pi * fc * Cseries[i]), 'Inductance')
+            count_L += 1
+            components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper-70) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+            # Current capacitor to node
+            x1 = x-30; x2 = x-step; y1 = y; y2 = y
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        else:
+            x1 = x+30; x2 = x+90; y1 = y+60; y2 = y+60
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+            
+    
+    x += step
+    if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):          
+        L = getUnitsWithScale(RS / (2 * np.pi * fc * Cshunt[-1]), 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y+150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        components += "<GND *1 5 " + str(x) + " " + str(y+180) + " 0 0 0 0>\n"
+
+        # Shunt capacitor to node
+        x1 = x; x2 = x; y1 = y+120; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Node to the previous series capacitor
+        x1 = x-step+30; x2 = x; y1 = y + 60; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Node
+        x1 = x; x2 = x; y1 = y+60; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Node to the previous series inductor
+        x1 = x-step+30; x2 = x; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Load port
+    if ((Elliptic_Type != 'Type S') and (Elliptic_Type != 'Type C')):
+        RL = round(RS*RS/RL, 2)
+        
+    x += (step + 60)
+    components += "<Pac P2 1 " + str(x) + " " + str(y + 150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"2\" 1 \"" + str(RL) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 180) + " 0 0 0 0>\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x; y1 = y+120; y2 = y+60
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Node to the previous component
+    x1 = x-step-60; x2 = x; y1 = y+60; y2 = y+60
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Add title, diagrams, S-parameter block and equations
+    comps, footer = getFooter(params, 400)
+    components += comps # Add S-parameter simulation block
+
+    # Close components block
+    components += "</Components>\n"
+    wires += "</Wires>\n"
+
+    schematic += components
+    schematic += wires
+    schematic += footer
+
+    return schematic
+
+# This function exports the first shunt elliptic LPF
+def getBandpassEllipticFirstShuntFilterQucsSchematic(params):
+    # Unpack the dictionary
+    Cshunt = params['Cshunt']
+    Cseries = params['Cseries']
+    Lseries = params['Lseries']
+    Elliptic_Type = params['EllipticType']
+    N =  params['N']
+    RS = params['ZS']
+    RL = params['ZL']
+    fc = params['fc']*1e6
+    f1 = params['f1']*1e6
+    f2 = params['f2']*1e6
+    Mask = params['Mask']
+    Response = params['Response']
+
+    bw = f2 - f1
+
+    count_L = 0
+    count_C = 0
+
+    # Set initial positions and text
+    x = 60 # Current x-position in the schematic
+    y = 200 # Current y-position in the schematic
+    ys = 60
+
+    # Position of the text in the lower branch components
+    xtext_lower = 18
+    ytext_lower = -25
+
+    # Position of the text in the upper branch components
+    xtext_upper = -30
+    ytext_upper = 10
+    
+    schematic = "<Qucs Schematic 0.0.20>\n"
+
+    # Size of the frame
+    frame_DIN = 3
+    if (N == 3):
+        frame_DIN = 5
+    elif(N > 3):
+        frame_DIN = 0
+ 
+
+    # Frame
+    datasetName = "sample.dat"
+    title = Response + " " + Mask + " Filter" + " - Order " + str(N)
+    today = date.today()
+    d = today.strftime("%B %d, %Y")
+    schematic += ("<Properties>\n<View=0,-60,800,800,0.683014,0,0>\n<Grid=10,10,1>\n<DataSet=" 
+                + datasetName
+                + ">\n<DataDisplay=sample.dpl>\n<OpenDisplay=0>\n<Script=sample.m>\n<RunScript=0>\n<showFrame=" + str(frame_DIN) + ">\n"
+                + "<FrameText0=" + title + ">\n<FrameText1=Drawn By: Andrés Martínez Mera>\n<FrameText2=Date: " 
+                + d + ">\n<FrameText3=Revision:>\n</Properties>\n<Symbol>\n</Symbol>\n")
+
+    components = "<Components>\n"
+    wires = "<Wires>\n"
+
+    # Source
+    components += "<Pac P1 1 " + str(x) + " " + str(y + 150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"1\" 1 \"" + str(RS) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 180) + " 0 0 0 0>\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x; y1 = y+120; y2 = y + 60
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    x1 = x; x2 = x+110; y1 = y+60; y2 = y + 60
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    x += 50
+    step = 140
+
+    # Scaling
+    Kl = RS / (2 * np.pi * fc);
+    Kc = 1 / (RS  * 2 * np.pi * fc)
+    delta = bw / fc;
+
+    for i in range(N):
+        x += step
+        # Shunt parallel resonator
+        L = getUnitsWithScale(Kl * delta / (Cshunt[i]), 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x-60) + " " + str(y+150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        components += "<GND *1 5 " + str(x-60) + " " + str(y+180) + " 0 0 0 0>\n"
+
+        C = getUnitsWithScale(Cshunt[i] * Kc / delta, 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x+60) + " " + str(y+150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        components += "<GND *1 5 " + str(x+60) + " " + str(y+180) + " 0 0 0 0>\n"
+
+        # Shunt inductor to node
+        x1 = x - 60; x2 = x - 60; y1 = y + 120; y2 = y + 100
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Shunt capacitor to node
+        x1 = x + 60; x2 = x + 60; y1 = y + 120; y2 = y + 100
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Wire between capacitor and inductor
+        x1 = x - 60; x2 = x; y1 = y + 100; y2 = y + 100
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x; x2 = x + 60; y1 = y + 100; y2 = y + 100
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Wire to the node
+        x1 = x; x2 = x; y1 = y + 100; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Wire to the previous section
+        x1 = x - 80; x2 = x; y1 = y+60; y2 = y+60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        x += step
+        ## Upper branch series resonator
+        count_L += 1
+        L = getUnitsWithScale(Kl * Lseries[i] / delta, 'Inductance')
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y+60) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        x += step
+        count_C += 1
+        C = getUnitsWithScale(Kc * delta / Lseries[i], 'Capacitance')
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y+60) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        # Wire between capacitor and inductor
+        x1 = x-step+30; x2 = x-30; y1 = y + 60; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Wire from the series inductor to the node
+        x1 = x-step-30; x2 = x-step-60; y1 = y + 60; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x-step-60; x2 = x-2*step; y1 = y + 60; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Wire from the series capacitor to the next node
+        x1 = x+30; x2 = x+60; y1 = y + 60; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        
+        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
+            # Upper-branch parallel resonator
+            offset = round(0.5*step)
+            L = getUnitsWithScale(Kl * delta / Cseries[i], 'Inductance')
+            count_L += 1
+            components += "<L L" + str(count_L) + " 1 " + str(x-offset) + " " + str(y+20) + " " + str(xtext_upper) + " " + str(ytext_upper-70) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+            C = getUnitsWithScale(Kc * Cseries[i] / delta, 'Capacitance')
+            count_C += 1
+            components += "<C C" + str(count_C) + " 1 " + str(x-offset) + " " + str(y-60) + " " + str(xtext_upper) + " " + str(ytext_upper-70) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+            # Wire from the parallel inductor to the previous node
+            x1 = x-offset-30; x2 = x-step-60; y1 = y + 20; y2 = y + 20
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+            x1 = x-step-60; x2 = x-step-60; y1 = y + 60; y2 = y + 20
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+            # Wire from the parallel capacitor to the previous node
+            x1 = x-offset-30; x2 = x-step-60; y1 = y - 60; y2 = y - 60
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+            x1 = x-step-60; x2 = x-step-60; y1 = y - 60; y2 = y + 20
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+            # Wire from the parallel inductor to the next node
+            x1 = x-offset+30; x2 = x+60; y1 = y + 20; y2 = y + 20
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+            x1 = x+60; x2 = x+60; y1 = y + 60; y2 = y + 20
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+            # Wire from the parallel capacitor to the next node
+            x1 = x-offset+30; x2 = x+60; y1 = y - 60; y2 = y - 60
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+            x1 = x+60; x2 = x+60; y1 = y - 60; y2 = y + 20
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        else:
+            # Wire from the parallel capacitor to the next node
+            x1 = x+60; x2 = x+step; y1 = y + 60; y2 = y + 60
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+            
+    
+    
+    if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
+        x += step        
+        # Lower-branch parallel resonator
+        L = getUnitsWithScale(Kl * delta / (Cshunt[-1]), 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x-60) + " " + str(y+150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        components += "<GND *1 5 " + str(x-60) + " " + str(y+180) + " 0 0 0 0>\n"
+
+        C = getUnitsWithScale(Cshunt[-1] * Kc / delta, 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x+60) + " " + str(y+150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        components += "<GND *1 5 " + str(x+60) + " " + str(y+180) + " 0 0 0 0>\n"
+
+        # Shunt inductor to node
+        x1 = x - 60; x2 = x - 60; y1 = y + 120; y2 = y + 100
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Shunt capacitor to node
+        x1 = x + 60; x2 = x + 60; y1 = y + 120; y2 = y + 100
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Wire between capacitor and inductor
+        x1 = x - 60; x2 = x; y1 = y + 100; y2 = y + 100
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x; x2 = x + 60; y1 = y + 100; y2 = y + 100
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Wire to the node
+        x1 = x; x2 = x; y1 = y + 100; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Wire to the previous section
+        x1 = x - 80; x2 = x; y1 = y+60; y2 = y+60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        x1 = x; x2 = x+step; y1 = y+60; y2 = y + 60
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Load port
+    if ((Elliptic_Type != 'Type S') and (Elliptic_Type != 'Type C')):
+        RL = round(RS*RS/RL, 2)
+        
+    x += (step + 60)
+    components += "<Pac P2 1 " + str(x) + " " + str(y + 150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"2\" 1 \"" + str(RL) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 180) + " 0 0 0 0>\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x; y1 = y+120; y2 = y + 60
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    x1 = x-60; x2 = x; y1 = y+60; y2 = y + 60
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Add title, diagrams, S-parameter block and equations
+    comps, footer = getFooter(params, 420)
     components += comps # Add S-parameter simulation block
 
     # Close components block
