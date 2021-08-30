@@ -1,23 +1,13 @@
 # Copyright 2020-2021 Andrés Martínez Mera - andresmartinezmera@gmail.com
 # Schematic drawing
-from mysql.connector import connection
-import schemdraw as schem
-import schemdraw.elements as elm
-from skrf.mathFunctions import find_closest
-
 # Get units with scale, etc.
 from ..utilities import *
 from .CanonicalFilters import *
 from .EllipticFilters import *
 from .DirectCoupledFilters import *
+from .exportQucs import getEllipticFilterQucsSchematic, getCanonicalFilterQucsSchematic
 
 import numpy as np
-
-# standard imports
-import skrf as rf
-from skrf import network2
-
-from multiprocessing.pool import ThreadPool
 
 import mysql.connector # MySQL connection for getting the filter coefficient from the Zverev Tables
 
