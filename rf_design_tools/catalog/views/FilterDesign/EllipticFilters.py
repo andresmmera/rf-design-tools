@@ -950,11 +950,11 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             Cshunt_ = Kc / (delta * Cshunt[i]);
             d.pop()
-            d += elm.Line().up().length(1).linewidth(1)
+            d += elm.Line().up().length(2).linewidth(1)
             d += elm.Line().right().length(1).linewidth(1)
             d += elm.Capacitor().right().label(getUnitsWithScale(Cshunt_, 'Capacitance'), fontsize=_fontsize).linewidth(1)
             d += elm.Line().right().length(1).linewidth(1)
-            d += elm.Line().down().length(1).linewidth(1)
+            d += elm.Line().down().length(2).linewidth(1)
             
             # Network
             count_L += 1
@@ -1049,13 +1049,17 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d.pop()
             d.push()
             Lshunt_ =   Kl * Cshunt[-1] * delta
+            d += elm.Line().right().length(1).linewidth(1)
             d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lshunt_, 'Inductance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Line().right().length(1).linewidth(1)
             
             d.pop()
-            d += elm.Line().up().length(1).linewidth(1)
+            d += elm.Line().up().length(2).linewidth(1)
+            d += elm.Line().right().length(1).linewidth(1)
             Cshunt_ = Kc / (delta * Cshunt[-1]);
             d += elm.Capacitor().right().label(getUnitsWithScale(Cshunt_, 'Capacitance'), fontsize=_fontsize).linewidth(1)
-            d += elm.Line().down().length(1).linewidth(1)
+            d += elm.Line().right().length(1).linewidth(1)
+            d += elm.Line().down().length(2).linewidth(1)
             
             # Network
             count_C += 1
@@ -1335,6 +1339,8 @@ def getEllipticFilterQucsSchematic(params):
             QucsSchematic = getHighpassEllipticFirstShuntFilterQucsSchematic(params)
         elif(Mask == 'Bandpass'):
             QucsSchematic = getBandpassEllipticFirstShuntFilterQucsSchematic(params)
+        elif(Mask == 'Bandstop'):
+            QucsSchematic = getBandstopEllipticFirstShuntFilterQucsSchematic(params)
     else: # First series
         if (Mask == 'Lowpass'):
             QucsSchematic = getLowpassEllipticFirstSeriesFilterQucsSchematic(params)
@@ -1342,6 +1348,8 @@ def getEllipticFilterQucsSchematic(params):
             QucsSchematic = getHighpassEllipticFirstSeriesFilterQucsSchematic(params)
         elif(Mask == 'Bandpass'):
             QucsSchematic = getBandpassEllipticFirstSeriesFilterQucsSchematic(params)
+        elif(Mask == 'Bandstop'):
+            QucsSchematic = getBandstopEllipticFirstSeriesFilterQucsSchematic(params)
 
     return QucsSchematic
 
@@ -2408,6 +2416,225 @@ def getBandpassEllipticFirstSeriesFilterQucsSchematic(params):
     x1 = x; x2 = x-step+90; y1 = y; y2 = y 
     wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
 
+
+    # Add title, diagrams, S-parameter block and equations
+    comps, footer = getFooter(params, 420)
+    components += comps # Add S-parameter simulation block
+
+    # Close components block
+    components += "</Components>\n"
+    wires += "</Wires>\n"
+
+    schematic += components
+    schematic += wires
+    schematic += footer
+
+    return schematic
+
+def getBandstopEllipticFirstSeriesFilterQucsSchematic(params):
+    # Unpack the dictionary
+    Cshunt = params['Cshunt']
+    Cseries = params['Cseries']
+    Lseries = params['Lseries']
+    Elliptic_Type = params['EllipticType']
+    N =  params['N']
+    RS = params['ZS']
+    RL = params['ZL']
+    fc = params['fc']*1e6
+    f1 = params['f1']*1e6
+    f2 = params['f2']*1e6
+    Mask = params['Mask']
+    Response = params['Response']
+
+    bw = f2 - f1
+
+    count_L = 0
+    count_C = 0
+
+    # Set initial positions and text
+    x = 60 # Current x-position in the schematic
+    y = 200 # Current y-position in the schematic
+    ys = 60
+
+    # Position of the text in the lower branch components
+    xtext_lower = 18
+    ytext_lower = -25
+
+    # Position of the text in the upper branch components
+    xtext_upper = -37
+    ytext_upper = -65
+    
+    schematic = "<Qucs Schematic 0.0.20>\n"
+
+    # Size of the frame
+    frame_DIN = 3
+    if (N == 3):
+        frame_DIN = 5
+    elif(N > 3):
+        frame_DIN = 0
+ 
+
+    # Frame
+    datasetName = "sample.dat"
+    title = Response + " " + Mask + " Filter" + " - Order " + str(N)
+    today = date.today()
+    d = today.strftime("%B %d, %Y")
+    schematic += ("<Properties>\n<View=0,-60,800,800,0.683014,0,0>\n<Grid=10,10,1>\n<DataSet=" 
+                + datasetName
+                + ">\n<DataDisplay=sample.dpl>\n<OpenDisplay=0>\n<Script=sample.m>\n<RunScript=0>\n<showFrame=" + str(frame_DIN) + ">\n"
+                + "<FrameText0=" + title + ">\n<FrameText1=Drawn By: Andrés Martínez Mera>\n<FrameText2=Date: " 
+                + d + ">\n<FrameText3=Revision:>\n</Properties>\n<Symbol>\n</Symbol>\n")
+
+    components = "<Components>\n"
+    wires = "<Wires>\n"
+
+    x += 50
+    step = 130
+
+    # Scaling
+    Kl = RS / (2 * np.pi * fc);
+    Kc = 1 / (RS  * 2 * np.pi * fc)
+    delta = bw / fc;
+
+    # Source
+    components += "<Pac P1 1 " + str(x) + " " + str(y + 150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"1\" 1 \"" + str(RS) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 180) + " 0 0 0 0>\n"
+
+    # Wire to the mainline
+    x1 = x; x2 = x; y1 = y+120; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+
+    for i in range(N):
+        x += step
+        
+        # Upper-brach parallel resonator
+        L = getUnitsWithScale(Kl * Cshunt[i] * delta, 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y+40) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        C = getUnitsWithScale(Kc / (delta * Cshunt[i]), 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y-40) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+    
+        # Wires to the previous node
+        x1 = x-60; x2 = x-30; y1 = y+40; y2 = y+40 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x-60; x2 = x-30; y1 = y-40; y2 = y-40 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x-60; x2 = x-60; y1 = y-40; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x-60; x2 = x-60; y1 = y+40; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x-step; x2 = x-60; y1 = y; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Wires to the next node
+        x1 = x+60; x2 = x+30; y1 = y+40; y2 = y+40 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x+60; x2 = x+30; y1 = y-40; y2 = y-40 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x+60; x2 = x+60; y1 = y-40; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x+60; x2 = x+60; y1 = y+40; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x+step; x2 = x+60; y1 = y; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+       
+        x += step
+        # Lower-branch series resonator
+        L = getUnitsWithScale(Kl / (delta * Lseries[i]), 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y+60) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        C = getUnitsWithScale(Kc * Lseries[i] * delta, 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y+140) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        # Wire between components
+        x1 = x; x2 = x; y1 = y+90; y2 = y+110 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Wire to the mainline
+        x1 = x; x2 = x; y1 = y+30; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
+
+            # Lower-branch parallel resonator
+            L = getUnitsWithScale(Kl * delta * Cseries[i], 'Inductance')
+            count_L += 1
+            components += "<L L" + str(count_L) + " 1 " + str(x-60) + " " + str(y+230) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+            components += "<GND *1 5 " + str(x-60) + " " + str(y + 260) + " 0 0 0 0>\n"
+
+            C = getUnitsWithScale(Kc / (Cseries[i] * delta), 'Capacitance')
+            count_C += 1
+            components += "<C C" + str(count_C) + " 1 " + str(x+60) + " " + str(y+230) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+            components += "<GND *1 5 " + str(x+60) + " " + str(y + 260) + " 0 0 0 0>\n"
+
+            # Wires to the node
+            x1 = x-60; x2 = x-60; y1 = y+200; y2 = y+180
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+            x1 = x+60; x2 = x+60; y1 = y+200; y2 = y+180
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+            x1 = x+60; x2 = x; y1 = y+180; y2 = y+180
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+            x1 = x-60; x2 = x; y1 = y+180; y2 = y+180
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+            x1 = x; x2 = x; y1 = y+180; y2 = y+170
+            wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        else:
+            components += "<GND *1 5 " + str(x) + " " + str(y + 170) + " 0 0 0 0>\n"
+
+
+    if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
+        x += step
+        # Last upper-branch parallel resonator
+        L = getUnitsWithScale(Kl * Cshunt[-1] * delta, 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y+40) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        C = getUnitsWithScale(Kc / (delta * Cshunt[-1]), 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y-40) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+ 
+        # Wires to the previous node
+        x1 = x-60; x2 = x-30; y1 = y+40; y2 = y+40 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x-60; x2 = x-30; y1 = y-40; y2 = y-40 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x-60; x2 = x-60; y1 = y-40; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x-60; x2 = x-60; y1 = y+40; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x-step; x2 = x-60; y1 = y; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Wires to the next node
+        x1 = x+60; x2 = x+30; y1 = y+40; y2 = y+40 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x+60; x2 = x+30; y1 = y-40; y2 = y-40 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x+60; x2 = x+60; y1 = y-40; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x+60; x2 = x+60; y1 = y+40; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        x1 = x+step; x2 = x+60; y1 = y; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+    else:
+        x1 = x; x2 = x+step; y1 = y; y2 = y 
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+        RL = round(RL, 2)
+
+    # Source
+    x += step
+    components += "<Pac P2 1 " + str(x) + " " + str(y + 150) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"2\" 1 \"" + str(RL) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 180) + " 0 0 0 0>\n"
+
+    # Wires to the mainline
+    x1 = x; x2 = x; y1 = y+120; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
 
     # Add title, diagrams, S-parameter block and equations
     comps, footer = getFooter(params, 420)
