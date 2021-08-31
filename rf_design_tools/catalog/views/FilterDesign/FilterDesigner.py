@@ -8,7 +8,7 @@ from .DirectCoupledFilters import *
 
 
 from .exportQucs import getEllipticFilterQucsSchematic, getCanonicalFilterQucsSchematic
-from .exportQucs import get_DirectCoupled_C_Coupled_ShuntResonators_QucsSchematic
+from .exportQucs import get_DirectCoupled_ShuntResonators_QucsSchematic
 
 import numpy as np
 
@@ -238,6 +238,7 @@ class Filter:
         params['Cshunt'] = self.Cshunt
         params['EllipticType'] = self.EllipticType
         params['Xres'] = self.Xres
+        params['DC_Type'] = self.DC_Type
 
         return params
 
@@ -320,8 +321,8 @@ class Filter:
             else:
                 QucsSchematic = getCanonicalFilterQucsSchematic(params)
         elif(self.Structure == 'Direct Coupled LC'):
-            if (self.DC_Type == "C-coupled shunt resonators"):
-                QucsSchematic = get_DirectCoupled_C_Coupled_ShuntResonators_QucsSchematic(params)
+            if ("shunt" or "Wave" in self.DC_Type):
+                QucsSchematic = get_DirectCoupled_ShuntResonators_QucsSchematic(params)
 
             
         return QucsSchematic

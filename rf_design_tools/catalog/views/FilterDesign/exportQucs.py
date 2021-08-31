@@ -5,6 +5,8 @@ from datetime import date
 
 # Import functions for filter synthesis
 from .DirectCoupledFilters import synthesize_DC_Filter_C_Coupled_Shunt_Resonators
+from .DirectCoupledFilters import synthesize_DC_Filter_L_Coupled_Shunt_Resonators
+from .DirectCoupledFilters import synthesize_DC_Filter_QW_Shunt_Resonators
 
 # This function exports the filter as a Qucs schematic
 def getCanonicalFilterQucsSchematic(params):
@@ -1935,7 +1937,7 @@ def getBandstopEllipticFirstShuntFilterQucsSchematic(params):
     return schematic
 
 # Export Direct Coupled filters with shunt resonators
-def get_DirectCoupled_C_Coupled_ShuntResonators_QucsSchematic(params):
+def get_DirectCoupled_ShuntResonators_QucsSchematic(params):
     # Unpack the dictionary
     N =  params['N']
     RS = params['ZS']
@@ -1945,6 +1947,7 @@ def get_DirectCoupled_C_Coupled_ShuntResonators_QucsSchematic(params):
     
     count_L = 0
     count_C = 0
+    count_TL = 0
 
     # Set initial positions and text
     x = 60 # Current x-position in the schematic
@@ -1961,15 +1964,28 @@ def get_DirectCoupled_C_Coupled_ShuntResonators_QucsSchematic(params):
 
 
     syn_params = {}
-    syn_params['Xres'] = [float(i)*1e-9 for i in params['Xres']]
     syn_params['gi'] = params['gi']
     syn_params['N'] = params['N']
     syn_params['ZS'] = params['ZS']
     syn_params['ZL'] = params['ZL']
     syn_params['f1'] = float(params['f1'])*1e6
     syn_params['f2'] = float(params['f2'])*1e6
-    print("Export: ", syn_params)
-    Cseries, Lres, Cres = synthesize_DC_Filter_C_Coupled_Shunt_Resonators(syn_params)
+    
+    DC_Type = 0
+    if (params['DC_Type'] == 'C-coupled shunt resonators'):
+        syn_params['Xres'] = [float(i)*1e-9 for i in params['Xres']] # Resonator inductance
+        Cseries, Lres, Cres = synthesize_DC_Filter_C_Coupled_Shunt_Resonators(syn_params)
+        DC_Type = 0
+    elif(params['DC_Type'] == 'L-coupled shunt resonators'):
+        syn_params['Xres'] = [float(i)*1e-12 for i in params['Xres']]# Resonator capacitance
+        Lseries, Lres, Cres = synthesize_DC_Filter_L_Coupled_Shunt_Resonators(syn_params)
+        DC_Type = 1
+    elif(params['DC_Type'] == 'Quarter-Wave coupled resonators'):
+        Z0_TL, len_TL, Lres, Cres = synthesize_DC_Filter_QW_Shunt_Resonators(syn_params)
+        len_TL = getUnitsWithScale(len_TL, 'Distance')
+        Z0_TL = str(round(Z0_TL)) + " Ohm"
+        
+        DC_Type = 2
 
 
     schematic = "<Qucs Schematic 0.0.20>\n"
@@ -2011,10 +2027,19 @@ def get_DirectCoupled_C_Coupled_ShuntResonators_QucsSchematic(params):
     wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
 
     x += step
-    # First coupling capacitor
-    C = getUnitsWithScale(Cseries[0], 'Capacitance')
-    count_C += 1
-    components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+    # First coupling element
+    if (DC_Type == 0):
+        C = getUnitsWithScale(Cseries[0], 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+    elif(DC_Type == 1):
+        L = getUnitsWithScale(Lseries[0], 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+    elif(DC_Type == 2):
+        count_TL += 1
+        ytext_upper -= 20
+        components += "<TLIN Line" + str(count_TL) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + Z0_TL + "\" 1 \"" + len_TL + "\" 1 \"0 dB\" 0 \"26.85\" 0>\n"
 
     for i in range (0, N):
             x += step
@@ -2029,7 +2054,7 @@ def get_DirectCoupled_C_Coupled_ShuntResonators_QucsSchematic(params):
             components += "<C C" + str(count_C) + " 1 " + str(x-60) + " " + str(y + 90) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
             components += "<GND *1 5 " + str(x-60) + " " + str(y + 120) + " 0 0 0 0>\n"
 
-            L = getUnitsWithScale(Lres[i], 'Inductance')
+            L = getUnitsWithScale(Lres[i], 'Inductance', 3)
             count_L += 1
             components += "<L L" + str(count_L) + " 1 " + str(x+60) + " " + str(y + 90) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
             components += "<GND *1 5 " + str(x+60) + " " + str(y + 120) + " 0 0 0 0>\n"
@@ -2046,11 +2071,19 @@ def get_DirectCoupled_C_Coupled_ShuntResonators_QucsSchematic(params):
             x1 = x; x2 = x+60; y1 = y+30; y2 = y+30
             wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
            
-            # Next coupling capacitor
+            # Next coupling element
             x += step
-            C = getUnitsWithScale(Cseries[i+1], 'Capacitance', 3)
-            count_C += 1
-            components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+            if (DC_Type == 0):
+                C = getUnitsWithScale(Cseries[i+1], 'Capacitance', 3)
+                count_C += 1
+                components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+            elif(DC_Type == 1):
+                L = getUnitsWithScale(Lseries[i+1], 'Inductance', 3)
+                count_L += 1
+                components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+            elif(DC_Type == 2):
+                count_TL += 1
+                components += "<TLIN Line" + str(count_TL) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + Z0_TL + "\" 1 \"" + len_TL + "\" 1 \"0 dB\" 0 \"26.85\" 0>\n"
 
             # Wire to the current resonator
             x1 = x-30; x2 = x-step; y1 = y; y2 = y

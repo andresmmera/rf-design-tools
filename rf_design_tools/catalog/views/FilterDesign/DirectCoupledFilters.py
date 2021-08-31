@@ -125,7 +125,6 @@ def DirectCoupled_C_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Lres, fstart, fs
     params['ZL'] = RL
     params['f1'] = f1
     params['f2'] = f2
-    print(params)
     Cseries, Lres, Cres = synthesize_DC_Filter_C_Coupled_Shunt_Resonators(params)
         
     # Source port
@@ -206,23 +205,16 @@ def DirectCoupled_C_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Lres, fstart, fs
        
     return d, connections
 
-# gi: Normalized lowpass coefficients
-# RS: Source impedance
-# RL: Load impedance
-# f0: Center frequency
-# BW: Bandwidth
-# Lr: Resonator inductance (it can be chosen by the user)
-
-# Reference: 
-# [1] "Microwave Filters, Impedance-Matching Networks, and Coupling Structures", George L. Matthaei, L. Young, E. M. Jones, Artech House pg. 482
-def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fstop, npoints):
-    Nres = len(gi) - 2 # Number of resonators
-    bw = BW / f0
+def synthesize_DC_Filter_L_Coupled_Shunt_Resonators(params):
     
-    # Calculation of w1, w2, w - 8.11-1 (15)
-    f1 = f0 - BW / 2
-    f2 = f0 + BW / 2
-    
+    Cres = params['Xres']
+    gi = params['gi']
+    Nres =  params['N']
+    RS = params['ZS']
+    RL = params['ZL']
+    f1 = params['f1']
+    f2 = params['f2']
+   
     w1 = 2*np.pi*f1
     w2 = 2*np.pi*f2
     
@@ -232,28 +224,14 @@ def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fs
     # Calculation of GA and GB
     GA = 1 / RS
     GB = 1 / RL
-    
-    # Draw circuit
-    schem.use('svg')
-    d = schem.Drawing(inches_per_unit = 0.3)
-    _fontsize = 8
-    
-    # Network
-    rf.stylely()
-    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
-    line = rf.media.DefinedGammaZ0(frequency=freq)
-    
-    # Component counter
-    count_C = 0
-    count_L = 0
-    count_gnd = 0
-    
+
     # Array of components
     Lseries = []
     J = []
     
     # Resonator capacitance as specified by the user. Later, the capacitance from the pi-C inverters will be substracted
     Lr = []
+    Cres = [float(i) for i in params['Xres']]
     for i in range(0, Nres):
         Lr.append(1 / (Cres[i] * w0*w0) ) # [1] Fig. 8.11-1 (1)
     
@@ -285,6 +263,45 @@ def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fs
         Lres.append(1 / (1/Lr[i] - 1/Lseries[i] - 1/Lseries[i+1])) # [1] Fig. 8.11-1 (9)
         
     Lres.append(1 / (1/Lr[-1] - 1/Lseries[-2] - 1/Ln_np1e)) # [1] Fig. 8.11-1 (10)
+
+    return Lseries, Lres, Cres
+
+# gi: Normalized lowpass coefficients
+# RS: Source impedance
+# RL: Load impedance
+# f0: Center frequency
+# BW: Bandwidth
+# Lr: Resonator inductance (it can be chosen by the user)
+
+# Reference: 
+# [1] "Microwave Filters, Impedance-Matching Networks, and Coupling Structures", George L. Matthaei, L. Young, E. M. Jones, Artech House pg. 482
+def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fstop, npoints):
+    Nres = len(gi) - 2 # Number of resonators
+    
+    # Draw circuit
+    schem.use('svg')
+    d = schem.Drawing(inches_per_unit = 0.3)
+    _fontsize = 8
+    
+    # Network
+    rf.stylely()
+    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
+    line = rf.media.DefinedGammaZ0(frequency=freq)
+    
+    # Component counter
+    count_C = 0
+    count_L = 0
+    count_gnd = 0
+
+    params = {}
+    params['Xres'] = Cres
+    params['gi'] = gi
+    params['N'] = Nres
+    params['ZS'] = RS
+    params['ZL'] = RL
+    params['f1'] = f0-BW/2
+    params['f2'] = f0+BW/2
+    Lseries, Lres, Cres = synthesize_DC_Filter_L_Coupled_Shunt_Resonators(params)
         
     # Source port
     # Drawing: Source port and the first line
@@ -860,6 +877,52 @@ def DirectCoupled_C_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, port_matc
     return d, connections
 
 
+def synthesize_DC_Filter_QW_Shunt_Resonators(params):
+
+    f1 = params['f1']
+    f2 = params['f2']
+    RS = params['ZS']
+    gi = params['gi']
+    Nres = params['N']
+    
+    w1 = 2*np.pi*f1
+    w2 = 2*np.pi*f2
+    f0 = (f1+f2)/2
+    
+    w0 = np.sqrt(w1*w2)
+    w = (w2 - w1) / w0
+    
+    # Calculation of GA and GB
+    Y0 = 1/RS
+
+        # Array of components
+    J = []
+    
+    # Bi/Y0
+    by = []
+    Cres = []
+    Lres = []
+    by.append(gi[0]*gi[1]/w - np.pi/4) # [1] b1/Y0 Fig. 8.10-1 (1)
+    Cres.append(by[0]*Y0/w0)
+    Lres.append(1/(w0*w0*Cres[0]))
+    
+    for i in range(1, Nres-1):
+        if (i % 2 == 1): # Even 
+            by.append(gi[i+1]/(w * gi[0]) - np.pi/2) # [1] Fig. 8.10-1 (3)
+        else: # Odd
+            by.append(gi[i+1] * gi[0]/w  - np.pi/2) # [1] Fig. 8.10-1 (2)
+            
+        Cres.append(by[i]*Y0/w0)
+        Lres.append(1/(w0*w0*Cres[i]))
+    by.append(by[0]) # [1] Fig. 8.10-1 (4)
+    Cres.append(Cres[0])
+    Lres.append(Lres[0])
+    
+    C0 = 299792458 # m/s
+    wavelength = C0/f0
+    qw = wavelength / 4 # lambda / 4
+    return RS, qw, Lres, Cres
+
 # gi: Normalized lowpass coefficients
 # RS: Source impedance
 # RL: Load impedance
@@ -962,7 +1025,7 @@ def DirectCoupled_QW_Coupled_ShuntResonators(gi, RS, RL, f0, BW, fstart, fstop, 
 
         d.pop()
         d += elm.Line().right().length(1).linewidth(1)
-        d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lres[i], 'Inductance'), fontsize=_fontsize).linewidth(1)
+        d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(Lres[i], 'Inductance'), fontsize=_fontsize, loc='bottom').linewidth(1)
         d += elm.Ground().linewidth(1)
         
         # Network
@@ -979,9 +1042,9 @@ def DirectCoupled_QW_Coupled_ShuntResonators(gi, RS, RL, f0, BW, fstart, fstop, 
         # Coupling line
         # Drawing
         d.pop()
-        d += elm.Line().right().length(1).linewidth(1)
+        d += elm.Line().right().length(2).linewidth(1)
         d += TransmissionLine().right().label("l = " + getUnitsWithScale(qw, 'Distance'), fontsize=_fontsize, loc = 'bottom').label("Z\u2080 = " + str(RS) + " \u03A9 ", loc = 'top').linewidth(1)
-        d += elm.Line().right().length(1).linewidth(1)
+        d += elm.Line().right().length(2).linewidth(1)
         
         count_TL += 1
         TL.append(Z0_line.line(Z0_line.theta_2_d(90, deg=True), unit='m', name='TL' + str(count_TL)))
