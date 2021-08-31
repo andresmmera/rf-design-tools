@@ -7,7 +7,7 @@ def ArrayToString(arr):
     return string[:-1]
 
 # Ported from Qucs num2str() function
-def getUnitsWithScale(value, units):
+def getUnitsWithScale(value, units, n_decimals=2):
     c = ''
     cal = abs(value)
     if(cal > 1e-20):
@@ -28,7 +28,7 @@ def getUnitsWithScale(value, units):
         
     if (c!=''):
         value /= pow(10.0, (3.*Expo))
-    value = float("{:.2f}".format(value))
+    value = float(("{:." + str(n_decimals) + "f}").format(value))
         
     # Add units
     if (units == "Capacitance"):

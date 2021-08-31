@@ -14,6 +14,66 @@ from ..components import TransmissionLine
 import skrf as rf
 from skrf import network2
 
+def synthesize_DC_Filter_C_Coupled_Shunt_Resonators(params):
+    Lr = params['Xres']
+    gi = params['gi']
+    N =  params['N']
+    RS = params['ZS']
+    RL = params['ZL']
+    f1 = params['f1']
+    f2 = params['f2']
+
+    GA = 1/RS
+    GB = 1/RL
+
+    w1 = 2*np.pi*f1
+    w2 = 2*np.pi*f2
+    
+    w0 = np.sqrt(w1*w2)
+    w = (w2 - w1) / w0
+    # Array of components
+    Cseries = []
+    J = []
+    
+    # Resonator capacitance as specified by the user. Later, the capacitance from the pi-C inverters will be substracted
+    Cr = []
+    Lres = []
+    for i in range(0, N):
+        Lres.append(float(Lr[i])) # It must be float
+        Cr.append(1 / (Lres[i] * w0*w0) ) # [1] Fig. 8.11-1 (1)
+    
+    # Calculation of the coupling coefficients
+    J.append(np.sqrt( (GA * w0 * Cr[0] * w) / (gi[0]*gi[1]) )) # J01 - First series coupling capacitor. [1] Fig. 8.11-1 (2)
+    
+    for i in range(1, N): # Intermediate coupling capacitors
+        J.append((w*w0) * np.sqrt((Cr[i-1]*Cr[i]) / (gi[i]*gi[i+1]))) # [1] Fig. 8.11-1 (3)
+        
+    J.append(np.sqrt((GB * w0 * Cr[-1] * w) / (gi[-2] * gi[-1]))) # Jn, n+1 - Last series coupling capacitor. [1] Fig. 8.11-1 (4)
+    
+    # Calculation of the coupling capacitances
+    Cseries.append( J[0] / (w0 * np.sqrt(1 - np.power(J[0] / GA, 2))) ) #C01. [1] Fig. 8.11-1 (5)
+                  
+    for i in range(1, N):
+        Cseries.append(J[i] / w0) # Ci, i+1. [1] Fig. 8.11-1 (6)
+
+    Cseries.append(J[-1] / (w0 * np.sqrt(1 - np.power(J[-1] / GB, 2)))) # [1] Fig. 8.11-1 (7)
+                  
+    # Excess of capacitance of first and last resonator
+    C01e = Cseries[0] / (1 + np.power(w0*Cseries[0]/GA, 2)) # First resonator. [1] Fig. 8.11-1 (11)
+    Cn_np1e = Cseries[-1] / (1 + np.power(w0*Cseries[-1]/GB, 2)) # Last resonator. [1] Fig. 8.11-1 (12)
+    
+    # Net shunt capacitances
+    Cres = []
+    Cres.append(Cr[0] - C01e - Cseries[1]) # [1] Fig. 8.11-1 (8)
+    
+    for i in range(1, N-1):
+        Cres.append(Cr[i] - Cseries[i] - Cseries[i+1]) # [1] Fig. 8.11-1 (9)
+        
+    Cres.append(Cr[-1] - Cseries[-2] - Cn_np1e) # [1] Fig. 8.11-1 (10)
+
+    return Cseries, Lres, Cres
+
+
 
 # gi: Normalized lowpass coefficients
 # RS: Source impedance
@@ -57,43 +117,16 @@ def DirectCoupled_C_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Lres, fstart, fs
     count_L = 0
     count_gnd = 0
     
-    # Array of components
-    Cseries = []
-    J = []
-    
-    # Resonator capacitance as specified by the user. Later, the capacitance from the pi-C inverters will be substracted
-    Cr = []
-    for i in range(0, Nres):
-        Cr.append(1 / (Lres[i] * w0*w0) ) # [1] Fig. 8.11-1 (1)
-    
-    # Calculation of the coupling coefficients
-    J.append(np.sqrt( (GA * w0 * Cr[0] * w) / (gi[0]*gi[1]) )) # J01 - First series coupling capacitor. [1] Fig. 8.11-1 (2)
-    
-    for i in range(1, Nres): # Intermediate coupling capacitors
-        J.append((w*w0) * np.sqrt((Cr[i-1]*Cr[i]) / (gi[i]*gi[i+1]))) # [1] Fig. 8.11-1 (3)
-        
-    J.append(np.sqrt((GB * w0 * Cr[-1] * w) / (gi[-2] * gi[-1]))) # Jn, n+1 - Last series coupling capacitor. [1] Fig. 8.11-1 (4)
-    
-    # Calculation of the coupling capacitances
-    Cseries.append( J[0] / (w0 * np.sqrt(1 - np.power(J[0] / GA, 2))) ) #C01. [1] Fig. 8.11-1 (5)
-                  
-    for i in range(1, Nres):
-        Cseries.append(J[i] / w0) # Ci, i+1. [1] Fig. 8.11-1 (6)
-
-    Cseries.append(J[-1] / (w0 * np.sqrt(1 - np.power(J[-1] / GB, 2)))) # [1] Fig. 8.11-1 (7)
-                  
-    # Excess of capacitance of first and last resonator
-    C01e = Cseries[0] / (1 + np.power(w0*Cseries[0]/GA, 2)) # First resonator. [1] Fig. 8.11-1 (11)
-    Cn_np1e = Cseries[-1] / (1 + np.power(w0*Cseries[-1]/GB, 2)) # Last resonator. [1] Fig. 8.11-1 (12)
-    
-    # Net shunt capacitances
-    Cres = []
-    Cres.append(Cr[0] - C01e - Cseries[1]) # [1] Fig. 8.11-1 (8)
-    
-    for i in range(1, Nres-1):
-        Cres.append(Cr[i] - Cseries[i] - Cseries[i+1]) # [1] Fig. 8.11-1 (9)
-        
-    Cres.append(Cr[-1] - Cseries[-2] - Cn_np1e) # [1] Fig. 8.11-1 (10)
+    params = {}
+    params['Xres'] = Lres
+    params['gi'] = gi
+    params['N'] = Nres
+    params['ZS'] = RS
+    params['ZL'] = RL
+    params['f1'] = f1
+    params['f2'] = f2
+    print(params)
+    Cseries, Lres, Cres = synthesize_DC_Filter_C_Coupled_Shunt_Resonators(params)
         
     # Source port
     # Drawing: Source port and the first line
