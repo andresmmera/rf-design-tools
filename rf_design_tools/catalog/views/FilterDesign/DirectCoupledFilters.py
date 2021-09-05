@@ -1,4 +1,5 @@
 # Copyright 2020-2021 Andrés Martínez Mera - andresmartinezmera@gmail.com
+from mysql.connector import connection
 import numpy as np
 
 # Schematic drawing
@@ -381,52 +382,38 @@ def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fs
         
     return d, connections
 
-# gi: Normalized lowpass coefficients
-# RS: Source impedance
-# RL: Load impedance
-# f0: Center frequency
-# BW: Bandwidth
-# Lr: Resonator inductance (it can be chosen by the user)
 
-# Reference: 
-# [1] "Microwave Filters, Impedance-Matching Networks, and Coupling Structures", George L. Matthaei, L. Young, E. M. Jones, Artech House pg. 484
-def DirectCoupled_L_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, Magnetic_Coupling, fstart, fstop, npoints):
+def synthesize_DC_Filter_L_Coupled_Series_Resonators(params):
+
+    f1 = params['f1']
+    f2 = params['f2']
+    Nres = params['N']
+    Cres = params['Xres']
+    RS = params['ZS']
+    RL = params['ZL']
+    gi = params['gi']
+    Magnetic_Coupling = params['Magnetic_Coupling']
+
     Nres = len(gi) - 2 # Number of resonators
-    bw = BW / f0
-    
-    # Calculation of w1, w2, w - 8.11-1 (15)
-    f1 = f0 - BW / 2
-    f2 = f0 + BW / 2
-    
+
     w1 = 2*np.pi*f1
     w2 = 2*np.pi*f2
     
     w0 = np.sqrt(w1*w2)
     w = (w2 - w1) / w0
-       
-    # Draw circuit
-    schem.use('svg')
-    d = schem.Drawing(inches_per_unit = 0.3)
-    _fontsize = 8
-    
-    # Network
-    rf.stylely()
-    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
-    line = rf.media.DefinedGammaZ0(frequency=freq)
-    
-    # Component counter
-    count_C = 0
-    count_L = 0
-    count_gnd = 0
-    
+
     # Array of components
-    Cseries = []
     K = []
     
     # Resonator capacitance as specified by the user. Later, the capacitance from the pi-C inverters will be substracted
-    Cseries = []
-    for i in range(1, Nres+1): # The resonator inductances are the indexes 1 to (Nres + 1). L0 and Ln+1 are the port couplings
-        Cseries.append(1 / (Lres[i] * w0*w0) ) # [1] Fig. 8.11-2 (1)
+    Lres = []
+    Cr = []
+    for i in range(0, Nres): # The resonator inductances are the indexes 1 to (Nres + 1). L0 and Ln+1 are the port couplings
+        Cr.append(float(Cres[i]))
+        Lres.append(1 / (Cr[i] * w0*w0) ) # [1] Fig. 8.11-2 (1)
+    Lres = np.insert(Lres, 0, Lres[0], axis=0)
+    Lres = np.append(Lres, Lres[-1])
+    Cres = Cr
     
     # Calculation of the shunt couplings
     K.append(np.sqrt( (RS * w0 * Lres[1] * w) / (gi[0]*gi[1]) )) # K01 - First shunt coupling. [1] Fig. 8.11-2 (2)
@@ -451,8 +438,7 @@ def DirectCoupled_L_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, Magnetic_
     Me = []
     M01e = (M[0] + (((Lres[0] - M[0])*w0*w0*M[0]*Lres[0])/(RS*RS))) / (1 + np.power(w0*Lres[0]/RS, 2))# M01e. [1] Fig. 8.11-2 (13)
     Mn_np1e = (M[-1] + (((Lres[-1] - M[-1])*w0*w0*M[-1]*Lres[-1])/(RL*RL))) / (1 + np.power(w0*Lres[-1]/RL, 2))# Mn, n+1 e. [1] Fig. 8.11-2 (13)
-    
-            
+
     if (Magnetic_Coupling == 0):
         # The transformers are replaced by the equivalent circuit resulting in series resonators coupled with shunt inductors
         
@@ -466,7 +452,72 @@ def DirectCoupled_L_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, Magnetic_
 
         Lseries.append(Lres[-2] - M[-2] - Mn_np1e);
         Lseries.append(Lres[-1] - M[-1])
+
+        return M, Lseries, Cres
         
+    else:
+        # Transformer inductance
+        Lp = []
+        Lp.append(Lres[0]) # Lp0. [1] Fig. 8.11-2 (15)
+        Lp.append(Lres[1] + M[0] - M01e) # Lp0. [1] Fig. 8.11-2 (16)
+        
+        for i in range(2, Nres):
+            Lp.append(Lres[i]) # Lpj. [1] Fig. 8.11-2 (17)
+        Lp.append(Lres[-2] + M[-1] - Mn_np1e) # Lpn. [1] Fig. 8.11-2 (18)
+        Lp.append(Lres[-1]) # Lpn+1. [1] Fig. 8.11-2 (19)
+        
+        # Halve resonator inductances
+        for i in range (1, Nres+1):
+            Lp[i] = Lp[i]/2
+
+        return M, Lp, Cres
+
+
+# gi: Normalized lowpass coefficients
+# RS: Source impedance
+# RL: Load impedance
+# f0: Center frequency
+# BW: Bandwidth
+# Lr: Resonator inductance (it can be chosen by the user)
+
+# Reference: 
+# [1] "Microwave Filters, Impedance-Matching Networks, and Coupling Structures", George L. Matthaei, L. Young, E. M. Jones, Artech House pg. 484
+def DirectCoupled_L_Coupled_SeriesResonators(params):
+    gi = params['gi']
+    RS = params['ZS']
+    RL = params['ZL']
+    f1 = params['f1']
+    f2 = params['f2']
+    f0 = params['fc']
+    Magnetic_Coupling = params['Magnetic_Coupling']
+    fstart = params['f_start']
+    fstop = params['f_stop']
+    npoints = params['n_points']
+
+    w0 = 2*np.pi*f0*1e6
+
+    Nres = len(gi) - 2 # Number of resonators 
+    # Draw circuit
+    schem.use('svg')
+    d = schem.Drawing(inches_per_unit = 0.3)
+    _fontsize = 8
+    
+    # Network
+    rf.stylely()
+    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
+    line = rf.media.DefinedGammaZ0(frequency=freq)
+    
+    # Component counter
+    count_C = 0
+    count_L = 0
+    count_gnd = 0
+    
+    params['f1'] = params['f1'] *1e6
+    params['f2'] = params['f2'] *1e6
+    M, Lseries, Cres = synthesize_DC_Filter_L_Coupled_Series_Resonators(params)
+    
+              
+    if (Magnetic_Coupling == 0):       
         # Source port
         # Drawing: Source port and the first line
         d += elm.Dot().label('ZS = ' + str(RS) + " \u03A9", fontsize=_fontsize).linewidth(1)
@@ -509,9 +560,9 @@ def DirectCoupled_L_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, Magnetic_
             L.append(line.inductor(Lseries[i+1], name='L' + str(count_L)))
 
             if (i < Nres):
-                d += elm.Capacitor().right().label(getUnitsWithScale(Cseries[i], 'Capacitance'), fontsize=_fontsize).linewidth(1)
+                d += elm.Capacitor().right().label(getUnitsWithScale(Cres[i], 'Capacitance'), fontsize=_fontsize).linewidth(1)
                 count_C += 1
-                C.append(line.capacitor(Cseries[i], name='C' + str(count_C)))
+                C.append(line.capacitor(Cres[i], name='C' + str(count_C)))
 
 
             # Connections
@@ -538,25 +589,8 @@ def DirectCoupled_L_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, Magnetic_
         connections.append([(L[-1], 1), (Port2, 0)])
     else:
         # Magnetic coupling
-        
-        # Transformer inductance
-        Lp = []
-        Lp.append(Lres[0]) # Lp0. [1] Fig. 8.11-2 (15)
-        Lp.append(Lres[1] + M[0] - M01e) # Lp0. [1] Fig. 8.11-2 (16)
-        
-        for i in range(2, Nres):
-            Lp.append(Lres[i]) # Lpj. [1] Fig. 8.11-2 (17)
-        Lp.append(Lres[-2] + M[-1] - Mn_np1e) # Lpn. [1] Fig. 8.11-2 (18)
-        Lp.append(Lres[-1]) # Lpn+1. [1] Fig. 8.11-2 (19)
-        
-        # Halve resonator inductances
-        for i in range (1, Nres+1):
-            Lp[i] = Lp[i]/2
-        
-        print("Cres: ", Cseries)
-        print("Lp: ", Lp)
-        print("M: ", M)
-        
+        Lp = Lseries
+                       
         # Source port
         # Drawing: Source port and the first line
         d += elm.Line(color='white').length(2).linewidth(0)
@@ -584,7 +618,7 @@ def DirectCoupled_L_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, Magnetic_
             d += elm.Ground().at(x.p1).linewidth(1)
             d += elm.Ground().at(x.s1).linewidth(1)
             d += elm.Line().at(x.s2).length(1) 
-            d += elm.Capacitor().right().label(getUnitsWithScale(Cseries[i], 'Capacitance'), fontsize=_fontsize).linewidth(1)
+            d += elm.Capacitor().right().label(getUnitsWithScale(Cres[i], 'Capacitance'), fontsize=_fontsize).linewidth(1)
             d += elm.Line().length(1)
             
             # Network: The transformer is simulated using the uncoupled lumped equivalen (Zverev, Fig. 10.4 (c))
@@ -598,12 +632,12 @@ def DirectCoupled_L_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, Magnetic_
             count_gnd += 1
             ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
             count_C += 1
-            C.append(line.capacitor(Cseries[i], name='C' + str(count_C)))
+            C.append(line.capacitor(Cres[i], name='C' + str(count_C)))
             
             print("L[" + str(3*i) + "] = ", getUnitsWithScale(Lp[i] - M[i], 'Inductance'))
             print("L[" + str(3*i+1) + "] = ", getUnitsWithScale(M[i], 'Inductance'))
             print("L[" + str(3*i+2) + "] = ", getUnitsWithScale(Lp[i+1] - M[i], 'Inductance'))
-            print("C[" + str(i) + "] = ", getUnitsWithScale(Cseries[i], 'Capacitance'))
+            print("C[" + str(i) + "] = ", getUnitsWithScale(Cres[i], 'Capacitance'))
             
             # Connections
             if (i == 0):
@@ -655,47 +689,25 @@ def DirectCoupled_L_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, Magnetic_
     
     return d, connections
 
-# gi: Normalized lowpass coefficients
-# RS: Source impedance
-# RL: Load impedance
-# f0: Center frequency
-# BW: Bandwidth
-# Lr: Resonator inductance (it can be chosen by the user)
 
-# References:
-# [1] "Microwave Filters, Impedance-Matching Networks, and Coupling Structures", George L. Matthaei, L. Young, E. M. Jones, Artech House pg. 484
-# [2] "Filter Handbook", Anatol I. Zverev. John Wiley and Sons, 1967, pages 562-563
+def synthesize_DC_Filter_C_Coupled_Series_Resonators(params):
 
-def DirectCoupled_C_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, port_match, fstart, fstop, npoints):
-    Nres = len(gi) - 2 # Number of resonators
-    bw = BW / f0
-    
-    # Calculation of w1, w2, w - [1] 8.11-1 (15)
-    f1 = f0 - BW / 2
-    f2 = f0 + BW / 2
-    
+    f1 = params['f1']
+    f2 = params['f2']
+    Nres = params['N']
+    Lres = params['Xres']
+    RS = params['ZS']
+    RL = params['ZL']
+    gi = params['gi']
+    port_match = ['C', 'C']
+
     w1 = 2*np.pi*f1
     w2 = 2*np.pi*f2
     
     w0 = np.sqrt(w1*w2)
     w = (w2 - w1) / w0
-      
-    # Draw circuit
-    schem.use('svg')
-    d = schem.Drawing(inches_per_unit = 0.3)
-    _fontsize = 8
-    
-    # Network
-    rf.stylely()
-    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
-    line = rf.media.DefinedGammaZ0(frequency=freq)
-    
-    # Component counter
-    count_C = 0
-    count_L = 0
-    count_gnd = 0
-    
-    # Array of components
+
+        # Array of components
     K = []
     
     # Resonator capacitance as specified by the user. Later, the capacitance from the pi-C inverters will be substracted
@@ -760,7 +772,63 @@ def DirectCoupled_C_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, port_matc
         Cmatch_load = 1/(w0 * (Rp - RL))
     else:
         Lmatch_load = (Rp - RL)/w0
-        
+
+    return Cmatch_source, Cmatch_load, Cinv, Lres, Cres
+
+# gi: Normalized lowpass coefficients
+# RS: Source impedance
+# RL: Load impedance
+# f0: Center frequency
+# BW: Bandwidth
+# Lr: Resonator inductance (it can be chosen by the user)
+
+# References:
+# [1] "Microwave Filters, Impedance-Matching Networks, and Coupling Structures", George L. Matthaei, L. Young, E. M. Jones, Artech House pg. 484
+# [2] "Filter Handbook", Anatol I. Zverev. John Wiley and Sons, 1967, pages 562-563
+
+def DirectCoupled_C_Coupled_SeriesResonators(params, port_match):
+    gi = params['gi']
+    f1 = params['f1']
+    f2 = params['f2']
+    fstart = params['f_start']
+    fstop = params['f_stop']
+    npoints = params['n_points']
+    RS = params['ZS']
+    RL = params['ZL']
+
+    Nres = len(gi) - 2 # Number of resonators
+    
+    w1 = 2*np.pi*f1
+    w2 = 2*np.pi*f2
+    
+    w0 = np.sqrt(w1*w2)
+    w = (w2 - w1) / w0
+      
+    # Draw circuit
+    schem.use('svg')
+    d = schem.Drawing(inches_per_unit = 0.3)
+    _fontsize = 8
+    
+    # Network
+    rf.stylely()
+    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
+    line = rf.media.DefinedGammaZ0(frequency=freq)
+    
+    # Component counter
+    count_C = 0
+    count_L = 0
+    count_gnd = 0
+    
+    syn_params = {}
+    syn_params['gi'] = params['gi']
+    syn_params['N'] = params['N']
+    syn_params['ZS'] = params['ZS']
+    syn_params['ZL'] = params['ZL']
+    syn_params['f1'] = float(params['f1'])*1e6
+    syn_params['f2'] = float(params['f2'])*1e6
+    syn_params['Xres'] = [float(i)*1e-9 for i in params['Xres']] # Resonator inductance
+    Match_source, Match_load, Cinv, Lres, Cres = synthesize_DC_Filter_C_Coupled_Series_Resonators(syn_params)
+    
     # Source port
     # Drawing: Source port and the first line
     d += elm.Line(color='white').length(2).linewidth(0)
@@ -778,20 +846,20 @@ def DirectCoupled_C_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, port_matc
     
     if (port_match[0] == 'C'):
         # Drawing
-        d += elm.Capacitor().right().label(getUnitsWithScale(Cmatch_source, 'Capacitance'), fontsize=_fontsize).linewidth(1)
+        d += elm.Capacitor().right().label(getUnitsWithScale(Match_source, 'Capacitance'), fontsize=_fontsize).linewidth(1)
         d += elm.Line().right().length(1).linewidth(1)
 
         # Network
-        C.append(line.capacitor(Cmatch_source, name='C' + str(count_C)))
+        C.append(line.capacitor(Match_source, name='C' + str(count_C)))
         connections.append([(Port1, 0), (C[0], 0)])
     
     else:
         # Drawing
-        d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lmatch_source, 'Inductance'), fontsize=_fontsize).linewidth(1)
+        d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Match_source, 'Inductance'), fontsize=_fontsize).linewidth(1)
         d += elm.Line().right().length(1).linewidth(1)
 
         # Network
-        L.append(line.inductor(Lmatch_source, name='L' + str(count_L)))
+        L.append(line.inductor(Match_source, name='L' + str(count_L)))
         connections.append([(Port1, 0), (L[0], 0)])
 
     
@@ -845,13 +913,13 @@ def DirectCoupled_C_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, port_matc
     
     d.pop()
     if (port_match[1] == 'C'):
-        d += elm.Capacitor().right().label(getUnitsWithScale(Cmatch_load, 'Capacitance'), fontsize=_fontsize).linewidth(1)
+        d += elm.Capacitor().right().label(getUnitsWithScale(Match_load, 'Capacitance'), fontsize=_fontsize).linewidth(1)
         count_C += 1
-        C.append(line.capacitor(Cmatch_load, name='C' + str(count_C)))
+        C.append(line.capacitor(Match_load, name='C' + str(count_C)))
     else:
-        d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lmatch_load, 'Inductance'), fontsize=_fontsize).linewidth(1)
+        d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Match_load, 'Inductance'), fontsize=_fontsize).linewidth(1)
         count_L += 1
-        L.append(line.capacitor(Lmatch_load, name='L' + str(count_L)))
+        L.append(line.capacitor(Match_load, name='L' + str(count_L)))
     
     # Load port
     # Drawing
@@ -873,7 +941,6 @@ def DirectCoupled_C_Coupled_SeriesResonators(gi, RS, RL, f0, BW, Lres, port_matc
         connections.append([(C[-1], 1), (ground[-1], 0)])
         connections.append([(L[-1], 1), (Port2, 0)])
 
-   
     return d, connections
 
 
@@ -895,9 +962,6 @@ def synthesize_DC_Filter_QW_Shunt_Resonators(params):
     # Calculation of GA and GB
     Y0 = 1/RS
 
-        # Array of components
-    J = []
-    
     # Bi/Y0
     by = []
     Cres = []
@@ -921,7 +985,9 @@ def synthesize_DC_Filter_QW_Shunt_Resonators(params):
     C0 = 299792458 # m/s
     wavelength = C0/f0
     qw = wavelength / 4 # lambda / 4
-    return RS, qw, Lres, Cres
+    RL = RS/gi[-1]
+
+    return RS, RL, qw, Lres, Cres
 
 # gi: Normalized lowpass coefficients
 # RS: Source impedance
@@ -932,21 +998,16 @@ def synthesize_DC_Filter_QW_Shunt_Resonators(params):
 # Reference: 
 # [1] "Microwave Filters, Impedance-Matching Networks, and Coupling Structures", George L. Matthaei, L. Young, E. M. Jones, Artech House pg. 482
 def DirectCoupled_QW_Coupled_ShuntResonators(gi, RS, RL, f0, BW, fstart, fstop, npoints):
-    Nres = len(gi) - 2 # Number of resonators
-    bw = BW / f0
-    
-    # Calculation of w1, w2, w - 8.11-1 (15)
-    f1 = f0 - BW / 2
-    f2 = f0 + BW / 2
-    
-    w1 = 2*np.pi*f1
-    w2 = 2*np.pi*f2
-    
-    w0 = np.sqrt(w1*w2)
-    w = (w2 - w1) / w0
-    
-    # Calculation of GA and GB
-    Y0 = 1/RS
+    Nres = len(gi) - 2 # Number of resonators   
+
+    params = {}
+    params['gi'] = gi
+    params['N'] = Nres
+    params['ZS'] = RS
+    params['ZL'] = RL
+    params['f1'] = f0-BW/2
+    params['f2'] = f0+BW/2
+    RS, RL, qw, Lres, Cres = synthesize_DC_Filter_QW_Shunt_Resonators(params)
     
     # Draw circuit
     schem.use('svg')
@@ -964,32 +1025,7 @@ def DirectCoupled_QW_Coupled_ShuntResonators(gi, RS, RL, f0, BW, fstart, fstop, 
     count_TL = 0
     count_gnd = 0
     
-    # Array of components
-    J = []
-    
-    # Bi/Y0
-    by = []
-    Cres = []
-    Lres = []
-    by.append(gi[0]*gi[1]/w - np.pi/4) # [1] b1/Y0 Fig. 8.10-1 (1)
-    Cres.append(by[0]*Y0/w0)
-    Lres.append(1/(w0*w0*Cres[0]))
-    
-    for i in range(1, Nres-1):
-        if (i % 2 == 1): # Even 
-            by.append(gi[i+1]/(w * gi[0]) - np.pi/2) # [1] Fig. 8.10-1 (3)
-        else: # Odd
-            by.append(gi[i+1] * gi[0]/w  - np.pi/2) # [1] Fig. 8.10-1 (2)
-            
-        Cres.append(by[i]*Y0/w0)
-        Lres.append(1/(w0*w0*Cres[i]))
-    by.append(by[0]) # [1] Fig. 8.10-1 (4)
-    Cres.append(Cres[0])
-    Lres.append(Lres[0])
-    
-    C0 = 299792458 # m/s
-    wavelength = C0/f0
-    qw = wavelength / 4 # lambda / 4
+
     
         
     # Source port

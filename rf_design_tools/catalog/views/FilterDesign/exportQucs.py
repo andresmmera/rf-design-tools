@@ -7,6 +7,8 @@ from datetime import date
 from .DirectCoupledFilters import synthesize_DC_Filter_C_Coupled_Shunt_Resonators
 from .DirectCoupledFilters import synthesize_DC_Filter_L_Coupled_Shunt_Resonators
 from .DirectCoupledFilters import synthesize_DC_Filter_QW_Shunt_Resonators
+from .DirectCoupledFilters import synthesize_DC_Filter_C_Coupled_Series_Resonators
+from .DirectCoupledFilters import synthesize_DC_Filter_L_Coupled_Series_Resonators
 
 # This function exports the filter as a Qucs schematic
 def getCanonicalFilterQucsSchematic(params):
@@ -1971,7 +1973,6 @@ def get_DirectCoupled_ShuntResonators_QucsSchematic(params):
     syn_params['f1'] = float(params['f1'])*1e6
     syn_params['f2'] = float(params['f2'])*1e6
     
-    DC_Type = 0
     if (params['DC_Type'] == 'C-coupled shunt resonators'):
         syn_params['Xres'] = [float(i)*1e-9 for i in params['Xres']] # Resonator inductance
         Cseries, Lres, Cres = synthesize_DC_Filter_C_Coupled_Shunt_Resonators(syn_params)
@@ -1984,9 +1985,7 @@ def get_DirectCoupled_ShuntResonators_QucsSchematic(params):
         Z0_TL, len_TL, Lres, Cres = synthesize_DC_Filter_QW_Shunt_Resonators(syn_params)
         len_TL = getUnitsWithScale(len_TL, 'Distance')
         Z0_TL = str(round(Z0_TL)) + " Ohm"
-        
         DC_Type = 2
-
 
     schematic = "<Qucs Schematic 0.0.20>\n"
 
@@ -2088,6 +2087,344 @@ def get_DirectCoupled_ShuntResonators_QucsSchematic(params):
             # Wire to the current resonator
             x1 = x-30; x2 = x-step; y1 = y; y2 = y
             wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    x += step
+    components += "<Pac P2 1 " + str(x) + " " + str(y + 90) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"2\" 1 \"" + str(RL) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 120) + " 0 0 0 0>\n"
+
+    # Wires to the filter
+    x1 = x; x2 = x; y1 = y+60; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+    x1 = x; x2 = x-step+30; y1 = y; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Add title, diagrams, S-parameter block and equations
+    comps, footer = getFooter(params, 420)
+    components += comps # Add S-parameter simulation block
+
+    # Close components block
+    components += "</Components>\n"
+    wires += "</Wires>\n"
+
+    schematic += components
+    schematic += wires
+    schematic += footer
+
+    return schematic
+
+
+# Export Direct Coupled filters with series resonators
+def get_DirectCoupled_SeriesResonators_QucsSchematic(params):
+    # Unpack the dictionary
+    N =  params['N']
+    RS = params['ZS']
+    RL = params['ZL']
+    Mask = params['Mask']
+    Response = params['Response']
+    
+    count_L = 0
+    count_C = 0
+    count_TL = 0
+
+    # Set initial positions and text
+    x = 60 # Current x-position in the schematic
+    y = 200 # Current y-position in the schematic
+    ylow = y + 90
+
+    # Position of the text in the lower branch components
+    xtext_lower = 18
+    ytext_lower = -25
+
+    # Position of the text in the upper branch components
+    xtext_upper = -36
+    ytext_upper = -64
+
+    syn_params = {}
+    syn_params['gi'] = params['gi']
+    syn_params['N'] = params['N']
+    syn_params['ZS'] = params['ZS']
+    syn_params['ZL'] = params['ZL']
+    syn_params['f1'] = float(params['f1'])*1e6
+    syn_params['f2'] = float(params['f2'])*1e6
+    
+    if (params['DC_Type'] == 'C-coupled series resonators'):
+        syn_params['Xres'] = [float(i)*1e-9 for i in params['Xres']] # Resonator inductance
+        Match_source, Match_load, Cinv, Lres, Cres = synthesize_DC_Filter_C_Coupled_Series_Resonators(syn_params)
+        DC_Type = 0
+    elif(params['DC_Type'] == 'L-coupled series resonators'):
+        syn_params['Xres'] = [float(i)*1e-12 for i in params['Xres']] # Resonator capacitance
+        syn_params['Magnetic_Coupling'] = 0
+        Lshunt, Lres, Cres = synthesize_DC_Filter_L_Coupled_Series_Resonators(syn_params)
+        
+        Match_source = Lres[0]
+        Match_load = Lres[-1]
+        del Lres[0]
+        del Lres[-1]
+
+        DC_Type = 1
+        schematic = "<Qucs Schematic 0.0.20>\n"
+
+    # Size of the frame  
+    if (N < 4):
+        frame_DIN = 3
+    elif ((N == 4) or (N <= 6)):
+        frame_DIN = 5
+    elif(N > 6):
+        frame_DIN = 0
+ 
+
+    # Frame
+    datasetName = "sample.dat"
+    title = Response + " " + Mask + " Filter" + " - Order " + str(N)
+    today = date.today()
+    d = today.strftime("%B %d, %Y")
+    schematic += ("<Properties>\n<View=0,-60,800,800,0.683014,0,0>\n<Grid=10,10,1>\n<DataSet=" 
+                + datasetName
+                + ">\n<DataDisplay=sample.dpl>\n<OpenDisplay=0>\n<Script=sample.m>\n<RunScript=0>\n<showFrame=" + str(frame_DIN) + ">\n"
+                + "<FrameText0=" + title + ">\n<FrameText1=Drawn By: Andrés Martínez Mera>\n<FrameText2=Date: " 
+                + d + ">\n<FrameText3=Revision:>\n</Properties>\n<Symbol>\n</Symbol>\n")
+
+    components = "<Components>\n"
+    wires = "<Wires>\n"
+
+    step = 90
+    
+
+    # Source
+    components += "<Pac P1 1 " + str(x) + " " + str(y + 90) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"1\" 1 \"" + str(RS) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 120) + " 0 0 0 0>\n"
+
+    # Wires to the filter
+    x1 = x; x2 = x; y1 = y+60; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+    x1 = x; x2 = x+step-30; y1 = y; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    x += step
+
+    # First coupling element
+    if (DC_Type == 0):
+        C = getUnitsWithScale(Match_source, 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+    else:
+        L = getUnitsWithScale(Match_source, 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+    # Coupling to the previous node
+    x1 = x+30; x2 = x+step; y1 = y; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Coupling to the previous node
+    x1 = x+step; x2 = x+step; y1 = ylow-30; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    for i in range (0, N):
+        x += step
+
+        # Shunt coupling
+        if (DC_Type == 0):# Shunt capacitor
+            C = getUnitsWithScale(Cinv[i], 'Capacitance')
+            count_C += 1
+            components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(ylow) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+            components += "<GND *1 5 " + str(x) + " " + str(y + 120) + " 0 0 0 0>\n"
+        else: # Shunt inductor
+            L = getUnitsWithScale(Lshunt[i], 'Inductance')
+            count_L += 1
+            components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(ylow) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+            components += "<GND *1 5 " + str(x) + " " + str(y + 120) + " 0 0 0 0>\n"
+       
+        x += step
+        # Series resonator
+        C = getUnitsWithScale(Cres[i], 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        # Capacitor to the previous node
+        x1 = x-step; x2 = x-30; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        x += step
+        L = getUnitsWithScale(Lres[i], 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        # Between L and C in the resonator
+        x1 = x-step+30; x2 = x-30; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Resonator to the node
+        x1 = x+30; x2 = x+step; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Resonator to shunt coupling
+        x1 = x+step; x2 = x+step; y1 = y; y2 = ylow-30
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    x += step
+    # Shunt coupling
+    if (DC_Type == 0):
+        C = getUnitsWithScale(Cinv[-1], 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(ylow) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        components += "<GND *1 5 " + str(x) + " " + str(y + 120) + " 0 0 0 0>\n"
+    else:
+        L = getUnitsWithScale(Lshunt[-1], 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(ylow) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 1 1 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+        components += "<GND *1 5 " + str(x) + " " + str(y + 120) + " 0 0 0 0>\n"
+
+    x += step
+    # Load coupling
+    if (DC_Type == 0):
+        C = getUnitsWithScale(Match_load, 'Capacitance')
+        count_C += 1
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+    else:
+        L = getUnitsWithScale(Match_load, 'Inductance')
+        count_L += 1
+        components += "<L L" + str(count_L) + " 1 " + str(x) + " " + str(y) + " " + str(xtext_upper) + " " + str(ytext_upper) + " 0 0 \"" + L + "\" 1 \"\" 0 \"neutral\" 0>\n"
+  
+    # Capacitor to the previous node
+    x1 = x-step; x2 = x-30; y1 = y; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    x += step
+    components += "<Pac P2 1 " + str(x) + " " + str(y + 90) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"2\" 1 \"" + str(RL) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 120) + " 0 0 0 0>\n"
+
+    # Wires to the filter
+    x1 = x; x2 = x; y1 = y+60; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+    x1 = x; x2 = x-step+30; y1 = y; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    # Add title, diagrams, S-parameter block and equations
+    comps, footer = getFooter(params, 420)
+    components += comps # Add S-parameter simulation block
+
+    # Close components block
+    components += "</Components>\n"
+    wires += "</Wires>\n"
+
+    schematic += components
+    schematic += wires
+    schematic += footer
+
+    return schematic
+
+# Export Direct Coupled filters with series resonators
+def get_DirectCoupled_MagneticCoupledResonators_QucsSchematic(params):
+    # Unpack the dictionary
+    N =  params['N']
+    RS = params['ZS']
+    RL = params['ZL']
+    Mask = params['Mask']
+    Response = params['Response']
+    
+    count_MUT = 0
+    count_C = 0
+
+    # Set initial positions and text
+    x = 60 # Current x-position in the schematic
+    y = 200 # Current y-position in the schematic
+    ylow = y + 90
+
+    # Position of the text in the lower branch components
+    xtext_lower = 18
+    ytext_lower = -25
+
+    # Position of the text in the upper branch components
+    xtext_upper = -36
+    ytext_upper = -64
+
+    syn_params = {}
+    syn_params['gi'] = params['gi']
+    syn_params['N'] = params['N']
+    syn_params['ZS'] = params['ZS']
+    syn_params['ZL'] = params['ZL']
+    syn_params['Xres'] = [float(i)*1e-12 for i in params['Xres']]
+    syn_params['Magnetic_Coupling'] = 1
+    syn_params['f1'] = float(params['f1'])*1e6
+    syn_params['f2'] = float(params['f2'])*1e6
+
+    M, Lp, Cres = synthesize_DC_Filter_L_Coupled_Series_Resonators(syn_params)
+    
+
+    schematic = "<Qucs Schematic 0.0.20>\n"
+
+    # Size of the frame  
+    if (N < 4):
+        frame_DIN = 3
+    elif ((N == 4) or (N <= 6)):
+        frame_DIN = 5
+    elif(N > 6):
+        frame_DIN = 0
+ 
+
+    # Frame
+    datasetName = "sample.dat"
+    title = Response + " " + Mask + " Filter" + " - Order " + str(N)
+    today = date.today()
+    d = today.strftime("%B %d, %Y")
+    schematic += ("<Properties>\n<View=0,-60,800,800,0.683014,0,0>\n<Grid=10,10,1>\n<DataSet=" 
+                + datasetName
+                + ">\n<DataDisplay=sample.dpl>\n<OpenDisplay=0>\n<Script=sample.m>\n<RunScript=0>\n<showFrame=" + str(frame_DIN) + ">\n"
+                + "<FrameText0=" + title + ">\n<FrameText1=Drawn By: Andrés Martínez Mera>\n<FrameText2=Date: " 
+                + d + ">\n<FrameText3=Revision:>\n</Properties>\n<Symbol>\n</Symbol>\n")
+
+    components = "<Components>\n"
+    wires = "<Wires>\n"
+
+    step = 120
+    
+
+    # Source
+    components += "<Pac P1 1 " + str(x) + " " + str(y + 90) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"1\" 1 \"" + str(RS) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"
+    components += "<GND *1 5 " + str(x) + " " + str(y + 120) + " 0 0 0 0>\n"
+
+    # Wires to the filter
+    x1 = x; x2 = x; y1 = y+60; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+    x1 = x; x2 = x+step+50-30; y1 = y; y2 = y
+    wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+    x += step
+    x += 50
+
+    for i in range (0, N):
+        count_MUT += 1
+        L1 = getUnitsWithScale(Lp[i], 'Inductance')
+        L2 = getUnitsWithScale(Lp[i+1], 'Inductance')
+        k = round(M[i]/np.sqrt(Lp[i]*Lp[i+1]), 3)
+        components += "<MUT Tr" + str(count_MUT) + " 1 " + str(x) + " " + str(y+30) + " -42 56 0 0 \"" + str(L1) + "\" 1 \"" + str(L2) + "\" 1 \"" + str(k) + "\" 1>\n"
+        components += "<GND *1 5 " + str(x-30) + " " + str(y + 60) + " 0 0 0 0>\n"
+        components += "<GND *1 5 " + str(x+30) + " " + str(y + 60) + " 0 0 0 0>\n"
+
+
+        x += step
+        count_C += 1
+        C = getUnitsWithScale(Cres[i], 'Capacitance')
+        components += "<C C" + str(count_C) + " 1 " + str(x) + " " + str(y) + " -30 -65 0 0 \"" + C + "\" 1 \"\" 0 \"neutral\" 0>\n"
+
+        # Wires to the previous inductors
+        x1 = x-step+30; x2 = x-30; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        # Wires to the next inductors
+        x1 = x+30; x2 = x+step-30; y1 = y; y2 = y
+        wires += "<" + str(x1) + " " + str(y1) + " " + str(x2) +  " " + str(y2) +  " \"\" 0 0 0 \"\">\n"
+
+        x += step
+
+    count_MUT += 1
+    L1 = getUnitsWithScale(Lp[-2], 'Inductance')
+    L2 = getUnitsWithScale(Lp[-1], 'Inductance')
+    k = round(M[-1]/np.sqrt(Lp[-2]*Lp[-1]), 3)
+    components += "<MUT Tr" + str(count_MUT) + " 1 " + str(x) + " " + str(y + 30) + " -42 56 0 0 \"" + str(L1) + "\" 1 \"" + str(L2) + "\" 1 \"" + str(k) + "\" 1>\n"
+    components += "<GND *1 5 " + str(x-30) + " " + str(y + 60) + " 0 0 0 0>\n"
+    components += "<GND *1 5 " + str(x+30) + " " + str(y + 60) + " 0 0 0 0>\n"
 
     x += step
     components += "<Pac P2 1 " + str(x) + " " + str(y + 90) + " " + str(xtext_lower) + " " + str(ytext_lower) + " 0 1 \"2\" 1 \"" + str(RL) + " Ohm\" 1 \"0 dBm\" 0 \"1 GHz\" 0>\n"

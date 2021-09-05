@@ -9,6 +9,8 @@ from .DirectCoupledFilters import *
 
 from .exportQucs import getEllipticFilterQucsSchematic, getCanonicalFilterQucsSchematic
 from .exportQucs import get_DirectCoupled_ShuntResonators_QucsSchematic
+from .exportQucs import get_DirectCoupled_SeriesResonators_QucsSchematic
+from .exportQucs import get_DirectCoupled_MagneticCoupledResonators_QucsSchematic
 
 import numpy as np
 
@@ -270,6 +272,7 @@ class Filter:
 
         elif(self.Structure == 'Direct Coupled LC'):
             self.getLowpassCoefficients()
+            params = self.getParams()
             BW = self.f2 - self.f1
             if (self.DC_Type == 'C-coupled shunt resonators'):
                 if (not self.Xres):
@@ -284,30 +287,26 @@ class Filter:
                     Cres = np.asarray(self.Xres, dtype='float64')*1e-12 # pF
                 Schematic, connections = DirectCoupled_L_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Cres, self.f_start, self.f_stop, self.n_points)
             elif (self.DC_Type == 'L-coupled series resonators'):
-                # N+2 Coupling inductances
                 if (not self.Xres):
-                    Lres = [10e-9] * (self.N+2)
+                    params['Xres'] = [10e-12] * (self.N)
                 else:
-                    Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
-                    Lres = np.insert(Lres, 0, Lres[0], axis=0)
-                    Lres = np.append(Lres, Lres[-1])
-                Schematic, connections = DirectCoupled_L_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, 0, self.f_start, self.f_stop, self.n_points)
+                    params['Xres'] = np.asarray(self.Xres, dtype='float64')*1e-12 # pF
+                params['Magnetic_Coupling'] = 0
+                Schematic, connections = DirectCoupled_L_Coupled_SeriesResonators(params)
             elif (self.DC_Type == 'C-coupled series resonators'):
                 if (not self.Xres):
                     Lres = [100e-9] * self.N
                 else:
                     Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
                 port_match = ['C', 'C']
-                Schematic, connections = DirectCoupled_C_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, port_match, self.f_start, self.f_stop, self.n_points)
+                Schematic, connections = DirectCoupled_C_Coupled_SeriesResonators(params, port_match)
             elif (self.DC_Type == 'Magnetic coupled resonators'):
-                # N+2 Coupling inductances
                 if (not self.Xres):
-                    Lres = [10e-9] * (self.N+2)
+                    params['Xres'] = [10e-12] * (self.N)
                 else:
-                    Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
-                    Lres = np.insert(Lres, 0, Lres[0], axis=0)
-                    Lres = np.append(Lres, Lres[-1])
-                Schematic, connections = DirectCoupled_L_Coupled_SeriesResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, 1, self.f_start, self.f_stop, self.n_points)
+                    params['Xres'] = np.asarray(self.Xres, dtype='float64')*1e-12 # pF
+                params['Magnetic_Coupling'] = 1
+                Schematic, connections = DirectCoupled_L_Coupled_SeriesResonators(params)
             elif(self.DC_Type == 'Quarter-Wave coupled resonators'):
                 Schematic, connections = DirectCoupled_QW_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, self.f_start, self.f_stop, self.n_points)
 
@@ -321,8 +320,12 @@ class Filter:
             else:
                 QucsSchematic = getCanonicalFilterQucsSchematic(params)
         elif(self.Structure == 'Direct Coupled LC'):
-            if ("shunt" or "Wave" in self.DC_Type):
+            if ("shunt" in self.DC_Type) or ("Wave" in self.DC_Type):
                 QucsSchematic = get_DirectCoupled_ShuntResonators_QucsSchematic(params)
+            elif("series" in self.DC_Type):
+                QucsSchematic = get_DirectCoupled_SeriesResonators_QucsSchematic(params)
+            elif("Magnetic" in self.DC_Type):
+                QucsSchematic = get_DirectCoupled_MagneticCoupledResonators_QucsSchematic(params)
 
             
         return QucsSchematic
