@@ -387,11 +387,18 @@
     if ((select.value == 1) || (select.value == 4) ){
       $('.inductance_input').show()// Show resonator values
       CreateTableDirectCoupled(N, 'L')
+      for (var i = 0; i < N; i++){
+        document.getElementById("X[" + i.toString() + "]").value = 100
+      }
+      
     }
 
     if ((select.value == 2) || (select.value == 3) || (select.value == 5)){
       $('.inductance_input').show()// Show resonator values
       CreateTableDirectCoupled(N, 'C')
+      for (var i = 0; i < N; i++){
+        document.getElementById("X[" + i.toString() + "]").value = 1
+      }
     }
 
     if (select.value == 6){ // Quarter wavelength coupling
