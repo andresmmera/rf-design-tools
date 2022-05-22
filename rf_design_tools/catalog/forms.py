@@ -315,3 +315,32 @@ class FilterDesignForm(forms.Form):
         self.fields['f_start'].widget.attrs['style'] = "width:75px"
         self.fields['f_stop'].widget.attrs['style'] = "width:75px"
         self.fields['n_points'].widget.attrs['style'] = "width:75px"
+
+
+ATTENUATOR_STRUCTURES =(
+("1", "Pi"),
+("2", "Tee"),
+("3", "Bridged Tee"),
+("4", "Reflection Attenuator"),
+("5", "Quarter Wave Series"),
+("6", "Quarter Wave Shunt"),
+)
+
+
+class AttenuatorDesignForm(forms.Form):
+
+    f0 = forms.FloatField(initial=1000, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+    Pin = forms.FloatField(initial=-10, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"})) # dBm
+    ZS = forms.FloatField(initial=50, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+    ZL = forms.FloatField(initial=50, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+    att = forms.FloatField(initial=10, widget = forms.NumberInput(attrs = {'onchange' : "submit_form();"}))
+    Structure = forms.ChoiceField(choices = ATTENUATOR_STRUCTURES, widget = forms.Select(attrs = {'onchange' : "submit_form();"}))
+   
+    def __init__(self, *args, **kwargs):
+        super(AttenuatorDesignForm, self).__init__(*args, **kwargs)
+        # Set the width of the boxes
+        self.fields['f0'].widget.attrs['style'] = "width:75px"
+        self.fields['Pin'].widget.attrs['style'] = "width:75px"
+        self.fields['ZS'].widget.attrs['style'] = "width:75px"
+        self.fields['ZL'].widget.attrs['style'] = "width:75px"
+        self.fields['att'].widget.attrs['style'] = "width:75px"

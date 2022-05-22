@@ -14,7 +14,7 @@ from .exportQucs import get_DirectCoupled_MagneticCoupledResonators_QucsSchemati
 
 import numpy as np
 
-import mysql.connector # MySQL connection for getting the filter coefficient from the Zverev Tables
+#import mysql.connector # MySQL connection for getting the filter coefficient from the Zverev Tables
 
 
 
@@ -57,12 +57,12 @@ class Filter:
         self.n_points = 201
 
         # OPEN DATABASE CONNECTION FOR THE ZVEREV TABLES
-        self.ZverevDB = mysql.connector.connect(
-          host="localhost",
-          user="admin",
-          passwd="",
-          database="ZverevTables"
-        )
+        # self.ZverevDB = mysql.connector.connect(
+        #   host="localhost",
+        #   user="admin",
+        #   passwd="",
+        #   database="ZverevTables"
+        # )
         self.gi = []
 
     def getLowpassCoefficients(self):
@@ -263,54 +263,58 @@ class Filter:
                 self.Cshunt = Cshunt
                 self.ZL = RL
 
-                Schematic, connections = SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, self.EllipticType, self.Mask, self.FirstElement, self.ZS, RL, self.fc*1e6, (self.f2-self.f1)*1e6, self.f_start, self.f_stop, self.n_points);
+                Schematic, NetworkType, comp_val = SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, self.EllipticType, self.Mask, self.FirstElement, self.ZS, RL, self.fc*1e6, (self.f2-self.f1)*1e6, self.f_start, self.f_stop, self.n_points);
             else: # Conventional LC filters
                 self.getLowpassCoefficients()
                 params = self.getParams()
                 Schematic = getCanonicalFilterSchematic(params)
-                connections = getCanonicalFilterNetwork(params)
+                NetworkType, comp_val = getCanonicalFilterNetwork(params)
+                
+
 
         elif(self.Structure == 'Direct Coupled LC'):
             self.getLowpassCoefficients()
             params = self.getParams()
             BW = self.f2 - self.f1
+            self.fc = 0.5*(self.f2 + self.f1)
             if (self.DC_Type == 'C-coupled shunt resonators'):
                 if (not self.Xres):
                     Lres = [100e-9] * self.N
                 else:
                     Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
-                Schematic, connections = DirectCoupled_C_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, self.f_start, self.f_stop, self.n_points)
+                Schematic, NetworkType, comp_val = DirectCoupled_C_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, self.f_start, self.f_stop, self.n_points)
             elif (self.DC_Type == 'L-coupled shunt resonators'):
+                self.fc = 0.5*(self.f2 + self.f1)
                 if (not self.Xres):
                     Cres = [10e-12] * self.N
                 else:
                     Cres = np.asarray(self.Xres, dtype='float64')*1e-12 # pF
-                Schematic, connections = DirectCoupled_L_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Cres, self.f_start, self.f_stop, self.n_points)
+                Schematic, NetworkType, comp_val = DirectCoupled_L_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Cres, self.f_start, self.f_stop, self.n_points)
             elif (self.DC_Type == 'L-coupled series resonators'):
                 if (not self.Xres):
                     params['Xres'] = [10e-12] * (self.N)
                 else:
                     params['Xres'] = np.asarray(self.Xres, dtype='float64')*1e-12 # pF
                 params['Magnetic_Coupling'] = 0
-                Schematic, connections = DirectCoupled_L_Coupled_SeriesResonators(params)
+                Schematic, NetworkType, comp_val = DirectCoupled_L_Coupled_SeriesResonators(params)
             elif (self.DC_Type == 'C-coupled series resonators'):
                 if (not self.Xres):
                     Lres = [100e-9] * self.N
                 else:
                     Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
                 port_match = ['C', 'C']
-                Schematic, connections = DirectCoupled_C_Coupled_SeriesResonators(params, port_match)
+                Schematic, NetworkType, comp_val = DirectCoupled_C_Coupled_SeriesResonators(params, port_match)
             elif (self.DC_Type == 'Magnetic coupled resonators'):
                 if (not self.Xres):
                     params['Xres'] = [10e-12] * (self.N)
                 else:
                     params['Xres'] = np.asarray(self.Xres, dtype='float64')*1e-12 # pF
                 params['Magnetic_Coupling'] = 1
-                Schematic, connections = DirectCoupled_L_Coupled_SeriesResonators(params)
+                Schematic, NetworkType, comp_val = DirectCoupled_L_Coupled_SeriesResonators(params)
             elif(self.DC_Type == 'Quarter-Wave coupled resonators'):
-                Schematic, connections = DirectCoupled_QW_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, self.f_start, self.f_stop, self.n_points)
+                Schematic, NetworkType, comp_val = DirectCoupled_QW_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, self.f_start, self.f_stop, self.n_points)
 
-        return Schematic, connections
+        return Schematic, NetworkType, comp_val
 
     def getQucsSchematic(self):
         params = self.getParams()

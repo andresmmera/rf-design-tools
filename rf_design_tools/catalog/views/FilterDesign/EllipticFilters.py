@@ -4,14 +4,11 @@ import numpy as np
 # Schematic drawing
 import schemdraw as schem
 import schemdraw.elements as elm
-from skrf.mathFunctions import find_closest
+
 
 # Get units with scale, etc.
 from ..utilities import *
 
-# standard imports
-import skrf as rf
-from skrf import network2
 
 # Reference:
 # [1] "Elliptic Approximation and Elliptic Filter Design on Small Computers",
@@ -110,10 +107,6 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
     d = schem.Drawing(inches_per_unit = 0.3)
     _fontsize = 8
     
-    # Network
-    rf.stylely()
-    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
-    line = rf.media.DefinedGammaZ0(frequency=freq)
     
     # Component counter
     count_C = 0
@@ -124,6 +117,23 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
     C = []
     L = []
     ground = []
+
+    comp_val = {} # Associative array for storing the value of the components
+    comp_val['ZS'] = RS
+    comp_val['ZL'] = RL
+
+    NetworkType = {}
+    NetworkType['Network'] = 'Elliptic'
+    NetworkType['Mask'] = FilterType
+    NetworkType['Elliptic_Type'] = Elliptic_Type
+    NetworkType['freq'] = np.linspace(fstart, fstop, npoints)*1e6
+    NetworkType['N'] = N
+
+
+    if FirstShunt==1:  
+        NetworkType['First_Element'] = 'Shunt'
+    else:
+        NetworkType['First_Element'] = 'Series'
     
     # Source port
     # Drawing: Source port and the first line
@@ -131,10 +141,6 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
     d += elm.Dot().label('ZS = ' + str(RS) + " \u03A9", fontsize=_fontsize).linewidth(1)
     d += elm.Line().length(2).linewidth(1)
 
-    # Network: Port 1
-    Port1 = rf.Circuit.Port(frequency=freq, name='port1', z0=RS)
-
-    connections = [] # Network connections
 
     # LOWPASS - FIRST SHUNT
     if (FilterType == "Lowpass" and FirstShunt == 1):  
@@ -149,11 +155,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d += elm.Ground().linewidth(1)
             
             # Network
-            count_C += 1
-            C.append(line.capacitor(Cshunt_, name='C' + str(count_C)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-            
+            count_C += 1                       
             ## Series inductor
             # Drawing
             d.pop()
@@ -163,8 +165,9 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_L += 1
-            L.append(line.inductor(Lseries_, name='L' + str(count_L)))
-            
+                       
+            comp_val['C' +str(count_C) ] = Cshunt_
+            comp_val['L' +str(count_L) ] = Lseries_
             
             ## Series capacitor
             if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
@@ -180,29 +183,14 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
                 
                 # Network
                 count_C += 1
-                C.append(line.capacitor(Cseries_, name='C' + str(count_C)))
+                comp_val['C' +str(count_C) ] = Cseries_
                           
             
             
             if ((i == N-1) and (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S')):
                 d.push()
                 
-            # Make connections
-            if (i < N): # The last connection must be done after the load port instantiation
-                if (i == 0): # The first node must include the source port
-                    connections.append([(Port1, 0), (C[0], 0), (C[1], 0), (L[0],0)])
-                    connections.append([(C[0], 1), (ground[0], 0)])
-                elif (i < N-1): # The other nodes must connect the current component with the ones from the last iteration
-                    connections.append([(C[2*i-1], 1), (L[i-1],1), (C[2*i], 0), (L[i],0), (C[2*i+1], 0)])
-                    connections.append([(C[2*i], 1), (ground[i], 0)])
-                else:
-                    if(Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):# Types A and S have a resonator in the last position. In this sense, these lines are the same as above
-                        connections.append([(C[2*i-1], 1), (L[i-1],1), (C[2*i], 0), (L[i],0), (C[2*i+1], 0)])
-                        connections.append([(C[2*i], 1), (ground[i], 0)])
-                    else:# Types B and C
-                        connections.append([(C[2*i-1], 1), (L[i-1],1), (C[2*i], 0), (L[i],0)])
-                        connections.append([(C[2*i], 1), (ground[i], 0)])
-            
+                       
         
         if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
             # Drawing
@@ -213,24 +201,14 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_C += 1
-            C.append(line.capacitor(Cshunt_, name='C' + str(count_C)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+            comp_val['C' +str(count_C) ] = Cshunt_
             
         # Load port
         # Drawing
         d += elm.Line().right().length(2).linewidth(1)
         d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
         d += elm.Line(color='white').length(2).linewidth(0)
-        
-        # Network
-        Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
-            connections.append([(Port2, 0), (C[-2], 1), (C[-1], 0), (L[-1] , 1)])
-            connections.append([(C[-1], 1), (ground[-1] , 0)])
-        else:
-            connections.append([(Port2, 0), (L[-1] , 1)])
-            
+                    
     # LOWPASS - FIRST SERIES
     if (FilterType == "Lowpass" and FirstShunt == 2):  
         # Filter components
@@ -243,9 +221,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries_, 'Inductance'), fontsize=_fontsize).linewidth(1)
             
             # Network
-            count_L += 1
-            L.append(line.inductor(Lseries_, name='L' + str(count_L)))      
-            
+            count_L += 1   
             
             ## Shunt capacitor
             d.push() # Save the drawing point for later
@@ -254,7 +230,9 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_C += 1
-            C.append(line.capacitor(Cshunt_, name='C' + str(count_C)))
+
+            comp_val['L' +str(count_L) ] = Lseries_
+            comp_val['C' +str(count_C) ] = Cshunt_
             
             if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
                 ## Shunt inductor
@@ -265,24 +243,12 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
 
                 # Network
                 count_L += 1
-                L.append(line.inductor(Lshunt_, name='L' + str(count_L)))
-                count_gnd += 1
-                ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+                comp_val['L' +str(count_L) ] = Lshunt_
             else:
                 d += elm.Ground().linewidth(1)
-                count_gnd += 1
-                ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
             
             d.pop()
-                
-            # Make connections
-            if (i == 0): # The first node must include the source port
-                connections.append([(Port1, 0), (L[0],0)])
-            elif (i < N): # The other nodes must connect the current component with the ones from the last iteration
-                connections.append([(L[2*i-2],1), (L[2*i],0), (C[i-1], 0)])
-                connections.append([(L[2*i-1], 0), (C[i-1], 1)])
-                connections.append([(L[2*i-1], 1), (ground[i-1], 0)])
-            
+                           
         if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
             # Drawing
             Lseries_ = RS / (2 * np.pi * fc) * Cshunt[-1]
@@ -290,31 +256,18 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
 
             # Network
             count_L += 1
-            L.append(line.inductor(Lseries_, name='L' + str(count_L)))
-
-        if(Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):# Types A and S have a resonator in the last position. In this sense, these lines are the same as above
-            connections.append([(L[-3],1), (L[-1],0), (C[-1], 0)])
-            connections.append([(L[-2], 0), (C[-1], 1)])
-            connections.append([(L[-2], 1), (ground[-1], 0)])
-        else:# Types B and C
-            connections.append([(C[-1], 1), (ground[-1], 0)])
+            comp_val['L' +str(count_L) ] = Lseries_
         
         # Load port
         if ((Elliptic_Type != 'Type S') and (Elliptic_Type != 'Type C')):
             RL = RS*RS/RL
+            comp_val['ZL'] = RL
             
         # Drawing
         d += elm.Line().right().length(2).linewidth(1)
         d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
         d += elm.Line(color='white').length(2).linewidth(0)
-
-        # Network
-        Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
-            connections.append([(Port2, 0), (L[-1] , 1)])
-        else:
-            connections.append([(Port2, 0), (C[-1] , 0), (L[-1], 1)])
-            
+           
       
     # HIGHPASS - FIRST SERIES
     if (FilterType == "Highpass" and FirstShunt == 2):  
@@ -329,8 +282,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_C += 1
-            C.append(line.capacitor(Cseries_, name='C' + str(count_C)))      
-            
+            comp_val['C' +str(count_C) ] = Cseries_  
             
             ## Shunt inductor
             d.push() # Save the drawing point for later
@@ -339,7 +291,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_L += 1
-            L.append(line.inductor(Lshunt_, name='L' + str(count_L)))
+            comp_val['L' +str(count_L) ] = Lshunt_
             
             if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
                 ## Shunt capacitor
@@ -350,24 +302,12 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
 
                 # Network
                 count_C += 1
-                C.append(line.capacitor(Cshunt_, name='C' + str(count_C)))
-                count_gnd += 1
-                ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+                comp_val['C' +str(count_C) ] = Cshunt_
             else:
                 d += elm.Ground().linewidth(1)
-                count_gnd += 1
-                ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
             
             d.pop()
-                
-            # Make connections
-            if (i == 0): # The first node must include the source port
-                connections.append([(Port1, 0), (C[0],0)])
-            elif (i < N): # The other nodes must connect the current component with the ones from the last iteration
-                connections.append([(C[2*i-2],1), (C[2*i],0), (L[i-1], 0)])
-                connections.append([(C[2*i-1], 0), (L[i-1], 1)])
-                connections.append([(C[2*i-1], 1), (ground[i-1], 0)])
-            
+                        
         if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
             # Drawing
             Cseries_ = 1 / (2 * np.pi * fc * RS * Cshunt[-1])
@@ -375,37 +315,22 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
 
             # Network
             count_C += 1
-            C.append(line.capacitor(Cseries_, name='C' + str(count_C)))
-
-        if(Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):# Types A and S have a resonator in the last position. In this sense, these lines are the same as above
-            connections.append([(C[-3], 1), (C[-1],0), (L[-1], 0)])
-            connections.append([(C[-2], 0), (L[-1], 1)])
-            connections.append([(C[-2], 1), (ground[-1], 0)])
-        else:# Types B and C
-            connections.append([(L[-1], 1), (ground[-1], 0)])
-
+            comp_val['C' +str(count_C) ] = Cseries_
     
         # Load port
         if ((Elliptic_Type != 'Type S') and (Elliptic_Type != 'Type C')):
             RL = RS*RS/RL
+            comp_val['ZL'] = RL
         
         # Drawing
         d += elm.Line().right().length(2).linewidth(1)
         d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
         d += elm.Line(color='white').length(2).linewidth(0)
 
-        # Network
-        Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
-            connections.append([(Port2, 0), (C[-1] , 1)])
-        else:
-            connections.append([(Port2, 0), (L[-1] , 0), (C[-1], 1)])
-
     # HIGHPASS - FIRST SHUNT
     if (FilterType == "Highpass" and FirstShunt == 1):  
         # Filter components
         for i in range(N):
-            
             ## Shunt inductor
             # Drawing
             d.push() # Save the drawing point for later
@@ -415,10 +340,9 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_L += 1
+            comp_val['L' +str(count_L) ] = Lshunt_
             L.append(line.inductor(Lshunt_, name='L' + str(count_L)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-            
+
             ## Series capacitor
             # Drawing
             d.pop()
@@ -428,8 +352,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_C += 1
-            C.append(line.capacitor(Cseries_, name='C' + str(count_C)))
-            
+            comp_val['C' +str(count_C) ] = Cseries_            
             
             ## Series inductor
             if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
@@ -445,29 +368,12 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
                 
                 # Network
                 count_L += 1
-                L.append(line.inductor(Lseries_, name='L' + str(count_L)))
-                          
+                comp_val['L' +str(count_L) ] = Lseries_
             
             
             if ((i == N-1) and (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S')):
                 d.push()
-                
-            # Make connections
-            if (i < N): # The last connection must be done after the load port instantiation
-                if (i == 0): # The first node must include the source port
-                    connections.append([(Port1, 0), (L[0], 0), (L[1], 0), (C[0],0)])
-                    connections.append([(L[0], 1), (ground[0], 0)])
-                elif (i < N-1): # The other nodes must connect the current component with the ones from the last iteration
-                    connections.append([(L[2*i-1], 1), (C[i-1],1), (L[2*i], 0), (C[i],0), (L[2*i+1], 0)])
-                    connections.append([(L[2*i], 1), (ground[i], 0)])
-                else:
-                    if(Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):# Types A and S have a resonator in the last position. In this sense, these lines are the same as above
-                        connections.append([(L[2*i-1], 1), (C[i-1],1), (L[2*i], 0), (C[i],0), (L[2*i+1], 0)])
-                        connections.append([(L[2*i], 1), (ground[i], 0)])
-                    else:# Types B and C
-                        connections.append([(L[2*i-1], 1), (C[i-1],1), (L[2*i], 0), (C[i],0)])
-                        connections.append([(L[2*i], 1), (ground[i], 0)])
-            
+                            
         
         if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
             # Drawing
@@ -478,9 +384,8 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_L += 1
+            comp_val['L' +str(count_L) ] = Lshunt_
             L.append(line.inductor(Lshunt_, name='L' + str(count_L)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
             
         # Load port
         # Drawing
@@ -488,14 +393,6 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
         d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
         d += elm.Line(color='white').length(2).linewidth(0)
         
-        # Network
-        Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
-            connections.append([(L[-1], 1), (ground[-1] , 0)])
-            connections.append([(Port2, 0), (L[-2], 1), (L[-1], 0), (C[-1] , 1)])
-        else:
-            connections.append([(Port2, 0), (C[-1] , 1)])
-
     # BANDPASS - FIRST SHUNT
     if (FilterType == "Bandpass" and FirstShunt == 1):
         Kl = RS / (2 * np.pi * fc);
@@ -525,14 +422,10 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_C += 1
-            C.append(line.capacitor(Cshunt_, name='C' + str(count_C)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-            
             count_L += 1
-            L.append(line.inductor(Lshunt_, name='L' + str(count_L)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+
+            comp_val['C' +str(count_C) ] = Cshunt_
+            comp_val['L' +str(count_L) ] = Lshunt_
             
             ## Upper-branch series resonator
             # Drawing
@@ -546,9 +439,9 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_L += 1
-            L.append(line.inductor(Lseries_, name='L' + str(count_L)))
             count_C += 1
-            C.append(line.capacitor(Cseries_, name='C' + str(count_C)))
+            comp_val['C' +str(count_C) ] = Cseries_
+            comp_val['L' +str(count_L) ] = Lseries_
             
             
             ## Upper-branch parallel resonator
@@ -576,38 +469,14 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
                 
                 # Network
                 count_C += 1
-                C.append(line.capacitor(Cseries_, name='C' + str(count_C)))
                 count_L += 1
-                L.append(line.inductor(Lseries_, name='L' + str(count_L)))
+                comp_val['C' +str(count_C) ] = Cseries_
+                comp_val['L' +str(count_L) ] = Lseries_
                           
             
             
             if ((i == N-1) and (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S')):
                 d.push()
-                
-            # Make connections
-            if (i < N): # The last connection must be done after the load port instantiation
-                if (i == 0): # The first node must include the source port
-                    connections.append([(Port1, 0), (C[0], 0), (L[0], 0), (C[2], 0), (L[1],0), (L[2],0)])
-                    connections.append([(L[1], 1), (C[1], 0)])
-                    connections.append([(C[0], 1), (ground[0], 0)])
-                    connections.append([(L[0], 1), (ground[1], 0)])
-                elif (i < N-1): # The other nodes must connect the current component with the ones from the last iteration
-                    connections.append([(C[3*i-1], 1), (L[3*i-1], 1), (C[3*i-2], 1), (L[3*i], 0), (C[3*i], 0), (C[3*i + 2], 0), (L[3*i+2], 0), (L[3*i+1], 0)])
-                    connections.append([(L[3*i+1], 1), (C[3*i+1], 0)])
-                    connections.append([(C[3*i], 1), (ground[2*i], 0)])
-                    connections.append([(L[3*i], 1), (ground[2*i+1], 0)])
-                else:
-                    if(Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):# Types A and S have a resonator in the last position. In this sense, these lines are the same as above
-                        connections.append([(C[3*i-1], 1), (L[3*i-1], 1), (C[3*i-2], 1), (L[3*i], 0), (C[3*i], 0), (C[3*i + 2], 0), (L[3*i+2], 0), (L[3*i+1], 0)])
-                        connections.append([(L[3*i+1], 1), (C[3*i+1], 0)])
-                        connections.append([(C[3*i], 1), (ground[2*i], 0)])
-                        connections.append([(L[3*i], 1), (ground[2*i+1], 0)])
-                    else:# Types B and C
-                        connections.append([(C[3*i-1], 1), (L[3*i-1], 1), (C[3*i-2], 1), (L[3*i], 0), (C[3*i], 0), (L[3*i+1], 0)])
-                        connections.append([(L[3*i+1], 1), (C[3*i+1], 0)])
-                        connections.append([(C[3*i], 1), (ground[2*i], 0)])
-                        connections.append([(L[3*i], 1), (ground[2*i+1], 0)])
             
         
         if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
@@ -631,15 +500,11 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d.pop()
             
             # Network
-            count_C += 1
-            C.append(line.capacitor(Cshunt_, name='C' + str(count_C)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-            
+            count_C += 1           
             count_L += 1
-            L.append(line.inductor(Lshunt_, name='L' + str(count_L)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+
+            comp_val['C' +str(count_C) ] = Cshunt_
+            comp_val['L' +str(count_L) ] = Lshunt_
             
         # Load port
         # Drawing
@@ -647,15 +512,6 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
         d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
         d += elm.Line(color='white').length(2).linewidth(0)
         
-        # Network
-        Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
-            connections.append([(Port2, 0), (C[-1], 0), (C[-2], 1), (C[-3], 1), (L[-1] , 0), (L[-2], 1)])
-            connections.append([(L[-1], 1), (ground[-2], 0)])
-            connections.append([(C[-1], 1), (ground[-1], 0)])
-        else:
-            connections.append([(Port2, 0), (C[-1], 1)])
-
     # BANDPASS - FIRST SERIES
     if (FilterType == "Bandpass" and FirstShunt == 2):  
         # Filter components
@@ -675,10 +531,9 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_L += 1
-            L.append(line.inductor(Lseries_, name='L' + str(count_L)))
             count_C += 1
-            C.append(line.capacitor(Cseries_, name='C' + str(count_C)))
-                     
+            comp_val['C' +str(count_C) ] = Cseries_
+            comp_val['L' +str(count_L) ] = Lseries_   
             
             ## Lower-branch parallel resonator
             d.push() # Save the drawing point for later
@@ -697,11 +552,11 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d += elm.Line().left().length(1).linewidth(1)
             
             # Network
-            count_C += 1
-            C.append(line.capacitor(Cshunt_, name='C' + str(count_C)))
-            
+            count_C += 1           
             count_L += 1
-            L.append(line.inductor(Lshunt_, name='L' + str(count_L)))
+
+            comp_val['C' +str(count_C) ] = Cshunt_
+            comp_val['L' +str(count_L) ] = Lshunt_
             
             if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
                 ## Lower-branch series resonator
@@ -715,34 +570,14 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
                 d += elm.Ground().linewidth(1)
 
                 # Network
-                count_L += 1
-                L.append(line.inductor(Lseries_, name='L' + str(count_L)))
-                
+                count_L += 1               
                 count_C += 1
-                C.append(line.capacitor(Cseries_, name='C' + str(count_C)))
-                
-                count_gnd += 1
-                ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+
+                comp_val['C' +str(count_C) ] = Cseries_
+                comp_val['L' +str(count_L) ] = Lseries_
             else:
                 d += elm.Ground().linewidth(1)
-                count_gnd += 1
-                ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-                count_gnd += 1
-                ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-            
             d.pop()
-
-            # Make connections
-            if (i == 0): # The first node must include the source port
-                connections.append([(Port1, 0), (L[0],0)])
-                connections.append([(L[0],1), (C[0], 0)])
-                
-            elif (i < N): # The other nodes must connect the current component with the ones from the last iteration
-                connections.append([(L[3*i], 1), (C[3*i], 0)])
-                connections.append([(C[3*i-3], 1), (L[3*i-2], 0), (C[3*i-2], 0), (L[3*i], 0)])
-                connections.append([(C[3*i-2], 1), (L[3*i-2], 1), (L[3*i-1], 0)])
-                connections.append([(L[3*i-1], 1), (C[3*i-1], 0)])
-                connections.append([(C[3*i-1], 1), (ground[i-1], 0)])
                
             
         if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
@@ -756,34 +591,17 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_L += 1
-            L.append(line.inductor(Lseries_, name='L' + str(count_L)))
             count_C += 1
-            C.append(line.capacitor(Cseries_, name='C' + str(count_C)))   
 
-        if(Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):# Types A and S have a resonator in the last position. In this sense, these lines are the same as above
-            connections.append([(L[-1], 1), (C[-1], 0)])
-            connections.append([(C[-4], 1), (L[-3], 0), (C[-3], 0), (L[-1], 0)])
-            connections.append([(C[-3], 1), (L[-3], 1), (L[-2], 0)])
-            connections.append([(L[-2], 1), (C[-2], 0)])
-            connections.append([(C[-2], 1), (ground[-1], 0)])
-
+            comp_val['C' +str(count_C) ] = Cseries_
+            comp_val['L' +str(count_L) ] = Lseries_
         
         # Load port
           
         # Drawing
         d += elm.Line().right().length(2).linewidth(1)
         d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
-        d += elm.Line(color='white').length(2).linewidth(0)
-
-        # Network
-        Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
-            connections.append([(Port2, 0), (C[-1] , 1)])
-        else:
-            connections.append([(L[-1], 0), (ground[-1], 0)])
-            connections.append([(C[-1], 0), (ground[-2], 0)])
-            connections.append([(Port2, 0), (C[-1] , 1), (L[-1], 1), (C[-2], 1)])
-            
+        d += elm.Line(color='white').length(2).linewidth(0)            
 
     # BANDSTOP - FIRST SHUNT
     if (FilterType == "Bandstop" and FirstShunt == 1):
@@ -805,15 +623,11 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d += elm.Ground().linewidth(1)
             
             # Network
-            count_L += 1
-            L.append(line.inductor(Lshunt_, name='L' + str(count_L)))
-            
+            count_L += 1            
             count_C += 1
-            C.append(line.capacitor(Cshunt_, name='C' + str(count_C)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
             
-
+            comp_val['L' +str(count_L) ] = Lshunt_
+            comp_val['C' +str(count_C) ] = Cshunt_
             
             ## Upper-branch parallel resonator
             # Drawing
@@ -836,9 +650,9 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_L += 1
-            L.append(line.inductor(Lseries_, name='L' + str(count_L)))
             count_C += 1
-            C.append(line.capacitor(Cseries_, name='C' + str(count_C)))
+            comp_val['L' +str(count_L) ] = Lseries_
+            comp_val['C' +str(count_C) ] = Cseries_
                         
             ## Upper-branch series resonator
             if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
@@ -854,38 +668,13 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
                 
                 # Network
                 count_C += 1
-                C.append(line.capacitor(Cseries_, name='C' + str(count_C)))
-                count_L += 1
-                L.append(line.inductor(Lseries_, name='L' + str(count_L)))
-                          
+                count_L += 1                          
+                comp_val['L' +str(count_L) ] = Lseries_
+                comp_val['C' +str(count_C) ] = Cseries_
             
             
             if ((i == N-1) and (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S')):
                 d.push()
-                
-            # Make connections
-            if (i < N): # The last connection must be done after the load port instantiation
-                if (i == 0): # The first node must include the source port
-                    connections.append([(Port1, 0), (L[0], 0), (L[1], 0), (C[1], 0), (L[2], 0)])
-                    connections.append([(L[2], 1), (C[2], 0)])
-                    connections.append([(L[0], 1), (C[0], 0)])
-                    connections.append([(C[0], 1), (ground[0], 0)])
-                    
-                elif (i < N-1): # The other nodes must connect the current component with the ones from the last iteration
-                    connections.append([(C[3*i-1], 1), (C[3*i-2], 1), (L[3*i-2], 1), (L[3*i], 0), (L[3*i+1], 0), (C[3*i+1], 0), (L[3*i+2], 0)])
-                    connections.append([(L[3*i+2], 1), (C[3*i+2], 0)])
-                    connections.append([(L[3*i], 1), (C[3*i], 0)])
-                    connections.append([(C[3*i], 1), (ground[i], 0)])
-                else:
-                    if(Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):# Types A and S have a resonator in the last position.
-                        connections.append([(C[3*i-1], 1), (C[3*i-2], 1), (L[3*i-2], 1), (L[3*i], 0), (L[3*i+1], 0), (C[3*i+1], 0), (L[3*i+2], 0)])
-                        connections.append([(L[3*i+2], 1), (C[3*i+2], 0)])
-                        connections.append([(L[3*i], 1), (C[3*i], 0)])
-                        connections.append([(C[3*i], 1), (ground[i], 0)])
-                    else:# Types B and C
-                        connections.append([(C[3*i-1], 1), (C[3*i-2], 1), (L[3*i-2], 1), (L[3*i], 0), (L[3*i+1], 0), (C[3*i+1], 0)])
-                        connections.append([(L[3*i], 1), (C[3*i], 0)])
-                        connections.append([(C[3*i], 1), (ground[i], 0)])
 
         
         if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
@@ -901,15 +690,11 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             d += elm.Ground().linewidth(1)
             # Network
             count_C += 1
-            C.append(line.capacitor(Cshunt_, name='C' + str(count_C)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-            
             count_L += 1
-            L.append(line.inductor(Lshunt_, name='L' + str(count_L)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
             d.pop()
+
+            comp_val['L' +str(count_L) ] = Lshunt_
+            comp_val['C' +str(count_C) ] = Cshunt_
             
         # Load port
         # Drawing
@@ -917,17 +702,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
         d += elm.Line().right().length(2).linewidth(1)
         d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
         d += elm.Line(color='white').length(2).linewidth(0)
-        
-        # Network
-        Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
-            connections.append([(Port2, 0), (L[-1], 0), (C[-2], 1), (L[-3], 1), (C[-3], 1)])
-            connections.append([(L[-1], 1), (C[-1], 0)])
-            connections.append([(C[-1], 1), (ground[-1], 0)])
-        else:
-            connections.append([(Port2, 0), (C[-1], 1), (L[-1], 1)])
-
-            
+                    
     # BANDSTOP - FIRST SERIES
     if (FilterType == "Bandstop" and FirstShunt == 2):
         Kl = RS / (2 * np.pi * fc);
@@ -955,10 +730,10 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_L += 1
-            L.append(line.inductor(Lshunt_, name='L' + str(count_L)))
-            
             count_C += 1
-            C.append(line.capacitor(Cshunt_, name='C' + str(count_C)))        
+
+            comp_val['L' +str(count_L) ] = Lshunt_
+            comp_val['C' +str(count_C) ] = Cshunt_  
             
             ## Lower-branch series resonator
             # Drawing
@@ -972,9 +747,9 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_L += 1
-            L.append(line.inductor(Lseries_, name='L' + str(count_L)))
             count_C += 1
-            C.append(line.capacitor(Cseries_, name='C' + str(count_C)))
+            comp_val['L' +str(count_L) ] = Lseries_
+            comp_val['C' +str(count_C) ] = Cseries_
                         
             ## Lower-branch parallel resonator
             if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S' or ((i < N-1) and (Elliptic_Type == 'Type B' or Elliptic_Type == 'Type C'))):
@@ -995,49 +770,14 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
                 
                 # Network
                 count_C += 1
-                C.append(line.capacitor(Cseries_, name='C' + str(count_C)))
                 count_L += 1
-                L.append(line.inductor(Lseries_, name='L' + str(count_L)))
-                
-                count_gnd += 1
-                ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-
-                count_gnd += 1
-                ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+                comp_val['L' +str(count_L) ] = Lseries_
+                comp_val['C' +str(count_C) ] = Cseries_
 
                 
             else:
                 d += elm.Ground().linewidth(1)
                 d.pop()
-                
-                count_gnd += 1
-                ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-                          
-            
-            # Make connections
-            if (i < N): # The last connection must be done after the load port instantiation
-                if (i == 0): # The first node must include the source port
-                    connections.append([(Port1, 0), (L[0], 0), (C[0], 0)])
-                    
-                elif (i < N-1): # The other nodes must connect the current component with the ones from the last iteration
-                    connections.append([(C[3*i], 0), (L[3*i], 0), (C[3*i-3], 1), (L[3*i-3], 1), (C[3*i-2], 0)])
-                    connections.append([(C[3*i-2], 1), (L[3*i-2], 0)])
-                    connections.append([(L[3*i-2], 1), (C[3*i-1], 0), (L[3*i-1], 0)])
-                    connections.append([(C[3*i-1], 1), (ground[2*i-2], 0)])
-                    connections.append([(L[3*i-1], 1), (ground[2*i -1], 0)])
-                else:
-                    if(Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):# Types A and S have a resonator in the last position.
-                        connections.append([(C[3*i], 0), (L[3*i], 0), (C[3*i-3], 1), (L[3*i-3], 1), (C[3*i-2], 0)])
-                        connections.append([(C[3*i-2], 1), (L[3*i-2], 0)])
-                        connections.append([(L[3*i-2], 1), (C[3*i-1], 0), (L[3*i-1], 0)])
-                        connections.append([(C[3*i-1], 1), (ground[2*i-2], 0)])
-                        connections.append([(L[3*i-1], 1), (ground[2*i -1], 0)])
-                    else:# Types B and C
-                        connections.append([(C[3*i], 0), (L[3*i], 0), (C[3*i-3], 1), (L[3*i-3], 1), (C[3*i-2], 0)])
-                        connections.append([(C[3*i-2], 1), (L[3*i-2], 0)])
-                        connections.append([(L[3*i-2], 1), (C[3*i-1], 0), (L[3*i-1], 0)])
-                        connections.append([(C[3*i-1], 1), (ground[2*i-2], 0)])
-                        connections.append([(L[3*i-1], 1), (ground[2*i -1], 0)])
         
         if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
             # Upper-branch parallel resonator
@@ -1060,38 +800,20 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
             
             # Network
             count_C += 1
-            C.append(line.capacitor(Cshunt_, name='C' + str(count_C)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-            
             count_L += 1
-            L.append(line.inductor(Lshunt_, name='L' + str(count_L)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+            comp_val['L' +str(count_L) ] = Lshunt_
+            comp_val['C' +str(count_C) ] = Cshunt_
             
         # Load port
         # Drawing
-        
+        comp_val['ZL'] = RL
         d += elm.Line().right().length(2).linewidth(1)
         d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
         d += elm.Line(color='white').length(2).linewidth(0)
-        
-        # Network
-        Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-        if (Elliptic_Type == 'Type A' or Elliptic_Type == 'Type S'):
-            connections.append([(Port2, 0), (L[-1], 1), (C[-1], 1)
-                               ])
-            connections.append([(L[-1], 0), (C[-1], 0), (C[-3], 0), (C[-4], 1), (L[-4], 1)])
-            connections.append([(L[-3], 0), (C[-3], 1)])
-            connections.append([(L[-3], 1), (C[-2], 0), (L[-2], 0)])
-            connections.append([(C[-2], 1), (ground[-1], 0)])
-            connections.append([(L[-2], 1), (ground[-2], 0)])
-        else:
-            connections.append([(Port2, 0), (C[-2], 1), (L[-2], 1), (L[-1], 0)])
-            connections.append([(L[-1], 1), (C[-1], 0)])
-            connections.append([(C[-1], 1), (ground[-1], 0)])
+
+
           
-    return d, connections
+    return d, NetworkType, comp_val
     
 # This function is used to rearrange the coefficients from the synthesis function.
 def RearrangeTypeS(Lseries, Cseries, Cshunt):

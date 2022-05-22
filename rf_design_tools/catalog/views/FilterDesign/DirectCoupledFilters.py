@@ -1,19 +1,14 @@
 # Copyright 2020-2021 Andrés Martínez Mera - andresmartinezmera@gmail.com
-from mysql.connector import connection
+#from mysql.connector import connection
 import numpy as np
 
 # Schematic drawing
 import schemdraw as schem
 import schemdraw.elements as elm
-from skrf.mathFunctions import find_closest
 
 # Get units with scale, etc.
 from ..utilities import *
 from ..components import TransmissionLine
-
-# standard imports
-import skrf as rf
-from skrf import network2
 
 def synthesize_DC_Filter_C_Coupled_Shunt_Resonators(params):
     Lr = params['Xres']
@@ -107,12 +102,7 @@ def DirectCoupled_C_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Lres, fstart, fs
     schem.use('svg')
     d = schem.Drawing(inches_per_unit = 0.3)
     _fontsize = 8
-    
-    # Network
-    rf.stylely()
-    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
-    line = rf.media.DefinedGammaZ0(frequency=freq)
-    
+       
     # Component counter
     count_C = 0
     count_L = 0
@@ -127,6 +117,15 @@ def DirectCoupled_C_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Lres, fstart, fs
     params['f1'] = f1
     params['f2'] = f2
     Cseries, Lres, Cres = synthesize_DC_Filter_C_Coupled_Shunt_Resonators(params)
+
+    NetworkType = {}
+    comp_val = {}
+    NetworkType['Network'] = 'Direct-Coupled'
+    NetworkType['DC_Type'] = 'C-Coupled Shunt Resonators'
+    NetworkType['freq'] = np.linspace(fstart, fstop, npoints)*1e6
+    NetworkType['N'] = Nres
+    comp_val['ZS'] = RS
+    comp_val['ZL'] = RL
         
     # Source port
     # Drawing: Source port and the first line
@@ -134,12 +133,7 @@ def DirectCoupled_C_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Lres, fstart, fs
     d += elm.Dot().label('ZS = ' + str(RS) + " \u03A9", fontsize=_fontsize).linewidth(1)
     d += elm.Line().length(1).linewidth(1)
     
-    # Network: Port 1
-    connections = [] # Network connections
-    L = []
-    C = []
-    ground = []
-    Port1 = rf.Circuit.Port(frequency=freq, name='port1', z0=RS)
+ 
     
     # First coupling capacitor
     # Drawing
@@ -148,10 +142,8 @@ def DirectCoupled_C_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Lres, fstart, fs
     
     # Network
     count_C += 1
-    C.append(line.capacitor(Cseries[0], name='C' + str(count_C)))
-    
-    connections.append([(Port1, 0), (C[0], 0)])
-    
+    comp_val['C'+str(count_C)] = Cseries[0]
+        
     for i in range (0, Nres):
         # Resonator
         
@@ -169,15 +161,11 @@ def DirectCoupled_C_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Lres, fstart, fs
         d += elm.Ground().linewidth(1)
         
         # Network
-        count_C += 1
-        C.append(line.capacitor(Cres[i], name='C' + str(count_C)))
-        count_gnd += 1
-        ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-        
+        count_C += 1      
         count_L += 1
-        L.append(line.inductor(Lres[i], name='L' + str(count_L)))
-        count_gnd += 1
-        ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+
+        comp_val['C'+str(count_C)] = Cres[i]
+        comp_val['L'+str(count_L)] = Lres[i]
         
         # Next coupling capacitor
         # Drawing
@@ -188,23 +176,15 @@ def DirectCoupled_C_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Lres, fstart, fs
         
         # Network
         count_C += 1
-        C.append(line.capacitor(Cseries[i+1], name='C' + str(count_C)))
+        comp_val['C'+str(count_C)] = Cseries[i+1]
         
-        # Connections
-        connections.append([(C[2*i], 1), (C[2*i+1], 0), (C[2*i+2], 0), (L[i], 0)])
-        connections.append([(C[2*i+1], 1), (ground[2*i], 0)])
-        connections.append([(L[i], 1), (ground[2*i+1], 0)])
         
     # Drawing
     d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
     d += elm.Line(color='white').length(2).linewidth(0)
-    # Network
-    Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-    
-    # Connections
-    connections.append([(C[-1], 1), (Port2, 0)])
+
        
-    return d, connections
+    return d, NetworkType, comp_val
 
 def synthesize_DC_Filter_L_Coupled_Shunt_Resonators(params):
     
@@ -284,15 +264,10 @@ def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fs
     d = schem.Drawing(inches_per_unit = 0.3)
     _fontsize = 8
     
-    # Network
-    rf.stylely()
-    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
-    line = rf.media.DefinedGammaZ0(frequency=freq)
     
     # Component counter
     count_C = 0
     count_L = 0
-    count_gnd = 0
 
     params = {}
     params['Xres'] = Cres
@@ -303,20 +278,22 @@ def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fs
     params['f1'] = f0-BW/2
     params['f2'] = f0+BW/2
     Lseries, Lres, Cres = synthesize_DC_Filter_L_Coupled_Shunt_Resonators(params)
+
+    NetworkType = {}
+    comp_val = {}
+    NetworkType['Network'] = 'Direct-Coupled'
+    NetworkType['DC_Type'] = 'L-Coupled Shunt Resonators'
+    NetworkType['freq'] = np.linspace(fstart, fstop, npoints)*1e6
+    NetworkType['N'] = Nres
+    comp_val['ZS'] = RS
+    comp_val['ZL'] = RL
         
     # Source port
     # Drawing: Source port and the first line
     d += elm.Line(color='white').length(2).linewidth(0)
     d += elm.Dot().label('ZS = ' + str(RS) + " \u03A9", fontsize=_fontsize).linewidth(1)
     d += elm.Line().length(1).linewidth(1)
-    
-    # Network: Port 1
-    connections = [] # Network connections
-    L = []
-    C = []
-    ground = []
-    Port1 = rf.Circuit.Port(frequency=freq, name='port1', z0=RS)
-    
+        
     # First coupling inductor
     # Drawing
     d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries[0], 'Inductance'), fontsize=_fontsize).linewidth(1)
@@ -324,9 +301,8 @@ def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fs
     
     # Network
     count_L += 1
-    L.append(line.inductor(Lseries[0], name='L' + str(count_L)))
+    comp_val['L'+str(count_L)] = Lseries[0]
     
-    connections.append([(Port1, 0), (L[0], 0)])
     
     for i in range (0, Nres):
         # Resonator
@@ -346,14 +322,10 @@ def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fs
         
         # Network
         count_C += 1
-        C.append(line.capacitor(Cres[i], name='C' + str(count_C)))
-        count_gnd += 1
-        ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-        
         count_L += 1
-        L.append(line.inductor(Lres[i], name='L' + str(count_L)))
-        count_gnd += 1
-        ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+    
+        comp_val['L'+str(count_L)] = Lres[i]
+        comp_val['C'+str(count_C)] = Cres[i]
         
         # Next coupling inductor
         # Drawing
@@ -364,23 +336,13 @@ def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fs
         
         # Network
         count_L += 1
-        L.append(line.inductor(Lseries[i+1], name='L' + str(count_L)))
-        
-        # Connections
-        connections.append([(L[2*i], 1), (L[2*i+1], 0), (L[2*i+2], 0), (C[i], 0)])
-        connections.append([(L[2*i+1], 1), (ground[2*i], 0)])
-        connections.append([(C[i], 1), (ground[2*i+1], 0)])
-        
+        comp_val['L'+str(count_L)] = Lseries[i+1]
+                
     # Drawing
     d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
     d += elm.Line(color='white').length(2).linewidth(0)
-    # Network
-    Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-    
-    # Connections
-    connections.append([(L[-1], 1), (Port2, 0)])
-        
-    return d, connections
+
+    return d, NetworkType, comp_val
 
 
 def synthesize_DC_Filter_L_Coupled_Series_Resonators(params):
@@ -502,33 +464,30 @@ def DirectCoupled_L_Coupled_SeriesResonators(params):
     d = schem.Drawing(inches_per_unit = 0.3)
     _fontsize = 8
     
-    # Network
-    rf.stylely()
-    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
-    line = rf.media.DefinedGammaZ0(frequency=freq)
-    
+   
     # Component counter
     count_C = 0
     count_L = 0
-    count_gnd = 0
     
     params['f1'] = params['f1'] *1e6
     params['f2'] = params['f2'] *1e6
     M, Lseries, Cres = synthesize_DC_Filter_L_Coupled_Series_Resonators(params)
+
+    NetworkType = {}
+    comp_val = {}
+    NetworkType['Network'] = 'Direct-Coupled'
+    NetworkType['freq'] = np.linspace(fstart, fstop, npoints)*1e6
+    NetworkType['N'] = Nres
+    comp_val['ZS'] = RS
+    comp_val['ZL'] = RL
     
               
-    if (Magnetic_Coupling == 0):       
+    if (Magnetic_Coupling == 0):
+        NetworkType['DC_Type'] = 'L-Coupled Series Resonators'      
         # Source port
         # Drawing: Source port and the first line
         d += elm.Dot().label('ZS = ' + str(RS) + " \u03A9", fontsize=_fontsize).linewidth(1)
         d += elm.Line().length(1).linewidth(1)
-
-        # Network: Port 1
-        connections = [] # Network connections
-        L = []
-        C = []
-        ground = []
-        Port1 = rf.Circuit.Port(frequency=freq, name='port1', z0=RS)
 
         # First coupling inductor
         # Drawing
@@ -536,7 +495,7 @@ def DirectCoupled_L_Coupled_SeriesResonators(params):
 
         # Network
         count_L += 1
-        L.append(line.inductor(Lseries[0], name='L' + str(count_L)))
+        comp_val['L'+str(count_L)] = Lseries[0]
 
         connections.append([(Port1, 0), (L[0], 0)])
 
@@ -549,46 +508,27 @@ def DirectCoupled_L_Coupled_SeriesResonators(params):
 
             #Network
             count_L += 1
-            L.append(line.inductor(M[i], name='L' + str(count_L)))
-            count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+            comp_val['L'+str(count_L)] = M[i]
 
             d.pop()
             # Series resonator
             d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lseries[i+1], 'Inductance'), fontsize=_fontsize).linewidth(1)        
             count_L += 1
-            L.append(line.inductor(Lseries[i+1], name='L' + str(count_L)))
+            comp_val['L'+str(count_L)] = Lseries[i+1]
 
             if (i < Nres):
                 d += elm.Capacitor().right().label(getUnitsWithScale(Cres[i], 'Capacitance'), fontsize=_fontsize).linewidth(1)
                 count_C += 1
-                C.append(line.capacitor(Cres[i], name='C' + str(count_C)))
-
-
-            # Connections
-            if (i == 0):
-                # Then, connect to the first inductor
-                connections.append([(L[0], 1), (L[1], 0), (L[2], 0)])
-                connections.append([(L[1], 1), (ground[i], 0)])
-                connections.append([(L[2], 1), (C[i], 0)])
-            else:
-                # Then, connect to the previous capacitor
-                connections.append([(C[i-1], 1), (L[2*i+1], 0), (L[2*i+2], 0)])
-                connections.append([(L[2*i+1], 1), (ground[i], 0)])
-                if (i < Nres):
-                    # The last iteration is the coupling for the load port
-                    connections.append([(L[2*i+2], 1), (C[i], 0)])
+                comp_val['C'+str(count_C)] = Cres[i]
+           
 
         # Drawing
         d += elm.Line().length(1).linewidth(1)
         d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
-        # Network
-        Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
 
-        # Connections
-        connections.append([(L[-1], 1), (Port2, 0)])
     else:
         # Magnetic coupling
+        NetworkType['DC_Type'] = 'Magnetic coupled resonators'
         Lp = Lseries
                        
         # Source port
@@ -596,19 +536,11 @@ def DirectCoupled_L_Coupled_SeriesResonators(params):
         d += elm.Line(color='white').length(2).linewidth(0)
         d += elm.Dot().label('ZS = ' + str(RS) + " \u03A9", fontsize=_fontsize).linewidth(1)
         d += elm.Line().length(2).linewidth(1)
-        
-        # Network: Port 1
-        connections = [] # Network connections
-        L = []
-        C = []
-        ground = []
-        
+               
         count_L = 0
         count_C = 0
         count_gnd = 0
-        
-        Port1 = rf.Circuit.Port(frequency=freq, name='port1', z0=RS)
-        
+               
         for i in range (0, Nres):
             x = d.add(elm.Transformer(t1=4, t2=4, loop=True, core = True, fontsize=_fontsize)
                       .label(getUnitsWithScale(Lp[i], 'Inductance'), loc='left')
@@ -623,34 +555,23 @@ def DirectCoupled_L_Coupled_SeriesResonators(params):
             
             # Network: The transformer is simulated using the uncoupled lumped equivalen (Zverev, Fig. 10.4 (c))
             count_L += 1
-            L.append(line.inductor(Lp[i] - M[i], name='L' + str(count_L)))
+            comp_val['L'+str(count_L)] = Lp[i] - M[i]
+
             count_L += 1
-            L.append(line.inductor(M[i], name='L' + str(count_L)))
+            comp_val['L'+str(count_L)] = M[i]
+
             count_L += 1
-            L.append(line.inductor(Lp[i+1] - M[i], name='L' + str(count_L)))
+            comp_val['L'+str(count_L)] = Lp[i+1] - M[i]
 
             count_gnd += 1
-            ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
             count_C += 1
-            C.append(line.capacitor(Cres[i], name='C' + str(count_C)))
+            comp_val['C'+str(count_C)] = Cres[i]
             
             print("L[" + str(3*i) + "] = ", getUnitsWithScale(Lp[i] - M[i], 'Inductance'))
             print("L[" + str(3*i+1) + "] = ", getUnitsWithScale(M[i], 'Inductance'))
             print("L[" + str(3*i+2) + "] = ", getUnitsWithScale(Lp[i+1] - M[i], 'Inductance'))
             print("C[" + str(i) + "] = ", getUnitsWithScale(Cres[i], 'Capacitance'))
             
-            # Connections
-            if (i == 0):
-                # Connect the first inductor to the source port
-                connections.append([(Port1, 0), (L[0], 0)])
-            else:
-                # Connect the first inductor to the previous capacitor
-                connections.append([(C[i-1], 1), (L[3*i], 0)])
-                
-            connections.append([(L[3*i], 1), (L[3*i+1], 0), (L[3*i+2], 0)])
-            connections.append([(L[3*i+1], 1), (ground[i], 0)])
-            connections.append([(L[3*i+2], 1), (C[i], 0)])
-
         x = d.add(elm.Transformer(t1=4, t2=4, loop = True, core = True, fontsize=_fontsize)
                       .label(getUnitsWithScale(Lp[-2], 'Inductance'), loc='left')
                       .label(getUnitsWithScale(Lp[-1], 'Inductance'), loc='right')
@@ -661,33 +582,22 @@ def DirectCoupled_L_Coupled_SeriesResonators(params):
         
         # Network: The transformer is simulated using the uncoupled lumped equivalen (Zverev, Fig. 10.4 (c))
         count_L += 1
-        L.append(line.inductor(Lp[-2] - M[-1], name='L' + str(count_L)))
+        comp_val['L'+str(count_L)] = Lp[-2] - M[-1]
+
         count_L += 1
-        L.append(line.inductor(M[-1], name='L' + str(count_L)))
+        comp_val['L'+str(count_L)] = M[-1]
+
         count_L += 1
-        L.append(line.inductor(Lp[-1] - M[-1], name='L' + str(count_L)))
+        comp_val['L'+str(count_L)] = Lp[-1] - M[-1]
         
         count_gnd += 1
-        ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-        
-        print("L[" + str(3*Nres) + "] = ", getUnitsWithScale(Lp[-2] - M[-1], 'Inductance'))
-        print("L[" + str(3*Nres+1) + "] = ", getUnitsWithScale(M[-1], 'Inductance'))
-        print("L[" + str(3*Nres+2) + "] = ", getUnitsWithScale(Lp[-1] - M[-1], 'Inductance'))
-                
+                       
         # Load port
         d += elm.Line().at(x.s2).length(2).linewidth(1)
         d += elm.Dot().label('ZL = ' + str(RL) + " \u03A9", fontsize=_fontsize).linewidth(1)
         d += elm.Line(color='white').length(2).linewidth(0)
-        
-        Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-        
-        # Connections
-        connections.append([(C[-1], 1), (L[-3], 0)])
-        connections.append([(L[-3], 1), (L[-2], 0), (L[-1], 0)])
-        connections.append([(L[-2], 1), (ground[-1], 0)])
-        connections.append([(L[-1], 1), (Port2, 0)])
-    
-    return d, connections
+            
+    return d, NetworkType, comp_val
 
 
 def synthesize_DC_Filter_C_Coupled_Series_Resonators(params):
@@ -808,12 +718,7 @@ def DirectCoupled_C_Coupled_SeriesResonators(params, port_match):
     schem.use('svg')
     d = schem.Drawing(inches_per_unit = 0.3)
     _fontsize = 8
-    
-    # Network
-    rf.stylely()
-    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
-    line = rf.media.DefinedGammaZ0(frequency=freq)
-    
+       
     # Component counter
     count_C = 0
     count_L = 0
@@ -829,19 +734,21 @@ def DirectCoupled_C_Coupled_SeriesResonators(params, port_match):
     syn_params['Xres'] = [float(i)*1e-9 for i in params['Xres']] # Resonator inductance
     Match_source, Match_load, Cinv, Lres, Cres = synthesize_DC_Filter_C_Coupled_Series_Resonators(syn_params)
     
+    NetworkType = {}
+    comp_val = {}
+    NetworkType['Network'] = 'Direct-Coupled'
+    NetworkType['DC_Type'] = 'C-Coupled Series Resonators'
+    NetworkType['freq'] = np.linspace(fstart, fstop, npoints)*1e6
+    NetworkType['N'] = Nres
+    comp_val['ZS'] = RS
+    comp_val['ZL'] = RL
+
     # Source port
     # Drawing: Source port and the first line
     d += elm.Line(color='white').length(2).linewidth(0)
     d += elm.Dot().label('ZS = ' + str(RS) + " \u03A9", fontsize=_fontsize, loc='bottom').linewidth(1)
     d += elm.Line().length(1).linewidth(1)
-    
-    # Network: Port 1
-    connections = [] # Network connections
-    L = []
-    C = []
-    ground = []
-    Port1 = rf.Circuit.Port(frequency=freq, name='port1', z0=RS)
-    
+       
     # First coupling
     
     if (port_match[0] == 'C'):
@@ -850,17 +757,15 @@ def DirectCoupled_C_Coupled_SeriesResonators(params, port_match):
         d += elm.Line().right().length(1).linewidth(1)
 
         # Network
-        C.append(line.capacitor(Match_source, name='C' + str(count_C)))
-        connections.append([(Port1, 0), (C[0], 0)])
+        count_C += 1
+        comp_val['C'+str(count_C)] = Match_source
     
     else:
         # Drawing
         d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Match_source, 'Inductance'), fontsize=_fontsize).linewidth(1)
         d += elm.Line().right().length(1).linewidth(1)
 
-        # Network
-        L.append(line.inductor(Match_source, name='L' + str(count_L)))
-        connections.append([(Port1, 0), (L[0], 0)])
+        comp_val['L'+str(count_L)] = Match_source
 
     
     for i in range (0, Nres):
@@ -873,53 +778,36 @@ def DirectCoupled_C_Coupled_SeriesResonators(params, port_match):
         
         # Network
         count_C += 1
-        C.append(line.capacitor(Cinv[i], name='C' + str(count_C)))
-        count_gnd += 1
-        ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+        comp_val['C'+str(count_C)] = Cinv[i]
         
         d.pop()
         d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Lres[i], 'Inductance'), fontsize=_fontsize).linewidth(1)
         d += elm.Capacitor().right().label(getUnitsWithScale(Cres[i], 'Capacitance'), fontsize=_fontsize).linewidth(1)
         
         count_L += 1
-        L.append(line.inductor(Lres[i], name='L' + str(count_L)))
         count_C += 1
-        C.append(line.capacitor(Cres[i], name='C' + str(count_C)))
 
-        
-        # Connections
-        if (port_match[0] == 'C'):
-            connections.append([(C[2*i], 1), (C[2*i+1], 0), (L[i], 0)])
-            connections.append([(L[i], 1), (C[2*i+2], 0)])
-            connections.append([(C[2*i+1], 1), (ground[i], 0)])
-        else: # There's one inductance too much and one capacitor too few
-            if (i == 0): # The first element must connect to the inductor
-                connections.append([(L[0], 1), (C[2*i], 0), (L[i+1], 0)])
-            else:
-                connections.append([(C[2*i-1], 1), (C[2*i], 0), (L[i+1], 0)])
-            connections.append([(L[i+1], 1), (C[2*i+1], 0)])
-            connections.append([(C[2*i], 1), (ground[i], 0)])
-
+        comp_val['L'+str(count_L)] = Lres[i]
+        comp_val['C'+str(count_C)] = Cres[i]
         
     # Drawing
     d.push()
     d += elm.Capacitor().down().label(getUnitsWithScale(Cinv[-1], 'Capacitance'), fontsize=_fontsize).linewidth(1)
     d += elm.Ground().linewidth(1)
-    
+
     count_C += 1
-    C.append(line.capacitor(Cinv[-1], name='C' + str(count_C)))
-    count_gnd += 1
-    ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+    comp_val['C'+str(count_C)] = Cinv[-1]
     
     d.pop()
     if (port_match[1] == 'C'):
         d += elm.Capacitor().right().label(getUnitsWithScale(Match_load, 'Capacitance'), fontsize=_fontsize).linewidth(1)
         count_C += 1
-        C.append(line.capacitor(Match_load, name='C' + str(count_C)))
+        comp_val['C'+str(count_C)] = Match_load
+        
     else:
         d += elm.Inductor2(loops=2).right().label(getUnitsWithScale(Match_load, 'Inductance'), fontsize=_fontsize).linewidth(1)
         count_L += 1
-        L.append(line.capacitor(Match_load, name='L' + str(count_L)))
+        comp_val['L'+str(count_L)] = Match_load
     
     # Load port
     # Drawing
@@ -927,21 +815,7 @@ def DirectCoupled_C_Coupled_SeriesResonators(params, port_match):
     d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize, loc='bottom').linewidth(1)
     d += elm.Line(color='white').length(2).linewidth(0)
     
-    # Network
-    Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-    
-    
-    # Connections
-    if (port_match[1] == 'C'):
-        connections.append([(C[-3], 1), (C[-2], 0), (C[-1], 0)])
-        connections.append([(C[-2], 1), (ground[-1], 0)])
-        connections.append([(C[-1], 1), (Port2, 0)])
-    else:
-        connections.append([(C[-2], 1), (C[-1], 0), (L[-1], 0)])
-        connections.append([(C[-1], 1), (ground[-1], 0)])
-        connections.append([(L[-1], 1), (Port2, 0)])
-
-    return d, connections
+    return d, NetworkType, comp_val
 
 
 def synthesize_DC_Filter_QW_Shunt_Resonators(params):
@@ -1008,43 +882,30 @@ def DirectCoupled_QW_Coupled_ShuntResonators(gi, RS, RL, f0, BW, fstart, fstop, 
     params['f1'] = f0-BW/2
     params['f2'] = f0+BW/2
     RS, RL, qw, Lres, Cres = synthesize_DC_Filter_QW_Shunt_Resonators(params)
+
+    NetworkType = {}
+    comp_val = {}
+    NetworkType['Network'] = 'Direct-Coupled'
+    NetworkType['DC_Type'] = 'Quarter-Wave coupled resonators'
+    NetworkType['freq'] = np.linspace(fstart, fstop, npoints)*1e6
+    NetworkType['N'] = Nres
+    comp_val['ZS'] = RS
+    comp_val['ZL'] = RL
     
     # Draw circuit
     schem.use('svg')
     d = schem.Drawing()
     _fontsize = 12
     
-    # Network
-    rf.stylely()
-    freq = rf.Frequency(start=fstart, stop=fstop, npoints=npoints, unit='MHz')
-    line = rf.media.DefinedGammaZ0(frequency=freq)
-    
     # Component counter
     count_C = 0
     count_L = 0
     count_TL = 0
-    count_gnd = 0
     
-
-    
-        
     # Source port
     # Drawing: Source port and the first line
     d += elm.Dot().label('ZS = ' + str(RS) + " \u03A9", fontsize=_fontsize).linewidth(1)
     d += elm.Line().length(1).linewidth(1)
-    
-    # Network: Port 1
-    connections = [] # Network connections
-    L = []
-    C = []
-    TL = []
-    ground = []
-    
-    Port1 = rf.Circuit.Port(frequency=freq, name='port1', z0=RS)
-    
-    # Quarter wavelength line
-    beta = freq.w/rf.c
-    Z0_line = rf.media.DefinedGammaZ0(frequency=freq, Z0=RS, gamma=0+beta*1j)
     
     d += elm.Line().right().length(1).linewidth(1)
         
@@ -1065,15 +926,11 @@ def DirectCoupled_QW_Coupled_ShuntResonators(gi, RS, RL, f0, BW, fstart, fstop, 
         d += elm.Ground().linewidth(1)
         
         # Network
-        count_C += 1
-        C.append(line.capacitor(Cres[i], name='C' + str(count_C)))
-        count_gnd += 1
-        ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
-        
+        count_C += 1       
         count_L += 1
-        L.append(line.inductor(Lres[i], name='L' + str(count_L)))
-        count_gnd += 1
-        ground.append(rf.Circuit.Ground(frequency=freq, name='ground' + str(count_gnd), z0=RS))
+
+        comp_val['C'+str(count_C)] = Cres[i]
+        comp_val['L'+str(count_L)] = Lres[i]
         
         # Coupling line
         # Drawing
@@ -1083,25 +940,15 @@ def DirectCoupled_QW_Coupled_ShuntResonators(gi, RS, RL, f0, BW, fstart, fstop, 
         d += elm.Line().right().length(2).linewidth(1)
         
         count_TL += 1
-        TL.append(Z0_line.line(Z0_line.theta_2_d(90, deg=True), unit='m', name='TL' + str(count_TL)))
-        
-        if (i == 0):
-            # Connect to the source port
-            connections.append([(Port1, 0), (L[0], 0), (C[0], 0), (TL[0], 0)])
-        else:
-            # Connect to the previous TL
-            connections.append([(TL[i-1], 1), (L[i], 0), (C[i], 0), (TL[i], 0)])
-            
-        connections.append([(C[i], 1), (ground[2*i], 0)])
-        connections.append([(L[i], 1), (ground[2*i+1], 0)])          
+        comp_val['TL_'+str(count_TL)+'_Z0'] = RS;
+        comp_val['TL_'+str(count_TL)+'_ang'] = 90;
+       
         
     # Load port
     # Drawing
     d += elm.Dot().label('ZL = ' + str(float("{:.2f}".format(RL))) + " \u03A9", fontsize=_fontsize).linewidth(1)
     # Network
-    Port2 = rf.Circuit.Port(frequency=freq, name='port2', z0=RL)
-    
-    # Connections
-    connections.append([(Port2, 0), (TL[-1], 1)])
+    comp_val['ZL'] = RL
+
        
-    return d, connections
+    return d, NetworkType, comp_val

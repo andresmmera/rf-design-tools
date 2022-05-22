@@ -1,5 +1,4 @@
 # Get units with scale, etc.
-from skrf import setup_pylab
 from ..utilities import *
 from datetime import date
 

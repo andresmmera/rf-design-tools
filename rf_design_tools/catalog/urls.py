@@ -43,6 +43,11 @@ from catalog.views import FilterDesignToolView
 from catalog.views import QucsFilterDownload
 from catalog.views import SchematicSVGDownload
 
+from catalog.views import AttenuatorDesignToolView
+from catalog.views import SchematicSVGDownload_Attenuator
+from catalog.views import AttenuatorDesignDocs
+from catalog.views import AttenuatorDesignDocs_PiTee
+
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
     
@@ -106,4 +111,12 @@ urlpatterns = [
     path('tool/filter_design', FilterDesignToolView, name='filter_design_tool'),
     path('tool/filter_design/download/schematic', QucsFilterDownload, name='qucs_filter_download'),
     path('tool/filter_design/download/svg/', SchematicSVGDownload, name='svg_download'),
+
+    #################################################################################
+    # ATTENUATOR DESIGN TOOL
+    path('tool/attenuator_design', AttenuatorDesignToolView, name='attenuator_design_tool'),
+    path('tool/attenuator_design/docs', AttenuatorDesignDocs, name='attenuator_design_docs'),
+    path('tool/attenuator_design/docs/Pi-Tee-type', AttenuatorDesignDocs_PiTee, name='attenuator_design_PiTee_docs'),
+    path('tool/attenuator_design/download/svg/', SchematicSVGDownload_Attenuator, name='svg_download_att'),
+
 ]

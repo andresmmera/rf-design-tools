@@ -105,7 +105,7 @@
                   Ripple (dB)
                 </td>
                 <td>
-                  <input type="number" id="Ripple" value = "0.05" step="0.05" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="Ripple" value = "0.05" step="0.05" min="0" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
               </tr>
               <tr class="as_input">
@@ -423,10 +423,12 @@
     if (select.value == 1){
       $('.EllipticType_input').show();
       $('.Rload_input').hide();
+      document.getElementById("Order").value = 2
     }
     else{
       $('.EllipticType_input').hide();
       $('.Rload_input').show();
+      document.getElementById("Order").value = 5
     }
     // Ripple visibility
     if ((select.value == 1) || (select.value == 2) || (select.value == 5)){

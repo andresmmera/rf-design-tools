@@ -1,0 +1,63 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="container-fluid">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.4cm 0.5cm; vertical-align: middle;">Pi & Tee-type Attenuators</h1>
+        </div>
+    
+        <div class="col-6 align-self-center text-right">
+            <div class=”card card-inverse card-danger”>
+                <a href="{% url 'attenuator_design_tool' %}" class="btn btn-dark" role="button">Attenuator Designer</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">
+          <div class="col-12">
+              <table class="table table-image">
+                <thead>
+                  <tr>
+                    <th scope="col">Topology</th>
+                    <th scope="col">Schematic</th>
+                    <th scope="col">R1</th>
+                    <th scope="col">R2</th>
+                    <th scope="col">R3</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Pi</th>
+                    <td class="w-25">
+                        <img src="{% static 'images/Attenuators/Docs/PiAttenuator.svg' %}" class="img-fluid img-thumbnail" alt="Sheep">
+                    </td>
+                    <td><p> $$ R_1 = \frac{1}{\frac{10^{0.1 \cdot att} + 1}{Z_{in} \cdot (10^{0.1 \cdot att} - 1)} - \frac{1}{R_2}}$$</p></td>
+                    <td><p> $$ R_2 = 0.5 \cdot (10^{0.1 \cdot att} - 1) \cdot \sqrt{\frac{Z_{in} \cdot Z_{out}}{10^{0.1\cdot att}}}$$</p></td>
+                    <td><p> $$ R_3 = \frac{1}{\frac{10^{0.1 \cdot att} + 1}{Z_{out} \cdot (10^{0.1 \cdot att} - 1)} - \frac{1}{R_2}}$$</p></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Tee</th>
+                    <td class="w-25">
+                        <img src="{% static 'images/Attenuators/Docs/TeeAttenuator.svg' %}" class="img-fluid img-thumbnail" alt="Sheep">
+                    </td>
+                    <td><p> $$ R_1 = \frac{10^{0.1 \cdot att} + 1}{10^{0.1 \cdot att} - 1} \cdot Z_{in} - R_2$$</p></td>
+                    <td><p> $$ R_2 = \frac{2 \cdot \sqrt{Z_{in}\cdot Z_{out} · 10^{0.1 \cdot att}}}{10^{0.1 \cdot att} - 1}$$</p></td>
+                    <td><p> $$ R_3 = \frac{10^{0.1 \cdot att} + 1}{10^{0.1 \cdot att} - 1} \cdot Z_{out} - R_2$$</p></td>
+                  </tr>
+                </tbody>
+              </table>   
+          </div>
+        </div>
+      </div>
+   
+   
+    
+  </div> 
+{% endblock %}

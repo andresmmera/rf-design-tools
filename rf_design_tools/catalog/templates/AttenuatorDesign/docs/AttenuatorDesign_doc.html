@@ -1,0 +1,44 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="container-fluid">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.4cm 0.5cm; vertical-align: middle;">Attenuator Design Docs</h1>
+        </div>
+    
+        <div class="col-6 align-self-center text-right">
+            <div class=”card card-inverse card-danger”>
+                <a href="{% url 'attenuator_design_tool' %}" class="btn btn-dark" role="button">Attenuator Designer</a>
+            </div>
+        </div>
+    </div>
+
+    <div class = "row">
+        <div class="col-xs-9 col-md-3 box" style="background-color:#ffffff;">
+          <!-- PI TEE ATTENUATOR -->
+           <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+             <a href='tool/filter_design'><h5 class="tool_title">Pi & Tee-type</h5></a>
+           </div>
+           
+            <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+              <a href="{% url 'attenuator_design_PiTee_docs'%}">
+                <img clas="img-responsive" src="{% static 'images/Attenuators/Tool/PiAttenuator.svg' %}" alt="">
+              </a>
+            </div>
+             
+           <!-- BUTTONS -->
+           <div class="d-flex flex-row justify-content-center">
+             <div class="p-2"><a href="{% url 'attenuator_design_PiTee_docs'%}" class="btn btn-dark" role="button">Go!</a></div>
+           </div>
+        </div>
+  
+      </div>
+   
+    
+  </div> 
+{% endblock %}

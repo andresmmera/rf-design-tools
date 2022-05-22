@@ -69,13 +69,14 @@ def getPlot(Pin_Upper_Limit, Pout_Upper_Limit, No_dBm, SImin, n, G, CPo, IIPn, O
     P_in = np.linspace(xmin, xmax, 100);
     fundamental = P_in + G;
     IMn = PoutIMN(P_in, n, G, IIPn);
-    DR = Pin_Upper_Limit - No_dBm;
+    DR = Pin_Upper_Limit + G - No_dBm;
     CPi = CPo - G + 1;
 
     # Lines
     plot.line(P_in, fundamental, line_width=2, color="navy", legend_label="Fundamental") # Fundamental
-    plot.line(P_in, IMn, line_width=2, color="red", legend_label="IMn") # IMn level
-    plot.line(P_in, No_dBm, line_width=2, color="orange", legend_label="Noise floor")# Noise floor
+    plot.line(P_in, IMn, line_width=2, color="red", legend_label="IM3") # IMn level
+    plot.line(P_in, No_dBm, line_width=2, color="black", legend_label="Noise floor")# Noise floor
+    plot.line(P_in, No_dBm+SImin, line_width=2, color="orange", legend_label="Noise floor + SImin")# Noise floor + SImin
 
     # Level
     level_x = np.linspace(xmin, Pin_Upper_Limit, 100);
@@ -103,13 +104,13 @@ def getPlot(Pin_Upper_Limit, Pout_Upper_Limit, No_dBm, SImin, n, G, CPo, IIPn, O
                         x_end=Pin_Upper_Limit, 
                         y_end=Pout_Upper_Limit))
 
-    plot.xaxis.axis_label = 'Input Power (dBm)';
-    plot.yaxis.axis_label = 'Output Power (dBm)';
+    plot.xaxis.axis_label = 'Input RF Power (dBm)';
+    plot.yaxis.axis_label = 'Output IF Power (dBm)';
     plot.legend.location = 'top_left';
 
     # Text annotations
     # Labels with 90 degree rotation
-    source = ColumnDataSource(data=dict(y=[Pout_Upper_Limit-DR/2 - 40, Pout_Upper_Limit-DR/2 - 20, Pout_Upper_Limit-SImin/2 - 25, Pout_Upper_Limit-SImin/2-10],
+    source = ColumnDataSource(data=dict(y=[Pout_Upper_Limit-DR/2 - 25, Pout_Upper_Limit-DR/2 - 15, Pout_Upper_Limit-SImin/2 - 25, Pout_Upper_Limit-SImin/2-10],
                                         x=[Pin_Upper_Limit-shift-2, Pin_Upper_Limit-shift, Pin_Upper_Limit-2, Pin_Upper_Limit],
                                         names=['Dynamic Range', str("%.1f" % DR) + ' dB',
                                             'Minimum S/I', str(SImin) + ' dB']))
@@ -119,7 +120,7 @@ def getPlot(Pin_Upper_Limit, Pout_Upper_Limit, No_dBm, SImin, n, G, CPo, IIPn, O
     # Labels without rotation
     source = ColumnDataSource(data=dict(y=[CPo+2, OIPn+2],
                                         x=[CPi-1, IIPn-1],
-                                        names=['CP', 'IP'+str(n)]))
+                                        names=['P1dB', 'IP'+str(n)]))
     labels = LabelSet(x='x', y='y', text='names', source=source, render_mode='canvas')
     plot.add_layout(labels)
     return plot
@@ -164,8 +165,8 @@ def IPn_DiagramView(request):
             # Dynamic range
             Pin_Upper_Limit = (SImin - (n-1)*IIPn)/(1-n)
             Pout_Upper_Limit = Pin_Upper_Limit + G
-            Lower_Limit = No_dBm
-            context['DR'] = round(Pin_Upper_Limit - Lower_Limit,1)
+            Lower_Limit = No_dBm + SImin
+            context['DR'] = round(Pout_Upper_Limit - Lower_Limit,1)
             context['Pin_Upper_Limit'] = Pin_Upper_Limit
             context['Pout_Upper_Limit'] = Pout_Upper_Limit
             context['No_dBm'] = No_dBm # Noise floor (scalar) for presenting the data in the HTML template

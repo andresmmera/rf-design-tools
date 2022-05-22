@@ -9,5 +9,9 @@ from .viewImageFrequency import *
 from .viewCapRes_Calculators import *
 from .viewSystemBalance import *
 from .viewWavelengthFrequency import *
+
 from .viewFilterDesignTool import *
 from .FilterDesign import *
+
+from .viewAttenuatorDesignTool import *
+from .AttenuatorDesign import *

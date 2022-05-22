@@ -1,0 +1,253 @@
+{% extends "base_generic.html" %}
+<!-- Add Bokeh headers -->
+<head>
+  <link href="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.css" rel="stylesheet" type="text/css">
+  <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Add icon library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+{% load static %}
+
+{% block content %}
+
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-auto">
+          <h2 class="tool-name">Attenuator Design</h2>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-auto box" style="background-color:rgb(151, 176, 255);">
+        <!-- Instantiate the form -->
+        <form id="AttenuatorDesign_form" method="POST">
+          {% csrf_token %}          
+          <table class="table table-hover">
+            <h5 align="center"> Attenuator Type</h5>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                    Structure
+                </td>
+                <td>                 
+                    <select id="Structure" onchange="StructureChanged(this)">
+                      <option selected="selected" value="1">Pi</option>
+                      <option value="2">Tee</option>
+                      <option value="3">Bridged-Tee</option>
+                      <option value="4">Reflection Attenuator</option>
+                      <option value="5">Quarter-Wave Series</option>
+                      <option value="6">Quarter-Wave Shunt</option>
+                    </select>
+                </td>
+              </tr>
+
+              <tr class="f0_input">
+                <td>
+                  Frequency (MHz)
+                </td>
+                <td>
+                  <input type="number" id="f0" value = "600" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+
+              <tr class="Attenuation_input">
+                <td>
+                  Attenuation (dB)
+                </td>
+                <td>
+                  <input type="number" id="att" value = "10" step="1" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+
+              <tr class="Pin_input">
+                <td>
+                  Input Power (dBm)
+                </td>
+                <td>
+                  <input type="number" id="Pin" value = "-10" step="1" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Z<sub>source</sub> (&Omega;)
+                </td>
+                <td>
+                  <input type="number" id="ZS" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr class = "Rload_input">
+                <td>
+                  Z<sub>load</sub> (&Omega;)
+                </td>
+                <td>
+                  <input type="number" id="ZL" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+
+          <table class="table table-hover">
+            <h5 align="center"> Simulation</h5>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Start Freq (MHz)
+                </td>
+                <td>
+                  <input type="number" id="f_start" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  End Freq (MHz)
+                </td>
+                <td>
+                  <input type="number" id="f_stop" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Points
+                </td>
+                <td>
+                  <input type="number" id="Points" value = "201" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+        <!-- BUTTONS -->
+        <div class="d-flex flex-row justify-content-center">
+          <div class="p-2"><a href="{% url 'attenuator_design_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+        </div>
+      </div>
+
+      
+      <div class="col-md-auto box">
+          <div class="row">
+              <div class="col-xs-12 col-md-12" >
+                  <div class="card shadow-sm">
+                    <div id='id1'>
+                      {{ divResponse | safe }}
+                    </div>
+                        
+                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
+                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
+                        <div id='id2'>
+                        {{ scriptResponse | safe }}
+                        </div>
+                  </div>
+              </div>
+
+          </div>
+        
+          <div class="card">
+            <div class="card-body">
+              <div class='row'>
+                <div class="col-xs-12 col-md-12" >
+                  <h5 class="card-title">Schematic</h5>
+                </div>
+
+                <div class="col-xs-2 col-md-2" > 
+                  <a href="{% url 'svg_download_att' %}" class="btn btn-light" role="button">Download SVG</a>
+                </div>
+
+                <div class="col-xs-4 col-md-4" > 
+                  <a href="{% url 'qucs_filter_download' %}" class="btn btn-warning" role="button">Download Qucs Schematic</a>
+                </div>
+              </div>
+            </div>
+            <div class="card-text text-center">
+              <script src="https://unpkg.com/svg-pan-zoom-container"></script>
+              <!-- https://www.cssscript.com/svg-pan-zoom-container/ -->
+              <div data-zoom-on-wheel data-pan-on-drag>
+                <svg id='svg_display' height = 500 width = 1000>
+                  {{ svg | safe }}
+                </svg>
+              </div>
+
+            </div>
+          </div>
+          </div>
+      </div>
+  </div>
+
+<script>
+  // It's called just when the page is loaded
+  $(document).ready(function () {
+    $('.f0_input').hide(); // Hide central frequency
+
+  })
+
+
+  function StructureChanged(select) {
+    if (select.value == 5){
+    // Conventional LC
+    $('.f0_input').show() // Make visible the central frequency box
+    document.getElementById("f_start").value = 10;
+    document.getElementById("f_stop").value = 1000;
+    }
+    submit_form()
+  }
+
+ 
+  function submit_form(){
+    // Get variables from the form
+    var Structure = document.getElementById("Structure").value;
+    var Pin = document.getElementById("Pin").value;
+    var att = document.getElementById("att").value;
+    var f0 = document.getElementById("f0").value;
+    var ZS = document.getElementById("ZS").value;
+    var ZL = document.getElementById("ZL").value;
+    var f_start = document.getElementById("f_start").value;
+    var f_stop = document.getElementById("f_stop").value;
+    var Points = document.getElementById("Points").value;
+    
+    $.ajax({
+        type: "POST",
+        url: 'attenuator_design',
+        data: {
+            "Structure": Structure,
+            "f0": f0,
+            "ZS": ZS,
+            "ZL": ZL,
+            "Pin": Pin,
+            "att": att,
+            "f_start": f_start,
+            "f_stop": f_stop,
+            "n_points": Points,
+        },
+        dataType: "json",
+        success: function (data) {
+            $("#id1").html(data['divResponse'])
+            $("#id2").html(data['scriptResponse'])
+            $("#id3").html(data['divGroupDelay'])
+            $("#id4").html(data['scriptGroupDelay'])
+            $("#svg_display").html(data['svg'])
+            if (data['warning']){
+              alert(data['warning'])
+            }
+        },
+        failure: function () {
+            alert("failure");
+        }
+    });
+  }
+
+</script>
+{% endblock %}
+
