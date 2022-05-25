@@ -25,7 +25,7 @@ SECRET_KEY = '2c2f#m#2x7sqrku#3z#5cd4x%6!-0wgnv)z2z-c*3)n=m7l6!u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'rfdesigntools.pythonanywhere.com']
 
 
 # Application definition

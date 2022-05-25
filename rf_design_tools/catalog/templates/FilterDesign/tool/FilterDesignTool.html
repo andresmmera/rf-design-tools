@@ -243,31 +243,10 @@
           <div class="row">
               <div class="col-xs-6 col-md-6" >
                   <div class="card shadow-sm">
-                    <div id='id1'>
-                      {{ divResponse | safe }}
-                    </div>
-                        
-                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
-                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
-                        <div id='id2'>
-                        {{ scriptResponse | safe }}
-                        </div>
+                    <script src="https://code.highcharts.com/highcharts.js"></script>
+                    <div id="container" style="width: 800px"></div>
                   </div>
               </div>
-
-              <div class="col-xs-6 col-md-6" >
-                <div class="card shadow-sm">
-                  <div id='id3'>
-                    {{ divGroupDelay | safe }}
-                  </div>
-                      
-                      <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
-                      <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
-                      <div id='id4'>
-                      {{ scriptGroupDelay | safe }}
-                      </div>
-                </div>
-            </div>
           </div>
         
           <div class="card">
@@ -302,6 +281,8 @@
   </div>
 
 <script>
+submit_form()
+
   // It's called just when the page is loaded
   $(document).ready(function () {
     $('.EllipticType_input').hide(); // Hide elliptic type
@@ -515,6 +496,14 @@
             $("#id3").html(data['divGroupDelay'])
             $("#id4").html(data['scriptGroupDelay'])
             $("#svg_display").html(data['svg'])
+    
+            // Retrieve data from django
+            freq = data['freq']
+            S11 = data['S11']
+            S21 = data['S21']
+            title = data['title']
+            plotChart(freq, S21, S11, title)
+
             if (data['warning']){
               alert(data['warning'])
             }
@@ -561,6 +550,57 @@ function insertrow(id){
   var cell2 = row.insertCell();
   cell2.innerHTML = "<input type=\"number\" id=\"X[" + id+ "]\" value = \"100\" style=\"width: 4em\" onchange=\"submit_form(this)\"/>";
 }
+
+
+function plotChart(x, y1, y2, title) {
+          $('#container').highcharts({
+                plotOptions: {
+                              series: {
+                                      animation: false
+                                      }
+                              },
+                title: {
+                          text: title
+                         },
+                xAxis: {
+                        categories: x,
+                        gridLineWidth: 1,
+                        tickInterval: 5,
+                        title: {text: 'freq (MHz)'}
+                        },
+                yAxis: [
+                                {
+                                title: {
+                                        text: 'S21 (dB), S11 (dB)'
+                                      },
+                                      gridLineWidth: 1, 
+                                      tickInterval: 5,
+                                      tickPositioner: function(){
+                                                                  var ticks = this.tickPositions;
+                                                                  ticks.sort(function(a, b) {
+                                                                  return a - b;
+                                                                  });
+                                                                return ticks;
+                                                                }
+                                }
+                        ],
+                                series: [{
+                                  name: 'S21 (dB)',
+                                  data: y1,
+                                  color: 'red',
+                                  yAxis: 0
+                                },
+                                {
+                                  name: 'S11 (dB)',
+                                  data: y2,
+                                  color: 'blue',
+                                  yAxis: 0
+                                }
+                              ]
+                            });
+                        };
+
+
 
 </script>
 {% endblock %}
