@@ -160,7 +160,7 @@ def FilterDesignToolView(request):
 
             
             # Response
-            title = Response + " Bandpass Filter, N = "+ str(N) + ", Ripple = " + str(Ripple) + " dB" 
+            title = Response + " " + Mask + " Filter, N = "+ str(N) + ", Ripple = " + str(Ripple) + " dB" 
 
             # Get warnings
             warning = designer.warning
