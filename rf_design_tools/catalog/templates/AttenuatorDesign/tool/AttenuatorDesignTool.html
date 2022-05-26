@@ -1,9 +1,5 @@
 {% extends "base_generic.html" %}
-<!-- Add Bokeh headers -->
 <head>
-  <link href="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.css" rel="stylesheet" type="text/css">
-  <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.css" rel="stylesheet" type="text/css">
-
   <!-- Add icon library -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -209,7 +205,7 @@
     var f_start = document.getElementById("f_start").value;
     var f_stop = document.getElementById("f_stop").value;
     var Points = document.getElementById("Points").value;
-    
+
     $.ajax({
         type: "POST",
         url: 'attenuator_design',
@@ -226,10 +222,6 @@
         },
         dataType: "json",
         success: function (data) {
-            $("#id1").html(data['divResponse'])
-            $("#id2").html(data['scriptResponse'])
-            $("#id3").html(data['divGroupDelay'])
-            $("#id4").html(data['scriptGroupDelay'])
             $("#svg_display").html(data['svg'])
 
             // Retrieve data from django
@@ -238,13 +230,13 @@
             S21 = data['S21']
             title = data['title']
             plotChart(freq, S21, S11, title)
-
+            
             if (data['warning']){
               alert(data['warning'])
             }
         },
         failure: function () {
-            alert("failure");
+            alert("JSON failure");
         }
     });
   }

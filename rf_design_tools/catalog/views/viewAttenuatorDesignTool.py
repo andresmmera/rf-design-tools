@@ -110,33 +110,29 @@ def AttenuatorDesignToolView(request):
             freq = Network_Type['freq']
             phase = (180/np.pi)*np.angle(S21)
             gd = -(1e9)*np.diff(np.angle(S21))/(2*np.pi*freq[:-1]); # Group delay [ns]
-
+           
+            
+            S11 = np.where(S11 == 0, 1e-12, S11) # Prevent display errors in the JS side for having S11 = 0
             S11 = 20*np.log10(np.abs(S11))
             S21 = 20*np.log10(np.abs(S21))
-
-            context['freq'] = freq
-            context['S11'] = S11
-            context['S21'] = S21
             
             # Response
             title = Structure + " Attenuator ("+ str(att) + " dB)"
-          
 
             response_data = {}
-            
+
             # Prepare objects for the html 
             response_data['freq'] =(freq*1e-6).tolist()
             response_data['S11'] = S11.tolist()
             response_data['S21'] = S21.tolist()
             response_data['title'] = title
-            
             #response_data['warning'] = warning
             response_data['svg'] = svgcode.decode('utf-8')
-            context['form_attenuator_design'] = form_attenuator_design
             return JsonResponse(response_data)
 
     else:
         # Generate default data
+        print('Default call')
         form_attenuator_design = AttenuatorDesignForm()
         # Attenuator Design
         designer = Attenuator()
