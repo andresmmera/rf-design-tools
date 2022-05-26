@@ -52,7 +52,7 @@
                   Frequency (MHz)
                 </td>
                 <td>
-                  <input type="number" id="f0" value = "600" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="f0" min="1" value = "600" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
               </tr>
 
@@ -61,7 +61,7 @@
                   Attenuation (dB)
                 </td>
                 <td>
-                  <input type="number" id="att" value = "10" step="1" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="att" min="0" value = "10" step="1" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
               </tr>
 
@@ -79,7 +79,7 @@
                   Z<sub>source</sub> (&Omega;)
                 </td>
                 <td>
-                  <input type="number" id="ZS" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="ZS" min="1" value = "50" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
               </tr>
               <tr class = "Rload_input">
@@ -87,7 +87,7 @@
                   Z<sub>load</sub> (&Omega;)
                 </td>
                 <td>
-                  <input type="number" id="ZL" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="ZL" min="1" value = "50" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
               </tr>
             </tbody>
@@ -108,7 +108,7 @@
                   Start Freq (MHz)
                 </td>
                 <td>
-                  <input type="number" id="f_start" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="f_start" min="0" value = "50" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
               </tr>
               <tr>
@@ -116,7 +116,7 @@
                   End Freq (MHz)
                 </td>
                 <td>
-                  <input type="number" id="f_stop" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="f_stop" min="0" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
               </tr>
               <tr>
@@ -124,7 +124,7 @@
                   Points
                 </td>
                 <td>
-                  <input type="number" id="Points" value = "201" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="Points" min="1" value = "201" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
               </tr>
             </tbody>
@@ -138,22 +138,14 @@
 
       
       <div class="col-md-auto box">
-          <div class="row">
-              <div class="col-xs-12 col-md-12" >
-                  <div class="card shadow-sm">
-                    <div id='id1'>
-                      {{ divResponse | safe }}
-                    </div>
-                        
-                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
-                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
-                        <div id='id2'>
-                        {{ scriptResponse | safe }}
-                        </div>
-                  </div>
+        <div class="row">
+          <div class="col-xs-6 col-md-6" >
+              <div class="card shadow-sm">
+                <script src="https://code.highcharts.com/highcharts.js"></script>
+                <div id="container" style="width: 800px"></div>
               </div>
-
           </div>
+        </div>
         
           <div class="card">
             <div class="card-body">
@@ -187,6 +179,7 @@
   </div>
 
 <script>
+  submit_form()
   // It's called just when the page is loaded
   $(document).ready(function () {
     $('.f0_input').hide(); // Hide central frequency
@@ -238,6 +231,14 @@
             $("#id3").html(data['divGroupDelay'])
             $("#id4").html(data['scriptGroupDelay'])
             $("#svg_display").html(data['svg'])
+
+            // Retrieve data from django
+            freq = data['freq']
+            S11 = data['S11']
+            S21 = data['S21']
+            title = data['title']
+            plotChart(freq, S21, S11, title)
+
             if (data['warning']){
               alert(data['warning'])
             }
@@ -247,6 +248,66 @@
         }
     });
   }
+
+
+
+  function linspace_int(startValue, stopValue, cardinality) {
+  var arr = [];
+  var step = (stopValue - startValue) / (cardinality - 1);
+  for (var i = 0; i < cardinality; i++) {
+    arr.push(Math.round(startValue + (step * i)));
+  }
+  return arr;
+}
+
+function plotChart(x, y1, y2, title) {
+          $('#container').highcharts({
+                plotOptions: {
+                              series: {
+                                      animation: false
+                                      }
+                              },
+                title: {
+                          text: title
+                         },
+                xAxis: {
+                        categories: x,
+                        gridLineWidth: 1,
+                        tickPositions: linspace_int(0, x.length-1, 10),
+                        title: {text: 'freq (MHz)'}
+                        },
+                yAxis: [
+                                {
+                                min: -50,
+                                title: {
+                                        text: 'S21 (dB), S11 (dB)'
+                                      },
+                                      gridLineWidth: 1, 
+                                      tickInterval: 5,
+                                      tickPositioner: function(){
+                                                                  var ticks = this.tickPositions;
+                                                                  ticks.sort(function(a, b) {
+                                                                  return a - b;
+                                                                  });
+                                                                return ticks;
+                                                                }
+                                }
+                        ],
+                                series: [{
+                                  name: 'S21 (dB)',
+                                  data: y1,
+                                  color: 'red',
+                                  yAxis: 0
+                                },
+                                {
+                                  name: 'S11 (dB)',
+                                  data: y2,
+                                  color: 'blue',
+                                  yAxis: 0
+                                }
+                              ]
+                            });
+                        };
 
 </script>
 {% endblock %}

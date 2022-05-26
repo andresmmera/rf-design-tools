@@ -113,43 +113,23 @@ def AttenuatorDesignToolView(request):
 
             S11 = 20*np.log10(np.abs(S11))
             S21 = 20*np.log10(np.abs(S21))
+
+            context['freq'] = freq
+            context['S11'] = S11
+            context['S21'] = S21
             
             # Response
             title = Structure + " Attenuator ("+ str(att) + " dB)"
-            ResponsePlot = figure(plot_width=800, plot_height=400, title=title, y_range=[-50, 0])
-            ResponsePlot.line(freq, S11, line_width=2, color="navy", legend_label="S11")
-            ResponsePlot.line(freq, S21, line_width=2, color="red", legend_label="S21")
-            ResponsePlot.xaxis.axis_label = 'Frequency (MHz)';
-            ResponsePlot.yaxis.axis_label = 'Response (dB)';
-            ResponsePlot.legend.location = 'bottom_right';
-
-            # Group delay
-            title = Structure + " Attenuator ("+ str(att) + " dB)"
-            GroupDelayPlot = figure(plot_width=800, plot_height=400, title=title, y_range=[0, 1.1*max(gd)])
-            GroupDelayPlot.line(freq, gd, line_width=2, color="navy", legend_label="Group Delay")
-            GroupDelayPlot.xaxis.axis_label = 'Frequency (MHz)';
-            GroupDelayPlot.yaxis.axis_label = 'Group Delay (ns)';
-            GroupDelayPlot.legend.location = 'bottom_right';
-
-            GroupDelayPlot.extra_y_ranges = {"phase": Range1d(start=-180, end=180)}
-            GroupDelayPlot.add_layout(LinearAxis(y_range_name="phase", axis_label="Phase (deg)"), 'right')
-            GroupDelayPlot.line(x=freq, y=phase, legend_label='Phase', 
-            y_range_name="phase", color="green")
-
-            # Get warnings
-            #warning = designer.warning
+          
 
             response_data = {}
             
             # Prepare objects for the html 
-            scriptResponse, divResponse = components(ResponsePlot)
-            response_data['scriptResponse'] = scriptResponse
-            response_data['divResponse'] = divResponse
-
-            scriptGroupDelay, divGroupDelay = components(GroupDelayPlot)
-            response_data['scriptGroupDelay'] = scriptGroupDelay
-            response_data['divGroupDelay'] = divGroupDelay
-
+            response_data['freq'] =(freq*1e-6).tolist()
+            response_data['S11'] = S11.tolist()
+            response_data['S21'] = S21.tolist()
+            response_data['title'] = title
+            
             #response_data['warning'] = warning
             response_data['svg'] = svgcode.decode('utf-8')
             context['form_attenuator_design'] = form_attenuator_design
@@ -188,36 +168,15 @@ def AttenuatorDesignToolView(request):
         S11 = 20*np.log10(np.abs(S11))
         S21 = 20*np.log10(np.abs(S21))
         
+        S11 = 20*np.log10(np.abs(S11))
+        S21 = 20*np.log10(np.abs(S21))
+
+        context['freq'] = freq
+        context['S11'] = S11
+        context['S21'] = S21
+        
         # Response
         title = designer.Structure + " Attenuator ("+ str(designer.att) + " dB) " 
-        ResponsePlot = figure(plot_width=800, plot_height=400, title=title, y_range=[-50, 0])
-        ResponsePlot.line(freq, S11, line_width=2, color="navy", legend_label="S11")
-        ResponsePlot.line(freq, S21, line_width=2, color="red", legend_label="S21")
-        ResponsePlot.xaxis.axis_label = 'Frequency (MHz)';
-        ResponsePlot.yaxis.axis_label = 'Response (dB)';
-        ResponsePlot.legend.location = 'bottom_right';
-
-        # Group delay
-        title = designer.Structure + " Attenuator ("+ str(designer.att) + " dB) " 
-        GroupDelayPlot = figure(plot_width=800, plot_height=400, title=title, y_range=[0, max(gd)+10])
-        GroupDelayPlot.line(freq, gd, line_width=2, color="navy", legend_label="Group Delay")
-        GroupDelayPlot.xaxis.axis_label = 'Frequency (MHz)';
-        GroupDelayPlot.yaxis.axis_label = 'Group Delay (ns)';
-        GroupDelayPlot.legend.location = 'bottom_right';
-
-        GroupDelayPlot.extra_y_ranges = {"phase": Range1d(start=-180, end=180)}
-        GroupDelayPlot.add_layout(LinearAxis(y_range_name="phase", axis_label="Phase (deg)"), 'right')
-        GroupDelayPlot.line(x=freq, y=phase, legend_label='Phase', 
-        y_range_name="phase", color="green")
-
-        # Prepare objets for the html 
-        scriptResponse, divResponse = components(ResponsePlot)
-        context['scriptResponse'] = scriptResponse
-        context['divResponse'] = divResponse
-
-        scriptGroupDelay, divGroupDelay = components(GroupDelayPlot)
-        context['scriptGroupDelay'] = scriptGroupDelay
-        context['divGroupDelay'] = divGroupDelay
 
         context['svg'] = svgcode # Schematic
 
