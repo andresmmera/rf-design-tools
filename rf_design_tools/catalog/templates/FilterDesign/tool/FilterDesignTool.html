@@ -252,7 +252,7 @@
           <div class="card">
             <div class="card-body">
               <div class='row'>
-                <div class="col-xs-9 col-md-9" >
+                <div class="col-xs-6 col-md-6" >
                   <h5 class="card-title">Schematic</h5>
                 </div>
 
@@ -279,6 +279,7 @@
           </div>
       </div>
   </div>
+
 
 <script>
 submit_form()
@@ -552,6 +553,15 @@ function insertrow(id){
 }
 
 
+function linspace_int(startValue, stopValue, cardinality) {
+  var arr = [];
+  var step = (stopValue - startValue) / (cardinality - 1);
+  for (var i = 0; i < cardinality; i++) {
+    arr.push(Math.round(startValue + (step * i)));
+  }
+  return arr;
+}
+
 function plotChart(x, y1, y2, title) {
           $('#container').highcharts({
                 plotOptions: {
@@ -565,11 +575,12 @@ function plotChart(x, y1, y2, title) {
                 xAxis: {
                         categories: x,
                         gridLineWidth: 1,
-                        tickInterval: 5,
+                        tickPositions: linspace_int(0, x.length-1, 10),
                         title: {text: 'freq (MHz)'}
                         },
                 yAxis: [
                                 {
+                                min: -50,
                                 title: {
                                         text: 'S21 (dB), S11 (dB)'
                                       },
@@ -599,8 +610,6 @@ function plotChart(x, y1, y2, title) {
                               ]
                             });
                         };
-
-
 
 </script>
 {% endblock %}
