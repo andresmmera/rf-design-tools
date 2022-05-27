@@ -80,3 +80,17 @@ ul
 }
 
 .errorlist { color: red; }
+
+
+.btn-info
+{
+  background-color: #68889E !important;
+  color:#FFF;
+  border-color: #2F3E48;
+}
+
+
+.box_form {
+    @extend .box;
+    background-color: #f0f0f0 !important;
+  }

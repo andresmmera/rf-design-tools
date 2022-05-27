@@ -9,17 +9,8 @@ from catalog.forms import ATTENUATOR_STRUCTURES, AttenuatorDesignForm
 
 # Bokeh
 from django.shortcuts import render
-from bokeh.plotting import figure, output_file, show 
-from bokeh.embed import components
-from bokeh.io import output_notebook, show
-from bokeh.plotting import figure
-from bokeh.models import Legend, LegendItem
-from bokeh.models import Arrow, NormalHead
-from bokeh.models import ColumnDataSource, LabelSet
-from bokeh.models import LinearAxis, Range1d
 
-
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt # Allow ajax
 
 from .AttenuatorDesign.AttenuatorDesigner import *
 
@@ -50,7 +41,6 @@ def AttenuatorDesignToolView(request):
     context = {} 
     if request.method == "POST":
         form_attenuator_design = AttenuatorDesignForm(request.POST)
-        print(form_attenuator_design.errors)
         if form_attenuator_design.is_valid():
             #Catch the input data
             index = request.POST.get('Structure', None)

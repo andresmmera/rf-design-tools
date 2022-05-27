@@ -1,9 +1,4 @@
 {% extends "base_generic.html" %}
-<!-- Add Bokeh headers -->
-<head>
-  <link href="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.css" rel="stylesheet" type="text/css">
-  <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.css" rel="stylesheet" type="text/css">
-</head>
 {% load static %}
 
 {% block content %}
@@ -17,7 +12,7 @@
 
     
     <div class="row">
-      <div class="col-md-5" style="background-color:rgb(151, 176, 255);overflow: scroll;">
+      <div class="col-md-5 box_form">
         <!-- Instantiate the form -->
           {% csrf_token %}
           <h5 align="center"> System Blocks</h5>
