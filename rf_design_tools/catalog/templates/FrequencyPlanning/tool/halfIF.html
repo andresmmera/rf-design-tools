@@ -411,7 +411,7 @@ function plotChart(x, NL_series, S_Series, f_HIF, P_max_HF, f_RF, RF_level, titl
                                                           xAxis: 0,
                                                           yAxis: 0
                                                       },
-                                                      text: 'Incoming RF Signal'
+                                                      text: 'Incoming RF Signal: ' + RF_level.toString() + ' dBm'
                                                     },
                                                     {
                                                       point: {
@@ -420,7 +420,7 @@ function plotChart(x, NL_series, S_Series, f_HIF, P_max_HF, f_RF, RF_level, titl
                                                           xAxis: 0,
                                                           yAxis: 0
                                                       },
-                                                      text: 'Half-IF interferer'
+                                                      text: 'Half-IF interferer: ' + Pmax_half_IF_int.toString() + ' dBm'
                                                     },
                                                   ],
                                           labelOptions: {
