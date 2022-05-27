@@ -2,6 +2,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt # Allow ajax
 
 # Forms
 from catalog.models import Tool
@@ -16,13 +18,6 @@ from .utilities import ArrayToString
 
 # Bokeh
 from django.shortcuts import render
-from bokeh.plotting import figure, output_file, show 
-from bokeh.embed import components
-from bokeh.io import output_notebook, show
-from bokeh.plotting import figure
-from bokeh.models import Legend, LegendItem
-from bokeh.models import Arrow, NormalHead
-from bokeh.models import ColumnDataSource, LabelSet
 
 def ImageFrequencyDocs(request):
     return render(request, 'FrequencyPlanning/docs/ImageFrequency_doc.html')
@@ -134,103 +129,101 @@ def getplotHalf_IF(required_CI, sensitivity, R_half_IF, f_half_IF_low, f_RF):
 
     #Plot intercept diagram
     title = "Half-IF low-side injection interference";
-    plot = figure(plot_width=800, plot_height=400, title=title, y_range=(noise_limit-20, Pmax_half_IF_int+20))
+    # plot = figure(plot_width=800, plot_height=400, title=title, y_range=(noise_limit-20, Pmax_half_IF_int+20))
 
     freq = np.linspace(0.8*f_half_IF_low, 1.2*f_RF, 100);
-    plot.line(freq, noise_limit, line_width=2, color="navy", line_dash='dotted', legend_label="Noise + Interference Limit") # Fundamental
-    plot.line(freq, sensitivity, line_width=2, color="red", line_dash='dotted', legend_label="Receiver Sensitivity") # Fundamental
+    # plot.line(freq, noise_limit, line_width=2, color="navy", line_dash='dotted', legend_label="Noise + Interference Limit") # Fundamental
+    # plot.line(freq, sensitivity, line_width=2, color="red", line_dash='dotted', legend_label="Receiver Sensitivity") # Fundamental
 
 
-    # Half-IF interferer
-    plot.add_layout(Arrow( end=NormalHead(size=10),
-                        x_start=f_half_IF_low, 
-                        y_start=noise_limit-20, 
-                        x_end=f_half_IF_low, 
-                        y_end=Pmax_half_IF_int))
+    # # Half-IF interferer
+    # plot.add_layout(Arrow( end=NormalHead(size=10),
+    #                     x_start=f_half_IF_low, 
+    #                     y_start=noise_limit-20, 
+    #                     x_end=f_half_IF_low, 
+    #                     y_end=Pmax_half_IF_int))
 
-    # Desired signal
-    plot.add_layout(Arrow( end=NormalHead(size=10),
-                        x_start=f_RF, 
-                        y_start=noise_limit-20, 
-                        x_end=f_RF, 
-                        y_end=sensitivity))
+    # # Desired signal
+    # plot.add_layout(Arrow( end=NormalHead(size=10),
+    #                     x_start=f_RF, 
+    #                     y_start=noise_limit-20, 
+    #                     x_end=f_RF, 
+    #                     y_end=sensitivity))
 
-    # Half-IF Rejection
-    plot.add_layout(Arrow( start=NormalHead(size=10),
-                        end=NormalHead(size=10),
-                        x_start=f_RF+20, 
-                        y_start=sensitivity, 
-                        x_end=f_RF+20, 
-                        y_end=Pmax_half_IF_int))
+    # # Half-IF Rejection
+    # plot.add_layout(Arrow( start=NormalHead(size=10),
+    #                     end=NormalHead(size=10),
+    #                     x_start=f_RF+20, 
+    #                     y_start=sensitivity, 
+    #                     x_end=f_RF+20, 
+    #                     y_end=Pmax_half_IF_int))
 
-    # C/I
-    plot.add_layout(Arrow( start=NormalHead(size=10),
-                        end=NormalHead(size=10),
-                        x_start=f_RF+20, 
-                        y_start=noise_limit, 
-                        x_end=f_RF+20, 
-                        y_end=sensitivity))
+    # # C/I
+    # plot.add_layout(Arrow( start=NormalHead(size=10),
+    #                     end=NormalHead(size=10),
+    #                     x_start=f_RF+20, 
+    #                     y_start=noise_limit, 
+    #                     x_end=f_RF+20, 
+    #                     y_end=sensitivity))
 
-    # Labels
-    source = ColumnDataSource(data=dict(y=[Pmax_half_IF_int+10, Pmax_half_IF_int, noise_limit + .5*(sensitivity-noise_limit), sensitivity + .5*(Pmax_half_IF_int-sensitivity), sensitivity],
-                                        x=[f_half_IF_low-15, f_half_IF_low-15, f_RF+25, f_RF+25, f_RF-5],
-                                        names=['Half-IF' , str(f_half_IF_low) + ' MHz',
-                                            'C/I', 'Half-IF Rejection', 'RF']))
-    labels = LabelSet(x='x', y='y', text='names', source=source, render_mode='canvas')
-    plot.add_layout(labels)
+    # # Labels
+    # source = ColumnDataSource(data=dict(y=[Pmax_half_IF_int+10, Pmax_half_IF_int, noise_limit + .5*(sensitivity-noise_limit), sensitivity + .5*(Pmax_half_IF_int-sensitivity), sensitivity],
+    #                                     x=[f_half_IF_low-15, f_half_IF_low-15, f_RF+25, f_RF+25, f_RF-5],
+    #                                     names=['Half-IF' , str(f_half_IF_low) + ' MHz',
+    #                                         'C/I', 'Half-IF Rejection', 'RF']))
+    # labels = LabelSet(x='x', y='y', text='names', source=source, render_mode='canvas')
+    # plot.add_layout(labels)
 
 
-    plot.xaxis.axis_label = 'frequency (MHz)';
-    plot.yaxis.axis_label = 'Power (dBm)';
-    plot.legend.location = 'top_left';
+    return freq, noise_limit, sensitivity;
 
-    return plot;
+@csrf_exempt
 def HalfIFView(request):
     context = {} 
     if request.method == "POST":
-        #Catch the forms
-        form_halfIF = HalfIFForm(request.POST)
+        # Get data from the form
+        f_RF = request.POST.get('RF', None)
+        f_IF = request.POST.get('IF', None)
+        R_half_IF = request.POST.get('HIF_Rejection', None)
+        sensitivity = request.POST.get('Sensitivity', None)
+        required_CI = request.POST.get('CI', None)
+
+        f_RF = float(f_RF)
+        f_IF = float(f_IF)
+        R_half_IF = float(R_half_IF)
+        sensitivity = float(sensitivity)
+        required_CI = float(required_CI)
+        ##############################################3
+        # # Calculations
+        #   Half-IF calculation
+        f_LO_low = f_RF - f_IF
+        f_LO_high = f_RF + f_IF
         
-        if form_halfIF.is_valid():
-
-            # Get data from the form
-            f_RF = form_halfIF.cleaned_data['RF']
-            f_IF = form_halfIF.cleaned_data['IF']
-            R_half_IF = form_halfIF.cleaned_data['R'] # Half-IF rejection
-            sensitivity = form_halfIF.cleaned_data['S']
-            required_CI = form_halfIF.cleaned_data['CI']
- 
-            ##############################################3
-            # # Calculations
-            #   Half-IF calculation
-            f_LO_low = f_RF - f_IF
-            f_LO_high = f_RF + f_IF
-            
-            half_IF_low_injection = 0.5*(f_RF + f_LO_low)
-            half_IF_high_injection = 0.5*(f_RF + f_LO_high)
-
-            context['f_LO_low'] = f_LO_low
-            context['f_LO_high'] = f_LO_high
-            context['half_IF_low_injection'] = half_IF_low_injection
-            context['half_IF_high_injection'] = half_IF_high_injection
+        half_IF_low_injection = 0.5*(f_RF + f_LO_low)
+        half_IF_high_injection = 0.5*(f_RF + f_LO_high)
 
             #  IIP2 requirement
-            noise_limit = sensitivity - required_CI
-            Pmax_half_IF_int = sensitivity + R_half_IF
-            IIP2 = 2*R_half_IF + sensitivity + required_CI
-            
-            context['IIP2'] = IIP2
-            context['form_halfIF'] = form_halfIF
+        noise_limit = sensitivity - required_CI
+        Pmax_half_IF_int = sensitivity + R_half_IF
+        IIP2 = 2*R_half_IF + sensitivity + required_CI
+        
+        #Store components 
 
-            ## Bokeh plot
-            plot = getplotHalf_IF(required_CI, sensitivity, R_half_IF, half_IF_low_injection, f_RF)
+        response_data = {}
+        freq = np.round_(np.linspace(0.8*half_IF_low_injection, 1.2*f_RF, 100))
+        response_data['freq'] =freq.tolist()
+        response_data['noise_limit'] = noise_limit
+        response_data['Pmax_half_IF_int'] = Pmax_half_IF_int
+        response_data['IIP2'] = IIP2
 
-            #Store components 
-            script, div = components(plot)
-            context['script'] = script
-            context['div'] = div
+        response_data['f_LO_low'] = f_LO_low
+        response_data['f_LO_high'] = f_LO_high
+        response_data['half_IF_low_injection'] = half_IF_low_injection
+        response_data['half_IF_high_injection'] = half_IF_high_injection
 
-            return render(request, 'FrequencyPlanning/tool/halfIF.html', context)
+        response_data['title'] = 'Half-IF Spurious Diagram (RF = ' + str(f_RF) + ' MHz,  IF = ' + str(f_IF) + ' MHz)' 
+        
+        return JsonResponse(response_data)
     else:
         # Default values
         required_CI = 35 #dB
@@ -242,9 +235,8 @@ def HalfIFView(request):
         plot = getplotHalf_IF(required_CI, sensitivity, R_half_IF, half_IF_low_injection, f_RF)
             
         #Store components 
-        script, div = components(plot)
-        context['script'] = script
-        context['div'] = div
+        context['script'] = 'script'
+        context['div'] = 'div'
 
         form_halfIF = HalfIFForm()
 

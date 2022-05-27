@@ -74,7 +74,7 @@
         </div>
     </div>
     <div class="row">
-      <div class="col-md-auto box" style="background-color:rgb(151, 176, 255)">
+      <div class="col-md-auto box_form">
         <!-- Instantiate the form -->
         <form method="POST">
           {% csrf_token %}          
@@ -87,27 +87,29 @@
               </tr>
             </thead>
             <tbody>
-              <tr> <!-- IF -->
+              <tr class="IF frequency"> <!-- IF -->
                 <td>
                   <div class="popup" onclick="help_IF()">
-                    {{form_halfIF.IF.label}}
+                    IF Frequency (MHz)
                     <span class="popuptext" id="Pop-up-IF">Intermediate Frequency (MHz)</span>
                   </div>
                 </td>
-                <td>{{form_halfIF.IF}}</td>
-   
-              </tr>
-              <tr> <!-- RF -->
                 <td>
-                  <div class="popup" onclick="help_RF()">
-                    {{form_halfIF.RF.label}}
-                    <span class="popuptext" id="Pop-up-RF">Carrier frequency (MHz)</span>
+                  <input type="number" id="IF" min="0" value = "100" step="10" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+
+              <tr class="RF frequency"> <!-- RF -->
+                <td>
+                  <div class="popup" onclick="help_IF()">
+                    RF Frequency (MHz)
+                    <span class="popuptext" id="Pop-up-RF">RF Frequency (MHz)</span>
                   </div>
                 </td>
-                <td>{{form_halfIF.RF}}</td>
+                <td>
+                  <input type="number" id="RF" min="0" value = "900" step="10" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
               </tr>
-            </tbody>
-          </table>
 
           <table class="table table-hover">
             <h5 align="center"> Receiver IIP2 Calculation</h5>
@@ -118,36 +120,37 @@
               </tr>
             </thead>
             <tbody>
-                <tr> <!-- R -->
+                  <tr class="Half-IF rejection frequency">
                     <td>
-                        {{form_halfIF.R.label}}
+                        Half-IF Rejection (dB)
                     </td>
-                    <td>{{form_halfIF.R}}</td>
-                  </tr>
-                  <tr> <!-- Sensitivity -->
                     <td>
-                        {{form_halfIF.S.label}}
+                      <input type="number" id="HIF_Rejection" value = "60" step="5" style="width: 4em" onchange="submit_form(this)"/>
                     </td>
-                    <td>{{form_halfIF.S}}</td>
                   </tr>
-              <tr> <!-- Cochannel Rejection -->
-                <td>
-                  <div class="popup" onclick="help_CI()">
-                    {{form_halfIF.CI.label}}
-                    <span class="popuptext" id="Pop-up-CI">Carrier to interference ratio</span>
-                  </div>
-                </td>
-                <td>{{form_halfIF.CI}}</td>
-              </tr>
+
+                  <tr class="Sensitivity">
+                    <td>
+                      Sensitivity (dBm)
+                    </td>
+                    <td>
+                      <input type="number" id="Sensitivity" value = "-110" step="5" style="width: 4em" onchange="submit_form(this)"/>
+                    </td>
+                  </tr>
+
+                  <tr class="CoChannel Rejection">
+                    <td>
+                      C/I (dB)
+                    </td>
+                    <td>
+                      <input type="number" id="CI" min="0" value = "10" step="5" style="width: 4em" onchange="submit_form(this)"/>
+                    </td>
+                  </tr>
             </tbody>
           </table>
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
-            <div class="p-2">
-              <input type = "submit" value = "Calculate">
-            </div>
-
             <div class="p-2">
               <a href="{% url 'ipn_nf_docs' %}" class="btn btn-info" role="button">See docs</a>
             </div>
@@ -157,20 +160,16 @@
       </div>
 
       <div class="col-md-auto box">
-          <div class="row">
-              <div class="col-xs-12 col-md-12" >
-                  <div class="card shadow-sm">
-                      <div class="card-body" >
-                        {{ div | safe }}
-                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
-                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
-                        {{ script | safe }}
-                      </div>
-                  </div>
+        <div class="row">
+          <div class="col-xs-6 col-md-6" >
+              <div class="card shadow-sm">
+                <script src="https://code.highcharts.com/highcharts.js"></script>
+                <script src="https://code.highcharts.com/modules/annotations.js"></script>
+                <div id="container" style="width: 800px"></div>
               </div>
           </div>
+        </div>
       <!-- Present the result -->
-      {%if IIP2 != None%}
       <div class="col-md-auto">
         <div class="card-body">
             
@@ -189,52 +188,19 @@
                   </tr>
                 <tr> 
                   <td>Low-side injection</sub></td>
-                  <td>{{ f_LO_low }}</td>
-                  <td>{{ half_IF_low_injection }}</td>
-                  <td>{{ IIP2 }}</td>
+                  <td> <p id="f_LO_low">800</p> </td>
+                  <td> <p id="half_IF_low_injection">850</p> </td>
+                  <td> <p id="IIP2">-5</p></td>
                 </tr>
                 <tr> 
                   <td>High-side injection</sub></td>
-                  <td>{{ f_LO_high }}</td>
-                  <td>{{ half_IF_high_injection }}</td>
-                  <td>{{ IIP2 }}</td>
+                  <td><p id="f_LO_high">1000</p></td>
+                  <td><p id="half_IF_high_injection">850</p></td>
+                  <td><p id="IIP2">-5</p></td>
                 </tr>
             </tbody>
           </table>
-      </div>
-      {% else %}
-      <div class="col-md-auto">
-        <div class="card-body">
-               <table class="table table-light table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th colspan="4"><h5 align="center">Results</h5></th>
-                  </tr>
-                </thead>
-                <tbody>
-                    <tr> 
-                        <td></sub></td>
-                        <td> <b> LO (MHz) </b> </td>
-                        <td> <b> Half-IF (MHz) </b> </td>
-                        <td> <b> Receiver IIP2 (dBm) </b> </td>
-                      </tr>
-                    <tr> 
-                      <td>Low-side injection</sub></td>
-                      <td>800.0</td>
-                      <td>850.0</td>
-                      <td>-5.0</td>
-                    </tr>
-                    <tr> 
-                      <td>High-side injection</sub></td>
-                      <td>1000.0</td>
-                      <td>950.0</td>
-                      <td>-5.0</td>
-                    </tr>
-                </tbody>
-              <table>
-          </div>
-      </div>
-      {%endif%}
+        </div>
       </div>
                
     </div>
@@ -260,6 +226,212 @@
     popup.classList.toggle("show");
   }
   </script>
+
+
+<script>
+  submit_form()
+  // It's called just when the page is loaded
+  $(document).ready(function () {
+    $('.f0_input').hide(); // Hide central frequency
+
+  })
+
+
+  function StructureChanged(select) {
+    if (select.value == 5){
+    // Conventional LC
+    $('.f0_input').show() // Make visible the central frequency box
+    document.getElementById("f_start").value = 10;
+    document.getElementById("f_stop").value = 1000;
+    }
+    submit_form()
+  }
+
+ 
+  function submit_form(){
+    // Get variables from the form
+    var IF = document.getElementById("IF").value;
+    var RF = document.getElementById("RF").value;
+    var HIF_Rejection = document.getElementById("HIF_Rejection").value;
+    var Sensitivity = document.getElementById("Sensitivity").value;
+    var CI = document.getElementById("CI").value;
+
+    $.ajax({
+        type: "POST",
+        url: 'half_IF',
+        data: {
+            "IF": IF,
+            "RF": RF,
+            "HIF_Rejection": HIF_Rejection,
+            "Sensitivity": Sensitivity,
+            "CI": CI,
+        },
+        dataType: "json",
+        success: function (data) {
+            $("#svg_display").html(data['svg'])
+
+            // Retrieve data from django
+            freq = data['freq']
+            noise_limit = data['noise_limit']
+            Pmax_half_IF_int = data['Pmax_half_IF_int']
+            form_halfIF = data['form_halfIF']
+            f_LO_low = data['f_LO_low']
+            f_LO_high = data['f_LO_high']
+            half_IF_low_injection = data['half_IF_low_injection']
+            half_IF_high_injection = data['half_IF_high_injection']
+            IIP2 = data['IIP2']
+            title = data['title']
+
+            // Table data
+            document.getElementById("f_LO_low").innerHTML = f_LO_low
+            document.getElementById("half_IF_low_injection").innerHTML = half_IF_low_injection
+            document.getElementById("IIP2").innerHTML = IIP2
+
+            document.getElementById("f_LO_high").innerHTML = f_LO_high
+            document.getElementById("half_IF_high_injection").innerHTML = half_IF_low_injection
+            document.getElementById("IIP2").innerHTML = IIP2
+            
+            // Prepare plot
+            const sensitivity = parseFloat(Sensitivity)
+            const NL = new Array(freq.length).fill(noise_limit)
+            const S = new Array(freq.length).fill(sensitivity)
+            const RF_level = sensitivity + parseFloat(CI)
+            const f_RF = parseInt(RF)
+
+            var NL_series = [];
+            var S_Series = [];
+
+              for(var i=0; i<freq.length; i++) {
+                NL_series[i] = new Array(2);
+                NL_series[i][0] = freq[i];
+                NL_series[i][1] = NL[i];
+
+                S_Series[i] = new Array(2);
+                S_Series[i][0] = freq[i];
+                S_Series[i][1] = S[i];
+              }
+
+            plotChart(freq, NL_series, S_Series, half_IF_low_injection, Pmax_half_IF_int, f_RF, RF_level, title)
+
+            
+            if (data['warning']){
+              alert(data['warning'])
+            }
+        },
+        failure: function () {
+            alert("JSON failure");
+        }
+    });
+  }
+
+
+
+  function linspace_int(startValue, stopValue, cardinality) {
+  var arr = [];
+  var step = (stopValue - startValue) / (cardinality - 1);
+  for (var i = 0; i < cardinality; i++) {
+    arr.push(Math.round(startValue + (step * i)));
+  }
+  return arr;
+}
+
+
+
+
+
+function plotChart(x, NL_series, S_Series, f_HIF, P_max_HF, f_RF, RF_level, title) {
+          $('#container').highcharts({
+                plotOptions: {
+                              series: {
+                                      animation: false
+                                      }
+                              },
+                title: {
+                          text: title
+                        },
+                xAxis: {
+                        gridLineWidth: 1,
+                        title: {text: 'freq (MHz)'}},
+                yAxis: [
+                                {
+                                min: NL_series[0][1]-10,
+                                max: P_max_HF+20,
+                                title: {
+                                        text: 'Power (dBm)'
+                                      },
+                                gridLineWidth: 1, 
+                                tickInterval: 10,
+                                tickPositioner: function(){
+                                                            var ticks = this.tickPositions;
+                                                            ticks.sort(function(a, b) {
+                                                            return a - b;
+                                                            });
+                                                          return ticks;
+                                                          }
+                                }
+                        ],
+                series: [                             
+                              {
+                                name: 'Noise Limit (dBm)',
+                                data: NL_series,
+                                color: 'red',
+                                yAxis: 0
+                              },
+                              {
+                                name: 'Sensitivity (dBm)',
+                                data: S_Series,
+                                color: 'blue',
+                                yAxis: 0
+                              },
+                              {
+                                  name: 'Maximum Half-IF interferer (dBm)',
+                                  data: [
+                                    [f_HIF, NL_series[0][1]-20],
+                                    [f_HIF,Pmax_half_IF_int]
+                                  ],
+                                  color: 'black',
+                                  yAxis: 0
+                              },
+                              {
+                                  name: 'Incoming RF signal (dBm)',
+                                  data: [
+                                    [f_RF, NL_series[0][1]-20],
+                                    [f_RF, RF_level]
+                                  ],
+                                  color: 'black',
+                                  yAxis: 0
+                              },  
+                          ],
+                          annotations: [{
+                                          draggable: '',
+                                          labels: [{
+                                                      point: {
+                                                          x: f_RF,
+                                                          y: RF_level,
+                                                          xAxis: 0,
+                                                          yAxis: 0
+                                                      },
+                                                      text: 'Incoming RF Signal'
+                                                    },
+                                                    {
+                                                      point: {
+                                                          x: f_HIF,
+                                                          y: Pmax_half_IF_int,
+                                                          xAxis: 0,
+                                                          yAxis: 0
+                                                      },
+                                                      text: 'Half-IF interferer'
+                                                    },
+                                                  ],
+                                          labelOptions: {
+                                              backgroundColor: 'rgba(240,240,240,0.5)',
+                                              x: 0, y: -20
+                                          }
+                                      }]
+        });
+    };
+
+</script>
 
 
 {% endblock %}
