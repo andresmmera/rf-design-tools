@@ -89,7 +89,7 @@
             <tbody>
               <tr class="IF frequency"> <!-- IF -->
                 <td>
-                  <div class="popup" onclick="help_IF()">
+                  <div class="popup" onmouseover="help_IF()">
                     IF Frequency (MHz)
                     <span class="popuptext" id="Pop-up-IF">Intermediate Frequency (MHz)</span>
                   </div>
@@ -101,7 +101,7 @@
 
               <tr class="RF frequency"> <!-- RF -->
                 <td>
-                  <div class="popup" onclick="help_IF()">
+                  <div class="popup" onmouseover="help_RF()">
                     RF Frequency (MHz)
                     <span class="popuptext" id="Pop-up-RF">RF Frequency (MHz)</span>
                   </div>
@@ -122,16 +122,22 @@
             <tbody>
                   <tr class="Half-IF rejection frequency">
                     <td>
-                        Half-IF Rejection (dB)
+                      <div class="popup" onmouseover="help_Half_IF()">
+                          Half-IF Rejection (dB)
+                        <span class="popuptext" id="Pop-up-HIF">Filter rejection at half-IF</span>
+                      </div>  
                     </td>
                     <td>
-                      <input type="number" id="HIF_Rejection" value = "60" step="5" style="width: 4em" onchange="submit_form(this)"/>
+                      <input type="number" id="HIF_Rejection" value = "30" step="5" style="width: 4em" onchange="submit_form(this)"/>
                     </td>
                   </tr>
 
                   <tr class="Sensitivity">
                     <td>
-                      Sensitivity (dBm)
+                      <div class="popup" onmouseover="help_Sensitivity()">
+                          Sensitivity (dBm)
+                        <span class="popuptext" id="Pop-up-Sensitivity">Receiver's sensitivity</span>
+                      </div>  
                     </td>
                     <td>
                       <input type="number" id="Sensitivity" value = "-110" step="5" style="width: 4em" onchange="submit_form(this)"/>
@@ -140,7 +146,10 @@
 
                   <tr class="CoChannel Rejection">
                     <td>
-                      C/I (dB)
+                      <div class="popup" onmouseover="help_CI()">
+                        C/I (dB)
+                      <span class="popuptext" id="Pop-up-CI">Required C/I</span>
+                      </div>  
                     </td>
                     <td>
                       <input type="number" id="CI" min="0" value = "10" step="5" style="width: 4em" onchange="submit_form(this)"/>
@@ -190,13 +199,13 @@
                   <td>Low-side injection</sub></td>
                   <td> <p id="f_LO_low">800</p> </td>
                   <td> <p id="half_IF_low_injection">850</p> </td>
-                  <td> <p id="IIP2">-5</p></td>
+                  <td> <p id="IIP2_L">-5</p></td>
                 </tr>
                 <tr> 
                   <td>High-side injection</sub></td>
                   <td><p id="f_LO_high">1000</p></td>
                   <td><p id="half_IF_high_injection">850</p></td>
-                  <td><p id="IIP2">-5</p></td>
+                  <td><p id="IIP2_H">-5</p></td>
                 </tr>
             </tbody>
           </table>
@@ -225,6 +234,24 @@
     var popup = document.getElementById("Pop-up-CI");
     popup.classList.toggle("show");
   }
+
+  function help_Half_IF() {
+    // Half-IF helper
+    var popup = document.getElementById("Pop-up-HIF");
+    popup.classList.toggle("show");
+  }
+
+  function help_Sensitivity() {
+    // Half-IF helper
+    var popup = document.getElementById("Pop-up-Sensitivity");
+    popup.classList.toggle("show");
+  }
+
+  function help_CI() {
+    // Half-IF helper
+    var popup = document.getElementById("Pop-up-CI");
+    popup.classList.toggle("show");
+  }
   </script>
 
 
@@ -232,79 +259,57 @@
   submit_form()
   function submit_form(){
     // Get variables from the form
-    var IF = document.getElementById("IF").value;
-    var RF = document.getElementById("RF").value;
-    var HIF_Rejection = document.getElementById("HIF_Rejection").value;
-    var Sensitivity = document.getElementById("Sensitivity").value;
-    var CI = document.getElementById("CI").value;
+    var IF = parseFloat(document.getElementById("IF").value);
+    var RF = parseFloat(document.getElementById("RF").value);
+    var HIF_Rejection = parseFloat(document.getElementById("HIF_Rejection").value);
+    var Sensitivity = parseFloat(document.getElementById("Sensitivity").value);
+    var CI = parseFloat(document.getElementById("CI").value);
 
-    $.ajax({
-        type: "POST",
-        url: 'half_IF',
-        data: {
-            "IF": IF,
-            "RF": RF,
-            "HIF_Rejection": HIF_Rejection,
-            "Sensitivity": Sensitivity,
-            "CI": CI,
-        },
-        dataType: "json",
-        success: function (data) {
-            // Retrieve data from django
-            freq = data['freq']
-            noise_limit = data['noise_limit']
-            Pmax_half_IF_int = data['Pmax_half_IF_int']
-            form_halfIF = data['form_halfIF']
-            f_LO_low = data['f_LO_low']
-            f_LO_high = data['f_LO_high']
-            half_IF_low_injection = data['half_IF_low_injection']
-            half_IF_high_injection = data['half_IF_high_injection']
-            IIP2 = data['IIP2']
-            title = data['title']
+    var f_LO_low = RF - IF
+    var f_LO_high = RF + IF
+        
+    var half_IF_low_injection = 0.5*(RF + f_LO_low)
+    var half_IF_high_injection = 0.5*(RF + f_LO_high)
 
-            // Table data
-            document.getElementById("f_LO_low").innerHTML = f_LO_low
-            document.getElementById("half_IF_low_injection").innerHTML = half_IF_low_injection
-            document.getElementById("IIP2").innerHTML = IIP2
+    // IIP2 requirement
+    var noise_limit = Sensitivity - CI
+    var Pmax_half_IF_int = Sensitivity + HIF_Rejection
+    var IIP2 = 2*HIF_Rejection + Sensitivity + CI
 
-            document.getElementById("f_LO_high").innerHTML = f_LO_high
-            document.getElementById("half_IF_high_injection").innerHTML = half_IF_low_injection
-            document.getElementById("IIP2").innerHTML = IIP2
-            
-            // Prepare plot
-            const sensitivity = parseFloat(Sensitivity)
-            const NL = new Array(freq.length).fill(noise_limit)
-            const S = new Array(freq.length).fill(sensitivity)
-            const RF_level = sensitivity + parseFloat(CI)
-            const f_RF = parseInt(RF)
+    document.getElementById("f_LO_low").innerHTML = f_LO_low
+    document.getElementById("half_IF_low_injection").innerHTML = half_IF_low_injection
+    document.getElementById("IIP2_L").innerHTML = IIP2
+    document.getElementById("IIP2_H").innerHTML = IIP2
 
-            var NL_series = [];
-            var S_Series = [];
+    document.getElementById("f_LO_high").innerHTML = f_LO_high
+    document.getElementById("half_IF_high_injection").innerHTML = half_IF_high_injection
+    // Prepare plot
+    var N = 100;
+    
+    var freq = linspace_int(0.8*half_IF_low_injection, 1.2*RF, N)
 
-              for(var i=0; i<freq.length; i++) {
-                NL_series[i] = new Array(2);
-                NL_series[i][0] = freq[i];
-                NL_series[i][1] = NL[i];
+    const NL = new Array(freq.length).fill(noise_limit)
+    const S = new Array(freq.length).fill(Sensitivity)
+    const RF_level = Sensitivity + CI
 
-                S_Series[i] = new Array(2);
-                S_Series[i][0] = freq[i];
-                S_Series[i][1] = S[i];
-              }
 
-            plotChart(freq, NL_series, S_Series, half_IF_low_injection, Pmax_half_IF_int, f_RF, RF_level, title)
+    var NL_series = [];
+    var S_Series = [];
 
-            
-            if (data['warning']){
-              alert(data['warning'])
-            }
-        },
-        failure: function () {
-            alert("JSON failure");
-        }
-    });
+      for(var i=0; i<N; i++) {
+        NL_series[i] = new Array(2);
+        NL_series[i][0] = freq[i];
+        NL_series[i][1] = NL[i];
+
+        S_Series[i] = new Array(2);
+        S_Series[i][0] = freq[i];
+        S_Series[i][1] = S[i];
+      }
+      
+    title='Half-IF Spurious Diagram (RF = ' + String(RF) + ' MHz,  IF = ' + String(IF) + ' MHz)' 
+    plotChart(freq, NL_series, S_Series, half_IF_low_injection, Pmax_half_IF_int, RF, RF_level, title)
+    
   }
-
-
 
   function linspace_int(startValue, stopValue, cardinality) {
   var arr = [];
@@ -367,7 +372,7 @@ function plotChart(x, NL_series, S_Series, f_HIF, P_max_HF, f_RF, RF_level, titl
                                   name: 'Maximum Half-IF interferer (dBm)',
                                   data: [
                                     [f_HIF, NL_series[0][1]-20],
-                                    [f_HIF,Pmax_half_IF_int]
+                                    [f_HIF,P_max_HF]
                                   ],
                                   color: 'black',
                                   yAxis: 0
@@ -396,11 +401,11 @@ function plotChart(x, NL_series, S_Series, f_HIF, P_max_HF, f_RF, RF_level, titl
                                                     {
                                                       point: {
                                                           x: f_HIF,
-                                                          y: Pmax_half_IF_int,
+                                                          y: P_max_HF,
                                                           xAxis: 0,
                                                           yAxis: 0
                                                       },
-                                                      text: 'Half-IF interferer: ' + Pmax_half_IF_int.toString() + ' dBm'
+                                                      text: 'Half-IF interferer: ' + P_max_HF.toString() + ' dBm'
                                                     },
                                                   ],
                                           labelOptions: {
