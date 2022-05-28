@@ -157,28 +157,6 @@ class IPn_NF_diagramForm(forms.Form):
         self.fields['freq'].widget.attrs['min'] = 0.1
 
 
-# FORM - Image Frequency Planning
-
-class ImageFrequency_diagramForm(forms.Form):
-    # Carrier frequency
-    f_RF = forms.FloatField(initial=1000,  label='F_RF')
-
-    # LO sweep
-    f_LO1 = forms.FloatField(initial=200,  label='F_LO1')
-    f_LO2 = forms.FloatField(initial=1500,  label='F_LO2')
-
-    def __init__(self, *args, **kwargs):
-        super(ImageFrequency_diagramForm, self).__init__(*args, **kwargs)
-        # Set the width of the boxes
-        box_width = 5
-        self.fields['f_RF'].widget.attrs['style'] = "width:75px"
-        self.fields['f_LO1'].widget.attrs['style'] = "width:75px"
-        self.fields['f_LO2'].widget.attrs['style'] = "width:75px"
-
-        # Set the minimum values
-        self.fields['f_RF'].widget.attrs['min'] = 1
-        self.fields['f_LO1'].widget.attrs['min'] = 1
-        self.fields['f_LO2'].widget.attrs['min'] = 1
 
 class HalfIFForm(forms.Form):
     # Half IF Calculation

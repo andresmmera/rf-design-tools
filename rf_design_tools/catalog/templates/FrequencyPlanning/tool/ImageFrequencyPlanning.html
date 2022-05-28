@@ -74,9 +74,7 @@
     </div>
     <div class="row">
       <div class="col-md-auto box_form">
-        <!-- Instantiate the form -->
-        <form method="POST">
-          {% csrf_token %}          
+        <!-- Instantiate the form -->     
           <table class="table table-hover">
             <h5 align="center"> Carrier</h5>
             <thead>
@@ -88,12 +86,14 @@
             <tbody>
               <tr> <!-- RF frequency -->
                 <td>
-                  <div class="popup" onclick="help_gain()">
+                  <div class="popup" onmouseover="help_Carrier()">
                     f<sub>RF</sub> (MHz)
                     <span class="popuptext" id="Pop-up-Carrier">Carrier frequency</span>
                   </div>
                 </td>
-                <td>{{form_im.f_RF}}</td>
+                <td>
+                  <input type="number" id="f_RF" value = "800" step="5" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
    
               </tr>
             </tbody>
@@ -110,31 +110,31 @@
             <tbody>
               <tr> <!-- Lowest LO -->
                 <td>
-                  <div class="popup" onclick="help_Pout()">
+                  <div class="popup" onmouseover="help_LO_min()">
                     Lowest LO (MHz)
                     <span class="popuptext" id="Pop-up-LO1">Lowest LO possible</span>
                   </div>
                 </td>
-                <td>{{form_im.f_LO1}}</td>
+                <td>
+                  <input type="number" id="f_LO_min" value = "200" step="5" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
               </tr>
               <tr> <!-- Highest LO -->
                 <td>
-                  <div class="popup" onclick="help_delta()">
+                  <div class="popup" onmouseover="help_LO_max()">
                     Highest LO (MHz)
                     <span class="popuptext" id="Pop-up-LO2">Highest LO possible</span>
                   </div>
                 </td>
-                <td>{{form_im.f_LO2}}</td>
+                <td>
+                  <input type="number" id="f_LO_max" value = "1500" step="5" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
               </tr>
             </tbody>
           </table>
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
-            <div class="p-2">
-              <input type = "submit" value = "Calculate">
-            </div>
-
             <div class="p-2">
               <a href="{% url 'image_frequency_planning_docs' %}" class="btn btn-info" role="button">See docs</a>
             </div>
@@ -147,9 +147,9 @@
           <div class="row">
               <div class="col-xs-12 col-md-12" >
                   <div class="card shadow-sm">
-                      <div class="card-body" >
-                        {{ div | safe }}
-                      </div>
+                    <script src="https://code.highcharts.com/highcharts.js"></script>
+                    <script src="https://code.highcharts.com/modules/annotations.js"></script>
+                    <div id="container" style="width: 800px"></div>
                   </div>
               </div>
           </div>
@@ -157,27 +157,193 @@
   </div>
 <script>
   // Pop-up helpers
-  function help_gain() {
+  function help_Carrier() {
     // Carrier
     var popup = document.getElementById("Pop-up-Carrier");
     popup.classList.toggle("show");
   }
 
-  function help_Pout(){
+  function help_LO_min(){
     // Lowest LO
     var popup = document.getElementById("Pop-up-LO1");
     popup.classList.toggle("show");
   }
 
-  function help_delta(){
+  function help_LO_max(){
     // Highest LO
     var popup = document.getElementById("Pop-up-LO2");
     popup.classList.toggle("show");
   }
   </script>
 
-<script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
-<script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
+
+<script>
+  submit_form()
+  function submit_form(){
+    // Get variables from the form
+    var N = 100; // Number of points
+    var f_RF = parseFloat(document.getElementById("f_RF").value);
+    var f_LO_min = parseFloat(document.getElementById("f_LO_min").value);
+    var f_LO_max = parseFloat(document.getElementById("f_LO_max").value);
+    
+
+    var f_LO_ = linspace_int(f_LO_min, f_LO_max, N)
+    
+    var f_IM_ = [];
+    var f_IF_ = [];
+    var delta_ = [];
+    var max_val = -1;
+
+    for(var i=0; i<N; i++) {
+                f_IM_[i] = new Array(2);
+                f_IM_[i][0] = f_LO_[i];
+                f_IM_[i][1] = Math.abs(2*f_LO_[i] - f_RF);
+                if(f_IM_[i][1] > max_val) max_val = f_IM_[i][1];
+
+                f_IF_[i] = new Array(2);
+                f_IF_[i][0] = f_LO_[i];
+                f_IF_[i][1] = Math.abs(f_RF - f_LO_[i]);
+                if(f_IF_[i][1] > max_val) max_val = f_IF_[i][1];
+
+                delta_[i] = new Array(2);
+                delta_[i][0] = f_LO_[i];
+                delta_[i][1] = 2*Math.abs(f_RF - f_LO_[i]);
+                if(delta_[i][1] > max_val) max_val = delta_[i][1];
+              }
+
+    title = 'Image Frequency Planning'
+
+    plotChart(f_IM_, f_IF_, delta_, f_RF, 0.95*max_val, title)
+  }
+
+
+  function plotChart(f_IM, f_IF, delta, f_RF, max_val, title) {
+          $('#container').highcharts({
+                plotOptions: {
+                              series: {
+                                      animation: false
+                                      }
+                              },
+                title: {
+                          text: title
+                        },
+                xAxis: {
+                        gridLineWidth: 1,
+                        title: {text: 'freq LO (MHz)'}},
+                yAxis: [
+                                {
+                             //   min: NL_series[0][1]-10,
+                            //    max: P_max_HF+20,
+                                title: {
+                                        text: 'freq (MHz)'
+                                      },
+                                gridLineWidth: 1, 
+                                tickInterval: 10,
+                                tickPositioner: function(){
+                                                            var ticks = this.tickPositions;
+                                                            ticks.sort(function(a, b) {
+                                                            return a - b;
+                                                            });
+                                                          return ticks;
+                                                          }
+                                }
+                        ],
+                series: [                             
+                              {
+                                name: 'Image Frequency',
+                                data: f_IM,
+                                color: 'blue',
+                                yAxis: 0
+                              },
+                              {
+                                name: 'IF',
+                                data: f_IF,
+                                color: 'red',
+                                yAxis: 0
+                              },
+                              {
+                                name: 'f_{RF} - f_{IM}',
+                                data: delta,
+                                color: 'green',
+                                yAxis: 0
+                              },
+                              {
+                                  name: '',
+                                  data: [
+                                    [f_RF, 0],
+                                    [f_RF, max_val]
+                                  ],
+                                  color: 'black',
+                                  yAxis: 0
+                              }, 
+                              {
+                                  name: '',
+                                  data: [
+                                    [f_RF/2, 0],
+                                    [f_RF/2, max_val]
+                                  ],
+                                  color: 'black',
+                                  yAxis: 0
+                              }, 
+                          ],
+                          annotations: [{
+                                          draggable: '',
+                                          labels: [{
+                                                      point: {
+                                                          x: 1.2*f_RF,
+                                                          y: 0.8*max_val,
+                                                          xAxis: 0,
+                                                          yAxis: 0
+                                                      },
+                                                      text: 'High-side injection'
+                                                    },
+                                                    {
+                                                      point: {
+                                                          x: 0.8*f_RF,
+                                                          y: 0.8*max_val,
+                                                          xAxis: 0,
+                                                          yAxis: 0
+                                                      },
+                                                      text: 'Low-side injection'
+                                                    },
+                                                    {
+                                                      point: {
+                                                          x: f_RF,
+                                                          y: max_val,
+                                                          xAxis: 0,
+                                                          yAxis: 0
+                                                      },
+                                                      text: 'RF'
+                                                    },
+                                                    {
+                                                      point: {
+                                                          x: f_RF/2,
+                                                          y: max_val,
+                                                          xAxis: 0,
+                                                          yAxis: 0
+                                                      },
+                                                      text: 'LO = RF/2'
+                                                    },
+                                                  ],
+                                          labelOptions: {
+                                              backgroundColor: 'rgba(240,240,240,0.5)',
+                                              x: 0, y: -20
+                                          }
+                                      }]
+        });
+    };
+
+
+  function linspace_int(startValue, stopValue, cardinality) 
+  {
+      var arr = [];
+      var step = (stopValue - startValue) / (cardinality - 1);
+      for (var i = 0; i < cardinality; i++) {
+        arr.push(Math.round(startValue + (step * i)));
+      }
+    return arr;
+  }
+</script>
 {{ script | safe }}
 {% endblock %}
 

@@ -230,24 +230,6 @@
 
 <script>
   submit_form()
-  // It's called just when the page is loaded
-  $(document).ready(function () {
-    $('.f0_input').hide(); // Hide central frequency
-
-  })
-
-
-  function StructureChanged(select) {
-    if (select.value == 5){
-    // Conventional LC
-    $('.f0_input').show() // Make visible the central frequency box
-    document.getElementById("f_start").value = 10;
-    document.getElementById("f_stop").value = 1000;
-    }
-    submit_form()
-  }
-
- 
   function submit_form(){
     // Get variables from the form
     var IF = document.getElementById("IF").value;
@@ -268,8 +250,6 @@
         },
         dataType: "json",
         success: function (data) {
-            $("#svg_display").html(data['svg'])
-
             // Retrieve data from django
             freq = data['freq']
             noise_limit = data['noise_limit']
