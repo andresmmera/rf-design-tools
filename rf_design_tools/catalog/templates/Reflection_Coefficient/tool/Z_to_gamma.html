@@ -1,6 +1,9 @@
 {% extends "base_generic.html" %}
 {% load static %}
 {% block content %}
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
+</head>
 
 <!-- Impedance to reflection coefficient -->
 <div class="container-fluid">
@@ -12,7 +15,7 @@
 
     <div class="row">
     <div class="col-md-auto">
-      <div class="mx-auto" style="background-color:rgb(151, 176, 255);">
+      <div class="mx-auto box_form">
         <!-- Instantiate the form -->
         <form method="POST"> 
           {% csrf_token %}          
@@ -26,31 +29,33 @@
             <tbody>
               <tr> <!--Real{Z} -->
                 <td>
-                  {{form_ZtoR.ZR.label}}
+                  Re{Z}
                 </td>
-                <td>{{form_ZtoR.ZR}}</td>
+                <td>
+                  <input type="number" id="real_Z" step = '0.1' min='0' value="73" style="width: 5em" onchange="calculate()">
+                </td>
               </tr>
               <tr> <!--Imag{Z} -->
                 <td>
-                  {{form_ZtoR.ZI.label}}
+                  Im{Z}
                 </td>
-                <td>{{form_ZtoR.ZI}}</td>
+                <td>
+                  <input type="number" id="imag_Z" step = '0.1' value="10" style="width: 5em" onchange="calculate()">
+                </td>
               </tr>
               <tr> <!--Z0 -->
                 <td>
-                  {{form_ZtoR.Z0.label}}
+                  Z <sub>0</sub>
                 </td>
-                <td>{{form_ZtoR.Z0}}</td>
+                <td>
+                  <input type="number" id="Z0" step = '0.1' value="50" style="width: 5em" onchange="calculate()">
+                </td>
               </tr>
             </tbody>
           </table>
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
-            <div class="p-2">
-              <input type = "submit" value = "Calculate">
-            </div>
-
             <div class="p-2">
               <a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a>
             </div>
@@ -59,69 +64,81 @@
       </div>
     </div>
 
-
-
-
     <div class="col-md-auto">
       <div class="mx-auto">
-            <!-- Present the result -->
               <div class="card-body">
-                {% if gamma_mag != None %}
-                    <table class="table table-light table-bordered table-striped">
-                        <thead>
-                          <tr>
-                            <th colspan="2"><h5 align="center">Results</h5></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr> 
-                            <td>&#915; </td>
-                            <td align="center">{{ gamma_mag}} &#8736; {{gamma_ang}} &#176;</td>
-                          </tr>
-                          <tr>
-                            <td>SWR</td>
-                            {% if SWR == 1e6 %}
-                              <td align="center">&#8734;</td>
-                            {%else%}
-                              <td align="center">{{SWR}}</td>
-                            {% endif %}
-                          </tr>
-                            <tr> 
-                              <td>S<sub>11</sub></td>
-                              {% if S11 == -1e3 %}
-                                <td align="center">-&#8734; dB</td>
-                              {%else%}
-                                <td align="center">{{S11}} dB</td>
-                              {% endif %}
-                            </tr>
-                        </tbody>
-                    </table>
-                {% else %}
-                    <table class="table table-light table-bordered table-striped">
-                      <thead>
-                        <tr>
-                          <th colspan="2"><h5 align="center">Results</h5></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr> 
-                          <td>&#915; </td>
-                          <td align="center">0.2 &#8736; 15.0 &#176;</td>
-                        </tr>
-                        <tr> 
-                          <td>SWR</td>
-                          <td align="center">1.5</td>
-                        </tr>
-                        <tr> 
-                          <td>S<sub>11</sub></td>
-                          <td align="center">-13.98 dB</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                {% endif %}
+                <table class="table table-light table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th colspan="2"><h5 align="center">Results</h5></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr> 
+                      <td>&#915; </td>
+                      <td align="center"> <p id="gamma"> </p></td>
+                    </tr>
+                    <tr>
+                      <td>SWR</td>
+                        <td align="center"> <p id="SWR"> </p> </td>
+                    </tr>
+                    <tr>
+                        <td>S11</td>
+                        <td align="center"> <p id="S11"> </p> </td>
+                      </tr>
+                  </tbody>
+              </table>
               </div>
-            </div>
       </div>
+    </div>
+    
+
   </div>
 </div>
+
+
+<script type="text/javascript">
+calculate()
+function calculate(){
+    // Get data
+    let ZR = parseFloat(document.getElementById("real_Z").value)
+    let ZI = parseFloat(document.getElementById("imag_Z").value)
+    let Z0 = parseFloat(document.getElementById("Z0").value)
+    
+    // Calculations
+    let ZL = math.complex(ZR, ZI)
+    
+    let gamma = math.divide( math.add(ZL,- Z0), math.add(ZL, Z0) )
+
+    if (math.re(gamma) < 1e-3) gamma = math.complex(1e-3, math.im(gamma));
+
+    let gamma_mag = math.sqrt(  math.re(gamma)*math.re(gamma)+ math.im(gamma)*math.im(gamma))
+    let gamma_ang = (180/math.pi)*math.atan(math.im(gamma) / math.re(gamma))
+    let SWR = (1 + gamma_mag)/(1 - gamma_mag)
+
+    if (SWR > 1000){
+      SWR = '&#8734';
+    }
+    else{
+      SWR = SWR.toFixed(2)
+    }
+
+    let S11 = -1e3
+
+    if (gamma_mag > 1e-2){
+        S11 = 20*math.log10(gamma_mag)
+        S11 = S11.toFixed(2)
+    }
+    else{
+      S11 = '-' + '&#8734';
+    }
+
+    // Put results inside the table
+    document.getElementById("gamma").innerHTML = gamma_mag.toFixed(2) + '&#8736;' + gamma_ang.toFixed(1) + '&#176';
+    document.getElementById("SWR").innerHTML = SWR
+    document.getElementById("S11").innerHTML = S11
+    
+}
+
+</script>
 {% endblock %}

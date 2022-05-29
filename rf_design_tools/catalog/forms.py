@@ -2,23 +2,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-# FORM 1.2 - Calculation of the reflection coefficient given the load impedance
-class ImpedanceToReflectionCoefficientForm(forms.Form):
-    
-    ZR = forms.FloatField(initial=73.44,  label='Re{Z}')
-    ZI = forms.FloatField(initial=7.92, label='Im{Z}')   
-    Z0 = forms.FloatField(initial=50, label='Z\u2080')
-
-    def __init__(self, *args, **kwargs):
-        super(ImpedanceToReflectionCoefficientForm, self).__init__(*args, **kwargs)
-        self.fields['Z0'].widget.attrs['min'] = 1e-6
-        self.fields['ZR'].widget.attrs['min'] = 1e-6
-
-        # Set the width of the boxes
-        box_width = 5
-        self.fields['ZR'].widget.attrs['style'] = "width:75px"
-        self.fields['ZI'].widget.attrs['style'] = "width:75px"
-        self.fields['Z0'].widget.attrs['style'] = "width:75px"
 
 # FORM 1.3 - Calculation of the reflection coefficient and S11 given the SWR
 class SWRToReflectionCoefficientForm(forms.Form):
