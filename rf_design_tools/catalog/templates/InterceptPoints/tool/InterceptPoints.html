@@ -90,11 +90,13 @@
               <tr> <!-- GAIN -->
                 <td>
                   <div class="popup" onclick="help_gain()">
-                    {{form_ipn_diag.G.label}}
+                    G (dB)
                     <span class="popuptext" id="Pop-up-Gain">Linear gain of the amplifier</span>
                   </div>
                 </td>
-                <td>{{form_ipn_diag.G}}</td>
+                <td>
+                  <input type="number" id="G" min="0" value = "16" step="1" style="width: 4em" onchange="calculate(this)"/>
+                </td>
    
               </tr>
               <tr> <!-- Pout -->
@@ -104,73 +106,88 @@
                     <span class="popuptext" id="Pop-up-Pout">Power of the carrier at the two-tone test</span>
                   </div>
                 </td>
-                <td>{{form_ipn_diag.Pout}}</td>
+                <td>
+                  <input type="number" id="Pout" min="0" value = "20" step="1" style="width: 4em" onchange="calculate(this)"/>
+                </td>
               </tr>
               <tr> <!-- DELTA IMD -->
                 <td>
                   <div class="popup" onclick="help_delta()">
-                    {{form_ipn_diag.Delta.label}}
+                    &#916; (dB)
                     <span class="popuptext" id="Pop-up-delta">Difference between the intermodulation products and the carrier at the two-tone test</span>
                   </div>
                 </td>
-                <td>{{form_ipn_diag.Delta}}</td>
+                <td>
+                  <input type="number" id="delta" min="0" value = "35" step="1" style="width: 4em" onchange="calculate(this)"/>
+                </td>
               </tr>
               <tr> <!-- Order IMD -->
                 <td>
                   <div class="popup" onclick="help_IMn()">
-                    {{form_ipn_diag.n.label}}
+                    N</sub>
                     <span class="popuptext" id="Pop-up-IMn">Order of the intermodulation products</span>
                   </div>
                 </td>
-                <td>{{form_ipn_diag.n}}</td>
+                <td>
+                  <input type="number" id="N" min="0" value = "3" step="1" style="width: 4em" onchange="calculate(this)"/>
+                </td>
               </tr>
             </tbody>
           </table>
 
           <table class="table table-hover">
             <h5 align="center"> Dynamic Range and Noise Floor</h5>
-            <thead>
+            <button id="btn-hide-DR" type="button" class="btn btn-info" onclick="hideDR_NF()">Hide</button>
+            <thead id='DR_NF_Head'>
               <tr>
                 <th>Parameter</th>
                 <th>Value</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id='DR_NF_Table'>
               <tr> <!-- Minimim S/I -->
                 <td>
-                  <div class="popup" onclick="help_SImin()">
-                    {{form_ipn_diag.SImin.label}}
+                  <div  class="popup" onclick="help_SImin()">
+                    S/I (dB)
                     <span class="popuptext" id="Pop-up-SImin">Minimum S/I required for the modulation</span>
                   </div>
                 </td>
-                <td>{{form_ipn_diag.SImin}}</td>
+                <td>
+                  <input type="number" id="SI" min="0" value = "35" step="5" style="width: 4em" onchange="calculate(this)"/>
+                </td>
               </tr>
               <tr> <!-- Noise Figure -->
                 <td>
                   <div class="popup" onclick="help_NF()">
-                    {{form_ipn_diag.NF.label}}
+                    NF (dB)
                     <span class="popuptext" id="Pop-up-NF">Noise Figure of the amplifier</span>
                   </div>
                 </td>
-                <td>{{form_ipn_diag.NF}}</td>
+                <td>
+                  <input type="number" id="NF" min="0" value = "3" step="1" style="width: 4em" onchange="calculate(this)"/>
+                </td>
               </tr>
               <tr> <!-- Bandwidth -->
                 <td>
                   <div class="popup" onclick="help_BW()">
-                    {{form_ipn_diag.BW.label}}
+                    BW (MHz)
                     <span class="popuptext" id="Pop-up-BW">Bandwidth of the amplifier</span>
                   </div>
                 </td>
-                <td>{{form_ipn_diag.BW}}</td>
+                <td>
+                  <input type="number" id="BW" min="0" value = "1218" step="1" style="width: 4em" onchange="calculate(this)"/>
+                </td>
               </tr>
               <tr> <!-- Temperature -->
                 <td>
                   <div class="popup" onclick="help_T()">
-                    {{form_ipn_diag.T.label}}
+                    T (K)
                     <span class="popuptext" id="Pop-up-T">System Temperature</span>
                   </div>
                 </td>
-                <td>{{form_ipn_diag.T}}</td>
+                <td>
+                  <input type="number" id="T" min="0" value = "300" step="5" style="width: 4em" onchange="calculate(this)"/>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -190,32 +207,39 @@
                     P<sub>1dB</sub>
                     <span class="popuptext" id="Pop-up-P1dB">Output level at which the actual fundamental power deviates 1dB from ideal (linear) output power</span>
                   </div></td>
-                <td>{{form_ipn_diag.CPo}}</td>
+                <td>
+                  <input type="number" id="CPo" min="0" value = "22" step="1" style="width: 4em" onchange="calculate(this)"/>
+                </td>
               </tr>
               </tr>
             </tbody>
             <table class="table table-hover">
               <h5 align="center">DUT & Frequency</h5>
-              <thead>
+              <button id="btn-hide-DF" type="button" class="btn btn-info" onclick="hideDF()">Hide</button>
+              <thead id="DF_Head">
                 <tr>
                   <th>Parameter</th>
                   <th>Value</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id = 'DF_Table'>
                 <tr> <!-- DUT -->
                   <td>
                     <div class="popup" onclick="help_DUT()">DUT</sub>
                       <span class="popuptext" id="Pop-up-DUT">Name or ID of the device under test (DUT)</span>
                     </div></td>
-                  <td>{{form_ipn_diag.DUT}}</td>
+                  <td>
+                    <input type="text" id="ID" value = "AMP1" style="width: 4em" onchange="calculate(this)"/>
+                  </td>
                 </tr>
                 <tr> <!-- Frequency -->
                   <td>
                     <div class="popup" onclick="help_freq()">Frequency (MHz)</sub>
                       <span class="popuptext" id="Pop-up-freq">Frequency at which the above data was measured</span>
                     </div></td>
-                  <td>{{form_ipn_diag.freq}}</td>
+                  <td>
+                    <input type="number" id="freq" min="0" value = "500" step="5" style="width: 4em" onchange="calculate(this)"/>
+                  </td>
                 </tr>
                 </tr>
               </tbody>
@@ -223,10 +247,6 @@
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
-            <div class="p-2">
-              <input type = "submit" value = "Calculate">
-            </div>
-
             <div class="p-2">
               <a href="{% url 'ipn_nf_docs' %}" class="btn btn-info" role="button">See docs</a>
             </div>
@@ -238,18 +258,14 @@
       <div class="col-md-auto box">
           <div class="row">
               <div class="col-xs-12 col-md-12" >
-                  <div class="card shadow-sm">
-                      <div class="card-body" >
-                        {{ div | safe }}
-                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.3.0.min.js"></script>
-                        <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.3.0.min.js"></script>
-                        {{ script | safe }}
-                      </div>
-                  </div>
+                <div class="card shadow-sm">
+                  <script src="https://code.highcharts.com/highcharts.js"></script>
+                  <script src="https://code.highcharts.com/modules/annotations.js"></script>
+                  <div id="container" style="width: 800px"></div>
+                </div>
               </div>
           </div>
       <!-- Present the result -->
-      {%if IIPn != None%}
       <div class="col-md-auto">
         <div class="card-body">
             
@@ -261,63 +277,28 @@
               </thead>
               <tbody>
                 <tr> 
-                  <td>IIP<sub>{{n}}</sub></td>
-                  <td>{{IIPn}} dBm</td>
+                  <td> <p id="IIPN_Label"> IIP<sub>3</sub></p> </td>
+                  <td> <p id="IIPN">24 dBm</p> </td>
                 </tr>
                 <tr> 
-                  <td>OIP<sub>{{n}}</sub></td>
-                  <td>{{OIPn}} dBm</td>
+                  <td> <p id="OIPN_Label"> OIP<sub>3</sub></p> </td>
+                  <td> <p id="OIPN">40 dBm</p> </td>
                 </tr>
                 <tr> 
-                  <td>P<sub>out</sub> @ S/I = {{SI}} dB</td>
-                  <td>{{Pout_Upper_Limit}} dBm</td>
+                  <td><p id="PoutSI_Label"> P<sub>out</sub> @ S/I = 35 dB </p></td>
+                  <td><p id="PoutSI">15 dBm</p></td>
                 </tr>
                 <tr> 
                   <td>Dynamic Range</td>
-                  <td>{{DR}} dB</td>
+                  <td><p id="DR">71.7 dB</p> </td>
                 </tr>
                 <tr> 
                   <td>Noise floor</td>
-                  <td>{{No_dBm}} dBm</td>
+                  <td><p id="NFloor">-65.18 dBm</p> </td>
                 </tr>
             </tbody>
           </table>
-      </div>
-      {% else %}
-      <div class="col-md-auto">
-        <div class="card-body">
-               <table class="table table-light table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th colspan="2"><h5 align="center">Results</h5></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr> 
-                    <td>IIP<sub>3</sub></td>
-                    <td>24 dBm</td>
-                  </tr>
-                  <tr> 
-                    <td>OIP<sub>3</sub></td>
-                    <td>40 dBm</td>
-                  </tr>
-                  <tr> 
-                    <td>P<sub>out</sub> @ S/I = 35 dB</td>
-                    <td>22.5 dBm</td>
-                  </tr>
-                  <tr> 
-                    <td>Dynamic Range</td>
-                    <td>75.6 dB</td>
-                  </tr>
-                  <tr> 
-                    <td>Noise floor</td>
-                    <td>-69.14 dBm</td>
-                  </tr>
-                </tbody>
-              <table>
-          </div>
-      </div>
-      {%endif%}
+        </div>
       </div>
                
     </div>
@@ -391,6 +372,221 @@
     var popup = document.getElementById("Pop-up-freq");
     popup.classList.toggle("show");
   }
+
+  function hideDR_NF(){
+    if (document.getElementById("btn-hide-DR").innerHTML == 'Show'){
+      // Show elements
+      document.getElementById("DR_NF_Table").removeAttribute("hidden");
+      document.getElementById("DR_NF_Head").removeAttribute("hidden");
+      document.getElementById("btn-hide-DR").innerHTML = 'Hide'
+    }
+    else{
+      //Hide elements
+      document.getElementById("DR_NF_Table").setAttribute("hidden", "hidden");
+      document.getElementById("DR_NF_Head").setAttribute("hidden", "hidden");
+      document.getElementById("btn-hide-DR").innerHTML = 'Show'
+    }
+    
+    
+  }
+
+  function hideDF(){
+    if (document.getElementById("btn-hide-DF").innerHTML == 'Show'){
+      // Show elements
+      document.getElementById("DF_Table").removeAttribute("hidden");
+      document.getElementById("DF_Head").removeAttribute("hidden");
+      document.getElementById("btn-hide-DF").innerHTML = 'Hide'
+    }
+    else{
+      //Hide elements
+      document.getElementById("DF_Table").setAttribute("hidden", "hidden");
+      document.getElementById("DF_Head").setAttribute("hidden", "hidden");
+      document.getElementById("btn-hide-DF").innerHTML = 'Show'
+    }
+  }
+  </script>
+
+  <script>
+    calculate()
+
+    function calculate()
+    {
+      // Get variables from the form
+      let G = parseFloat(document.getElementById("G").value);
+      let Pout = parseFloat(document.getElementById("Pout").value);
+      let delta = parseFloat(document.getElementById("delta").value);
+      let N = parseFloat(document.getElementById("N").value);
+      let SImin = parseFloat(document.getElementById("SI").value);
+      let NF = parseFloat(document.getElementById("NF").value);
+      let BW = parseFloat(document.getElementById("BW").value);
+      let T = parseFloat(document.getElementById("T").value);
+      let CPo = parseFloat(document.getElementById("CPo").value);
+      let ID = document.getElementById("ID").value;
+      let freq = document.getElementById("freq").value;
+
+      // Calculations
+                  
+      // Noise floor
+      let k = 1.3806503e-23 // Boltzmann constant [J/K]
+      let No = k*T*BW*Math.pow(10, .1*(NF+G)) // Noise at the output in n.u. [W]
+      let No_dBm = parseFloat((10*Math.log10(No) + 30).toFixed(1)) // Noise at the outpout in dBm [dBm]
+
+      // Intercept point
+      let IIPn = parseFloat(((Pout - G) + delta/(N-1)).toFixed(1)); // Input intercept point. RF Design Guide. Vizmuller. pg. 36
+      let OIPn = (IIPn + G).toFixed(1)
+
+      // Dynamic range
+      let Pin_Upper_Limit = (SImin - (N-1)*IIPn)/(1-N)
+      let Pout_Upper_Limit = Pin_Upper_Limit + G
+      let Lower_Limit = No_dBm + SImin
+      let DR = parseFloat((Pout_Upper_Limit - Lower_Limit).toFixed(1))
+
+      document.getElementById("IIPN_Label").innerHTML =  'IIP<sub>' + N + '</sub>'
+      document.getElementById("IIPN").innerHTML =  IIPn + ' dBm'
+
+      document.getElementById("OIPN_Label").innerHTML =  'OIP<sub>' + N + '</sub>'
+      document.getElementById("OIPN").innerHTML =  OIPn + ' dBm'
+
+      document.getElementById("PoutSI_Label").innerHTML =  'P<sub>out</sub> @ S/I = ' + SImin + 'dB'
+      document.getElementById("PoutSI").innerHTML =  Pout_Upper_Limit + ' dBm'
+
+      document.getElementById("DR").innerHTML =  DR + ' dB'
+      document.getElementById("NFloor").innerHTML =  No_dBm + ' dBm'
+
+      // Prepare plot
+      let xmin = Pin_Upper_Limit - 20;
+      let xmax = IIPn + 10;
+      let ymin = No_dBm;
+      let ymax = OIPn + 10;
+      let npoints = 100;
+      let P_in = linspace_int(xmin, xmax, npoints);
+
+      // Calculations
+      let fundamental = []
+      let IMn = []
+      let NoiseFloor = []
+      let N_SI = []
+
+      for(var i=0; i<npoints; i++) {
+        fundamental[i] = new Array(2);
+        fundamental[i][0] = P_in[i];
+        fundamental[i][1] = P_in[i] + G;
+
+        IMn[i] = new Array(2);
+        IMn[i][0] = P_in[i];
+        IMn[i][1] = N*P_in[i] - (N-1)*IIPn + G;
+
+        NoiseFloor[i] = new Array(2);
+        NoiseFloor[i][0] = P_in[i];
+        NoiseFloor[i][1] = No_dBm;
+
+        N_SI[i] = new Array(2);
+        N_SI[i][0] = P_in[i];
+        N_SI[i][1] = Lower_Limit;
+      }
+      let CPi = CPo - G + 1;
+      title = 'Interception Diagram (f = ' + freq + ' MHz)'
+      
+      plotChart(P_in, fundamental, IMn, N, CPi, CPo, DR, NoiseFloor, N_SI, IIPn, OIPn, title)
+    }
+
+
+    function plotChart(P_in, fundamental, IMn, N, CPi, CPo, DR, NoiseFloor, N_SI, IIPn, OIPn, title) {
+          $('#container').highcharts({
+                plotOptions: {
+                              series: {
+                                      animation: false
+                                      }
+                              },
+                title: {
+                          text: title
+                        },
+                xAxis: {
+                        gridLineWidth: 1,
+                        title: {text: 'Input Power (dBm)'}},
+                yAxis: [
+                                {
+                                title: {
+                                        text: 'Output Power (dBm)'
+                                      },
+                                gridLineWidth: 1, 
+                                tickInterval: 10,
+                                tickPositioner: function(){
+                                                            var ticks = this.tickPositions;
+                                                            ticks.sort(function(a, b) {
+                                                            return a - b;
+                                                            });
+                                                          return ticks;
+                                                          }
+                                }
+                        ],
+                series: [                             
+                              {
+                                name: 'Fundamental (dBm)',
+                                data: fundamental,
+                                color: 'blue',
+                                yAxis: 0
+                              },
+                              {
+                                name: 'IM' + N,
+                                data: IMn,
+                                color: 'red',
+                                yAxis: 0
+                              },
+                              {
+                                name: 'Noise Floor',
+                                data: NoiseFloor,
+                                color: 'black',
+                                yAxis: 0
+                              },
+                              {
+                                name: 'Noise Floor + S/I min',
+                                data: N_SI,
+                                color: 'orange',
+                                yAxis: 0
+                              },
+                          ],
+                          annotations: [{
+                                          draggable: '',
+                                          labelOptions: {
+                                                        shape: 'connector',
+                                                        align: 'right',
+                                                        backgroundColor: 'rgba(240,240,240,0.5)',                                                       
+                                                      },
+                                          labels: [{
+                                                      point: {
+                                                          x: IIPn,
+                                                          y: OIPn,
+                                                          xAxis: 0,
+                                                          yAxis: 0
+                                                      },
+                                                      x: -30,
+                                                      y: 0,
+                                                      text: '<b>IP'+ N + '</b><br>IIP'+N + ': ' +IIPn+ ' dBm<br> OIP' + N +': ' + OIPn + ' dBm'
+                                                    },
+                                                    {
+                                                      point: {
+                                                            x: CPi,
+                                                            y: CPo,
+                                                            xAxis: 0,
+                                                            yAxis: 0,
+                                                        },
+                                                        text: '<b>P1dB</b><br>' + 'CPi: ' + CPi + ' dBm<br> CPo:' + CPo + ' dBm'
+                                                    },
+                                                  ],
+                                      }]
+        });
+    };
+
+    function linspace_int(startValue, stopValue, cardinality) 
+    {
+      var arr = [];
+      var step = (stopValue - startValue) / (cardinality - 1);
+      for (var i = 0; i < cardinality; i++) {
+        arr.push(Math.round(startValue + (step * i)));
+      }
+      return arr;
+    }
 
   </script>
 

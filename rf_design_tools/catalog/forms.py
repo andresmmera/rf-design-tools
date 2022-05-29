@@ -110,53 +110,6 @@ class SeriesCapacitorForm(forms.Form):
         self.fields['C1'].widget.attrs['style'] = "width:75px"
         self.fields['C2'].widget.attrs['style'] = "width:75px"
 
-# FORM 6 - IPn and noisefloor diagram
-
-class IPn_NF_diagramForm(forms.Form):
-    # Amplifier parameters
-    G = forms.FloatField(initial=16,  label='G (dB)')
-    Pout = forms.FloatField(initial=20,  label='Pcarrier (dBm)')
-    Delta = forms.FloatField(initial=40,  label='\u0394 (dB)')
-    n = forms.IntegerField(initial=3,  label='IM\u2099')
-
-    # Compression and minimum S/I required
-    CPo = forms.FloatField(initial=22,  label='P1dB (dBm)')
-    SImin = forms.FloatField(initial=35,  label='S/I (dB)')
-
-    # Noise figure
-    NF = forms.FloatField(initial=2,  label='NF (dB)')
-    BW = forms.FloatField(initial=1200,  label='BW (MHz)')
-    T = forms.FloatField(initial=290,  label='T (K)')
-
-    # DUT and frequency
-    DUT = forms.CharField(initial='PHA-1H+', label='DUT')
-    freq = forms.FloatField(initial=500,  label='Freq (MHz)')
-
-    def __init__(self, *args, **kwargs):
-        super(IPn_NF_diagramForm, self).__init__(*args, **kwargs)
-        # Set the width of the boxes
-        box_width = 5
-        self.fields['G'].widget.attrs['style'] = "width:75px"
-        self.fields['Pout'].widget.attrs['style'] = "width:75px"
-        self.fields['Delta'].widget.attrs['style'] = "width:75px"
-        self.fields['n'].widget.attrs['style'] = "width:75px"
-        self.fields['CPo'].widget.attrs['style'] = "width:75px"
-        self.fields['SImin'].widget.attrs['style'] = "width:75px"
-        self.fields['NF'].widget.attrs['style'] = "width:75px"
-        self.fields['BW'].widget.attrs['style'] = "width:75px"
-        self.fields['T'].widget.attrs['style'] = "width:75px"
-        self.fields['DUT'].widget.attrs['style'] = "width:100px"
-        self.fields['freq'].widget.attrs['style'] = "width:75px"
-
-        # Set the minimum values
-        self.fields['Delta'].widget.attrs['min'] = 10
-        self.fields['n'].widget.attrs['min'] = 2
-        self.fields['NF'].widget.attrs['min'] = 0.1
-        self.fields['BW'].widget.attrs['min'] = 0.1 # 100 kHz
-        self.fields['T'].widget.attrs['min'] = 0.1
-        self.fields['freq'].widget.attrs['min'] = 0.1
-
-
 class SecondaryImageForm(forms.Form):
     # Secondary Image Calculation
     f_IF1 = forms.FloatField(initial=200,  label='First IF (MHz)')
