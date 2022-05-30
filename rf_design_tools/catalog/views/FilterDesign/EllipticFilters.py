@@ -126,7 +126,7 @@ def SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, Elliptic_Type, FilterType
     NetworkType['Network'] = 'Elliptic'
     NetworkType['Mask'] = FilterType
     NetworkType['Elliptic_Type'] = Elliptic_Type
-    NetworkType['freq'] = np.round_(np.linspace(f_start, f_stop, n_points))*1e6
+    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))*1e6
     NetworkType['N'] = N
 
 

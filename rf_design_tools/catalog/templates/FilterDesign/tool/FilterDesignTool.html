@@ -75,11 +75,11 @@
                     <option id='EllipticResponse' value="1">Elliptic</option>
                     <option selected="selected" value="2">Chebyshev</option>
                     <option value="3">Butterworth</option>
-                    <option value="4">Bessel</option>
+                    <!-- <option value="4">Bessel</option>
                     <option value="5">Legendre</option>
                     <option value="6">Gegenbauer</option>
                     <option value="7">Linear Phase</option>
-                    <option value="8">Gaussian</option>
+                    <option value="8">Gaussian</option> -->
                   </select>
                 </td>
               </tr>
@@ -296,10 +296,14 @@ submit_form()
       // LPF of HPF
       $('.fc_input').show();
       $('.fBPF_input').hide();
+      document.getElementById("f_start").value = 0.1*document.getElementById("f1").value
+      document.getElementById("f_stop").value = 2*document.getElementById("f2").value
     }else{
       //BPF or HPF  
       $('.fc_input').hide();
       $('.fBPF_input').show();
+      document.getElementById("f_start").value = 0.8*document.getElementById("f1").value
+      document.getElementById("f_stop").value = 1.2*document.getElementById("f2").value
     }
     submit_form()
   }

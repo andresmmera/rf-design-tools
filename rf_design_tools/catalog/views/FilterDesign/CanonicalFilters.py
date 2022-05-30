@@ -59,7 +59,7 @@ def getCanonicalFilterNetwork(params):
         NetworkType['First_Element'] = 'Series'
         comp_val['ZL'] = ZS*gi[-1]
     NetworkType['N'] = N
-    NetworkType['freq'] = np.round_(np.linspace(f_start, f_stop, n_points))*1e6
+    NetworkType['freq'] = np.linspace(f_start, f_stop, n_points)*1e6
 
     # Place components
     for i in range(0, N):

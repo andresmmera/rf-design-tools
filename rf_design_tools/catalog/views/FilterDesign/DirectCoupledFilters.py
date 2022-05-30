@@ -122,7 +122,7 @@ def DirectCoupled_C_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Lres, fstart, fs
     comp_val = {}
     NetworkType['Network'] = 'Direct-Coupled'
     NetworkType['DC_Type'] = 'C-Coupled Shunt Resonators'    
-    NetworkType['freq'] = np.round_(np.linspace(f_start, f_stop, n_points))*1e6
+    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))*1e6
     NetworkType['N'] = Nres
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL
@@ -283,7 +283,7 @@ def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fs
     comp_val = {}
     NetworkType['Network'] = 'Direct-Coupled'
     NetworkType['DC_Type'] = 'L-Coupled Shunt Resonators'
-    NetworkType['freq'] = np.round_(np.linspace(f_start, f_stop, n_points))*1e6
+    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))*1e6
     NetworkType['N'] = Nres
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL
@@ -476,7 +476,7 @@ def DirectCoupled_L_Coupled_SeriesResonators(params):
     NetworkType = {}
     comp_val = {}
     NetworkType['Network'] = 'Direct-Coupled'
-    NetworkType['freq'] = np.round_(np.linspace(f_start, f_stop, n_points))*1e6
+    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))*1e6
     NetworkType['N'] = Nres
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL
@@ -496,8 +496,6 @@ def DirectCoupled_L_Coupled_SeriesResonators(params):
         # Network
         count_L += 1
         comp_val['L'+str(count_L)] = Lseries[0]
-
-        connections.append([(Port1, 0), (L[0], 0)])
 
         for i in range (0, Nres+1):
             d.push()
@@ -738,7 +736,7 @@ def DirectCoupled_C_Coupled_SeriesResonators(params, port_match):
     comp_val = {}
     NetworkType['Network'] = 'Direct-Coupled'
     NetworkType['DC_Type'] = 'C-Coupled Series Resonators'
-    NetworkType['freq'] = np.round_(np.linspace(f_start, f_stop, n_points))*1e6
+    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))*1e6
     NetworkType['N'] = Nres
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL
@@ -887,7 +885,7 @@ def DirectCoupled_QW_Coupled_ShuntResonators(gi, RS, RL, f0, BW, fstart, fstop, 
     comp_val = {}
     NetworkType['Network'] = 'Direct-Coupled'
     NetworkType['DC_Type'] = 'Quarter-Wave coupled resonators'
-    NetworkType['freq'] = np.round_(np.linspace(f_start, f_stop, n_points))*1e6
+    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))*1e6
     NetworkType['N'] = Nres
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL
