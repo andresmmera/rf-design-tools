@@ -3,18 +3,6 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 
-# FORM 1.3 - Calculation of the reflection coefficient and S11 given the SWR
-class SWRToReflectionCoefficientForm(forms.Form):
-    SWR = forms.FloatField(initial=1.3,  label='SWR')
-
-    def __init__(self, *args, **kwargs):
-        super(SWRToReflectionCoefficientForm, self).__init__(*args, **kwargs)
-        self.fields['SWR'].widget.attrs['min'] = 1
-        
-        # Set the width of the boxes
-        box_width = 5
-        self.fields['SWR'].widget.attrs['style'] = "width:75px"
-
 # FORM 2 - RF POWER CONVERTER
 class RF_PowerConversionForm(forms.Form):
     
