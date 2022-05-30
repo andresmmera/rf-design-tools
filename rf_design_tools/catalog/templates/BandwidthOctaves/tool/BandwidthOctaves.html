@@ -5,7 +5,7 @@
   <div class="container-fluid">
     <div class="row">
         <div class="col-md-auto">
-          <h2 class="tool-name">Bandwidth in Octaves & Q factor</h2>
+          <h2 class="tool-name">Bandwidth in Octaves/Decades & Q factor</h2>
         </div>
     </div>
 
@@ -45,10 +45,6 @@
             <!-- BUTTONS -->
             <div class="d-flex flex-row justify-content-center">
               <div class="p-2">
-                <input type = "button" value = "Calculate" onclick="updateTable()">
-              </div>
-
-              <div class="p-2">
                 <a href="{% url 'bw_octaves_docs' %}" class="btn btn-info" role="button">See docs</a>
               </div>
             </div>
@@ -68,11 +64,15 @@
                         </thead>
                         <tbody>
                           <tr> 
-                            <td>BW<sub>octaves</sub></td>
+                            <td><b># Octaves</b></td>
                             <td>4.2</td>
                           </tr>
                           <tr> 
-                            <td>Q</td>
+                            <td><b># Decades</b></td>
+                            <td>4.2</td>
+                          </tr>
+                          <tr> 
+                            <td><b>Q</b></td>
                             <td>1.1</td>
                           </tr>
                         </tbody>
@@ -85,7 +85,7 @@
   </div>
 
 <script type="text/javascript">
-
+  updateTable()
   function updateTable(){
     // Get data
     var f1 = parseFloat(document.getElementById("f1").value)
@@ -94,13 +94,15 @@
     // Calculations
     var maxf = Math.max(f1, f2)
     var minf = Math.min(f1, f2)
-    var BW_OCT = Math.log10(maxf/minf)/Math.log10(2)
+    var BW_DEC = Math.log10(maxf/minf)
+    var BW_OCT = BW_DEC/Math.log10(2)
     var Q = (minf + maxf) / (maxf - minf)
   
     // Update table
     var ResultsTable = document.getElementById("ResultsTable");
     ResultsTable.rows[1].cells[1].textContent = BW_OCT.toFixed(2); // Bandwidth in octaves
-    ResultsTable.rows[2].cells[1].textContent = Q.toFixed(2); // Quality factor
+    ResultsTable.rows[2].cells[1].textContent = BW_DEC.toFixed(2); // Quality factor
+    ResultsTable.rows[3].cells[1].textContent = Q.toFixed(2); // Quality factor
   }
   
   </script>
