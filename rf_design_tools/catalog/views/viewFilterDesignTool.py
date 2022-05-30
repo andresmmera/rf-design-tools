@@ -7,17 +7,6 @@ from django.template import loader
 from catalog.models import Tool
 from catalog.forms import FILTER_STRUCTURES, RESPONSE_TYPE, MASK_TYPE, ELLIPTIC_TYPE, DC_TYPE, FilterDesignForm
 
-# Bokeh
-from django.shortcuts import render
-from bokeh.plotting import figure, output_file, show 
-from bokeh.embed import components
-from bokeh.io import output_notebook, show
-from bokeh.plotting import figure
-from bokeh.models import Legend, LegendItem
-from bokeh.models import Arrow, NormalHead
-from bokeh.models import ColumnDataSource, LabelSet
-from bokeh.models import LinearAxis, Range1d
-
 
 from django.views.decorators.csrf import csrf_exempt
 

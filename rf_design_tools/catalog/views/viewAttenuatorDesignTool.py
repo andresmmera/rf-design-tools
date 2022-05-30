@@ -7,8 +7,6 @@ from django.template import loader
 from catalog.models import Tool
 from catalog.forms import ATTENUATOR_STRUCTURES, AttenuatorDesignForm
 
-# Bokeh
-from django.shortcuts import render
 
 from django.views.decorators.csrf import csrf_exempt # Allow ajax
 

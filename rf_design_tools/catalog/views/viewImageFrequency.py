@@ -3,8 +3,6 @@ from django.shortcuts import render
 # Python stuff
 import numpy as np
 
-# Bokeh
-from django.shortcuts import render
 
 def ImageFrequencyDocs(request):
     return render(request, 'FrequencyPlanning/docs/ImageFrequency_doc.html')
