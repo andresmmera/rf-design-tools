@@ -7,7 +7,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-auto">
-        <h2 class="tool-name">Equivalent of Two Series Capacitors</h2>
+        <h2 class="tool-name">Equivalent Capacitance of Series Capacitors</h2>
       </div>
   </div>
 
@@ -17,35 +17,31 @@
         <!-- Instantiate the form -->
         <form method="POST"> 
           {% csrf_token %}          
-          <table class="table table-bordered table-striped">
-            <thead>
+          <table id="table1" class="table table-hover table-bordered ">
+            
+            <thead style="text-align: center; vertical-align: middle;">
               <tr>
-                <th>Parameter</th>
+                <th></th>
                 <th>Value</th>
+                <th colspan="2">Action</th>
               </tr>
             </thead>
-            <tbody>
-              <tr> <!--C1 -->
-                <td>
-                  {{form_Cseries.C1.label}}
-                </td>
-                <td>{{form_Cseries.C1}}</td>
-              </tr>
-              <tr> <!--R2 -->
-                <td>
-                  {{form_Cseries.C2.label}}
-                </td>
-                <td>{{form_Cseries.C2}}</td>
-              </tr>
-            </tbody>
+            <tr>
+              <td class="tbl_id">C<sub>1</sub></td>
+                  <td class="C_input"><input type="text" id="C[1]" value = "1pF" style="width: 3em" onchange="ob_adRows.update(this)"/></td>
+              <td class="remove_button"><input type="button" value="-" id="remove_button1" class="btn btn-danger" onclick="ob_adRows.delRow(this)"/></td>
+              <td class="add_button"><input type="button" value="+" id="add_button1" class="btn btn-success" onclick="ob_adRows.addRow(this)"/></td>
+            </tr>
+            <tr>
+              <td class="tbl_id">C<sub>2</sub></td>
+                  <td class="C_input"><input type="text" id="C[2]" value = "1pF" style="width: 3em" onchange="ob_adRows.update(this)"/></td>
+              <td class="remove_button"><input type="button" value="-" id="remove_button2" class="btn btn-danger" onclick="ob_adRows.delRow(this)"/></td>
+              <td class="add_button"><input type="button" value="+" id="add_button2" class="btn btn-success" onclick="ob_adRows.addRow(this)"/></td>
+            </tr>
           </table>
 
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
-            <div class="p-2">
-              <input type = "submit" value = "Calculate">
-            </div>
-
             <div class="p-2">
               <a href="{% url 'cseries_docs' %}" class="btn btn-info" role="button">See docs</a>
             </div>
@@ -59,8 +55,7 @@
       <div class="mx-auto">
             <!-- Present the result -->
               <div class="card-body">
-                {% if Ceq != None %}
-                  {% if Ceq != "-1" and Ceq != "-2" %}
+
                     <table class="table table-light table-bordered table-striped">
                         <thead>
                           <tr>
@@ -70,35 +65,329 @@
                         <tbody>
                           <tr> 
                             <td>C<sub>eq</sub></td>
-                            <td>{{Ceq}}</td>
+                            <td><p id="Ceq"></p></td>
                           </tr>
                         </tbody>
                     </table>
-                  {% else %}
-                     {% if Ceq == "-1" %}
-                       <p style="color:#ff0000;"> Enter a valid value for C<sub>1</sub> </p>
-                     {% else %}
-                       <p style="color:#ff0000;"> Enter a valid value for C<sub>2</sub> </p>
-                     {% endif %}
-                  {% endif %}
-                {% else %}
-                    <table class="table table-light table-bordered table-striped">
-                      <thead>
-                        <tr>
-                          <th colspan="2"><h5 align="center">Result</h5></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr> 
-                          <td>C<sub>eq</sub></td>
-                          <td>0.91 pF</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                {% endif %}
               </div>
             </div>
       </div>
   </div>
+
+  <script type="text/javascript">
+
+    //Inspired by https://coursesweb.net/javascript/ 
+    
+    function adRowsTable(id){
+      var table = document.getElementById(id);
+      var me = this;
+
+      if(document.getElementById(id)){
+        var row1 = table.rows[1].outerHTML;
+      
+      function getID(string_id){
+        var index1 = string_id.indexOf("id=\"")
+        index1 += 4
+        var index2 = string_id.indexOf("\" ", index1)
+        return string_id.substr(index1, index2-index1)
+      }
+
+      function getValue(string_val){
+        var index1 = string_val.indexOf("value=\"")
+        index1 += 7
+        var index2 = string_val.indexOf("\" ", index1)
+        return string_val.substr(index1, index2-index1)
+      }
+
+          //adds index-id in cols with class .tbl_id
+      function setIds(add_after){
+        var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
+        for(var i=0; i<tbl_id.length; i++) 
+        {
+          tbl_id[i].innerHTML = "C<sub>" + String(i+1) + "</sub>";
+        }
+        // UPDATE C IDs
+        var C_id = document.querySelectorAll('#'+ id +' .C_input');
+        for(var i=0; i<tbl_id.length; i++){
+          var old_id = getID(C_id[i].innerHTML)
+          var tmp = C_id[i].innerHTML.replace(old_id, 'C['+ (i+1) + ']')
+          C_id[i].innerHTML = tmp
+        }
+
+      }
+
+      //add row after clicked row; receives clicked button in row
+      me.addRow = function(btn){
+        var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
+        
+        var add_after = parseInt(btn.id.replace('add_button', ''))
+        var new_row = row1.replaceAll("[1]", "["+ (add_after+1) + "]")
+        new_row = new_row.replaceAll("C<sub>1</sub>", "C<sub>"+ (add_after+1) + "</sub>")
+        btn.parentNode.parentNode.insertAdjacentHTML('afterend', new_row)
+        setIds(add_after);
+        me.update(btn)
+      }
+
+      //delete clicked row; receives clicked button in row
+      me.delRow = function(btn){
+        var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
+        if (tbl_id.length > 1)
+        {
+          btn.parentNode.parentNode.outerHTML ='';
+      //   alert('Remove: ' + btn.id)
+          setIds(-1);
+          me.update(btn)
+        }
+
+      }
+
+    //Update table content and recalculate the equivalent capacitance
+     me.update = function(btn){
+      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
+      var C_id = document.querySelectorAll('#'+ id +' .C_input');
+      var C_array = []
+        // Update values
+        for(var i=0; i<C_id.length; i++) {
+          // C[i]
+          var new_val = document.getElementById("C["+(i+1)+"]").value;
+          var old_val = getValue(C_id[i].innerHTML)
+          var tmp = C_id[i].innerHTML.replace("value=\"" + old_val +"\"", 'value=\"' + new_val + '\"')
+          C_id[i].innerHTML = tmp
+          C_array.push(parseCstring(new_val));
+        }
+        // Equivalent capacitance
+        let Ceq = 0
+        for (let i = 0; i < C_array.length; i++) {
+          Ceq += 1/C_array[i]
+        }
+        Ceq = 1 / Ceq
+        document.getElementById("Ceq").innerHTML = getValueWithUnits(Ceq, 'F')
+     }
+    }
+  }
+
+//create object of adRowsTable(), pass the table id
+var ob_adRows = new adRowsTable('table1');
+ob_adRows.update()
+
+function getValueWithUnits(val, unit){
+    prefix = ''
+    // Lower than 1
+    if (val < 1)
+    {
+        if (val < 0.5e-12)
+        {
+            // femto
+            val *= 1e15
+            prefix = 'f'
+        }
+        else
+        {
+            if (val < 0.5e-9)
+            {
+                // pico
+                val *= 1e12
+                prefix = 'p'
+            }
+            else
+            {
+                if (val < 0.5e-6)
+                {
+                    // nano
+                    val *= 1e9
+                    prefix = 'n'
+                }
+                else
+                {
+                    if (val < 0.5e-3)
+                    {
+                        // micro
+                        val *= 1e6
+                        prefix = 'u'
+                    }
+                    else
+                    {
+                        if (val < 0.5)
+                        {
+                            // mili
+                            val *= 1e3
+                            prefix = 'm'
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        if (val > 1e3)
+        {
+            // Higher than 1
+            if (val > 1e9)
+            {
+                // Giga
+                val *= 1e-9
+                prefix = 'G'
+            }
+            else
+            {
+                if (val > 1e6)
+                {
+                    // Mega
+                    val *= 1e6
+                    prefix = 'M'
+                }
+                else
+                {
+                    if (val > 1e3)
+                    {
+                        // kilo
+                        val *= 1e3
+                        prefix = 'k'
+                    }
+                }
+            }
+        }
+        else
+        {
+            // Value between 1 and 1k
+            prefix = ''
+        }
+    }
+    if (prefix == '')
+        return val.toFixed(2) + ' ' + unit
+    else
+        return val.toFixed(2) + ' ' + prefix + unit
+}
+
+
+function parseCstring(C)
+{     
+    C = C.toLowerCase()
+
+    index_farad = C.indexOf('f')
+    
+    // Remove F unit
+    if (index_farad != -1)
+    {
+        C = C.substring(0, index_farad) + C.substring(index_farad + 1)
+    }
+
+    // Remove blank spaces from the string
+    if (index_farad != -1)
+    {
+        C = C.replace(" ", "")
+    }
+    L = C.length
+    
+    // Scientific
+    index=C.indexOf('e')
+    
+    if (index != -1)
+    {
+        if (index == 0)
+            a = 0
+        else
+            a = parseFloat(C.substring(0,index))
+
+            b = C.substring(index+1,L)
+            Lb = b.length
+            b = parseFloat(b)
+            return a*Math.pow(10, b)
+
+    }
+
+    // NANOFARAD
+    index=C.indexOf('n')
+    
+    if (index != -1)
+    {
+        if (index == 0)
+            a = 0
+        else
+            a = parseFloat(C.substring(0,index))
+
+        if (L > index+1)
+        {
+            b = C.substring(index+1,L)
+            Lb = b.length
+            b = parseFloat(b)
+            if (a < 0 || b < 0)
+                return -1
+            else
+                return a*1e-9+b*Math.pow(10, (-7-(Lb-1)))
+        }
+        else
+        {
+            if (a < 0)
+                return -1
+            else
+                return a*1e-9
+        }
+    }
+    // MICROFARAD
+    index=C.indexOf('u')
+    if (index != -1)
+    {
+        if (index == 0)
+            a = 0
+        else
+            a = parseFloat(C.substring(0,index))
+
+        if (L > index+1)
+        {
+            b = C.substring(index+1,L)
+            Lb = b.length
+            b = parseFloat(b)
+            if (a < 0 || b < 0)
+                return -1
+            else
+                return a*1e-6+b*Math.pow(10, (-7-(Lb-1)))
+        }
+        else
+        {
+            if (a < 0)
+                return -1
+            else
+                return a*1e-6
+        }
+    }
+
+    // PICOFARAD
+    
+    index=C.indexOf('p')
+    
+    if (index != -1)
+    {
+        if (index == 0)
+            a = 0
+        else
+            a = parseFloat(C.substring(0,index))
+        if (L > index+1)
+        {   
+            b = C.substring(index+1, L)
+            Lb = b.length
+            b = parseFloat(b)
+            if (a < 0 || b < 0)
+                return -1
+            else
+                return a*1e-12+b*Math.pow(10, (-13-(Lb-1)))
+        }
+        else
+        {
+            if (a < 0)
+                return -1
+            else
+                return a*1e-12
+        }
+    }
+
+    C = parseFloat(C)
+    if (C < 0)
+        C = -1
+    
+    return C
+}
+</script>
 
 {% endblock %}

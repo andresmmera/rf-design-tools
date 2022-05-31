@@ -59,28 +59,6 @@ class ParallelResistorForm(forms.Form):
         self.fields['R1'].widget.attrs['style'] = "width:75px"
         self.fields['R2'].widget.attrs['style'] = "width:75px"
 
-# FORM 4 - Equivalent capacitance of two series capacitors
-
-class SeriesCapacitorForm(forms.Form):
-
-    C1 = forms.CharField(label='C\u2081', max_length=6, initial='10p')
-    C2 = forms.CharField(label='C\u2082', max_length=6, initial='1p')
-
-    def clean_C1(self):
-        C1 = self.cleaned_data['C1']
-        return C1
-
-    def clean_C2(self):
-        C2 = self.cleaned_data['C2']
-        return C2
-    
-    def __init__(self, *args, **kwargs):
-        super(SeriesCapacitorForm, self).__init__(*args, **kwargs)
-        # Set the width of the boxes
-        box_width = 5
-        self.fields['C1'].widget.attrs['style'] = "width:75px"
-        self.fields['C2'].widget.attrs['style'] = "width:75px"
-
 class SecondaryImageForm(forms.Form):
     # Secondary Image Calculation
     f_IF1 = forms.FloatField(initial=200,  label='First IF (MHz)')
