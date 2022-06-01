@@ -37,28 +37,6 @@ class RF_PowerConversionForm(forms.Form):
         self.fields['P'].widget.attrs['style'] = "width:75px"
 
 
-# FORM 3 - Equivalent resistance of two parallel resistors
-
-class ParallelResistorForm(forms.Form):
-
-    R1 = forms.CharField(label='R\u2081', max_length=6, initial='1k')
-    R2 = forms.CharField(label='R\u2082', max_length=6, initial='3k3')
-
-    def clean_R1(self):
-        R1 = self.cleaned_data['R1']
-        return R1
-
-    def clean_R2(self):
-        R2 = self.cleaned_data['R2']
-        return R2
-
-    def __init__(self, *args, **kwargs):
-        super(ParallelResistorForm, self).__init__(*args, **kwargs)
-        # Set the width of the boxes
-        box_width = 5
-        self.fields['R1'].widget.attrs['style'] = "width:75px"
-        self.fields['R2'].widget.attrs['style'] = "width:75px"
-
 class SecondaryImageForm(forms.Form):
     # Secondary Image Calculation
     f_IF1 = forms.FloatField(initial=200,  label='First IF (MHz)')
