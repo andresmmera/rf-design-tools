@@ -402,12 +402,44 @@ function plotChart(x, NL_series, S_Series, f_HIF, P_max_HF, f_RF, RF_level, titl
                                                       },
                                                       text: 'Half-IF interferer: ' + P_max_HF.toString() + ' dBm'
                                                     },
+
                                                   ],
                                           labelOptions: {
                                               backgroundColor: 'rgba(240,240,240,0.5)',
                                               x: 0, y: -20
                                           }
-                                      }]
+                                      },
+                                      {
+                                        labels: [
+                                                    {
+                                                      point: {
+                                                          x: 0.8*f_RF,
+                                                          y: S_Series[0][1],
+                                                          xAxis: 0,
+                                                          yAxis: 0
+                                                      },
+                                                      text: 'Sensitivity: ' + S_Series[0][1].toString() + ' dBm'
+                                                    },
+                                                    {
+                                                      point: {
+                                                          x: 0.8*f_RF,
+                                                          y: NL_series[0][1],
+                                                          xAxis: 0,
+                                                          yAxis: 0
+                                                      },
+                                                      text: 'Noise Floor: ' + NL_series[0][1].toString() + ' dBm'
+                                                    },
+                                        ],
+                                        labelOptions: {
+                                              backgroundColor: 'rgba(240,240,240,0.5)',
+                                              shape: 'connector',
+                                              x: 0, y: 20
+                                          }
+                                      }
+                                    
+                                    
+                                    
+                                    ]
         });
     };
 
