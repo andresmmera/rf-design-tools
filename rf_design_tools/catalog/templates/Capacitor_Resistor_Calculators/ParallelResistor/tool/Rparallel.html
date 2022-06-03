@@ -2,6 +2,65 @@
 {% load static %}
 {% block content %}
 
+<style>
+  /* Popup container - can be anything you want */
+  .popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* The actual popup */
+  .popup .popuptext {
+    visibility: hidden;
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -40px;
+  }
+  
+  /* Popup arrow */
+  .popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  /* Toggle this class - hide and show the popup */
+  .popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+  }
+  
+  /* Add animation (fade in the popup) */
+  @-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+  }
+  
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+  }
+  </style>
+
   <!-- Reflection coefficient to impedance -->
 
   <div class="container-fluid">
@@ -28,16 +87,37 @@
             </thead>
             <tr>
               <td class="tbl_id">R<sub>1</sub></td>
-                  <td class="R_input"><input type="text" id="R[1]" value = "1k" style="width: 3em" onchange="ob_adRows.update(this)"/></td>
+                  <td class="R_input"><input type="text" id="R[1]" value = "1k" style="width: 3em" onchange="ob_adRows.update()"/></td>
               <td class="remove_button"><input type="button" value="-" id="remove_button1" class="btn btn-danger" onclick="ob_adRows.delRow(this)"/></td>
               <td class="add_button"><input type="button" value="+" id="add_button1" class="btn btn-success" onclick="ob_adRows.addRow(this)"/></td>
             </tr>
             <tr>
               <td class="tbl_id">R<sub>2</sub></td>
-                  <td class="R_input"><input type="text" id="R[2]" value = "1k" style="width: 3em" onchange="ob_adRows.update(this)"/></td>
+                  <td class="R_input"><input type="text" id="R[2]" value = "1k" style="width: 3em" onchange="ob_adRows.update()"/></td>
               <td class="remove_button"><input type="button" value="-" id="remove_button2" class="btn btn-danger" onclick="ob_adRows.delRow(this)"/></td>
               <td class="add_button"><input type="button" value="+" id="add_button2" class="btn btn-success" onclick="ob_adRows.addRow(this)"/></td>
             </tr>
+          </table>
+          
+          <table id = "table_I_Pdiss" class="table table-hover table-bordered ">
+              <tr>
+                <td>
+                  <div class="popup" onmouseover="help_dV()">
+                    <p>&#916;V</p>
+                    <span class="popuptext" id="Pop-up-dV">Voltage between the resistors' terminals</span>
+                  </div>
+                </td>
+                <td><input type="text" id="dV" value = "5 V" style="width: 3em" onchange="ob_adRows.update()"/></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="popup" onmouseover="help_Pdiss()">
+                    <p>P<sub>max</sub></p>
+                    <span class="popuptext" id="Pop-up-Pdiss">Resistors' power rating (max. dissipation power allowed)</span>
+                  </div>
+                </td>
+                <td><input type="text" id="Pmax" value = "50 mW" style="width: 4em" onchange="ob_adRows.update()"/></td>
+              </tr>
           </table>
 
           <!-- BUTTONS -->
@@ -55,7 +135,6 @@
       <div class="mx-auto">
             <!-- Present the result -->
               <div class="card-body">
-
                     <table class="table table-light table-bordered table-striped">
                         <thead>
                           <tr>
@@ -70,11 +149,60 @@
                         </tbody>
                     </table>
               </div>
-            </div>
-      </div>
+        </div>
+    </div>
+
+    <div class="col-md-auto">
+      <div class="mx-auto">
+            <!-- Present the result -->
+              <div class="card-body">
+                    <table class="table table-light table-bordered table-striped" id="ResultsTable">
+                        <thead>
+                          <tr>
+                            <th colspan="3"><h5 align="center">Calculate Current and Power Dissipation</h5></th>
+                          </tr>
+                          <tr>
+                            <th></th>
+                            <th>Current</th>
+                            <th>Power Dissipation</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                              <td>R<sub>1</sub></td>
+                              <td>1 mA</td>
+                              <td>1 mW</td>
+                          </tr>
+                          <tr>
+                            <td>Total</td>
+                            <td>1 mA</td>
+                            <td>1 mW</td>
+                        </tr>
+                        </tbody>
+                    </table>
+              </div>
+        </div>
+    </div>
+
   </div>
 
+  <script>
+      // Pop-up helpers
+      function help_dV() {
+        // Linear gain
+        var popup = document.getElementById("Pop-up-dV");
+        popup.classList.toggle("show");
+      }
+
+      function help_Pdiss() {
+        // Linear gain
+        var popup = document.getElementById("Pop-up-Pdiss");
+        popup.classList.toggle("show");
+      }
+  </script>
+
   <script type="text/javascript">
+
 
     //Inspired by https://coursesweb.net/javascript/ 
     
@@ -125,7 +253,7 @@
         new_row = new_row.replaceAll("R<sub>1</sub>", "R<sub>"+ (add_after+1) + "</sub>")
         btn.parentNode.parentNode.insertAdjacentHTML('afterend', new_row)
         setIds(add_after);
-        me.update(btn)
+        me.update()
       }
 
       //delete clicked row; receives clicked button in row
@@ -136,13 +264,13 @@
           btn.parentNode.parentNode.outerHTML ='';
       //   alert('Remove: ' + btn.id)
           setIds(-1);
-          me.update(btn)
+          me.update()
         }
 
       }
 
     //Update table content and recalculate the equivalent capacitance
-     me.update = function(btn){
+     me.update = function(){
       var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
       var R_id = document.querySelectorAll('#'+ id +' .R_input');
       var R_array = []
@@ -153,7 +281,7 @@
           var old_val = getValue(R_id[i].innerHTML)
           var tmp = R_id[i].innerHTML.replace("value=\"" + old_val +"\"", 'value=\"' + new_val + '\"')
           R_id[i].innerHTML = tmp
-          R_array.push(parseRstring(new_val));
+          R_array.push(parseUnits(new_val, 'ohm'));
         }
         // Equivalent capacitance
         let Req = 0
@@ -162,6 +290,85 @@
         }
         Req = 1 / Req
         document.getElementById("Req").innerHTML = getValueWithUnits(Req, 'Ohm')
+
+         
+        let dV = parseUnits(document.getElementById("dV").value, 'V')
+        let Pmax = parseUnits(document.getElementById("Pmax").value, 'W')
+        
+        let I = []
+        let Pdiss = []
+        let overdriven = []
+        let Itotal = 0
+        let Ptotal = 0
+        for (let i = 0; i < R_array.length; i++)
+        {
+          I[i] = dV/R_array[i]
+          Pdiss[i] = dV*dV/R_array[i]
+
+          Itotal += I[i]
+          Ptotal += Pdiss[i]
+          if(Pdiss[i] > Pmax)
+          {
+            // Mark that component as overdriven
+            overdriven[i] = 1
+          }
+          else
+          {
+            overdriven[i] = 0
+          }
+        }
+
+        // Update table size
+        // http://jsfiddle.net/Btjg6/1/
+        // https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_table_insert_deleterow
+        var ResultsTable = document.getElementById("ResultsTable");
+
+        let num_new_rows = parseFloat(R_array.length) - (parseFloat(ResultsTable.rows.length-3));
+        if (num_new_rows > 0)
+        {
+          // Need to add rows                                                                     
+          for (let i = 0; i < num_new_rows; i++)
+          {
+            var row = ResultsTable.insertRow(ResultsTable.rows.length-1);
+            row.insertCell(0);
+            row.insertCell(1);
+            row.insertCell(2);
+          }
+        }
+        else{
+          // Delete rows
+          for (let i = 0; i < -num_new_rows; i++)
+          {
+              if (table.rows.length == 2)
+                ResultsTable.deleteRow(table.rows.length);
+              else
+                ResultsTable.deleteRow(table.rows.length-1);
+          }
+
+        }
+        
+        // Write table content
+        for (let i = 0; i < R_array.length; i++)
+        {
+          ResultsTable.rows[i+2].cells[0].innerHTML = "R<sub>" + String(i+1) + "</sub>"
+          ResultsTable.rows[i+2].cells[1].innerHTML = getValueWithUnits(I[i], 'A')
+          if (overdriven[i]){
+            // Put text in red
+            str = "<td style=\"color:#FF0000\" bgcolor=\"#FFFF00\">" +  getValueWithUnits(Pdiss[i], 'W') + "</td>"
+          }
+          else{
+            str = "<td>" +  getValueWithUnits(Pdiss[i], 'W') + "</td>"
+          }
+          ResultsTable.rows[i+2].cells[2].outerHTML = str
+          
+        }
+        
+        ResultsTable.rows[R_array.length+2].cells[1].innerHTML = getValueWithUnits(Itotal, 'A')
+        ResultsTable.rows[R_array.length+2].cells[2].innerHTML = getValueWithUnits(Ptotal, 'W')
+
+          
+
+        
      }
     }
   }
@@ -261,20 +468,18 @@ function getValueWithUnits(val, unit){
 }
 
 
-function parseRstring(R)
+function parseUnits(R, units)
 {     
-    R = R.toLowerCase()
-
-    index_Ohm = R.indexOf('Ohm')
+    index_units = R.indexOf(units)
     
-    // Remove F unit
-    if (index_Ohm != -1)
+    // Remove unit string
+    if (index_units != -1)
     {
-        R = R.substring(0, index_Ohm) + R.substring(index_Ohm + 1)
+        R = R.substring(0, index_units) + R.substring(index_units + 1)
     }
 
     // Remove blank spaces from the string
-    if (index_Ohm != -1)
+    if (index_units != -1)
     {
         R = R.replace(" ", "")
     }
@@ -282,6 +487,7 @@ function parseRstring(R)
     
     // Scientific
     index=R.indexOf('e')
+    if (index == -1) index=R.indexOf('E') // Re-try with uppercase
     
     if (index != -1)
     {
@@ -297,9 +503,128 @@ function parseRstring(R)
 
     }
 
-    // kilo Ohm
-    index=R.indexOf('k')
+
+    // NANO
+    index=R.indexOf('n')
+    if (index == -1) index=R.indexOf('N') // Re-try with uppercase
+        
+        if (index != -1)
+        {
+            if (index == 0)
+                a = 0
+            else
+                a = parseFloat(R.substring(0,index))
+
+            if (L > index+1)
+            {
+                b = R.substring(index+1,L)
+                Lb = b.length
+                b = parseFloat(b)
+                if (a < 0 || b < 0)
+                    return -1
+                else
+                    return a*1e-9+b*Math.pow(10, (-7-(Lb-1)))
+            }
+            else
+            {
+                if (a < 0)
+                    return -1
+                else
+                    return a*1e-9
+            }
+        }
     
+        // MICRO
+        index=R.indexOf('u')
+        if (index == -1) index=R.indexOf('U') // Re-try with uppercase
+        if (index != -1)
+        {
+            if (index == 0)
+                a = 0
+            else
+                a = parseFloat(R.substring(0,index))
+
+            if (L > index+1)
+            {
+                b = R.substring(index+1,L)
+                Lb = b.length
+                b = parseFloat(b)
+                if (a < 0 || b < 0)
+                    return -1
+                else
+                    return a*1e-6+b*Math.pow(10, (-7-(Lb-1)))
+            }
+            else
+            {
+                if (a < 0)
+                    return -1
+                else
+                    return a*1e-6
+            }
+        }
+        
+        // MILI
+        index=R.indexOf('m')
+        if (index != -1)
+        {
+            if (index == 0)
+                a = 0
+            else
+                a = parseFloat(R.substring(0,index))
+
+            if (L > index+1)
+            {
+                b = R.substring(index+1,L)
+                Lb = b.length
+                b = parseFloat(b)
+                if (a < 0 || b < 0)
+                    return -1
+                else
+                    return a*1e-3+b*Math.pow(10, (-7-(Lb-1)))
+            }
+            else
+            {
+                if (a < 0)
+                    return -1
+                else
+                    return a*1e-3
+            }
+        }
+
+        // PICO
+        
+        index=R.indexOf('p')
+        if (index == -1) index=R.indexOf('P') // Re-try with uppercase
+        
+        if (index != -1)
+        {
+            if (index == 0)
+                a = 0
+            else
+                a = parseFloat(R.substring(0,index))
+            if (L > index+1)
+            {   
+                b = R.substring(index+1, L)
+                Lb = b.length
+                b = parseFloat(b)
+                if (a < 0 || b < 0)
+                    return -1
+                else
+                    return a*1e-12+b*Math.pow(10, (-13-(Lb-1)))
+            }
+            else
+            {
+                if (a < 0)
+                    return -1
+                else
+                    return a*1e-12
+            }
+        }
+
+    // kilo
+    index=R.indexOf('k')
+    if (index == -1) index=R.indexOf('K') // Re-try with uppercase
+
     if (index != -1)
     {
         if (index == 0)
@@ -324,8 +649,8 @@ function parseRstring(R)
                 return a*1e3
         }
     }
-    // Mega Ohm
-    index=R.indexOf('m')
+    // Mega
+    index=R.indexOf('M')
     if (index != -1)
     {
         if (index == 0)
