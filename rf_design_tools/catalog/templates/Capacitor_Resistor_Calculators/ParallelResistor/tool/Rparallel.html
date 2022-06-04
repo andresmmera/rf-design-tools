@@ -27,7 +27,7 @@
     z-index: 1;
     bottom: 125%;
     left: 50%;
-    margin-left: -40px;
+    margin-left: -60px;
   }
   
   /* Popup arrow */
@@ -76,7 +76,7 @@
         <!-- Instantiate the form -->
         <form method="POST"> 
           {% csrf_token %}          
-          <table id="table1" class="table table-hover table-bordered ">
+          <table id="table1" class="table text-center table-hover table-bordered ">
             
             <thead style="text-align: center; vertical-align: middle;">
               <tr>
@@ -99,7 +99,7 @@
             </tr>
           </table>
           
-          <table id = "table_I_Pdiss" class="table table-hover table-bordered ">
+          <table id = "table_I_Pdiss" class="table text-center table-hover table-bordered ">
               <tr>
                 <td>
                   <div class="popup" onmouseover="help_dV()">
@@ -135,7 +135,7 @@
       <div class="mx-auto">
             <!-- Present the result -->
               <div class="card-body">
-                    <table class="table table-light table-bordered table-striped">
+                    <table class="table text-center table-light table-bordered table-striped">
                         <thead>
                           <tr>
                             <th colspan="2"><h5 align="center">Result</h5></th>
@@ -156,7 +156,7 @@
       <div class="mx-auto">
             <!-- Present the result -->
               <div class="card-body">
-                    <table class="table table-light table-bordered table-striped" id="ResultsTable">
+                    <table class="table text-center table-light table-bordered table-striped" id="ResultsTable">
                         <thead>
                           <tr>
                             <th colspan="3"><h5 align="center">Calculate Current and Power Dissipation</h5></th>
