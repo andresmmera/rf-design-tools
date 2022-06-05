@@ -48,6 +48,10 @@ from catalog.views import SchematicSVGDownload_Attenuator
 from catalog.views import AttenuatorDesignDocs
 from catalog.views import AttenuatorDesignDocs_PiTee
 
+
+from catalog.views import VoltageDividerView
+from catalog.views import VoltageDividerDocs
+
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
     
@@ -118,5 +122,11 @@ urlpatterns = [
     path('tool/attenuator_design/docs', AttenuatorDesignDocs, name='attenuator_design_docs'),
     path('tool/attenuator_design/docs/Pi-Tee-type', AttenuatorDesignDocs_PiTee, name='attenuator_design_PiTee_docs'),
     path('tool/attenuator_design/download/svg/', SchematicSVGDownload_Attenuator, name='svg_download_att'),
+
+
+    #################################################################################
+    ## VOLTAGE DIVIDER TOOL
+    path('tool/VoltageDivider', VoltageDividerView, name='voltage_divider_tool'),
+    path('tool/VoltageDivider/docs', VoltageDividerDocs, name='voltage_divider_docs'),
 
 ]
