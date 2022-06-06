@@ -15,10 +15,7 @@
 
     <div class="row">
     <div class="col-md-auto">
-      <div class="mx-auto box_form">
-        <!-- Instantiate the form -->
-        <form method="POST"> 
-          {% csrf_token %}          
+      <div class="mx-auto box_form">     
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
@@ -60,7 +57,6 @@
               <a href="{% url 'reflection_coeff_docs' %}" class="btn btn-info" role="button">See docs</a>
             </div>
           </div>
-        </form>
       </div>
     </div>
 
