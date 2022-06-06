@@ -127,10 +127,10 @@ function calculate(){
 
     if (gamma_mag > 1e-2){
         S11 = 20*math.log10(gamma_mag)
-        S11 = S11.toFixed(2)
+        S11 = S11.toFixed(2) + ' dB'
     }
     else{
-      S11 = '-' + '&#8734';
+      S11 = '-' + '&#8734' + ' dB';
     }
 
     // Put results inside the table
