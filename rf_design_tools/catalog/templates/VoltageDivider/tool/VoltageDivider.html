@@ -61,7 +61,7 @@
   }
   </style>
 
-  <!-- Reflection coefficient to impedance -->
+
 
   <div class="container-fluid">
     <div class="row">
@@ -142,7 +142,11 @@
       </div>
     </div>
   
-
+    <div class= "col-md-auto">
+      <div class="thumbnail" align="center">
+          <img class="img-responsive" src="{% static 'images/VoltageDivider/VoltageDivider.png' %}" style="width:60%" alt="VoltageDivider">
+      </div>
+    </div>
 
     <div class="col-md-auto">
       <div class="mx-auto">
@@ -196,6 +200,8 @@
               </div>
         </div>
     </div>
+
+
 
   </div>
 
@@ -794,7 +800,7 @@ function updateResults()
     row.cells[0].innerHTML = "R<sub>Lower " + String(i+1) + "</sub>"
     row.cells[1].innerHTML = getValueWithUnits(Rlower[i], 'Ohm')
     row.cells[2].innerHTML = getValueWithUnits(I_lower[i], 'A')
-    if (overdriven_upper[i]){
+    if (overdriven_lower[i]){
       // Put text in red
       str = "<td style=\"color:#FF0000\" bgcolor=\"#FFFF00\">" +  getValueWithUnits(Pdiss_lower[i], 'W') + "</td>"
     }
