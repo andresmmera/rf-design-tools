@@ -83,12 +83,18 @@
               <tr> <!-- RF frequency -->
                 <td>
                   <div class="popup" onmouseover="help_Carrier()">
-                    f<sub>RF</sub> (MHz)
+                    f<sub>RF</sub>
                     <span class="popuptext" id="Pop-up-Carrier">Carrier frequency</span>
                   </div>
                 </td>
                 <td>
                   <input type="number" id="f_RF" value = "800" step="5" style="width: 4em" onchange="submit_form(this)"/>
+                  <select id="f_RF_scale" onchange="submit_form(this)">
+                    <option value="1">Hz</option>
+                    <option value="2">kHz</option>
+                    <option selected="selected" value="3">MHz</option>
+                    <option value="4">GHz</option>
+                  </select>
                 </td>
    
               </tr>
@@ -107,23 +113,35 @@
               <tr> <!-- Lowest LO -->
                 <td>
                   <div class="popup" onmouseover="help_LO_min()">
-                    Lowest LO (MHz)
+                    Lowest LO
                     <span class="popuptext" id="Pop-up-LO1">Lowest LO possible</span>
                   </div>
                 </td>
                 <td>
                   <input type="number" id="f_LO_min" value = "200" step="5" style="width: 4em" onchange="submit_form(this)"/>
+                  <select id="f_LO_min_scale" onchange="submit_form(this)">
+                    <option value="1">Hz</option>
+                    <option value="2">kHz</option>
+                    <option selected="selected" value="3">MHz</option>
+                    <option value="4">GHz</option>
+                  </select>
                 </td>
               </tr>
               <tr> <!-- Highest LO -->
                 <td>
                   <div class="popup" onmouseover="help_LO_max()">
-                    Highest LO (MHz)
+                    Highest LO
                     <span class="popuptext" id="Pop-up-LO2">Highest LO possible</span>
                   </div>
                 </td>
                 <td>
                   <input type="number" id="f_LO_max" value = "1500" step="5" style="width: 4em" onchange="submit_form(this)"/>
+                  <select id="f_LO_max_scale" onchange="submit_form(this)">
+                    <option value="1">Hz</option>
+                    <option value="2">kHz</option>
+                    <option selected="selected" value="3">MHz</option>
+                    <option value="4">GHz</option>
+                  </select>
                 </td>
               </tr>
             </tbody>
@@ -179,11 +197,57 @@
     // Get variables from the form
     var N = 100; // Number of points
     var f_RF = parseFloat(document.getElementById("f_RF").value);
+    var scale_fRF = document.getElementById('f_RF_scale').value;
+    f_RF = f_RF*Math.pow(10, (scale_fRF-1)*3)
+
     var f_LO_min = parseFloat(document.getElementById("f_LO_min").value);
+    var scale_fLO_min = document.getElementById('f_LO_min_scale').value;
+    f_LO_min = f_LO_min*Math.pow(10, (scale_fLO_min-1)*3)
+
     var f_LO_max = parseFloat(document.getElementById("f_LO_max").value);
+    var scale_fLO_max = document.getElementById('f_LO_max_scale').value;
+    scale_fLO_max = Math.pow(10, (scale_fLO_max-1)*3)
+    f_LO_max = f_LO_max*scale_fLO_max
     
 
+    max_f = Math.max(f_LO_min, f_LO_max)
+
+    // Default: Use MHz
+    scale_str = 'MHz'
+    scale = 1e6
+    
+    if (max_f > 3e9)
+    {
+      // Use GHz
+      scale_str = 'GHz'
+      scale = 1e9
+    }
+    else
+    {
+      if (max_f < 10e6)
+      {
+      // Use kHz
+      scale_str = 'kHz'
+      scale = 1e3
+      }
+      else
+      {
+        if (max_f < 1000)
+         {
+           // Use Hz
+           scale_str = 'Hz'
+           scale = 1
+         }
+      }
+      
+    }
+
+
+    // Use the same scale for all
+    f_RF = f_RF/scale
     var f_LO_ = linspace_int(f_LO_min, f_LO_max, N)
+
+    for(var i=0; i<N; i++) f_LO_[i] = Math.round(1e3*f_LO_[i]/scale)/1e3;
     
     var f_IM_ = [];
     var f_IF_ = [];
@@ -193,27 +257,27 @@
     for(var i=0; i<N; i++) {
                 f_IM_[i] = new Array(2);
                 f_IM_[i][0] = f_LO_[i];
-                f_IM_[i][1] = Math.abs(2*f_LO_[i] - f_RF);
+                f_IM_[i][1] = Math.round(1e2*Math.abs(2*f_LO_[i] - f_RF))/1e2;
                 if(f_IM_[i][1] > max_val) max_val = f_IM_[i][1];
 
                 f_IF_[i] = new Array(2);
                 f_IF_[i][0] = f_LO_[i];
-                f_IF_[i][1] = Math.abs(f_RF - f_LO_[i]);
+                f_IF_[i][1] = Math.round(1e2*Math.abs(f_RF - f_LO_[i]))/1e2;
                 if(f_IF_[i][1] > max_val) max_val = f_IF_[i][1];
 
                 delta_[i] = new Array(2);
                 delta_[i][0] = f_LO_[i];
-                delta_[i][1] = 2*Math.abs(f_RF - f_LO_[i]);
+                delta_[i][1] = Math.round(1e2*2*Math.abs(f_RF - f_LO_[i]))/1e2;
                 if(delta_[i][1] > max_val) max_val = delta_[i][1];
               }
 
     title = 'Image Frequency Planning'
 
-    plotChart(f_IM_, f_IF_, delta_, f_RF, 0.95*max_val, title)
+    plotChart(f_IM_, f_IF_, delta_, f_RF, 0.95*max_val, title, scale_str)
   }
 
 
-  function plotChart(f_IM, f_IF, delta, f_RF, max_val, title) {
+  function plotChart(f_IM, f_IF, delta, f_RF, max_val, title, scale_str) {
           $('#container').highcharts({
                 plotOptions: {
                               series: {
@@ -225,16 +289,16 @@
                         },
                 xAxis: {
                         gridLineWidth: 1,
-                        title: {text: 'freq LO (MHz)'}},
+                        title: {text: 'freq LO (' + scale_str + ')'}},
+                        tickInterval: 0.1,
                 yAxis: [
                                 {
-                             //   min: NL_series[0][1]-10,
-                            //    max: P_max_HF+20,
+                                min: 0,
+                                max: 1.2*max_val,
                                 title: {
-                                        text: 'freq (MHz)'
+                                        text: 'freq (' + scale_str + ')'
                                       },
                                 gridLineWidth: 1, 
-                                tickInterval: 10,
                                 tickPositioner: function(){
                                                             var ticks = this.tickPositions;
                                                             ticks.sort(function(a, b) {
@@ -272,15 +336,6 @@
                                   color: 'black',
                                   yAxis: 0
                               }, 
-                              {
-                                  name: '',
-                                  data: [
-                                    [f_RF/2, 0],
-                                    [f_RF/2, max_val]
-                                  ],
-                                  color: 'black',
-                                  yAxis: 0
-                              }, 
                           ],
                           annotations: [{
                                           draggable: '',
@@ -310,15 +365,6 @@
                                                           yAxis: 0
                                                       },
                                                       text: 'RF'
-                                                    },
-                                                    {
-                                                      point: {
-                                                          x: f_RF/2,
-                                                          y: max_val,
-                                                          xAxis: 0,
-                                                          yAxis: 0
-                                                      },
-                                                      text: 'LO = RF/2'
                                                     },
                                                   ],
                                           labelOptions: {
