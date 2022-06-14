@@ -172,3 +172,22 @@ class AttenuatorDesignForm(forms.Form):
         self.fields['ZS'].widget.attrs['style'] = "width:75px"
         self.fields['ZL'].widget.attrs['style'] = "width:75px"
         self.fields['att'].widget.attrs['style'] = "width:75px"
+
+
+MATCHING_NETWORK_STRUCTURES =(
+("1", "L-Section"),
+("2", "Single Stub"),
+("3", "Double Stub"),
+("4", "Multistage lambda/4"),
+("5", "Multistage L-Section"),
+("6", "lambda/4 matching"),
+("7", "lambda/8 + lambda/4 matching"),
+("8", "pi-type"),
+("9", "T-type"),
+("10", "Tapped C transformer"),
+("11", "Tapped L transformer"),
+("12", "Double-tapped resonator"),
+("13", "Single-tuned transformer"),
+("14", "Parallel double-tuned transformer"),
+("15", "Series double-tuned transformer"),
+)
