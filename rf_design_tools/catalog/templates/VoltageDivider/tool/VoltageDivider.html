@@ -757,7 +757,7 @@ function updateResults()
 
     // Fill the row with the content
     row.cells[0].innerHTML = "R<sub>Upper " + String(i+1) + "</sub>"
-    row.cells[1].innerHTML = getValueWithUnits(Rupper[i], 'Ohm')
+    row.cells[1].innerHTML = getValueWithUnits(Rupper[i], '\u03A9')
     row.cells[2].innerHTML = getValueWithUnits(I_upper[i], 'A')
     if (overdriven_upper[i]){
       // Put text in red
@@ -777,6 +777,11 @@ function updateResults()
   row.insertCell(2);
   row.insertCell(3);
   row.cells[0].innerHTML = '<p align=\'left\'> <b>Total Upper Branch</b></p>'
+
+  if (Rupper.length > 1){
+    row.cells[1].innerHTML = '<b>' + getValueWithUnits(Req_upper, '\u03A9') + '</b>'
+  }
+
   row.cells[3].innerHTML = '<b>' + getValueWithUnits(Ptotal_upper, 'W')+ '</b>'
 
   // Now, add the header
@@ -798,7 +803,7 @@ function updateResults()
 
     // Fill the row with the content
     row.cells[0].innerHTML = "R<sub>Lower " + String(i+1) + "</sub>"
-    row.cells[1].innerHTML = getValueWithUnits(Rlower[i], 'Ohm')
+    row.cells[1].innerHTML = getValueWithUnits(Rlower[i], '\u03A9')
     row.cells[2].innerHTML = getValueWithUnits(I_lower[i], 'A')
     if (overdriven_lower[i]){
       // Put text in red
@@ -817,6 +822,11 @@ function updateResults()
   row.insertCell(2);
   row.insertCell(3);
   row.cells[0].innerHTML = '<p align=\'left\'> <b>Total Lower Branch</b></p>'
+  
+  if (Rlower.length > 1){
+    row.cells[1].innerHTML = '<b>' + getValueWithUnits(Req_lower, '\u03A9') + '</b>'
+  }
+
   row.cells[3].innerHTML = '<b>'+ getValueWithUnits(Ptotal_lower, 'W') + '</b>'
 
   // Add total current and power
