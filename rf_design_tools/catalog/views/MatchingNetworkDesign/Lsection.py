@@ -176,7 +176,7 @@ def get_L_Section_Schematic(params):
     d += elm.Line().right().length(2).linewidth(1)
 
     if (params["XL"] > 0):
-        d += elm.Dot().label('ZL = ' + str(params["RL"]) + '+ j' + str(params["XL"] + " \u03A9") , fontsize=_fontsize).linewidth(1)
+        d += elm.Dot().label('ZL = ' + str(params["RL"]) + '+ j' + str(params["XL"]) + " \u03A9" , fontsize=_fontsize).linewidth(1)
     elif(params["XL"] == 0):
         d += elm.Dot().label('ZL = ' + str(params["RL"]) + " \u03A9" , fontsize=_fontsize).linewidth(1)
     else:

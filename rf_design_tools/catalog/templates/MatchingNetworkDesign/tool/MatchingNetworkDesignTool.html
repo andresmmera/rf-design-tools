@@ -103,53 +103,7 @@
           </table>
 
 
-          <table class="table table-hover">
-            <h5 align="center"> Simulation Parameters  <button id="btn-hide-Simulation" type="button" class="btn btn-dark" onclick="hideSimulation()">Hide</button></h5>
-            <thead id = 'Sim_Head'>
-              <tr>
-                <th>Parameter</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody id = 'Sim_Table'>
-              <tr>
-                <td>
-                  Start Freq (MHz)
-                </td>
-                <td>
-                  <input type="number" id="f_start" min="0" value = "50" style="width: 4em" onchange="submit_form(this)"/>
-                  <select id="f_start_scale" onchange="submit_form(this)">
-                    <option value="1">Hz</option>
-                    <option value="2">kHz</option>
-                    <option selected="selected" value="3">MHz</option>
-                    <option value="4">GHz</option>
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  End Freq (MHz)
-                </td>
-                <td>
-                  <input type="number" id="f_stop" min="0" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
-                  <select id="f_stop_scale" onchange="submit_form(this)">
-                    <option value="1">Hz</option>
-                    <option value="2">kHz</option>
-                    <option selected="selected" value="3">MHz</option>
-                    <option value="4">GHz</option>
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Points
-                </td>
-                <td>
-                  <input type="number" id="Points" min="1" value = "201" style="width: 4em" onchange="submit_form(this)"/>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+         
         </form>
         <!-- BUTTONS -->
         <div class="d-flex flex-row justify-content-center">
@@ -160,7 +114,7 @@
       
       <div class="col-md-auto box">
         <div class="row">
-          <div class="col-xs-6 col-md-6" >
+          <div class="col-xs-4 col-md-8" >
               <div class="card shadow-sm">
                 <script src="https://code.highcharts.com/highcharts.js"></script>
                 <div id="container" style="width: 800px"></div>
@@ -198,32 +152,100 @@
             </div>
           </div>
           </div>
+
+          <div class="col-md-auto box_form">
+            <table class="table table-hover">
+              <h5 align="center"> Simulation Parameters</h5>
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    Start Freq (MHz)
+                  </td>
+                  <td>
+                    <input type="number" id="f_start" min="0" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                    <select id="f_start_scale" onchange="submit_form(this)">
+                      <option value="1">Hz</option>
+                      <option value="2">kHz</option>
+                      <option selected="selected" value="3">MHz</option>
+                      <option value="4">GHz</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    End Freq (MHz)
+                  </td>
+                  <td>
+                    <input type="number" id="f_stop" min="0" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
+                    <select id="f_stop_scale" onchange="submit_form(this)">
+                      <option value="1">Hz</option>
+                      <option value="2">kHz</option>
+                      <option selected="selected" value="3">MHz</option>
+                      <option value="4">GHz</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Points
+                  </td>
+                  <td>
+                    <input type="number" id="Points" min="1" value = "201" style="width: 4em" onchange="submit_form(this)"/>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table table-hover">
+              <h5 align="center"> Display Parameters</h5>
+              <thead id = 'Sim_Head'>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td>
+                      Scale (dB/div)
+                    </td>
+                    <td>
+                      <input type="number" id="y_axis_scale" min="1" value = "5" style="width: 4em" onchange="submit_form(this)"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Maximum (dB)
+                    </td>
+                    <td>
+                      <input type="number" id="y_axis_max" min="10" value = "0" style="width: 4em" onchange="submit_form(this)"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Minimum (dB)
+                    </td>
+                    <td>
+                      <input type="number" id="y_axis_min" min="-200" value = "-50" style="width: 4em" onchange="submit_form(this)"/>
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
       </div>
+
+      
   </div>
 
 <script>
   submit_form()
   
-  document.getElementById("Sim_Table").setAttribute("hidden", "hidden");
-  document.getElementById("Sim_Head").setAttribute("hidden", "hidden");
-  document.getElementById("btn-hide-Simulation").innerHTML = 'Show'
-
-  function hideSimulation(){
-    if (document.getElementById("btn-hide-Simulation").innerHTML == 'Show'){
-      // Show elements
-      document.getElementById("Sim_Table").removeAttribute("hidden");
-      document.getElementById("Sim_Head").removeAttribute("hidden");
-      document.getElementById("btn-hide-Simulation").innerHTML = 'Hide'
-    }
-    else{
-      //Hide elements
-      document.getElementById("Sim_Table").setAttribute("hidden", "hidden");
-      document.getElementById("Sim_Head").setAttribute("hidden", "hidden");
-      document.getElementById("btn-hide-Simulation").innerHTML = 'Show'
-    }
-  }
-
-
   function StructureChanged(select) {
     if (select.value != 1){
       // Hide mask
@@ -331,6 +353,11 @@
 }
 
 function plotChart(x, y1, y2, title) {
+
+  let y_axis_scale = parseFloat(document.getElementById("y_axis_scale").value)
+  let y_axis_min = document.getElementById("y_axis_min").value
+  let y_axis_max = document.getElementById("y_axis_max").value
+  
           $('#container').highcharts({
                 plotOptions: {
                               series: {
@@ -343,24 +370,18 @@ function plotChart(x, y1, y2, title) {
                 xAxis: {
                         categories: x,
                         gridLineWidth: 1,
-                        tickPositions: linspace_int(0, x.length-1, 10),
+                        tickPositions: linspace_int(0, x.length-1, 11),
                         title: {text: 'freq (MHz)'}
                         },
                 yAxis: [
                                 {
-                                min: -50,
+                                min: y_axis_min,
+                                max: y_axis_max,
                                 title: {
                                         text: 'S21 (dB), S11 (dB)'
                                       },
-                                      gridLineWidth: 1, 
-                                      tickInterval: 5,
-                                      tickPositioner: function(){
-                                                                  var ticks = this.tickPositions;
-                                                                  ticks.sort(function(a, b) {
-                                                                  return a - b;
-                                                                  });
-                                                                return ticks;
-                                                                }
+                                gridLineWidth: 1, 
+                                tickInterval: y_axis_scale,
                                 }
                         ],
                                 series: [{
