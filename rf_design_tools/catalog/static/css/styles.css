@@ -1,6 +1,6 @@
 html * /* Character settings for the whole site */
 {
-   font-family: Lato Light !important;
+   font-family: Lato Light, 'Verdana', sans-serif !important;
 }
 
 .box{ /* Box margins for the tool catalogs */
@@ -71,7 +71,7 @@ body {
 	color: white;
 	padding: 20px;
     min-height: 500px;
-    font-family: 'Lato', sans-serif;;
+    font-family: 'Lato', 'Verdana', sans-serif;
 }
 
 ul
