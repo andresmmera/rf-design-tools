@@ -157,15 +157,25 @@
             <table class="table table-hover">
               <h5 align="center"> Simulation Parameters</h5>
               <thead>
+                <tr align="center">
+                  <th>
+                    <input type="radio" id="fmode1" name="fmode" value="fmode1" checked="checked" onchange="switch_sweep_mode(this)">
+                    <span>fstart | fstop</span>
+                  </th>
+                  <th>
+                    <input type="radio" id="fmode2" name="fmode" value="fmode2" onchange="switch_sweep_mode(this)">
+                    <span>fc | span</span>
+                  </th>
+                </tr>
                 <tr>
                   <th>Parameter</th>
                   <th>Value</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr class="sweep_mode1">
                   <td>
-                    Start Freq (MHz)
+                    Start Freq
                   </td>
                   <td>
                     <input type="number" id="f_start" min="0" value = "50" style="width: 4em" onchange="submit_form(this)"/>
@@ -177,13 +187,41 @@
                     </select>
                   </td>
                 </tr>
-                <tr>
+                <tr class="sweep_mode1">
                   <td>
-                    End Freq (MHz)
+                    End Freq
                   </td>
                   <td>
                     <input type="number" id="f_stop" min="0" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
                     <select id="f_stop_scale" onchange="submit_form(this)">
+                      <option value="1">Hz</option>
+                      <option value="2">kHz</option>
+                      <option selected="selected" value="3">MHz</option>
+                      <option value="4">GHz</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr class="sweep_mode2">
+                  <td>
+                    f<sub>0</sub>
+                  </td>
+                  <td>
+                    <input type="number" id="f0_span" min="0" value = "500" style="width: 4em" onchange="submit_form(this)"/>
+                    <select id="f0_sweep_scale" onchange="submit_form(this)">
+                      <option value="1">Hz</option>
+                      <option value="2">kHz</option>
+                      <option selected="selected" value="3">MHz</option>
+                      <option value="4">GHz</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr class="sweep_mode2">
+                  <td>
+                    Span
+                  </td>
+                  <td>
+                    <input type="number" id="fspan" min="0" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
+                    <select id="span_scale" onchange="submit_form(this)">
                       <option value="1">Hz</option>
                       <option value="2">kHz</option>
                       <option selected="selected" value="3">MHz</option>
@@ -245,6 +283,11 @@
 
 <script>
   submit_form()
+
+    // It's called just when the page is loaded
+    $(document).ready(function () {
+    $('.sweep_mode2').hide();
+  })
   
   function StructureChanged(select) {
     if (select.value != 1){
@@ -256,6 +299,104 @@
     }
     submit_form()
   }
+
+    // Hide or show the corresponding inputs
+    function switch_sweep_mode(button){
+    if (button.value == 'fmode1'){
+      // fstart / fstop
+      $('.sweep_mode1').show();
+      $('.sweep_mode2').hide();
+
+      // Update inputs: the values may change in the other mode
+      let f0 = document.getElementById("f0_span").value;
+      let scale = document.getElementById('f0_sweep_scale').value;
+      f0 = f0*Math.pow(10, (scale-1)*3)
+
+
+      let span = document.getElementById("fspan").value;
+      scale = document.getElementById('span_scale').value;
+      span = span*Math.pow(10, (scale-1)*3)
+
+      let fstart = f0-0.5*span
+      let fstop = f0+0.5*span
+
+      let text_in = document.getElementById("f_start")
+      let units_in = document.getElementById("f_start_scale")
+
+      setFreqInputW_Units(text_in, units_in, fstart)
+
+      text_in = document.getElementById("f_stop")
+      units_in = document.getElementById("f_stop_scale")
+
+      setFreqInputW_Units(text_in, units_in, fstop)
+    }
+    else{
+      // fc / span
+      $('.sweep_mode1').hide();
+      $('.sweep_mode2').show();
+
+      // Update inputs: the values may change in the other mode
+      let fstart = document.getElementById("f_start").value;
+      let scale = document.getElementById('f_start_scale').value;
+      fstart = fstart*Math.pow(10, (scale-1)*3)
+
+      let fstop = document.getElementById("f_stop").value;
+      scale = document.getElementById('f_stop_scale').value;
+      fstop = fstop*Math.pow(10, (scale-1)*3)
+
+      let bw = fstop-fstart;
+
+      let f0 = fstart + 0.5*bw
+
+      let text_in = document.getElementById("f0_span")
+      let units_in = document.getElementById("f0_sweep_scale")
+      setFreqInputW_Units(text_in, units_in, f0)
+
+      text_in = document.getElementById("fspan")
+      units_in = document.getElementById("span_scale")
+      setFreqInputW_Units(text_in, units_in, bw)
+
+    }
+  }
+
+  // Set the frequency in the user input i.e. text + combobox
+  function setFreqInputW_Units(text_in, units_in, val)
+  {
+    if (val >= 2e9)
+    {
+      // GHz
+      val = val*1e-9;
+      text_in.value = val
+      units_in.value = 4
+    }
+    else
+    {
+      if (val >= 2e6)
+      {
+        // MHz
+        val = val*1e-6;
+        text_in.value = val
+        units_in.value = 3
+      }
+      else
+      {
+        if (val >= 2e3)
+        {
+          // KHz
+          val = val*1e-3;
+          text_in.value = val
+          units_in.value = 2
+        }
+        else
+        {
+          // Hz
+          text_in.value = val
+          units_in.value = 1
+        }
+      }
+    }
+  }
+
 
   function adjustSpan(){
     var f0 = document.getElementById("f0").value;
@@ -296,6 +437,7 @@
     var XS = document.getElementById("XS").value;
     var RL = document.getElementById("RL").value;
     var XL = document.getElementById("XL").value;
+
     var f_start = document.getElementById("f_start").value;
     var scale_fstart = document.getElementById('f_start_scale').value;
     f_start = f_start*Math.pow(10, (scale_fstart-1)*3)
@@ -303,6 +445,21 @@
     var f_stop = document.getElementById("f_stop").value;
     var scale_fstop = document.getElementById('f_stop_scale').value;
     f_stop = f_stop*Math.pow(10, (scale_fstop-1)*3)
+
+    var f0_span = document.getElementById("f0_span").value;
+    var scale_fsweep = document.getElementById('f0_sweep_scale').value;
+    f0_span = f0_span*Math.pow(10, (scale_fsweep-1)*3)
+
+    var f_span = document.getElementById("fspan").value;
+    var scale_fspan = document.getElementById('span_scale').value;
+    f_span = f_span*Math.pow(10, (scale_fspan-1)*3);
+
+    let sweep_mode = 1
+    sweep_mode_button = document.getElementById('fmode1')
+    if (sweep_mode_button.checked == false){
+      // f0 | span
+      sweep_mode = 2
+    }
 
     var Points = document.getElementById("Points").value;
     $.ajax({
@@ -318,6 +475,9 @@
             "XL": XL,
             "f_start": f_start,
             "f_stop": f_stop,
+            "f0_span": f0_span,
+            "f_span": f_span,
+            "sweep_mode": sweep_mode,
             "n_points": Points,
         },
         dataType: "json",

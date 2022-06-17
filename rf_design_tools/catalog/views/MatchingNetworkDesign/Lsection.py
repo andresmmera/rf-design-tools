@@ -122,7 +122,6 @@ def get_L_Section_Network(params):
     NetworkType = {}
     comp_val = {}
     NetworkType['Network'] = 'L-Section'
-    NetworkType['freq'] = np.linspace(params['f_start'], params['f_stop'], params['n_points'])
     comp_val['ZS'] = params['RS'] + 1j*params['XS']
     comp_val['ZL'] = params['RL'] + 1j*params['XL']
     comp_val['topology'] = data["topology"]

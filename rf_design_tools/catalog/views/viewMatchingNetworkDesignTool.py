@@ -65,6 +65,11 @@ def MatchingNetworkDesignToolView(request):
         
         f_stop = request.POST.get('f_stop', None)
         print(f_stop)
+
+        f0_span = request.POST.get('f0_span', None)        
+        f_span = request.POST.get('f_span', None)
+      
+        sweep_mode = request.POST.get('sweep_mode', None)
         
         n_points = request.POST.get('n_points', None)
         print(n_points)
@@ -80,6 +85,9 @@ def MatchingNetworkDesignToolView(request):
         designer.f_start = float(f_start)
         designer.f_stop = float(f_stop)
         designer.n_points = int(n_points)
+        designer.f0_span = float(f0_span)
+        designer.f_span = float(f_span)
+        designer.sweep_mode = int(sweep_mode)
         designer.Mask = Mask
         
         Schematic, Network_Type, comp_val = designer.synthesize()

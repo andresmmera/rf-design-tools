@@ -50,5 +50,11 @@ class MatchingNetwork:
             Schematic, NetworkType, comp_val = Synthesize_L_Section(params);
 
 
+        
+        # Define frequency sweep
+        if (self.sweep_mode == 1):
+            NetworkType['freq'] = np.linspace(self.f_start, self.f_stop, self.n_points)
+        else:
+            NetworkType['freq'] = np.linspace(self.f0_span-0.5*self.f_span, self.f0_span+0.5*self.f_span, self.n_points)
         return Schematic, NetworkType, comp_val
 
