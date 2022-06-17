@@ -30,12 +30,12 @@ def getCanonicalFilterNetwork(params):
     Ripple = params['Ripple']
 
     if (Mask =='Bandpass' or Mask =='Bandstop'):
-        w1 = 2*np.pi*f1*1e6 # rad/s
-        w2 = 2*np.pi*f2*1e6 # rad/s
+        w1 = 2*np.pi*f1 # rad/s
+        w2 = 2*np.pi*f2 # rad/s
         w0 = np.sqrt(w1*w2)
         Delta = w2-w1
     else:
-        w0 = 2*np.pi*fc*1e6 # rad/s
+        w0 = 2*np.pi*fc # rad/s
 
     count_C = 0
     count_L = 0
@@ -59,7 +59,7 @@ def getCanonicalFilterNetwork(params):
         NetworkType['First_Element'] = 'Series'
         comp_val['ZL'] = ZS*gi[-1]
     NetworkType['N'] = N
-    NetworkType['freq'] = np.linspace(f_start, f_stop, n_points)*1e6
+    NetworkType['freq'] = np.linspace(f_start, f_stop, n_points)
 
     # Place components
     for i in range(0, N):

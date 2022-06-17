@@ -143,26 +143,44 @@
               </tr>
               <tr class="fc_input">
                 <td>
-                  Cutoff Freq (MHz)
+                  Cutoff Freq
                 </td>
                 <td>
                   <input type="number" id="Cutoff" min="1" value = "500" style="width: 4em" onchange="submit_form(this)"/>
+                  <select id="fc_scale" onchange="submit_form(this)">
+                    <option value="1">Hz</option>
+                    <option value="2">kHz</option>
+                    <option selected="selected" value="3">MHz</option>
+                    <option value="4">GHz</option>
+                  </select>
                 </td>
               </tr>
               <tr class="fBPF_input">
                 <td>
-                  Lower Cutoff Freq (MHz)
+                  Lower Cutoff Freq
                 </td>
                 <td>
                   <input type="number" id="f1" min="1" value = "400" style="width: 4em" onchange="submit_form(this)"/>
+                  <select id="f1_scale" onchange="submit_form(this)">
+                    <option value="1">Hz</option>
+                    <option value="2">kHz</option>
+                    <option selected="selected" value="3">MHz</option>
+                    <option value="4">GHz</option>
+                  </select>
                 </td>
               </tr>
               <tr class="fBPF_input">
                 <td>
-                  Higher Cutoff Freq (MHz)
+                  Higher Cutoff Freq
                 </td>
                 <td>
                   <input type="number" id="f2" min="1" value = "600" style="width: 4em" onchange="submit_form(this)"/>
+                  <select id="f2_scale" onchange="submit_form(this)">
+                    <option value="1">Hz</option>
+                    <option value="2">kHz</option>
+                    <option selected="selected" value="3">MHz</option>
+                    <option value="4">GHz</option>
+                  </select>
                 </td>
               </tr>
               <tr>
@@ -195,41 +213,6 @@
           </table>
         </div>
 
-          <table class="table table-hover">
-            <h5 align="center"> Simulation</h5>
-            <thead>
-              <tr>
-                <th>Parameter</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  Start Freq (MHz)
-                </td>
-                <td>
-                  <input type="number" id="f_start" min="1" value = "50" style="width: 4em" onchange="submit_form(this)"/>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  End Freq (MHz)
-                </td>
-                <td>
-                  <input type="number" id="f_stop" min="1" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Points
-                </td>
-                <td>
-                  <input type="number" id="Points" min="1" value = "201" style="width: 4em" onchange="submit_form(this)"/>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </form>
 
       </div>
@@ -237,7 +220,7 @@
       
       <div class="col-md-auto box">
           <div class="row">
-              <div class="col-xs-6 col-md-6" >
+              <div class="col-xs-4 col-md-8" >
                   <div class="card shadow-sm">
                     <script src="https://code.highcharts.com/highcharts.js"></script>
                     <div id="container" style="width: 800px"></div>
@@ -252,11 +235,11 @@
                   <h5 class="card-title">Schematic</h5>
                 </div>
 
-                <div class="col-xs-1 col-md-1" > 
+                <div class="col-xs-2 col-md-2" > 
                   <a href="{% url 'svg_download' %}" class="btn btn-light" role="button">Download SVG</a>
                 </div>
 
-                <div class="col-xs-2 col-md-2" > 
+                <div class="col-xs-4 col-md-4" > 
                   <a href="{% url 'qucs_filter_download' %}" class="btn btn-warning" role="button">Download Qucs Schematic</a>
                 </div>
               </div>
@@ -265,7 +248,7 @@
               <script src="https://unpkg.com/svg-pan-zoom-container"></script>
               <!-- https://www.cssscript.com/svg-pan-zoom-container/ -->
               <div data-zoom-on-wheel data-pan-on-drag>
-                <svg id='svg_display' height = 500 width = 1000>
+                <svg id='svg_display' height = 500 width = 700>
                   {{ svg | safe }}
                 </svg>
               </div>
@@ -273,6 +256,131 @@
             </div>
           </div>
           </div>
+
+          <div class="col-md-auto box_form">
+            <table class="table table-hover">
+              <h5 align="center"> Simulation Parameters</h5>
+              <thead>
+                <tr align="center">
+                  <th>
+                    <input type="radio" id="fmode1" name="fmode" value="fmode1" checked="checked" onchange="switch_sweep_mode(this)">
+                    <span>fstart | fstop</span>
+                  </th>
+                  <th>
+                    <input type="radio" id="fmode2" name="fmode" value="fmode2" onchange="switch_sweep_mode(this)">
+                    <span>fc | span</span>
+                  </th>
+                </tr>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="sweep_mode1">
+                  <td>
+                    Start Freq
+                  </td>
+                  <td>
+                    <input type="number" id="f_start" min="0" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                    <select id="f_start_scale" onchange="submit_form(this)">
+                      <option value="1">Hz</option>
+                      <option value="2">kHz</option>
+                      <option selected="selected" value="3">MHz</option>
+                      <option value="4">GHz</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr class="sweep_mode1">
+                  <td>
+                    End Freq
+                  </td>
+                  <td>
+                    <input type="number" id="f_stop" min="0" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
+                    <select id="f_stop_scale" onchange="submit_form(this)">
+                      <option value="1">Hz</option>
+                      <option value="2">kHz</option>
+                      <option selected="selected" value="3">MHz</option>
+                      <option value="4">GHz</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr class="sweep_mode2">
+                  <td>
+                    f<sub>0</sub>
+                  </td>
+                  <td>
+                    <input type="number" id="f0_span" min="0" value = "500" style="width: 4em" onchange="submit_form(this)"/>
+                    <select id="f0_sweep_scale" onchange="submit_form(this)">
+                      <option value="1">Hz</option>
+                      <option value="2">kHz</option>
+                      <option selected="selected" value="3">MHz</option>
+                      <option value="4">GHz</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr class="sweep_mode2">
+                  <td>
+                    Span
+                  </td>
+                  <td>
+                    <input type="number" id="fspan" min="0" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
+                    <select id="span_scale" onchange="submit_form(this)">
+                      <option value="1">Hz</option>
+                      <option value="2">kHz</option>
+                      <option selected="selected" value="3">MHz</option>
+                      <option value="4">GHz</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Points
+                  </td>
+                  <td>
+                    <input type="number" id="Points" min="1" value = "201" style="width: 4em" onchange="submit_form(this)"/>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table table-hover">
+              <h5 align="center"> Display Parameters</h5>
+              <thead id = 'Sim_Head'>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td>
+                      Scale (dB/div)
+                    </td>
+                    <td>
+                      <input type="number" id="y_axis_scale" min="1" value = "5" style="width: 4em" onchange="submit_form(this)"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Maximum (dB)
+                    </td>
+                    <td>
+                      <input type="number" id="y_axis_max" min="10" value = "0" style="width: 4em" onchange="submit_form(this)"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Minimum (dB)
+                    </td>
+                    <td>
+                      <input type="number" id="y_axis_min" min="-200" value = "-50" style="width: 4em" onchange="submit_form(this)"/>
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+
       </div>
   </div>
 
@@ -289,22 +397,161 @@ submit_form()
     $('.fBPF_input').hide();
     $('.PhaseError_input').hide();
     $('.inductance_input').hide()// Hide resonator values
+    $('.sweep_mode2').hide();
   })
 
+  // Hide or show the corresponding inputs
+  function switch_sweep_mode(button){
+    if (button.value == 'fmode1'){
+      // fstart / fstop
+      $('.sweep_mode1').show();
+      $('.sweep_mode2').hide();
+
+      // Update inputs: the values may change in the other mode
+      let f0 = document.getElementById("f0_span").value;
+      let scale = document.getElementById('f0_sweep_scale').value;
+      f0 = f0*Math.pow(10, (scale-1)*3)
+
+
+      let span = document.getElementById("fspan").value;
+      scale = document.getElementById('span_scale').value;
+      span = span*Math.pow(10, (scale-1)*3)
+
+      let fstart = f0-0.5*span
+      let fstop = f0+0.5*span
+
+      let text_in = document.getElementById("f_start")
+      let units_in = document.getElementById("f_start_scale")
+
+      setFreqInputW_Units(text_in, units_in, fstart)
+
+      text_in = document.getElementById("f_stop")
+      units_in = document.getElementById("f_stop_scale")
+
+      setFreqInputW_Units(text_in, units_in, fstop)
+    }
+    else{
+      // fc / span
+      $('.sweep_mode1').hide();
+      $('.sweep_mode2').show();
+
+      // Update inputs: the values may change in the other mode
+      let fstart = document.getElementById("f_start").value;
+      let scale = document.getElementById('f_start_scale').value;
+      fstart = fstart*Math.pow(10, (scale-1)*3)
+
+      let fstop = document.getElementById("f_stop").value;
+      scale = document.getElementById('f_stop_scale').value;
+      fstop = fstop*Math.pow(10, (scale-1)*3)
+
+      let bw = fstop-fstart;
+
+      let f0 = fstart + 0.5*bw
+
+      let text_in = document.getElementById("f0_span")
+      let units_in = document.getElementById("f0_sweep_scale")
+      setFreqInputW_Units(text_in, units_in, f0)
+
+      text_in = document.getElementById("fspan")
+      units_in = document.getElementById("span_scale")
+      setFreqInputW_Units(text_in, units_in, bw)
+
+    }
+  }
+
+  // Set the frequency in the user input i.e. text + combobox
+  function setFreqInputW_Units(text_in, units_in, val)
+  {
+    if (val >= 2e9)
+    {
+      // GHz
+      val = val*1e-9;
+      text_in.value = val
+      units_in.value = 4
+    }
+    else
+    {
+      if (val >= 2e6)
+      {
+        // MHz
+        val = val*1e-6;
+        text_in.value = val
+        units_in.value = 3
+      }
+      else
+      {
+        if (val >= 2e3)
+        {
+          // KHz
+          val = val*1e-3;
+          text_in.value = val
+          units_in.value = 2
+        }
+        else
+        {
+          // Hz
+          text_in.value = val
+          units_in.value = 1
+        }
+      }
+    }
+  }
+
   function MaskChanged(select) {
+    let scale, fstart, fstop
     if (select.value <= 2){
       // LPF of HPF
       $('.fc_input').show();
       $('.fBPF_input').hide();
-      document.getElementById("f_start").value = 0.1*document.getElementById("f1").value
-      document.getElementById("f_stop").value = 2*document.getElementById("f2").value
+
+      // Fstart
+      fstart = document.getElementById("f1").value
+      scale = document.getElementById('f1_scale').value;
+      fstart = 0.1*fstart*Math.pow(10, (scale-1)*3)
+
+      // Fstop
+      fstop = document.getElementById("f2").value;
+      scale = document.getElementById('f2_scale').value;
+      fstop = 2*fstop*Math.pow(10, (scale-1)*3)
+
+
     }else{
-      //BPF or HPF  
+      //BPF or BSF  
       $('.fc_input').hide();
       $('.fBPF_input').show();
-      document.getElementById("f_start").value = 0.8*document.getElementById("f1").value
-      document.getElementById("f_stop").value = 1.2*document.getElementById("f2").value
+
+      // Fstart
+      fstart = document.getElementById("f1").value
+      scale = document.getElementById('f1_scale').value;
+      fstart = 0.8*fstart*Math.pow(10, (scale-1)*3);
+
+      // Fstop
+      fstop = document.getElementById("f2").value
+      scale = document.getElementById('f2_scale').value;
+      fstop = 1.2*fstop*Math.pow(10, (scale-1)*3)
     }
+
+    // Update frequency inputs
+    let text_in = document.getElementById("f_start")
+    let units_in = document.getElementById("f_start_scale")
+    setFreqInputW_Units(text_in, units_in, fstart)
+
+    text_in = document.getElementById("f_stop")
+    units_in = document.getElementById("f_stop_scale")
+    setFreqInputW_Units(text_in, units_in, fstop)
+
+    // f0
+    let bw = fstop - fstart
+    let f0 = fstart + 0.5*bw
+    text_in = document.getElementById("f0_span")
+    units_in = document.getElementById("f0_sweep_scale")
+    setFreqInputW_Units(text_in, units_in, f0)
+
+    //BW
+    text_in = document.getElementById("fspan")
+    units_in = document.getElementById("span_scale")
+    setFreqInputW_Units(text_in, units_in, bw)
+
     submit_form()
   }
 
@@ -450,12 +697,36 @@ submit_form()
     var Mask = document.getElementById("Mask").value;
     var Order = document.getElementById("Order").value;
     var Cutoff = document.getElementById("Cutoff").value;
+    var scale_fc = document.getElementById('fc_scale').value;
+    Cutoff = Cutoff*Math.pow(10, (scale_fc-1)*3)
+    
     var f1 = document.getElementById("f1").value;
+    var scale_f1 = document.getElementById('f1_scale').value;
+    f1 = f1*Math.pow(10, (scale_f1-1)*3)
+
     var f2 = document.getElementById("f2").value;
+    var scale_f2 = document.getElementById('f2_scale').value;
+    f2 = f2*Math.pow(10, (scale_f2-1)*3)
+
     var ZS = document.getElementById("ZS").value;
     var ZL = document.getElementById("ZL").value;
+
     var f_start = document.getElementById("f_start").value;
+    var scale_fstart = document.getElementById('f_start_scale').value;
+    f_start = f_start*Math.pow(10, (scale_fstart-1)*3)
+
     var f_stop = document.getElementById("f_stop").value;
+    var scale_fstop = document.getElementById('f_stop_scale').value;
+    f_stop = f_stop*Math.pow(10, (scale_fstop-1)*3)
+
+    var f0_span = document.getElementById("f0_span").value;
+    var scale_fsweep = document.getElementById('f0_sweep_scale').value;
+    f0_span = f0_span*Math.pow(10, (scale_fsweep-1)*3)
+
+    var f_span = document.getElementById("fspan").value;
+    var scale_fspan = document.getElementById('span_scale').value;
+    f_span = f_span*Math.pow(10, (scale_fspan-1)*3);
+
     var Points = document.getElementById("Points").value;
 
     // Get the reactances for the Direct Coupled LC filter
@@ -465,7 +736,14 @@ submit_form()
       Xres.push(document.getElementById("X[" + i + "]").value);
     }
     }
-    
+
+    let sweep_mode = 1
+    sweep_mode_button = document.getElementById('fmode1')
+    if (sweep_mode_button.checked == false){
+      // f0 | span
+      sweep_mode = 2
+    }
+
     $.ajax({
         type: "POST",
         url: 'filter_design',
@@ -487,6 +765,9 @@ submit_form()
             "ZL": ZL,
             "f_start": f_start,
             "f_stop": f_stop,
+            "f0_span": f0_span,
+            "f_span": f_span,
+            "sweep_mode": sweep_mode,
             "n_points": Points,
             "Xres[]": Xres,
         },
@@ -559,6 +840,11 @@ function linspace_int(startValue, stopValue, cardinality) {
 }
 
 function plotChart(x, y1, y2, title) {
+
+  let y_axis_scale = parseFloat(document.getElementById("y_axis_scale").value)
+  let y_axis_min = document.getElementById("y_axis_min").value
+  let y_axis_max = document.getElementById("y_axis_max").value
+
           $('#container').highcharts({
                 plotOptions: {
                               series: {
@@ -571,24 +857,18 @@ function plotChart(x, y1, y2, title) {
                 xAxis: {
                         categories: x,
                         gridLineWidth: 1,
-                        tickPositions: linspace_int(0, x.length-1, 10),
+                        tickPositions: linspace_int(0, x.length-1, 11),
                         title: {text: 'freq (MHz)'}
                         },
                 yAxis: [
                                 {
-                                min: -50,
+                                min: y_axis_min,
+                                max: y_axis_max,
                                 title: {
                                         text: 'S21 (dB), S11 (dB)'
                                       },
                                       gridLineWidth: 1, 
-                                      tickInterval: 5,
-                                      tickPositioner: function(){
-                                                                  var ticks = this.tickPositions;
-                                                                  ticks.sort(function(a, b) {
-                                                                  return a - b;
-                                                                  });
-                                                                return ticks;
-                                                                }
+                                      tickInterval: y_axis_scale,
                                 }
                         ],
                                 series: [{

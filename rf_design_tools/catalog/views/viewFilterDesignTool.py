@@ -67,11 +67,18 @@ def FilterDesignToolView(request):
         f1 = request.POST.get('f1', None)
         f2 = request.POST.get('f2', None)
         
+        
         ZS = request.POST.get('ZS', None)
         ZL = request.POST.get('ZL', None)
         
         f_start = request.POST.get('f_start', None)        
         f_stop = request.POST.get('f_stop', None)
+
+        f0_span = request.POST.get('f0_span', None)        
+        f_span = request.POST.get('f_span', None)
+      
+        sweep_mode = request.POST.get('sweep_mode', None)
+
         n_points = request.POST.get('n_points', None)
 
         Xres = request.POST.getlist('Xres[]')
@@ -91,13 +98,16 @@ def FilterDesignToolView(request):
         designer.fc = float(Cutoff)
         designer.f1 = float(f1)
         designer.f2 = float(f2)
+        designer.f0_span = float(f0_span)
+        designer.f_span = float(f_span)
+        designer.sweep_mode = int(sweep_mode)
         designer.ZS = float(ZS)
         designer.ZL = float(ZL)
         designer.f_start = float(f_start)
         designer.f_stop = float(f_stop)
         designer.n_points = int(n_points)
         designer.Xres = Xres
-        
+
         Schematic, Network_Type, comp_val = designer.synthesize()
         svgcode = Schematic.get_imagedata('svg')
         

@@ -28,7 +28,7 @@ class Filter:
 
         self.ZS = 50 # Source impedance
         self.ZL = 50 # Load impedance
-        self.w0 = 2*np.pi*self.fc*1e6 # rad/s
+        self.w0 = 2*np.pi*self.fc # rad/s
         self.Mask = 'Bandstop'
         self.Response = 'Chebyshev'
         self.EllipticType = "Type S"
@@ -46,8 +46,8 @@ class Filter:
         self.Cshunt = []
 
         if (self.Mask =='Bandpass' or self.Mask =='Bandstop'):
-            self.w1 = 2*np.pi*self.f1*1e6 # rad/s
-            self.w2 = 2*np.pi*self.f2*1e6 # rad/s
+            self.w1 = 2*np.pi*self.f1 # rad/s
+            self.w2 = 2*np.pi*self.f2 # rad/s
             self.w0 = np.sqrt(self.w1*self.w2)
             self.Delta = self.w2-self.w1
 
@@ -263,7 +263,7 @@ class Filter:
                 self.Cshunt = Cshunt
                 self.ZL = RL
 
-                Schematic, NetworkType, comp_val = SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, self.EllipticType, self.Mask, self.FirstElement, self.ZS, RL, self.fc*1e6, (self.f2-self.f1)*1e6, self.f_start, self.f_stop, self.n_points);
+                Schematic, NetworkType, comp_val = SynthesizeEllipticFilter(Lseries, Cseries, Cshunt, self.EllipticType, self.Mask, self.FirstElement, self.ZS, RL, self.fc, (self.f2-self.f1), self.f_start, self.f_stop, self.n_points);
             else: # Conventional LC filters
                 self.getLowpassCoefficients()
                 params = self.getParams()
@@ -282,14 +282,14 @@ class Filter:
                     Lres = [100e-9] * self.N
                 else:
                     Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
-                Schematic, NetworkType, comp_val = DirectCoupled_C_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Lres, self.f_start, self.f_stop, self.n_points)
+                Schematic, NetworkType, comp_val = DirectCoupled_C_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc, BW, Lres, self.f_start, self.f_stop, self.n_points)
             elif (self.DC_Type == 'L-coupled shunt resonators'):
                 self.fc = 0.5*(self.f2 + self.f1)
                 if (not self.Xres):
                     Cres = [10e-12] * self.N
                 else:
                     Cres = np.asarray(self.Xres, dtype='float64')*1e-12 # pF
-                Schematic, NetworkType, comp_val = DirectCoupled_L_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, Cres, self.f_start, self.f_stop, self.n_points)
+                Schematic, NetworkType, comp_val = DirectCoupled_L_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc, BW, Cres, self.f_start, self.f_stop, self.n_points)
             elif (self.DC_Type == 'L-coupled series resonators'):
                 if (not self.Xres):
                     params['Xres'] = [10e-12] * (self.N)
@@ -312,8 +312,13 @@ class Filter:
                 params['Magnetic_Coupling'] = 1
                 Schematic, NetworkType, comp_val = DirectCoupled_L_Coupled_SeriesResonators(params)
             elif(self.DC_Type == 'Quarter-Wave coupled resonators'):
-                Schematic, NetworkType, comp_val = DirectCoupled_QW_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc*1e6, BW*1e6, self.f_start, self.f_stop, self.n_points)
-
+                Schematic, NetworkType, comp_val = DirectCoupled_QW_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc, BW, self.f_start, self.f_stop, self.n_points)
+        
+        # Define frequency sweep
+        if (self.sweep_mode == 1):
+            NetworkType['freq'] = np.linspace(self.f_start, self.f_stop, self.n_points)
+        else:
+            NetworkType['freq'] = np.linspace(self.f0_span-0.5*self.f_span, self.f0_span+0.5*self.f_span, self.n_points)
         return Schematic, NetworkType, comp_val
 
     def getQucsSchematic(self):

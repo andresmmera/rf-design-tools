@@ -122,7 +122,7 @@ def DirectCoupled_C_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Lres, fstart, fs
     comp_val = {}
     NetworkType['Network'] = 'Direct-Coupled'
     NetworkType['DC_Type'] = 'C-Coupled Shunt Resonators'    
-    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))*1e6
+    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))
     NetworkType['N'] = Nres
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL
@@ -283,7 +283,7 @@ def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fs
     comp_val = {}
     NetworkType['Network'] = 'Direct-Coupled'
     NetworkType['DC_Type'] = 'L-Coupled Shunt Resonators'
-    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))*1e6
+    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))
     NetworkType['N'] = Nres
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL
@@ -476,7 +476,7 @@ def DirectCoupled_L_Coupled_SeriesResonators(params):
     NetworkType = {}
     comp_val = {}
     NetworkType['Network'] = 'Direct-Coupled'
-    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))*1e6
+    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))
     NetworkType['N'] = Nres
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL
@@ -736,7 +736,7 @@ def DirectCoupled_C_Coupled_SeriesResonators(params, port_match):
     comp_val = {}
     NetworkType['Network'] = 'Direct-Coupled'
     NetworkType['DC_Type'] = 'C-Coupled Series Resonators'
-    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))*1e6
+    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))
     NetworkType['N'] = Nres
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL
@@ -885,7 +885,7 @@ def DirectCoupled_QW_Coupled_ShuntResonators(gi, RS, RL, f0, BW, fstart, fstop, 
     comp_val = {}
     NetworkType['Network'] = 'Direct-Coupled'
     NetworkType['DC_Type'] = 'Quarter-Wave coupled resonators'
-    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))*1e6
+    NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))
     NetworkType['N'] = Nres
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL
