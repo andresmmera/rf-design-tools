@@ -9,7 +9,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-4">
-          <h2 class="tool-name">SWR to |&#915;| and S<sub>11</sub></h2>
+          <h2 class="tool-name">SWR &#8644; |&#915;| and S<sub>11</sub></h2>
         </div>
     </div>
 
@@ -20,17 +20,42 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
+                <td colspan="2">
+                <select id="mode" onchange="change_mode(this)">
+                  <option selected="selected" value="1"> SWR &#8594; |&#915;| and S<sub>11</sub></option>
+                  <option value="2">S<sub>11</sub> &#8594; SWR and |&#915;| </option>
+                  <option value="3">|&#915;| &#8594; SWR and S<sub>11</sub></option>
+                </select>
+                </td>
+              </tr>
+              <tr>
                 <th>Parameter</th>
                 <th>Value</th>
               </tr>
             </thead>
             <tbody>
-              <tr> <!--gamma magnitude -->
+              <tr class="SWR_input">
                 <td>
                   SWR
                 </td>
                 <td>
-                  <input type="number" id="SWR" step = '0.01' min='1' value="1.3" style="width: 5em" onchange="calculate()">
+                  <input type="number" id="SWR_input" step = '0.01' min='1' value="1.3" style="width: 5em" onchange="calculate()">
+                </td>
+              </tr>
+              <tr class="S11_input">
+                <td>
+                  S<sub>11</sub> (dB)
+                </td>
+                <td>
+                  <input type="number" id="S11_input" step = '0.5' max='0' value="-15.38" style="width: 5em" onchange="calculate()">
+                </td>
+              </tr>
+              <tr class="gamma_input">
+                <td>
+                  |&#915;|
+                </td>
+                <td>
+                  <input type="number" id="gamma_input" step = '0.01' min='0' max="1" value="0.5" style="width: 5em" onchange="calculate()">
                 </td>
               </tr>
             </tbody>
@@ -56,13 +81,17 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr> 
+                        <tr class="gamma_result"> 
                           <td>&#124;&#915;&#124</td>
                           <td align="center"><p id="gamma"> </p></td>
                         </tr>
-                        <tr> 
+                        <tr class = "S11_result"> 
                           <td>S<sub>11</sub></td>
                           <td align="center"><p id="S11"> </p></td>
+                        </tr>
+                        <tr class = "SWR_result"> 
+                          <td>SWR</td>
+                          <td align="center"><p id="SWR"> </p></td>
                         </tr>
                       </tbody>
                     </table>
@@ -73,24 +102,123 @@
   </div>
 
   <script type="text/javascript">
+    // It's called just when the page is loaded
+    $(document).ready(function () {
+      document.getElementById("mode").value = "1"
+    $('.gamma_input').hide();
+    $('.S11_input').hide();
+    $('.SWR_input').show();
+
+    $('.gamma_result').show();
+    $('.S11_result').show();
+    $('.SWR_result').hide();
     calculate()
-    function calculate(){
-      // Get data
-      let SWR = parseFloat(document.getElementById("SWR").value)
-      let S11 = '-' + '&#8734';
-      
-      // Calculations
-      let gamma_mag = (SWR-1)/(SWR+1);
-      if (gamma_mag > 1e-3)
+    })
+
+
+    
+
+    function change_mode(combo){
+      if(combo.value == "1")
       {
-          S11 = 20*math.log10(gamma_mag)
-          S11 = S11.toFixed(2)
+        // SWR to S11 and gamma
+        $('.gamma_input').hide();
+        $('.S11_input').hide();
+        $('.SWR_input').show();
+
+        $('.gamma_result').show();
+        $('.S11_result').show();
+        $('.SWR_result').hide();
       }
-      
-      // Put results inside the table
-      document.getElementById("gamma").innerHTML = gamma_mag.toFixed(2)
-      document.getElementById("S11").innerHTML = S11 + " dB"
-                
+      else
+      {
+        if(combo.value == "2")
+        {
+          // S11 to SWR and gamma
+          $('.gamma_input').hide();
+          $('.S11_input').show();
+          $('.SWR_input').hide();
+
+          $('.gamma_result').show();
+          $('.S11_result').hide();
+          $('.SWR_result').show();
+        }
+        else
+        {
+          // Gamma to SWR and S11
+          $('.gamma_input').show();
+          $('.S11_input').hide();
+          $('.SWR_input').hide();
+
+          $('.gamma_result').hide();
+          $('.S11_result').show();
+          $('.SWR_result').show();
+        }
+      }
+      calculate()
+    }
+
+
+
+    function calculate(){
+      // Check mode
+      let mode = document.getElementById("mode").value
+
+      if(mode == "1")
+      {
+        // SWR to S11 and gamma
+        // Get data
+        let SWR = parseFloat(document.getElementById("SWR_input").value)
+        let S11 = '-' + '&#8734';
+        
+        // Calculations
+        let gamma_mag = (SWR-1)/(SWR+1);
+        if (gamma_mag > 1e-3)
+        {
+            S11 = 20*math.log10(gamma_mag)
+            S11 = S11.toFixed(2)
+        }
+        
+        // Put results inside the table
+        document.getElementById("gamma").innerHTML = gamma_mag.toFixed(2)
+        document.getElementById("S11").innerHTML = S11 + " dB"
+      }
+      else
+      {
+        if(mode == "2")
+        {
+          // S11 to SWR and gamma
+          let S11 = parseFloat(document.getElementById("S11_input").value)
+
+          // Calculations
+          let gamma_mag = Math.pow(10, S11/20)
+          let SWR = (1+gamma_mag)/(1-gamma_mag)
+          // Put results inside the table
+          document.getElementById("gamma").innerHTML = gamma_mag.toFixed(2)
+          document.getElementById("SWR").innerHTML = SWR.toFixed(2)
+        }
+        else
+        {
+          // Gamma to SWR and S11
+          let gamma_mag = parseFloat(document.getElementById("gamma_input").value)
+          let S11
+          let SWR = (1+gamma_mag)/(1-gamma_mag)
+          // Calculations
+          if (gamma_mag > 1e-3)
+          {
+              S11 = 20*math.log10(gamma_mag)
+              S11 = S11.toFixed(2)
+          }
+          else
+          {
+              S11 = '-' + '&#8734';
+          }
+          document.getElementById("S11").innerHTML = S11 + " dB"
+          document.getElementById("SWR").innerHTML = SWR.toFixed(2)
+        }
+      }
+
+
     }
   </script>
 
