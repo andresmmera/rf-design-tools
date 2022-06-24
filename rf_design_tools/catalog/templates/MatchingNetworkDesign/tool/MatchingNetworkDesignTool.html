@@ -366,7 +366,7 @@
     {
       // GHz
       val = val*1e-9;
-      text_in.value = val
+      text_in.value = val.toFixed(2)
       units_in.value = 4
     }
     else
@@ -375,7 +375,7 @@
       {
         // MHz
         val = val*1e-6;
-        text_in.value = val
+        text_in.value = val.toFixed(2)
         units_in.value = 3
       }
       else
@@ -384,13 +384,13 @@
         {
           // KHz
           val = val*1e-3;
-          text_in.value = val
+          text_in.value = val.toFixed(2)
           units_in.value = 2
         }
         else
         {
           // Hz
-          text_in.value = val
+          text_in.value = val.toFixed(2)
           units_in.value = 1
         }
       }

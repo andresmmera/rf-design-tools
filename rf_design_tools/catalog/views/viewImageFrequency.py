@@ -26,6 +26,9 @@ def ImageFrequencyCatalogView(request):
 def ImageFrequencyView(request):
     return render(request, 'FrequencyPlanning/tool/ImageFrequencyPlanning.html')
 
+def ImageFrequencyCalculatorView(request):
+    return render(request, 'FrequencyPlanning/tool/ImageFrequencyCalculator.html')
+
 def HalfIFView(request):
     return render(request, 'FrequencyPlanning/tool/halfIF.html')
 

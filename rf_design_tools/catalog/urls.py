@@ -27,6 +27,7 @@ from catalog.views import IPn_DiagramDocs
 
 from catalog.views import ImageFrequencyCatalogView
 from catalog.views import ImageFrequencyView
+from catalog.views import ImageFrequencyCalculatorView
 from catalog.views import HalfIFView
 from catalog.views import SecondaryImageView
 
@@ -100,6 +101,7 @@ urlpatterns = [
     path('tool/frequency_planning/image_planning', ImageFrequencyView, name='image_frequency_planning'),
     path('tool/frequency_planning/image_planning/docs/image_frequency', ImageFrequencyDocs, name='image_frequency_planning_docs'),
     path('tool/frequency_planning/image_planning/docs', ImageFrequency_CatalogNotes, name='image_frequency_docs'),
+    path('tool/frequency_planning/image_frequency_calculator', ImageFrequencyCalculatorView, name='image_frequency_calculator'),
     path('tool/frequency_planning/half_IF', HalfIFView, name='half_IF_tool'),
     path('tool/frequency_planning/SecondaryImage_tool', SecondaryImageView, name='Secondary_image_tool'),
     # Image rejection notes

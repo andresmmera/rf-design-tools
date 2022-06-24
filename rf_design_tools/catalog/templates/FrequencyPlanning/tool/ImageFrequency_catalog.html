@@ -15,7 +15,7 @@
         
         <!-- TOOL DESCRIPTION -->
         <div class="d-flex flex-row justify-content-center">
-          <p>Calculate the image frequency and the IF for a range of LO frequencies</p>
+          <p>Plot the image frequency and the IF for a range of LO frequencies</p>
         </div>
           
         <!-- BUTTONS -->
@@ -25,6 +25,26 @@
         </div>
 
       </div>
+
+      <div class="col-xs-9 col-md-3 box" style="background-color:#ffffff">
+        <!-- IMAGE FREQUENCY PLANNING -->
+       <!-- TOOL TITLE -->
+       <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+         <a href="{% url 'image_frequency_calculator' %}"><h5 class="tool_title">Image Frequency Calculator</h5></a>
+       </div>
+       
+       <!-- TOOL DESCRIPTION -->
+       <div class="d-flex flex-row justify-content-center">
+         <p>Calculate the image frequency from the IF and LO frequencies</p>
+       </div>
+         
+       <!-- BUTTONS -->
+       <div class="d-flex flex-row justify-content-center">
+         <div class="p-2"><a href="{% url 'image_frequency_calculator' %}" class="btn btn-dark" role="button">Go!</a></div>
+         <div class="p-2"><a href="{% url 'image_frequency_planning_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+       </div>
+
+     </div>
 
       <div class="col-xs-3 col-md-3 box" style="background-color:#ffffff;">
         <!-- SECONDARY IMAGE PROBLEM -->
