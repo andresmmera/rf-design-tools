@@ -239,4 +239,27 @@
         </div>
       </div>
     </div>
+
+
+    <h2 class="tool-list">Display Tools</h2>
+    <div class="row">
+      <div class="col-xs-9 col-md-3 box" style="background-color:#ffffff;">
+        <!-- INTERCEPT POINT DIAGRAM -->
+         <!-- TOOL TITLE -->
+         <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+           <a href="{% url 's_parameter_viewer_tool'%}"><h5 class="tool_title">S-parameter Viewer</h5></a>
+         </div>
+         
+         <!-- TOOL DESCRIPTION -->
+         <div class="d-flex flex-row justify-content-center">
+           <p>Plot and compare S2P data from different files</p>
+         </div>
+           
+         <!-- BUTTONS -->
+         <div class="d-flex flex-row justify-content-center">
+           <div class="p-2"><a href="{% url 's_parameter_viewer_tool'%}" class="btn btn-dark" role="button">Go!</a></div>
+           <div class="p-2"><a href="{% url 's_parameter_viewer_tool'%}" class="btn btn-info" role="button">See docs</a></div>
+         </div>
+      </div>
+    </div>
 {% endblock %}

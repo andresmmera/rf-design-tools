@@ -55,6 +55,8 @@ from catalog.views import VoltageDividerDocs
 from catalog.views import MatchingNetworkDesignToolView
 from catalog.views import MatchingNetworkDesignDocs
 
+from catalog.views import S_parameter_Viewer_View
+
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
     
@@ -138,5 +140,7 @@ urlpatterns = [
     path('tool/matching_network_design', MatchingNetworkDesignToolView, name='matching_network_design_tool'),
     path('tool/matching_network_design/docs', MatchingNetworkDesignDocs, name='matching_network_design_docs'),
 
-
+    #################################################################################
+    # S-PARAMETER VIEWER
+    path('tool/s-parameter-viewer', S_parameter_Viewer_View, name='s_parameter_viewer_tool'),
 ]

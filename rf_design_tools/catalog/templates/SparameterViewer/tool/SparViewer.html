@@ -1,0 +1,830 @@
+{% extends "base_generic.html" %}
+<head>
+  <!-- Add icon library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+{% load static %}
+
+{% block content %}
+
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-auto">
+          <h2 class="tool-name">S-parameter Viewer</h2>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-auto box_form">        
+          
+          <table id="table1" class="table table-hover table-bordered ">
+            
+            <thead style="text-align: center; vertical-align: middle;">
+              <tr>
+                <th>File</th>
+                <th>Name</th>
+                <th colspan="2">Action</th>
+              </tr>
+            </thead>
+            <tr>
+              <td class="tbl_id"><input type="file" style="width: 90px;" id="file[0]" onchange="fileSelected(this);"></td>
+              <td class="ID_input"><input type="text" id="ID[0]" value = "Example" size="8" onchange="ob_adRows.update(this)"/></td>
+              <td class="remove_button"><input type="button" value="-" id="del_source[0]" class="btn btn-danger" onclick="ob_adRows.delRow(this)"/></td>
+              <td class="add_button"><input type="button" value="+" id="add_source[0]" class="btn btn-success" onclick="ob_adRows.addRow(this)"/></td>
+              <td>
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="border: 1px solid black">
+                        S<sub>11</sub>
+                      </th>
+                      <th style="border: 1px solid black">
+                        S<sub>12</sub>
+                      </th>
+                      <th style="border: 1px solid black">
+                        S<sub>21</sub>
+                      </th>
+                      <th style="border: 1px solid black">
+                        S<sub>22</sub>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tr>
+                    <td class="S11_color" style="border: 1px solid black">
+                      <input type="color" id="S11_color[0]" value="#091781" style="width: 30px;height: 30px;" onchange="update()">
+                    </td>
+                    <td class="S12_color" style="border: 1px solid black">
+                      <input type="color" id="S12_color[0]" value="#a393bf" style="width: 30px;height: 30px;" onchange="update()">
+                    </td>
+                    <td class="S21_color" style="border: 1px solid black">
+                      <input type="color" id="S21_color[0]" value="#ff0000" style="width: 30px;height: 30px;" onchange="update()">
+                    </td>
+                    <td class="S22_color" style="border: 1px solid black">
+                      <input type="color" id="S22_color[0]" value="#008404" style="width: 30px;height: 30px;" onchange="update()">
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+
+      </div>
+
+      
+      
+
+          <div class="col-md-auto box_form">
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    Display
+                  </th>
+                  <th>
+                    Parameters
+                  </th>
+                </tr>
+              </thead>
+              <tr class="DisplayRow">
+                <td>
+                  <div class="col-md-auto box">
+                    <div class="row">
+                        <div class="col-xs-4 col-md-8" >
+                            <div class="card shadow-sm">
+                              <script src="https://code.highcharts.com/highcharts.js"></script>
+                              <div  id="container0" style="width: 800px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </td>
+                <td>
+                  <table class="table table-hover">
+                    <h5 align="center"> x-axis Settings</h5>
+                    <thead>
+                      <tr align="center">
+                        <th>
+                          <input type="radio" id="container[0].fmode1[0]" name="fmode" value="fmode1" checked="checked" onchange="switch_sweep_mode(this)">
+                          <span>fstart | fstop</span>
+                        </th>
+                        <th>
+                          <input type="radio" id="container[0].fmode2[0]" name="fmode" value="fmode2" onchange="switch_sweep_mode(this)">
+                          <span>fc | span</span>
+                        </th>
+                      </tr>
+                      <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="sweep_mode1">
+                        <td>
+                          Start Freq
+                        </td>
+                        <td>
+                          <input type="number" id="f_start[0]" min="0" value = "50" style="width: 4em" onchange="update()"/>
+                          <select id="f_start_scale[0]" onchange="update()">
+                            <option value="1">Hz</option>
+                            <option value="2">kHz</option>
+                            <option selected="selected" value="3">MHz</option>
+                            <option value="4">GHz</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr class="sweep_mode1">
+                        <td>
+                          End Freq
+                        </td>
+                        <td>
+                          <input type="number" id="f_stop[0]" min="0" value = "1000" style="width: 4em" onchange="update()"/>
+                          <select id="f_stop_scale[0]" onchange="update()">
+                            <option value="1">Hz</option>
+                            <option value="2">kHz</option>
+                            <option selected="selected" value="3">MHz</option>
+                            <option value="4">GHz</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr class="sweep_mode2">
+                        <td>
+                          f<sub>0</sub>
+                        </td>
+                        <td>
+                          <input type="number" id="f0_span[0]" min="0" value = "500" style="width: 4em" onchange="update()"/>
+                          <select id="f0_sweep_scale[0]" onchange="update()">
+                            <option value="1">Hz</option>
+                            <option value="2">kHz</option>
+                            <option selected="selected" value="3">MHz</option>
+                            <option value="4">GHz</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr class="sweep_mode2">
+                        <td>
+                          Span
+                        </td>
+                        <td>
+                          <input type="number" id="fspan[0]" min="0" value = "1000" style="width: 4em" onchange="update()"/>
+                          <select id="span_scale[0]" onchange="update()">
+                            <option value="1">Hz</option>
+                            <option value="2">kHz</option>
+                            <option selected="selected" value="3">MHz</option>
+                            <option value="4">GHz</option>
+                          </select>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+      
+                  <table class="table table-hover">
+                    <h5 align="center"> y-axis Settings</h5>
+                    <thead id = 'Sim_Head'>
+                      <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td>
+                            Scale (dB/div)
+                          </td>
+                          <td>
+                            <input type="number" id="y_axis_scale[0]" min="1" value = "5" style="width: 4em" onchange="update()"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Maximum (dB)
+                          </td>
+                          <td>
+                            <input type="number" id="y_axis_max[0]"  value = "0" style="width: 4em" onchange="update()"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Minimum (dB)
+                          </td>
+                          <td>
+                            <input type="number" id="y_axis_min[0]" value = "0" style="width: 4em" onchange="update()"/>
+                          </td>
+                        </tr>
+                    </tbody>
+                  </table>
+                  
+                  <table id="dataTraces[0]">
+                    <thead>
+                      <tr>
+                        <th style="border: 1px solid black">
+                          File
+                        </th>
+                        <th style="border: 1px solid black">
+                          S<sub>11</sub>
+                        </th>
+                        <th style="border: 1px solid black">
+                          S<sub>12</sub>
+                        </th>
+                        <th style="border: 1px solid black">
+                          S<sub>21</sub>
+                        </th>
+                        <th style="border: 1px solid black">
+                          S<sub>22</sub>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="file_source" id="file_source[0]" value="Example" style="border: 1px solid black" ></td>
+                        <td style="border: 1px solid black">
+                          <input type="checkbox" id="container[0].S11[0]" checked onchange="update()">
+                        </td>
+                        <td style="border: 1px solid black">
+                          <input type="checkbox" id="container[0].S12[0]" onchange="update()">
+                        </td>
+                        <td style="border: 1px solid black">
+                          <input type="checkbox" id="container[0].S21[0]" checked onchange="update()">
+                        </td>
+                        <td style="border: 1px solid black">
+                          <input type="checkbox" id="container[0].S22[0]" checked onchange="update()">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <tr>
+                    <td class="remove_plot"><input type="button" value="-" id="remove_plot0" class="btn btn-danger" onclick="ob_adRows.delRow(this)"/></td>
+                    <td class="add_plot"><input type="button" value="+" id="add_plot0" class="btn btn-success" onclick="ob_adRows.addRow(this)"/></td>
+                  </tr>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+      </div>
+  </div>
+
+
+<script>
+
+  var full_data = []
+  function addData(data, filename)
+  {
+    filename = filename.replace(".s2p", "").replace(".S2P", "")
+    data["name"] = filename
+    full_data.push(data)
+    
+    // Catch the minimum and the maximum trace values so as to have a nice y-axis setup
+
+    var table_Display = document.querySelectorAll('.DisplayRow'); // Get a list of all rows for display
+    let last_data_index = full_data.length-1
+    for (let i=0; i<table_Display.length; i++) // Do it for all displays
+    {
+        // Current y_axis settings
+        let y_axis_min = document.getElementById("y_axis_min[" + String(i) + "]").value
+        let y_axis_max = document.getElementById("y_axis_max[" + String(i) + "]").value
+
+
+        // Check S11
+        let checkbox_name = "container[" + String(i) + "].S11[" + last_data_index + "]"
+        if ((document.getElementById(checkbox_name).checked == true) && (Math.max.apply(Math, data.S11_dB) > y_axis_max))
+            y_axis_max = Math.max.apply(Math, data.S11_dB)
+        if ((document.getElementById(checkbox_name).checked == true) && (Math.min.apply(Math, data.S11_dB) < y_axis_min))
+            y_axis_min = Math.min.apply(Math, data.S11_dB)
+
+        // Check S12
+        checkbox_name = "container[" + String(i) + "].S12[" + last_data_index + "]"
+        if ((document.getElementById(checkbox_name).checked == true) && (Math.max.apply(Math, data.S12_dB) > y_axis_max))
+            y_axis_max = Math.max.apply(Math, data.S12_dB)
+        if ((document.getElementById(checkbox_name).checked == true) && (Math.min.apply(Math, data.S12_dB) < y_axis_min))
+            y_axis_min = Math.min.apply(Math, data.S12_dB)
+
+        // Check S21
+        checkbox_name = "container[" + String(i) + "].S21[" + last_data_index + "]"
+        if ((document.getElementById(checkbox_name).checked == true) && (Math.max.apply(Math, data.S21_dB) > y_axis_max))
+            y_axis_max = Math.max.apply(Math, data.S21_dB)
+        if ((document.getElementById(checkbox_name).checked == true) && (Math.min.apply(Math, data.S21_dB) < y_axis_min))
+            y_axis_min = Math.min.apply(Math, data.S21_dB)
+
+        // Check S22
+        checkbox_name = "container[" + String(i) + "].S22[" + last_data_index + "]"
+        if ((document.getElementById(checkbox_name).checked == true) && (Math.max.apply(Math, data.S22_dB) > y_axis_max))
+            y_axis_max = MMath.max.apply(Math, data.S22_dB)
+        if ((document.getElementById(checkbox_name).checked == true) && (Math.min.apply(Math, data.S22_dB) < y_axis_min))
+            y_axis_min = Math.min.apply(Math, data.S22_dB)
+
+        document.getElementById("y_axis_min[" + String(i) + "]").value = roundto5(y_axis_min, 'floor')
+        document.getElementById("y_axis_max[" + String(i) + "]").value = roundto5(y_axis_max, 'ceil')
+    }
+
+    
+    update()
+  }
+
+  function update()
+  {
+    
+    var table_Display = document.querySelectorAll('.DisplayRow'); // Get a list of all rows for display
+
+    let f_start, scale_fstart, f_stop, scale_fstop;
+
+    // For all display panels, prepare the data
+    for (let i=0; i<table_Display.length; i++)
+    {
+      container_id = '#container'+String(i)
+
+      // For each plot, catch the frequency settings
+      f_start_id = "f_start[" + i + "]";
+      scale_fstart = 'f_start_scale[' + String(i) + "]"
+      f_start = document.getElementById(f_start_id).value
+      scale_fstart = document.getElementById(scale_fstart).value;
+      f_start = f_start*Math.pow(10, (scale_fstart-1)*3)
+      
+      fstop_id = "f_stop[" + i + "]"
+      scale_fstop_id = 'f_stop_scale[' + String(i) + "]"
+      f_stop = document.getElementById(fstop_id).value
+      scale_fstop = document.getElementById(scale_fstop_id).value;
+      f_stop = f_stop*Math.pow(10, (scale_fstop-1)*3)
+
+      // Build series for feeding Highcharts
+      series_ = [];
+
+      // Chose a proper scale for the x-axis
+      let scale_freq = 1
+      if (document.getElementById(scale_fstop_id).value == 4)
+      {
+        x_axis_text = 'freq (GHz)'
+        scale_freq = 1e-9;
+      }
+      else
+      {
+        if (document.getElementById(scale_fstop_id).value == 3)
+        {
+          x_axis_text = 'freq (MHz)'
+          scale_freq = 1e-6;
+        }
+        else
+        {
+          if (document.getElementById(scale_fstop_id).value == 2)
+          {
+            x_axis_text = 'freq (kHz)'
+            scale_freq = 1e-3;
+          }
+        }
+      }
+    
+      // For each data source, prepare the data to plot
+      let series_index = 0
+      let traces = ["S11", "S12", "S21", "S22"]
+      let min_freq_s2p = f_start
+      let max_freq_s2p = f_stop
+
+      for (let j = 0; j < full_data.length; j++)
+      {
+        for (let trace_index = 0; trace_index < 4; trace_index++)
+        {
+          let checkbox_name = "container[" + String(i) + "]." + traces[trace_index] + "[" + String(j) + "]"
+          if (document.getElementById(checkbox_name).checked == false)
+            continue
+
+          // Prepare x-axis according user settings. We have to take just the spar data withing the specified range
+          let data = []
+          for (let k = 0; k < full_data[j].freq.length; k++)
+          {
+            if ((full_data[j].freq[k] >= f_start) && (full_data[j].freq[k] <= f_stop))
+            {
+              let y_data
+              if (trace_index == 0) y_data = full_data[j].S11_dB[k]
+              if (trace_index == 1) y_data = full_data[j].S11_dB[k]
+              if (trace_index == 2) y_data = full_data[j].S21_dB[k]
+              if (trace_index == 3) y_data = full_data[j].S22_dB[k]
+
+              data.push([full_data[j].freq[k]*scale_freq, y_data])
+            }
+          }
+
+          // Get the frequency limits of the data to fit the span in case that the user settings were to broadband
+          if (full_data[j].freq[0] > min_freq_s2p) min_freq_s2p = full_data[j].freq[0]
+          if (full_data[j].freq[full_data[j].freq.length-1] < max_freq_s2p) max_freq_s2p = full_data[j].freq[full_data[j].freq.length-1]
+
+          series_[series_index] = {
+                      name: full_data[j].name + "."+ traces[trace_index] +" (dB)",
+                      data: data,
+                      color: document.getElementById(traces[trace_index] + '_color['+ String(j) + ']').value,
+                      yAxis: 0
+                    }
+          series_index++;
+        }
+      }
+      
+    let y_axis_scale = parseFloat(document.getElementById("y_axis_scale[" + String(i) + "]").value)
+    let y_axis_min = document.getElementById("y_axis_min[" + String(i) + "]").value
+    let y_axis_max = document.getElementById("y_axis_max[" + String(i) + "]").value
+
+    if (min_freq_s2p > f_start) f_start = min_freq_s2p
+    if (max_freq_s2p < f_stop) f_stop = max_freq_s2p  
+
+
+    $(container_id).highcharts({
+                plotOptions: {
+                              series: {
+                                      animation: false
+                                      }
+                              },
+                title: {
+                          text: ''
+                         },
+                xAxis: {
+                        type: 'linear',
+                        gridLineWidth: 1,
+                        tickPositions: linspace_int(f_start*scale_freq, f_stop*scale_freq, 11),
+                        title: {text: x_axis_text}
+                        },
+                yAxis: [
+                                {
+                                min: y_axis_min,
+                                max: y_axis_max,
+                                title: {
+                                        text: 'S21 (dB)'
+                                      },
+                                gridLineWidth: 1, 
+                                tickInterval: y_axis_scale,
+                                }
+                        ],
+                series: series_,
+                            });
+    }
+  }
+
+  function roundto5(number, op)
+  {//Inspired by https://jsfiddle.net/NvvGf/4/
+    var exp = Math.floor(Math.log(Math.abs(number))/Math.log(10)) - 1;
+    exp = Math.max(exp,0);
+    var n = number/Math.pow(10,exp);
+    var n2
+    if (op == 'ceil')
+    {
+      n2 = Math.ceil(n/5) * 5;
+    }
+    else
+    {
+      n2 = Math.floor(n/5) * 5;
+    }
+    var result = n2 * Math.pow(10,exp);
+
+    return number
+  }
+
+  function fileSelected(btn)
+  {
+    var file = document.getElementById(btn.id).files[0];
+    let extension = file.name.toLowerCase().slice(0. -3)
+    if (extension != "s2p")
+    {
+      alert(extension + " files are not supported. Only s2p files can be read." )
+      return
+    }
+    let A = readFile(file);
+    
+    A.then(
+          function(value) {
+                            let raw = value
+                            data = readTouchstone(raw)
+                            // Get the ID of the button
+                            let id = btn.id.substr(btn.id.indexOf("[")+1).slice(0,-1)
+                            filename = file.name.slice(0, -4)
+                            // Update ID in the data sources table
+                            let textbox_id = "ID[" + id+"]"
+                            document.getElementById(textbox_id).value = filename
+                            // Update ID in the display table
+                            document.getElementById("file_source[" + String(parseInt(id)) + "]").innerHTML = filename
+                            addData(data, file.name)
+                          },
+          function(error) { alert("Error loading the file") }
+          );
+
+    
+  }
+  // Inspired by https://scikit-rf.readthedocs.io/en/latest/_modules/skrf/io/touchstone.html
+  // Touchstone file format: https://www.ibis.org/touchstone_ver2.0/touchstone_ver2_0.pdf
+  function readTouchstone(raw){
+    let content = raw.split('\n');
+
+    // Parameters
+    let frequency_unit
+    let parameter
+    let format
+    let Z0
+
+    let freq = []
+    let S11a, S11b, S12a, S12b, S21a, S21b, S22a, S22b;
+
+    let S11_dB = []
+    let S11_ang = []
+
+    let S12_dB = []
+    let S12_ang = []
+
+    let S21_dB = []
+    let S21_ang = []
+
+    let S22_dB = []
+    let S22_ang = []
+
+    let freq_scale = 1
+
+    S2Pdata = []
+    S2Pdata["freq"] = []
+    S2Pdata["S11_dB"] = []
+    S2Pdata["S11_ang"] = []
+    S2Pdata["S12_dB"] = []
+    S2Pdata["S12_ang"] = []
+    S2Pdata["S21_dB"] = []
+    S2Pdata["S21_ang"] = []
+    S2Pdata["S22_dB"] = []
+    S2Pdata["S22_ang"] = []
+
+    for (let i = 0; i < content.length; i++)
+    {
+        let line = content[i]
+        line = RemoveBlankSpaces(line)
+        if (line[0] == "!") continue;
+        if (line.length == 0) continue;
+        if (line[0] == "#")
+        {
+          // Parameters
+          let info = line.split(' ');
+          frequency_unit = info[1].toLowerCase();
+          parameter = info[2]
+          format = info[3].toLowerCase()
+          Z0 = parseFloat(info[5])
+
+          if (frequency_unit == "mhz")
+          {
+            freq_scale = 1e6
+          }
+          else
+          {
+            if (frequency_unit == "ghz")
+            {
+              freq_scale = 1e9
+            }
+            else
+            {
+              if (frequency_unit == "khz")
+              {
+                freq_scale = 1e3
+              }
+            }
+          }
+        }
+        else
+        {
+          let data = line.split(' ');
+          S2Pdata["freq"].push(parseFloat(data[0])*freq_scale);
+          
+
+          if (format == 'db')
+          {
+            S2Pdata["S11_dB"].push(parseFloat(data[1]));
+            S2Pdata["S11_ang"].push(parseFloat(data[2]));
+
+            S2Pdata["S21_dB"].push(parseFloat(data[3]));
+            S2Pdata["S21_ang"].push(parseFloat(data[4]));
+
+            S2Pdata["S12_dB"].push(parseFloat(data[5]));
+            S2Pdata["S12_ang"].push(parseFloat(data[6]));
+
+            S2Pdata["S22_dB"].push(parseFloat(data[7]));
+            S2Pdata["S22_ang"].push(parseFloat(data[8]));
+          }
+          else
+          {
+            S11a = parseFloat(data[1]);
+            S11b = parseFloat(data[2]);
+
+            S21a = parseFloat(data[3]);
+            S21b = parseFloat(data[4]);
+
+            S12a = parseFloat(data[5]);
+            S12b = parseFloat(data[6]);
+
+            S22a = parseFloat(data[7]);
+            S22b = parseFloat(data[8]);
+
+            if (format == 'ma')
+            {
+              S2Pdata["S11_dB"].push(20*Math.log10(S11a));
+              S2Pdata["S11_ang"].push(20*Math.log10(S11b));
+              S2Pdata["S21_dB"].push(20*Math.log10(S12a));
+              S2Pdata["S21_ang"].push(20*Math.log10(S12b));
+              S2Pdata["S12_dB"].push(20*Math.log10(S21a));
+              S2Pdata["S12_ang"].push(20*Math.log10(S21b));
+              S2Pdata["S22_dB"].push(20*Math.log10(S22a));
+              S2Pdata["S22_ang"].push(20*Math.log10(S22b));
+            }
+            else
+            {// RI
+              S2Pdata["S11_dB"].push(10*Math.log10(Math.sqrt(S11a*S11a + S11b*S11b)));
+              S2Pdata["S11_ang"].push(10*Math.log10(Math.atan(S11b/S11a)));
+              S2Pdata["S21_dB"].push(10*Math.log10(Math.sqrt(S12a*S12a + S12b*S12b)));
+              S2Pdata["S21_ang"].push(10*Math.log10(Math.atan(S12b/S12a)));
+              S2Pdata["S12_dB"].push(10*Math.log10(Math.sqrt(S21a*S21a + S21b*S21b)));
+              S2Pdata["S12_ang"].push(10*Math.log10(Math.atan(S21b/S21a)));
+              S2Pdata["S22_dB"].push(10*Math.log10(Math.sqrt(S22a*S22a + S22b*S22b)));
+              S2Pdata["S22_ang"].push(10*Math.log10(Math.atan(S22b/S22a)));
+            }
+          }
+        }
+       
+    } 
+
+    return S2Pdata
+  }
+
+  function RemoveBlankSpaces(line)
+  {
+    line = line.replace(/\s{2,}/g, ' ');
+    line = line.replace(/\t/g, ' ');
+    line = line.toString().trim().replace(/(\r\n|\n|\r)/g,"");
+    return line
+  }
+  function readFile(file){
+  return new Promise((resolve, reject) => {
+    var fr = new FileReader();  
+    fr.onload = () => {
+      resolve(fr.result )
+    };
+    fr.onerror = reject;
+    fr.readAsText(file);
+  });
+}
+
+
+function linspace_int(startValue, stopValue, cardinality) {
+  var arr = [];
+  var step = (stopValue - startValue) / (cardinality - 1);
+  for (var i = 0; i < cardinality; i++) {
+    arr.push(Math.round(startValue + (step * i)));
+  }
+  return arr;
+}
+
+/////////////////////////
+//Inspired by https://coursesweb.net/javascript/ 
+
+function adRowsTable(id){
+  var table = document.getElementById(id);
+  var me = this;
+
+  if(document.getElementById(id)){
+    var row1 = table.rows[1].outerHTML;
+
+    function getID(string_id){
+      var index1 = string_id.indexOf("id=\"")
+      index1 += 5
+      var index2 = string_id.indexOf("\"", index1)
+      return string_id.substr(index1-1, index2-index1+1)
+    }
+
+    function getValue(string_val){
+      var index1 = string_val.indexOf("value=\"")
+      index1 += 7
+      var index2 = string_val.indexOf("\" ", index1)
+      return string_val.substr(index1, index2-index1)
+    }
+
+    //adds index-id in cols with class .tbl_id
+    function setIds(add_after){
+      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
+
+      me.replaceIDs(tbl_id, "tbl_id", "file")
+      me.replaceIDs(tbl_id, "add_button", "add_source")
+      me.replaceIDs(tbl_id, "remove_button", "del_source")
+      me.replaceIDs(tbl_id, "ID_input", "ID")
+
+    }
+
+    me.replaceIDs = function(tbl_id, tag, var_id){
+      var field = document.querySelectorAll('#'+ id +' .' + tag);
+      for(var i=0; i<tbl_id.length; i++){
+        var old_id = getID(field[i].innerHTML)
+        let old_val = document.getElementById(old_id).value
+        let new_id = var_id + '['+ (i) + ']';
+        var tmp = field[i].innerHTML.replace(old_id, new_id)
+        if (var_id == "ID") 
+            tmp = tmp.replace("Example", old_val)
+        field[i].innerHTML = tmp
+      }
+    }
+
+    //add row after clicked row; receives clicked button in row
+    me.addRow = function(btn){
+      // Add row in the data sources table
+      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
+      var add_after = parseInt(btn.id.substr(btn.id.indexOf("[")+1).slice(0,-1))
+      var new_row = row1.replaceAll("[0]", "["+ (add_after+1) + "]")
+      btn.parentNode.parentNode.insertAdjacentHTML('afterend', new_row)
+      setIds(add_after);
+
+      // Add row in each row of the display table
+      var table_Display = document.querySelectorAll('.DisplayRow'); // Get a list of all rows for display
+
+      for (let i =0; i < table_Display.length; i++)
+      {// For each display panel
+
+        let table = document.getElementById("dataTraces[" + String(i) + "]")
+        let button_index =  parseInt(btn.id.substr(btn.id.indexOf("[")+1).slice(0,-1))
+        var row = table.insertRow(button_index+2)
+        var cell0 = row.insertCell(0);
+        var cell11 = row.insertCell(1);
+        var cell21 = row.insertCell(2);
+        var cell12 = row.insertCell(3);
+        var cell22 = row.insertCell(4);
+        let row_index =button_index+1;
+
+        cell0.outerHTML = "<td class=\"file_source\" id=\"file_source["+ String(row_index) + "]\" value=\"Example\" style=\"border: 1px solid black\" ></td>";
+        cell11.outerHTML = "<td style=\"border: 1px solid black\"><input type=\"checkbox\" id=\"container[" + String(i) + "].S11[" + String(row_index) + "]\" onchange=\"update()\"></td>";
+        cell21.outerHTML = "<td style=\"border: 1px solid black\"><input type=\"checkbox\" id=\"container[" + String(i) + "].S12[" + String(row_index) + "]\" onchange=\"update()\"></td>"; 
+        cell12.outerHTML = "<td style=\"border: 1px solid black\"><input type=\"checkbox\" id=\"container[" + String(i) + "].S21[" + String(row_index) + "]\" checked onchange=\"update()\"></td>"; 
+        cell22.outerHTML = "<td style=\"border: 1px solid black\"><input type=\"checkbox\" id=\"container[" + String(i) + "].S22[" + String(row_index) + "]\" onchange=\"update()\"></td>"; 
+
+        // If there's more than one data sources, just compare the S21
+        if (table.rows.length > 1)
+        {
+          document.getElementById("container[" + String(i) + "].S11[0]").checked=false
+          document.getElementById("container[" + String(i) + "].S22[0]").checked=false
+        }
+        else
+        {//There's just one data source, show the S11, S21 and S22
+          document.getElementById("container[" + String(i) + "].S11[0]").checked=true
+          document.getElementById("container[" + String(i) + "].S22[0]").checked=true
+        }
+      }
+
+      me.update(btn)
+    }
+
+    //delete clicked row; receives clicked button in row
+    me.delRow = function(btn){
+      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
+      if (tbl_id.length > 1)
+      {
+        btn.parentNode.parentNode.outerHTML ='';
+     //   alert('Remove: ' + btn.id)
+        setIds(-1);
+        me.update(btn)
+
+        // Delete the corresponding row in the display panels
+        var table_Display = document.querySelectorAll('.DisplayRow'); // Get a list of all rows for display
+
+        for (let i =0; i < table_Display.length; i++)
+        {// For each display panel
+          let table = document.getElementById("dataTraces[" + String(i) + "]")
+          let button_index = btn.id.substr(btn.id.indexOf("[")+1).slice(0,-1)
+          table.deleteRow(button_index)
+        }
+
+      }
+
+    }
+
+    //Update table content and recalculate the system balance
+     me.update = function(btn){
+      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
+      var ID_id = document.querySelectorAll('#'+ id +' .ID_input');
+      
+      var ID_array = []
+
+      // Update values
+       for(var i=0; i<tbl_id.length; i++) {
+        // ID
+        var new_val = document.getElementById("ID["+(i)+"]").value;
+        var old_val = getValue(ID_id[i].innerHTML)
+        var tmp = ID_id[i].innerHTML.replace("value=\"" + old_val +"\"", 'value=\"' + new_val + '\"')
+        ID_id[i].innerHTML = tmp
+        ID_array.push(new_val)
+
+      }
+    }
+  }
+}
+//create object of adRowsTable(), pass the table id
+var ob_adRows = new adRowsTable('table1');
+ob_adRows.update()
+
+// Table of plots
+var ob_DisplayTable = new DisplayTable('Display_Table')
+ob_DisplayTable.update()
+
+function DisplayTable(id){
+  var table = document.getElementById(id);
+  var me = this;
+
+  if(document.getElementById(id)){
+    var row1 = table.rows[1].outerHTML;
+  }
+}
+
+</script>
+{% endblock %}
+

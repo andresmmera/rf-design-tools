@@ -19,3 +19,5 @@ from .AttenuatorDesign import *
 from .viewVoltageDivider import *
 
 from .viewMatchingNetworkDesignTool import *
+
+from .viewSPAR_viewer import *
