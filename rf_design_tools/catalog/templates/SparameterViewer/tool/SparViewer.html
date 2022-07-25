@@ -92,7 +92,7 @@
                         <div class="col-xs-4 col-md-8" >
                             <div class="card shadow-sm">
                               <script src="https://code.highcharts.com/highcharts.js"></script>
-                              <div  id="container0" style="width: 800px"></div>
+                              <div  id="container0" style="width: 800px; height: 600px"></div>
                             </div>
                         </div>
                     </div>
@@ -251,10 +251,71 @@
                       </tr>
                     </tbody>
                   </table>
-                  <tr>
-                    <td class="remove_plot"><input type="button" value="-" id="remove_plot0" class="btn btn-danger" onclick="ob_adRows.delRow(this)"/></td>
-                    <td class="add_plot"><input type="button" value="+" id="add_plot0" class="btn btn-success" onclick="ob_adRows.addRow(this)"/></td>
-                  </tr>
+
+                  <table id="TraceSelector" class="rf_table_style" >
+                    <thead>
+                      <td>
+                        <b>Dataset</b>
+                      </td>
+                      <td>
+                        <b>Traces</b>
+                      </td>
+                      <td>
+                        <b>Measure</b>
+                      </td>
+                      <td>
+                        <b>Action</b>
+                      </td>
+                    </thead>
+                    <tr>
+                      <td>
+                        <select id="datasets" size="0">
+                          <option value="0"></option>
+                        </select>
+                      </td>
+                      <td>
+                        <select id="traces" size="0">
+                          <option value="0"></option>
+                        </select>
+                      </td>
+                      <td>
+                        <select id="measure" size="0">
+                          <option value="0">dB</option>
+                          <option value="1">Phase</option>
+                          <option value="2">Group Delay</option>
+                          <option value="3">n.u.</option>
+                        </select>
+                      </td>
+                      <td>
+                        <input type="button" value="+" id="add_trace" class="btn btn-success" onclick="add_trace()"/>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <table id="DisplayTraces" class="rf_table_style">
+                    <thead>
+                      <td>
+                        <b>Name</b>
+                      </td>
+                      <td>
+                        <b>
+                          Color
+                        </b>
+                      </td>
+                      <td>
+                        <b>
+                          Line Style
+                        </b>
+                      </td>
+                      <td>
+                        <b>
+                          Axis
+                        </b>
+                      </td>
+                    </thead>
+                  </table>
+
+
                 </td>
               </tr>
             </table>
@@ -264,12 +325,12 @@
   </div>
 
 
+  
 <script>
 
   var full_data = []
   function addData(data, filename)
   {
-    filename = filename.replace(".s2p", "").replace(".S2P", "")
     data["name"] = filename
     full_data.push(data)
     
@@ -317,7 +378,32 @@
     }
 
     
+    // Update the column of datasets
+    let datasets = document.getElementById("datasets")
+    // var opt = document.createElement('option');
+    // opt.value = full_data.length;
+    // opt.innerHTML = filename;
+
+    let opt = '<option value='+ full_data.length + ' onclick=updateTraces(this)>' + filename + '</option>'
+
+    if ((datasets.length == 1) && (datasets[0].innerHTML == ""))// check if the dataset is empty (i.e. at the beginning)
+    {
+      datasets[0] = opt
+    }
+    else
+    {
+      datasets.appendChild(opt);
+    }
+    
+    datasets.size = full_data.length;
+
+
     update()
+  }
+
+  function updateTraces(opt)
+  {
+    let a = 0
   }
 
   function update()
