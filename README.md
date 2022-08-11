@@ -4,7 +4,7 @@ This is a website with some useful tools for RF engineering. It should be up and
 
 Give it a try !
 
-Did you find a bug or do you have a suggestion for improvement? Email me at rfdesigntools@prontonmail.com
+Did you find a bug or do you have a suggestion for improvement? Email me at rfdesigntools@proton.me
 
 
 ## Deploy this site locally
