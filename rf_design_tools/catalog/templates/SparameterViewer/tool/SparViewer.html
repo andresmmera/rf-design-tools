@@ -7,408 +7,425 @@
 
 {% block content %}
 
-  <div class="container-fluid">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-auto">
-          <h2 class="tool-name">S-parameter Viewer</h2>
-        </div>
+      <div class="col-md-auto">
+        <h2 class="tool-name">S-parameter Viewer</h2>
+      </div>
     </div>
+    
+    <div class="custom-file overflow-hidden rounded-pill mb-5">
+      <input id="add_S2P" type="file" class="custom-file-input rounded-pill" accept=".s2p" onchange="addNewFile(this)">
+      <label for="customFile" class="custom-file-label rounded-pill">Upload S-parameter file (only S2P)</label>
+    </div>
+
     <div class="row">
-      <div class="col-md-auto box_form">        
-          
-          <table id="table1" class="table table-hover table-bordered ">
+        <div class="col-2" id="sidebar">
+          <div class="card bg-light box">
+          <table id="DataFiles_Table" class="rf_table_style table-bordered">
             
             <thead style="text-align: center; vertical-align: middle;">
-              <tr>
-                <th>File</th>
-                <th>Name</th>
-                <th colspan="2">Action</th>
-              </tr>
-            </thead>
             <tr>
-              <td class="tbl_id"><input type="file" style="width: 90px;" id="file[0]" onchange="fileSelected(this);"></td>
-              <td class="ID_input"><input type="text" id="ID[0]" value = "Example" size="8" onchange="ob_adRows.update(this)"/></td>
-              <td class="remove_button"><input type="button" value="-" id="del_source[0]" class="btn btn-danger" onclick="ob_adRows.delRow(this)"/></td>
-              <td class="add_button"><input type="button" value="+" id="add_source[0]" class="btn btn-success" onclick="ob_adRows.addRow(this)"/></td>
-              <td>
-                <table>
-                  <thead>
-                    <tr>
-                      <th style="border: 1px solid black">
-                        S<sub>11</sub>
-                      </th>
-                      <th style="border: 1px solid black">
-                        S<sub>12</sub>
-                      </th>
-                      <th style="border: 1px solid black">
-                        S<sub>21</sub>
-                      </th>
-                      <th style="border: 1px solid black">
-                        S<sub>22</sub>
-                      </th>
-                    </tr>
-                  </thead>
+              <td colspan="2"> <h4> Data files</h4> </td>
+            </tr>
+            <tr>
+              <td><b>Name</b></td>
+              <td><b>Delete</b></td>
+            </tr>
+            </thead>
+            <tbody>
+              <tr></tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+        <div class="col-md-auto box">
+          <div class="row">  
+            <div class="col-md-auto bg-light" style="float:none;margin:auto;">
+              <table class="rf_table_style">
+                <thead>
                   <tr>
-                    <td class="S11_color" style="border: 1px solid black">
-                      <input type="color" id="S11_color[0]" value="#091781" style="width: 30px;height: 30px;" onchange="update()">
+                    <td>
+                      <h4 align="center"> <b> Display </b> </h5>
                     </td>
-                    <td class="S12_color" style="border: 1px solid black">
-                      <input type="color" id="S12_color[0]" value="#a393bf" style="width: 30px;height: 30px;" onchange="update()">
-                    </td>
-                    <td class="S21_color" style="border: 1px solid black">
-                      <input type="color" id="S21_color[0]" value="#ff0000" style="width: 30px;height: 30px;" onchange="update()">
-                    </td>
-                    <td class="S22_color" style="border: 1px solid black">
-                      <input type="color" id="S22_color[0]" value="#008404" style="width: 30px;height: 30px;" onchange="update()">
+                    <td>
+                      <h4 align="center"> <b> Parameters </b></h5>
                     </td>
                   </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-
-
-      </div>
-
-      
-      
-
-          <div class="col-md-auto box_form">
-            <table>
-              <thead>
-                <tr>
-                  <th>
-                    Display
-                  </th>
-                  <th>
-                    Parameters
-                  </th>
-                </tr>
-              </thead>
-              <tr class="DisplayRow">
-                <td>
-                  <div class="col-md-auto box">
-                    <div class="row">
-                        <div class="col-xs-4 col-md-8" >
-                            <div class="card shadow-sm">
-                              <script src="https://code.highcharts.com/highcharts.js"></script>
-                              <div  id="container0" style="width: 800px; height: 600px"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </td>
-                <td>
-                  <table class="table table-hover">
-                    <h5 align="center"> x-axis Settings</h5>
-                    <thead>
-                      <tr align="center">
-                        <th>
+                </thead>
+                <tr class="DisplayRow">
+                  <td>
+                    <div class="col-md-auto box">
+                      <div class="row">
+                          <div class="col-xs-4 col-md-8" >
+                              <div class="card shadow-sm">
+                                <script src="https://code.highcharts.com/highcharts.js"></script>
+                                <div  id="container0" style="width: 1000px; height: 600px"></div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  </td>
+                  <td>
+                    <div class="col-md-auto box">
+                      <div class="col-md-auto box">
+                        <div class="col-md-auto box" align="center">
                           <input type="radio" id="container[0].fmode1[0]" name="fmode" value="fmode1" checked="checked" onchange="switch_sweep_mode(this)">
                           <span>fstart | fstop</span>
-                        </th>
-                        <th>
+
                           <input type="radio" id="container[0].fmode2[0]" name="fmode" value="fmode2" onchange="switch_sweep_mode(this)">
                           <span>fc | span</span>
-                        </th>
-                      </tr>
-                      <tr>
-                        <th>Parameter</th>
-                        <th>Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr class="sweep_mode1">
-                        <td>
-                          Start Freq
-                        </td>
-                        <td>
-                          <input type="number" id="f_start[0]" min="0" value = "50" style="width: 4em" onchange="update()"/>
-                          <select id="f_start_scale[0]" onchange="update()">
-                            <option value="1">Hz</option>
-                            <option value="2">kHz</option>
-                            <option selected="selected" value="3">MHz</option>
-                            <option value="4">GHz</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr class="sweep_mode1">
-                        <td>
-                          End Freq
-                        </td>
-                        <td>
-                          <input type="number" id="f_stop[0]" min="0" value = "1000" style="width: 4em" onchange="update()"/>
-                          <select id="f_stop_scale[0]" onchange="update()">
-                            <option value="1">Hz</option>
-                            <option value="2">kHz</option>
-                            <option selected="selected" value="3">MHz</option>
-                            <option value="4">GHz</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr class="sweep_mode2">
-                        <td>
-                          f<sub>0</sub>
-                        </td>
-                        <td>
-                          <input type="number" id="f0_span[0]" min="0" value = "500" style="width: 4em" onchange="update()"/>
-                          <select id="f0_sweep_scale[0]" onchange="update()">
-                            <option value="1">Hz</option>
-                            <option value="2">kHz</option>
-                            <option selected="selected" value="3">MHz</option>
-                            <option value="4">GHz</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr class="sweep_mode2">
-                        <td>
-                          Span
-                        </td>
-                        <td>
-                          <input type="number" id="fspan[0]" min="0" value = "1000" style="width: 4em" onchange="update()"/>
-                          <select id="span_scale[0]" onchange="update()">
-                            <option value="1">Hz</option>
-                            <option value="2">kHz</option>
-                            <option selected="selected" value="3">MHz</option>
-                            <option value="4">GHz</option>
-                          </select>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-      
-                  <table class="table table-hover">
-                    <h5 align="center"> y-axis Settings</h5>
-                    <thead id = 'Sim_Head'>
-                      <tr>
-                        <th>Parameter</th>
-                        <th>Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+                        </div>
+
+                      </div>
+
+                      <h5 align="center"> x-axis settings</h5>
+                      <table class="rf_table_style" align="center">
+                        <thead>
+                          <tr>
+                            <td>Parameter</td>
+                            <td>Value</td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="sweep_mode1">
+                            <td>
+                              Start Freq
+                            </td>
+                            <td>
+                              <input type="number" id="f_start[0]" min="0" value = "50" style="width: 4em" onchange="update()"/>
+                              <select id="f_start_scale[0]" onchange="update()">
+                                <option value="1">Hz</option>
+                                <option value="2">kHz</option>
+                                <option selected="selected" value="3">MHz</option>
+                                <option value="4">GHz</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr class="sweep_mode1">
+                            <td>
+                              End Freq
+                            </td>
+                            <td>
+                              <input type="number" id="f_stop[0]" min="0" value = "1000" style="width: 4em" onchange="update()"/>
+                              <select id="f_stop_scale[0]" onchange="update()">
+                                <option value="1">Hz</option>
+                                <option value="2">kHz</option>
+                                <option selected="selected" value="3">MHz</option>
+                                <option value="4">GHz</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr class="sweep_mode2">
+                            <td>
+                              f<sub>0</sub>
+                            </td>
+                            <td>
+                              <input type="number" id="f0_span[0]" min="0" value = "500" style="width: 4em" onchange="update()"/>
+                              <select id="f0_sweep_scale[0]" onchange="update()">
+                                <option value="1">Hz</option>
+                                <option value="2">kHz</option>
+                                <option selected="selected" value="3">MHz</option>
+                                <option value="4">GHz</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr class="sweep_mode2">
+                            <td>
+                              Span
+                            </td>
+                            <td>
+                              <input type="number" id="fspan[0]" min="0" value = "1000" style="width: 4em" onchange="update()"/>
+                              <select id="span_scale[0]" onchange="update()">
+                                <option value="1">Hz</option>
+                                <option value="2">kHz</option>
+                                <option selected="selected" value="3">MHz</option>
+                                <option value="4">GHz</option>
+                              </select>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+        
+                    <div class="col-md-auto box">
+                      <h5 align="center"> y-axis settings</h5>
+                      <table class="rf_table_style" align="center">
+                        <thead id = 'Sim_Head'>
+                          <tr>
+                            <td>Parameter</td>
+                            <td>Value</td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>
+                                Scale (dB/div)
+                              </td>
+                              <td>
+                                <input type="number" id="y_axis_scale[0]" min="1" value = "5" style="width: 4em" onchange="update()"/>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                Maximum (dB)
+                              </td>
+                              <td>
+                                <input type="number" id="y_axis_max[0]"  value = "0" style="width: 4em" onchange="update()"/>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                Minimum (dB)
+                              </td>
+                              <td>
+                                <input type="number" id="y_axis_min[0]" value = "-30" style="width: 4em" onchange="update()"/>
+                              </td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                   
+                    <div class="col-md-auto box" align="center">
+                      <table id="TraceSelector" class="rf_table_style" >
+                        <thead>
+                          <td>
+                            <b>Dataset</b>
+                          </td>
+                          <td>
+                            <b>Traces</b>
+                          </td>
+                          <td>
+                            <b>Measure</b>
+                          </td>
+                          <td>
+                            <b>Action</b>
+                          </td>
+                        </thead>
                         <tr>
                           <td>
-                            Scale (dB/div)
+                            <select id="datasets" size="0">
+                            </select>
                           </td>
                           <td>
-                            <input type="number" id="y_axis_scale[0]" min="1" value = "5" style="width: 4em" onchange="update()"/>
+                            <select id="traces" size="4">
+                              <option value="0">S<sub>11</sub></option>
+                              <option value="1" selected="selected">S<sub>21</sub></option>
+                              <option value="2">S<sub>12</sub></option>
+                              <option value="3">S<sub>22</sub></option>
+                            </select>
+                          </td>
+                          <td>
+                            <select id="measure" size="0">
+                              <option value="0">dB</option>
+                              <option value="1">Phase</option>
+                              <option value="2">Group Delay</option>
+                              <option value="3">n.u.</option>
+                            </select>
+                          </td>
+                          <td>
+                            <input type="button" value="+" id="add_trace" class="btn btn-success" onclick="add_trace()"/>
                           </td>
                         </tr>
+                      </table>
+                    </div>
+
+                    <div class="col-md-auto box">
+                      <table id="DisplayTraces" class="rf_table_style">
+                        <thead>
+                          <td>
+                            <b>Name</b>
+                          </td>
+                          <td>
+                            <b>
+                              Color
+                            </b>
+                          </td>
+                          <td>
+                            <b>
+                              Line Style
+                            </b>
+                          </td>
+                          <td>
+                            <b>
+                              Axis
+                            </b>
+                          </td>
+                          <td>
+                            <b>
+                              Delete Trace
+                            </b>
+                          </td>
+                        </thead>
                         <tr>
-                          <td>
-                            Maximum (dB)
-                          </td>
-                          <td>
-                            <input type="number" id="y_axis_max[0]"  value = "0" style="width: 4em" onchange="update()"/>
-                          </td>
                         </tr>
-                        <tr>
-                          <td>
-                            Minimum (dB)
-                          </td>
-                          <td>
-                            <input type="number" id="y_axis_min[0]" value = "0" style="width: 4em" onchange="update()"/>
-                          </td>
-                        </tr>
-                    </tbody>
-                  </table>
-                  
-                  <table id="dataTraces[0]">
-                    <thead>
-                      <tr>
-                        <th style="border: 1px solid black">
-                          File
-                        </th>
-                        <th style="border: 1px solid black">
-                          S<sub>11</sub>
-                        </th>
-                        <th style="border: 1px solid black">
-                          S<sub>12</sub>
-                        </th>
-                        <th style="border: 1px solid black">
-                          S<sub>21</sub>
-                        </th>
-                        <th style="border: 1px solid black">
-                          S<sub>22</sub>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td class="file_source" id="file_source[0]" value="Example" style="border: 1px solid black" ></td>
-                        <td style="border: 1px solid black">
-                          <input type="checkbox" id="container[0].S11[0]" checked onchange="update()">
-                        </td>
-                        <td style="border: 1px solid black">
-                          <input type="checkbox" id="container[0].S12[0]" onchange="update()">
-                        </td>
-                        <td style="border: 1px solid black">
-                          <input type="checkbox" id="container[0].S21[0]" checked onchange="update()">
-                        </td>
-                        <td style="border: 1px solid black">
-                          <input type="checkbox" id="container[0].S22[0]" checked onchange="update()">
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <table id="TraceSelector" class="rf_table_style" >
-                    <thead>
-                      <td>
-                        <b>Dataset</b>
-                      </td>
-                      <td>
-                        <b>Traces</b>
-                      </td>
-                      <td>
-                        <b>Measure</b>
-                      </td>
-                      <td>
-                        <b>Action</b>
-                      </td>
-                    </thead>
-                    <tr>
-                      <td>
-                        <select id="datasets" size="0">
-                          <option value="0"></option>
-                        </select>
-                      </td>
-                      <td>
-                        <select id="traces" size="0">
-                          <option value="0"></option>
-                        </select>
-                      </td>
-                      <td>
-                        <select id="measure" size="0">
-                          <option value="0">dB</option>
-                          <option value="1">Phase</option>
-                          <option value="2">Group Delay</option>
-                          <option value="3">n.u.</option>
-                        </select>
-                      </td>
-                      <td>
-                        <input type="button" value="+" id="add_trace" class="btn btn-success" onclick="add_trace()"/>
-                      </td>
-                    </tr>
-                  </table>
-
-                  <table id="DisplayTraces" class="rf_table_style">
-                    <thead>
-                      <td>
-                        <b>Name</b>
-                      </td>
-                      <td>
-                        <b>
-                          Color
-                        </b>
-                      </td>
-                      <td>
-                        <b>
-                          Line Style
-                        </b>
-                      </td>
-                      <td>
-                        <b>
-                          Axis
-                        </b>
-                      </td>
-                    </thead>
-                  </table>
-
-
-                </td>
-              </tr>
-            </table>
-          </div>
-
-      </div>
-  </div>
+                      </table>
+                    </div>
+  
+  
+                  </td>
+                </tr>
+              </table>
+            </div>
+  
+        </div>
+        </div>
+    </div>
+</div>
 
 
   
 <script>
 
-  var full_data = []
+  var full_data = [] // All the data contained in the loaded S2P files is contained here
+  var displayed_data = [] // All the data selected for displaying is here including the color and line style properties
   function addData(data, filename)
   {
-    data["name"] = filename
-    full_data.push(data)
+    full_data[filename] = data
     
-    // Catch the minimum and the maximum trace values so as to have a nice y-axis setup
-
     var table_Display = document.querySelectorAll('.DisplayRow'); // Get a list of all rows for display
-    let last_data_index = full_data.length-1
-    for (let i=0; i<table_Display.length; i++) // Do it for all displays
-    {
-        // Current y_axis settings
-        let y_axis_min = document.getElementById("y_axis_min[" + String(i) + "]").value
-        let y_axis_max = document.getElementById("y_axis_max[" + String(i) + "]").value
-
-
-        // Check S11
-        let checkbox_name = "container[" + String(i) + "].S11[" + last_data_index + "]"
-        if ((document.getElementById(checkbox_name).checked == true) && (Math.max.apply(Math, data.S11_dB) > y_axis_max))
-            y_axis_max = Math.max.apply(Math, data.S11_dB)
-        if ((document.getElementById(checkbox_name).checked == true) && (Math.min.apply(Math, data.S11_dB) < y_axis_min))
-            y_axis_min = Math.min.apply(Math, data.S11_dB)
-
-        // Check S12
-        checkbox_name = "container[" + String(i) + "].S12[" + last_data_index + "]"
-        if ((document.getElementById(checkbox_name).checked == true) && (Math.max.apply(Math, data.S12_dB) > y_axis_max))
-            y_axis_max = Math.max.apply(Math, data.S12_dB)
-        if ((document.getElementById(checkbox_name).checked == true) && (Math.min.apply(Math, data.S12_dB) < y_axis_min))
-            y_axis_min = Math.min.apply(Math, data.S12_dB)
-
-        // Check S21
-        checkbox_name = "container[" + String(i) + "].S21[" + last_data_index + "]"
-        if ((document.getElementById(checkbox_name).checked == true) && (Math.max.apply(Math, data.S21_dB) > y_axis_max))
-            y_axis_max = Math.max.apply(Math, data.S21_dB)
-        if ((document.getElementById(checkbox_name).checked == true) && (Math.min.apply(Math, data.S21_dB) < y_axis_min))
-            y_axis_min = Math.min.apply(Math, data.S21_dB)
-
-        // Check S22
-        checkbox_name = "container[" + String(i) + "].S22[" + last_data_index + "]"
-        if ((document.getElementById(checkbox_name).checked == true) && (Math.max.apply(Math, data.S22_dB) > y_axis_max))
-            y_axis_max = MMath.max.apply(Math, data.S22_dB)
-        if ((document.getElementById(checkbox_name).checked == true) && (Math.min.apply(Math, data.S22_dB) < y_axis_min))
-            y_axis_min = Math.min.apply(Math, data.S22_dB)
-
-        document.getElementById("y_axis_min[" + String(i) + "]").value = roundto5(y_axis_min, 'floor')
-        document.getElementById("y_axis_max[" + String(i) + "]").value = roundto5(y_axis_max, 'ceil')
-    }
-
+    let last_data_index = Object.keys(full_data).length
     
     // Update the column of datasets
     let datasets = document.getElementById("datasets")
-    // var opt = document.createElement('option');
-    // opt.value = full_data.length;
-    // opt.innerHTML = filename;
+    var opt = document.createElement('option');
 
-    let opt = '<option value='+ full_data.length + ' onclick=updateTraces(this)>' + filename + '</option>'
-
-    if ((datasets.length == 1) && (datasets[0].innerHTML == ""))// check if the dataset is empty (i.e. at the beginning)
-    {
-      datasets[0] = opt
-    }
-    else
-    {
-      datasets.appendChild(opt);
-    }
-    
-    datasets.size = full_data.length;
-
+    opt.text = filename
+    datasets.add(opt)
 
     update()
   }
 
-  function updateTraces(opt)
+  // As the trace is selected in the datasets table, this function adds a new row in the traces table.
+  function add_trace()
   {
-    let a = 0
+    // Select dataset
+    let dataset_options = document.getElementById("datasets").options
+    let selected_index = document.getElementById("datasets").selectedIndex 
+    let dataset_name = dataset_options[selected_index].value
+    // Remove the extension if needed
+    dataset_name = dataset_name.replace(".S2P", "")
+
+    // Select trace
+    let trace_options = document.getElementById("traces").options
+    let trace_index = document.getElementById("traces").selectedIndex
+    let trace_name = trace_options[trace_index].innerHTML
+
+    // Select measure
+    let measure_options = document.getElementById("measure").options
+    let measure_index = document.getElementById("measure").selectedIndex
+    let measure_name = measure_options[measure_index].innerHTML
+
+
+    // Add new row to the table
+    var table = document.getElementById("DisplayTraces")
+    var row = document.createElement("tr");
+
+    // Create ID
+    let id = displayed_data.length + 1
+    
+    // Name
+    var cell_name = document.createElement("td");
+    cell_name.innerHTML = dataset_name + "." + trace_name + "." + measure_name
+    
+    // Color
+    var cell_color = document.createElement("td");
+    
+    // Set the trace color
+    let color = "#FF0000" // Default
+    if (displayed_data.length > 0)
+    {
+      if (displayed_data.length == 1) color = "#0000FF"
+      else{
+            if (displayed_data.length == 2) color = "#0c4213"
+            else {color = '#' + Math.floor(Math.random()*16777215).toString(16);} // Random color
+          }
+    }
+    cell_color.innerHTML = "<input type=\"color\" id=\"color_trace_"+ id.toString() +"\" onchange=\"update()\" value=\"" + color + "\">"
+
+    // Line Style
+    var cell_line_style = document.createElement("td");
+    cell_line_style.innerHTML =  "<select id=\"LineStyle_trace_" + id.toString() + "\" onchange=\"update()\" > <option value=\"Solid\">Solid</option> <option value=\"Dot\">Dot</option> <option value=\"Dash\">Dash</option> </select>"
+  
+    // Axis
+    var cell_axis = document.createElement("td");
+    cell_axis.innerHTML = "<select id=\"Axis_trace_" + id.toString() + "\" onchange=\"update()\" > <option value=\"LeftY\">Left Y</option> <option value=\"RightY\">Right Y</option> </select>"
+  
+    // Delete trace
+    var cell_delete = document.createElement("td");
+    cell_delete.innerHTML =  "<input type=\"button\" id=\"delete_trace_" + id.toString() + "\" value=\"-\" class=\"btn btn-danger\" onclick=\"DeleteTrace(this)\"/>"
+
+    row.appendChild(cell_name);
+    row.appendChild(cell_color);
+    row.appendChild(cell_line_style);
+    row.appendChild(cell_axis);
+    row.appendChild(cell_delete);
+    table.appendChild(row);
+
+    // Add this settings to the structure to control the displayed traces
+    let trace_properties = new Object();
+    trace_properties.cell_name = cell_name.innerHTML
+    trace_properties.cell_line_style = cell_line_style.innerHTML
+    trace_properties.cell_axis = cell_axis.innerHTML
+    trace_properties.id = id.toString()
+
+    displayed_data.push(trace_properties)
+
+    // Call display function to read this table and create a plot accordingly
+    update()
+  }
+  
+  // This function is called when the user selects a trace to remove
+  function DeleteTrace(trace)
+  {
+    let index = parseInt(trace.id.substring(trace.id.lastIndexOf("_")+1))
+
+    // Delete entry from the managing table
+    displayed_data.splice(index-1,1)
+
+
+    // Update the display
+    var table = document.getElementById("DisplayTraces")
+
+    // Find the row with the index to be removed
+    for (let i = 2; i < table.rows.length; i++)
+    {
+      let i1 = table.rows[i].innerHTML.indexOf("color_trace_")
+      let i2 = table.rows[i].innerHTML.indexOf("\"", i1)
+
+      let id = parseInt(table.rows[i].innerHTML.substring(i1+12, i2))
+
+      if (id == index)
+      {
+        // Remove that row
+        table.deleteRow(id+1)
+
+        // Now, we need to reassing the input IDs
+        for (let i = 2; i < table.rows.length; i++)
+        {
+          // Update IDs in the display management table
+          displayed_data[i-2].id = i-1
+
+          // Color input
+          let i1 = table.rows[i].innerHTML.indexOf("color_trace_")
+          let i2 = table.rows[i].innerHTML.indexOf("\"", i1)
+          let id = table.rows[i].innerHTML.substring(i1+12, i2) // Current ID
+
+          table.rows[i].innerHTML = table.rows[i].innerHTML.replace("color_trace_" + id, "color_trace_" + (i-1).toString()) // New ID
+          table.rows[i].innerHTML = table.rows[i].innerHTML.replace("LineStyle_trace_" + id, "LineStyle_trace_" + (i-1).toString()) // Line style
+          table.rows[i].innerHTML = table.rows[i].innerHTML.replace("Axis_trace_" + id, "Axis_trace_" + (i-1).toString()) // Axis
+          table.rows[i].innerHTML = table.rows[i].innerHTML.replace("delete_trace_" + id, "delete_trace_" + (i-1).toString()) // Axis
+
+        }
+      }
+    }
+
+    // Finally, it's needed to update the display
+    update()
   }
 
   function update()
   {
-    
     var table_Display = document.querySelectorAll('.DisplayRow'); // Get a list of all rows for display
 
     let f_start, scale_fstart, f_stop, scale_fstop;
@@ -460,46 +477,86 @@
     
       // For each data source, prepare the data to plot
       let series_index = 0
-      let traces = ["S11", "S12", "S21", "S22"]
       let min_freq_s2p = f_start
       let max_freq_s2p = f_stop
 
-      for (let j = 0; j < full_data.length; j++)
+
+      for (let j = 0; j < displayed_data.length; j++)
       {
-        for (let trace_index = 0; trace_index < 4; trace_index++)
-        {
-          let checkbox_name = "container[" + String(i) + "]." + traces[trace_index] + "[" + String(j) + "]"
-          if (document.getElementById(checkbox_name).checked == false)
-            continue
+
+        // Trace name
+        let trace_name = displayed_data[j].cell_name
+
+        // The name of the trace has the following format: <File name>.<Trace>.<Operation>
+        let index_point_1 = trace_name.indexOf('.')
+        let index_point_2 = trace_name.indexOf('.', index_point_1+1)
+
+        let dataset_name = trace_name.substring(0, index_point_1); // Name of the dataset
+        dataset_name = dataset_name + ".S2P"
+        let parameter = trace_name.substring(index_point_1+1, index_point_2); // Parameter to display
+        let operation = trace_name.substring(index_point_2+1); // Operation to perform
 
           // Prepare x-axis according user settings. We have to take just the spar data withing the specified range
           let data = []
-          for (let k = 0; k < full_data[j].freq.length; k++)
+          for (let k = 0; k < full_data[dataset_name].freq.length; k++)
           {
-            if ((full_data[j].freq[k] >= f_start) && (full_data[j].freq[k] <= f_stop))
+            if ((full_data[dataset_name].freq[k] >= f_start) && (full_data[dataset_name].freq[k] <= f_stop))
             {
               let y_data
-              if (trace_index == 0) y_data = full_data[j].S11_dB[k]
-              if (trace_index == 1) y_data = full_data[j].S11_dB[k]
-              if (trace_index == 2) y_data = full_data[j].S21_dB[k]
-              if (trace_index == 3) y_data = full_data[j].S22_dB[k]
+              if (parameter == 'S11')
+              {
+                if (operation == 'dB')
+                  {
+                    y_data = full_data[dataset_name].S11_dB[k]
+                  }
+              }
+              else
+              {
+                if (parameter == 'S21')
+                {
+                  if (operation == 'dB')
+                  {
+                    y_data = full_data[dataset_name].S21_dB[k]
+                  }
+                }
+                else
+                {
+                  if (parameter == 'S22')
+                  {
+                    if (operation == 'dB')
+                    {
+                      y_data = full_data[dataset_name].S22_dB[k]
+                    }
+                  }
+                  else
+                  { // S12
 
-              data.push([full_data[j].freq[k]*scale_freq, y_data])
+                    if (operation == 'dB')
+                    {
+                      y_data = full_data[dataset_name].S12_dB[k]
+                    }
+
+                  }
+                }
+              }
+              
+
+              data.push([full_data[dataset_name].freq[k]*scale_freq, y_data])
             }
           }
 
           // Get the frequency limits of the data to fit the span in case that the user settings were to broadband
-          if (full_data[j].freq[0] > min_freq_s2p) min_freq_s2p = full_data[j].freq[0]
-          if (full_data[j].freq[full_data[j].freq.length-1] < max_freq_s2p) max_freq_s2p = full_data[j].freq[full_data[j].freq.length-1]
+          if (full_data[dataset_name].freq[0] > min_freq_s2p) min_freq_s2p = full_data[dataset_name].freq[0]
+          if (full_data[dataset_name].freq[full_data[dataset_name].freq.length-1] < max_freq_s2p) max_freq_s2p = full_data[dataset_name].freq[full_data[dataset_name].freq.length-1]
 
           series_[series_index] = {
-                      name: full_data[j].name + "."+ traces[trace_index] +" (dB)",
+                      name: trace_name,
                       data: data,
-                      color: document.getElementById(traces[trace_index] + '_color['+ String(j) + ']').value,
+                      color: document.getElementById("color_trace_" + displayed_data[j].id.toString()).value,
                       yAxis: 0
                     }
           series_index++;
-        }
+        
       }
       
     let y_axis_scale = parseFloat(document.getElementById("y_axis_scale[" + String(i) + "]").value)
@@ -560,9 +617,12 @@
     return number
   }
 
-  function fileSelected(btn)
+  //  This function is called when the user wants to add a S2P file
+  function addNewFile(btn)
   {
     var file = document.getElementById(btn.id).files[0];
+    if (full_data[file.name] !== undefined) return 
+
     let extension = file.name.toLowerCase().slice(0. -3)
     if (extension != "s2p")
     {
@@ -575,20 +635,86 @@
           function(value) {
                             let raw = value
                             data = readTouchstone(raw)
-                            // Get the ID of the button
-                            let id = btn.id.substr(btn.id.indexOf("[")+1).slice(0,-1)
-                            filename = file.name.slice(0, -4)
-                            // Update ID in the data sources table
-                            let textbox_id = "ID[" + id+"]"
-                            document.getElementById(textbox_id).value = filename
-                            // Update ID in the display table
-                            document.getElementById("file_source[" + String(parseInt(id)) + "]").innerHTML = filename
+                            // Add new row
+                            var table = document.getElementById("DataFiles_Table");
+                            var row = document.createElement("tr");
+
+                            // Create ID
+                            let id = Object.keys(full_data).length + 1
+
+                            // Name
+                            var cell_name = document.createElement("td");
+                            cell_name.innerHTML = file.name
+
+                            // Delete trace
+                            var cell_delete = document.createElement("td");
+                            cell_delete.innerHTML =  "<input type=\"button\" id=\"delete_file_" + id.toString() + "\" value=\"-\" class=\"btn btn-danger\" onclick=\"DeleteFile(this)\"/>"
+
+                            row.appendChild(cell_name);
+                            row.appendChild(cell_delete);
+                            table.appendChild(row);
+
                             addData(data, file.name)
                           },
           function(error) { alert("Error loading the file") }
           );
-
     
+  }
+
+
+  // This function is called when the user wants to remove a S2P file
+  function DeleteFile(btn)
+  {
+    let index = parseInt(btn.id.substring(btn.id.lastIndexOf("_")+1))
+    var table = document.getElementById("DataFiles_Table")
+
+    // Delete entry from the managing table
+
+    let row_html = table.rows[index+1].innerHTML // Find the name of the file to be removed
+    let i2 = row_html.indexOf("</td")
+    let filename = row_html.substring(4, i2)
+
+    delete full_data[filename]
+
+
+    // Update the display
+  
+    // Find the row with the index to be removed
+    for (let i = 2; i < table.rows.length; i++)
+    {
+      let i1 = table.rows[i].innerHTML.indexOf("delete_file_")
+      let i2 = table.rows[i].innerHTML.indexOf("\"", i1)
+
+      let id = parseInt(table.rows[i].innerHTML.substring(i1+12, i2))
+
+      if (id == index)
+      {
+        // Remove that row
+        table.deleteRow(id+1)
+
+        // Now, we need to reassing the input IDs
+        for (let i = 2; i < table.rows.length; i++)
+        {
+
+          // Color input
+          let i1 = table.rows[i].innerHTML.indexOf("delete_file_")
+          let i2 = table.rows[i].innerHTML.indexOf("\"", i1)
+          let id = table.rows[i].innerHTML.substring(i1+12, i2) // Current ID
+
+          table.rows[i].innerHTML = table.rows[i].innerHTML.replace("delete_file_" + id, "delete_file_" + (i-1).toString()) // Delete file button
+
+        }
+      }
+    }
+
+    // Finally, update the available datasets in the trace selector
+    // Update the column of datasets
+    let datasets = document.getElementById("datasets")
+    datasets.remove(index-1); 
+
+
+    update()
+
   }
   // Inspired by https://scikit-rf.readthedocs.io/en/latest/_modules/skrf/io/touchstone.html
   // Touchstone file format: https://www.ibis.org/touchstone_ver2.0/touchstone_ver2_0.pdf
@@ -754,149 +880,6 @@ function linspace_int(startValue, stopValue, cardinality) {
   }
   return arr;
 }
-
-/////////////////////////
-//Inspired by https://coursesweb.net/javascript/ 
-
-function adRowsTable(id){
-  var table = document.getElementById(id);
-  var me = this;
-
-  if(document.getElementById(id)){
-    var row1 = table.rows[1].outerHTML;
-
-    function getID(string_id){
-      var index1 = string_id.indexOf("id=\"")
-      index1 += 5
-      var index2 = string_id.indexOf("\"", index1)
-      return string_id.substr(index1-1, index2-index1+1)
-    }
-
-    function getValue(string_val){
-      var index1 = string_val.indexOf("value=\"")
-      index1 += 7
-      var index2 = string_val.indexOf("\" ", index1)
-      return string_val.substr(index1, index2-index1)
-    }
-
-    //adds index-id in cols with class .tbl_id
-    function setIds(add_after){
-      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
-
-      me.replaceIDs(tbl_id, "tbl_id", "file")
-      me.replaceIDs(tbl_id, "add_button", "add_source")
-      me.replaceIDs(tbl_id, "remove_button", "del_source")
-      me.replaceIDs(tbl_id, "ID_input", "ID")
-
-    }
-
-    me.replaceIDs = function(tbl_id, tag, var_id){
-      var field = document.querySelectorAll('#'+ id +' .' + tag);
-      for(var i=0; i<tbl_id.length; i++){
-        var old_id = getID(field[i].innerHTML)
-        let old_val = document.getElementById(old_id).value
-        let new_id = var_id + '['+ (i) + ']';
-        var tmp = field[i].innerHTML.replace(old_id, new_id)
-        if (var_id == "ID") 
-            tmp = tmp.replace("Example", old_val)
-        field[i].innerHTML = tmp
-      }
-    }
-
-    //add row after clicked row; receives clicked button in row
-    me.addRow = function(btn){
-      // Add row in the data sources table
-      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
-      var add_after = parseInt(btn.id.substr(btn.id.indexOf("[")+1).slice(0,-1))
-      var new_row = row1.replaceAll("[0]", "["+ (add_after+1) + "]")
-      btn.parentNode.parentNode.insertAdjacentHTML('afterend', new_row)
-      setIds(add_after);
-
-      // Add row in each row of the display table
-      var table_Display = document.querySelectorAll('.DisplayRow'); // Get a list of all rows for display
-
-      for (let i =0; i < table_Display.length; i++)
-      {// For each display panel
-
-        let table = document.getElementById("dataTraces[" + String(i) + "]")
-        let button_index =  parseInt(btn.id.substr(btn.id.indexOf("[")+1).slice(0,-1))
-        var row = table.insertRow(button_index+2)
-        var cell0 = row.insertCell(0);
-        var cell11 = row.insertCell(1);
-        var cell21 = row.insertCell(2);
-        var cell12 = row.insertCell(3);
-        var cell22 = row.insertCell(4);
-        let row_index =button_index+1;
-
-        cell0.outerHTML = "<td class=\"file_source\" id=\"file_source["+ String(row_index) + "]\" value=\"Example\" style=\"border: 1px solid black\" ></td>";
-        cell11.outerHTML = "<td style=\"border: 1px solid black\"><input type=\"checkbox\" id=\"container[" + String(i) + "].S11[" + String(row_index) + "]\" onchange=\"update()\"></td>";
-        cell21.outerHTML = "<td style=\"border: 1px solid black\"><input type=\"checkbox\" id=\"container[" + String(i) + "].S12[" + String(row_index) + "]\" onchange=\"update()\"></td>"; 
-        cell12.outerHTML = "<td style=\"border: 1px solid black\"><input type=\"checkbox\" id=\"container[" + String(i) + "].S21[" + String(row_index) + "]\" checked onchange=\"update()\"></td>"; 
-        cell22.outerHTML = "<td style=\"border: 1px solid black\"><input type=\"checkbox\" id=\"container[" + String(i) + "].S22[" + String(row_index) + "]\" onchange=\"update()\"></td>"; 
-
-        // If there's more than one data sources, just compare the S21
-        if (table.rows.length > 1)
-        {
-          document.getElementById("container[" + String(i) + "].S11[0]").checked=false
-          document.getElementById("container[" + String(i) + "].S22[0]").checked=false
-        }
-        else
-        {//There's just one data source, show the S11, S21 and S22
-          document.getElementById("container[" + String(i) + "].S11[0]").checked=true
-          document.getElementById("container[" + String(i) + "].S22[0]").checked=true
-        }
-      }
-
-      me.update(btn)
-    }
-
-    //delete clicked row; receives clicked button in row
-    me.delRow = function(btn){
-      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
-      if (tbl_id.length > 1)
-      {
-        btn.parentNode.parentNode.outerHTML ='';
-     //   alert('Remove: ' + btn.id)
-        setIds(-1);
-        me.update(btn)
-
-        // Delete the corresponding row in the display panels
-        var table_Display = document.querySelectorAll('.DisplayRow'); // Get a list of all rows for display
-
-        for (let i =0; i < table_Display.length; i++)
-        {// For each display panel
-          let table = document.getElementById("dataTraces[" + String(i) + "]")
-          let button_index = btn.id.substr(btn.id.indexOf("[")+1).slice(0,-1)
-          table.deleteRow(button_index)
-        }
-
-      }
-
-    }
-
-    //Update table content and recalculate the system balance
-     me.update = function(btn){
-      var tbl_id = document.querySelectorAll('#'+ id +' .tbl_id');
-      var ID_id = document.querySelectorAll('#'+ id +' .ID_input');
-      
-      var ID_array = []
-
-      // Update values
-       for(var i=0; i<tbl_id.length; i++) {
-        // ID
-        var new_val = document.getElementById("ID["+(i)+"]").value;
-        var old_val = getValue(ID_id[i].innerHTML)
-        var tmp = ID_id[i].innerHTML.replace("value=\"" + old_val +"\"", 'value=\"' + new_val + '\"')
-        ID_id[i].innerHTML = tmp
-        ID_array.push(new_val)
-
-      }
-    }
-  }
-}
-//create object of adRowsTable(), pass the table id
-var ob_adRows = new adRowsTable('table1');
-ob_adRows.update()
 
 // Table of plots
 var ob_DisplayTable = new DisplayTable('Display_Table')
