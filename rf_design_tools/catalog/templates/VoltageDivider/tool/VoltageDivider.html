@@ -76,13 +76,13 @@
         <!-- Instantiate the form -->
         <form method="POST"> 
           {% csrf_token %}          
-          <table id="table_upper" class="table text-center table-hover table-bordered ">
+          <table id="table_upper" class="rf_table_style table text-center table-hover table-bordered ">
             <h5 align="center"> Upper resistors</h5>
             <thead style="text-align: center; vertical-align: middle;">
               <tr>
-                <th></th>
-                <th>Value</th>
-                <th colspan="2">Action</th>
+                <td></td>
+                <td><b>Value</b></td>
+                <td colspan="2"><b>Action</b></td>
               </tr>
             </thead>
             <tr>
@@ -93,13 +93,13 @@
             </tr>
           </table>
 
-          <table id="table_lower" class="table text-center table-hover table-bordered ">
+          <table id="table_lower" class="rf_table_style table text-center table-hover table-bordered ">
             <h5 align="center"> Lower resistors</h5>
             <thead style="text-align: center; vertical-align: middle;">
               <tr>
-                <th></th>
-                <th>Value</th>
-                <th colspan="2">Action</th>
+                <td></td>
+                <td><b>Value</b></td>
+                <td colspan="2"><b>Action</b></td>
               </tr>
             </thead>
             <tr>
@@ -110,7 +110,7 @@
             </tr>
           </table>
           
-          <table id = "table_I_Pdiss" class="table text-center table-hover table-bordered ">
+          <table id = "table_I_Pdiss" class="rf_table_style table text-center table-hover table-bordered ">
             <h5 align="center"> Settings </h5>
               <tr>
                 <td>
@@ -152,10 +152,10 @@
       <div class="mx-auto">
             <!-- Present the result -->
               <div class="card-body">
-                <table class="table text-center table-light table-bordered table-striped">
+                <table class="rf_table_style table text-center table-bordered">
                   <thead>
                     <tr>
-                      <th colspan="4"><h5 align="center">Output Voltage</h5></th>
+                      <td colspan="4"><h4 align="center"><b>Output Voltage</b></h4></td>
                     </tr>
                   </thead>
                   <tbody>
@@ -165,16 +165,16 @@
                     </tr>
                   </tbody>
                 </table>
-                    <table class="table text-center table-light table-bordered table-striped" id="ResultsTable">                     
+                    <table class="rf_table_style table text-center table-bordered" id="ResultsTable">                     
                         <thead>
                           <tr>
-                            <th colspan="4"><h5 align="center">Current and Power Dissipation</h5></th>
+                            <td colspan="4"><h4 align="center"><b>Current and Power Dissipation</b></h4></td>
                           </tr>
                           <tr>
-                            <th></th>
-                            <th>Value</th>
-                            <th>Current</th>
-                            <th>Power Dissipation</th>
+                            <td></td>
+                            <td><b>Value</b></td>
+                            <td><b>Current</b></td>
+                            <td><b>Dissipation</b></td>
                           </tr>
                         </thead>
                         <tbody>

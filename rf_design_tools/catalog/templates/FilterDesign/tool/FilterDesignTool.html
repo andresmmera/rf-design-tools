@@ -18,12 +18,12 @@
         <!-- Instantiate the form -->
         <form id="FilterDesign_form" method="POST">
           {% csrf_token %}          
-          <table class="table table-hover">
+          <table class="rf_table_style table table-hover">
             <h5 align="center"> Filter Type</h5>
             <thead>
               <tr>
-                <th>Parameter</th>
-                <th>Value</th>
+                <td>Parameter</td>
+                <td>Value</td>
               </tr>
             </thead>
             <tbody>
@@ -203,11 +203,11 @@
           </table>
 
           <div class="inductance_input">
-          <table id="tableX" class="table table-hover table-bordered ">
+          <table id="tableX" class="rf_table_style table table-bordered ">
             <thead style="text-align: center; vertical-align: middle;">
               <tr>
-                <th>Res # </th>
-                <th>L (nH)</th>
+                <td>Res # </td>
+                <td>L (nH)</td>
               </tr>
             </thead>
           </table>
@@ -258,22 +258,25 @@
           </div>
 
           <div class="col-md-auto box_form">
-            <table class="table table-hover">
-              <h5 align="center"> Simulation Parameters</h5>
+
+            <h5 align="center"> Simulation Parameters</h5>
+            
+            <div class="col-md-auto box">
+              <div class="col-md-auto box" align="center">
+                <input type="radio" id="fmode1" name="fmode" value="fmode1" checked="checked" onchange="switch_sweep_mode(this)">
+                <span>fstart | fstop</span>
+
+                <input type="radio" id="fmode2" name="fmode" value="fmode2" onchange="switch_sweep_mode(this)">
+                <span>fc | span</span>
+              </div>
+
+            </div>
+           
+            <table class="rf_table_style table">
               <thead>
-                <tr align="center">
-                  <th>
-                    <input type="radio" id="fmode1" name="fmode" value="fmode1" checked="checked" onchange="switch_sweep_mode(this)">
-                    <span>fstart | fstop</span>
-                  </th>
-                  <th>
-                    <input type="radio" id="fmode2" name="fmode" value="fmode2" onchange="switch_sweep_mode(this)">
-                    <span>fc | span</span>
-                  </th>
-                </tr>
                 <tr>
-                  <th>Parameter</th>
-                  <th>Value</th>
+                  <td>Parameter</td>
+                  <td>Value</td>
                 </tr>
               </thead>
               <tbody>
@@ -344,12 +347,12 @@
               </tbody>
             </table>
 
-            <table class="table table-hover">
+            <table class="rf_table_style table">
               <h5 align="center"> Display Parameters</h5>
               <thead id = 'Sim_Head'>
                 <tr>
-                  <th>Parameter</th>
-                  <th>Value</th>
+                  <td>Parameter</td>
+                  <td>Value</td>
                 </tr>
               </thead>
               <tbody>

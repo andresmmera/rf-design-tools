@@ -16,11 +16,11 @@
         <!-- Instantiate the form -->
         <form method="POST"> 
           {% csrf_token %}          
-          <table class="table table-bordered table-hover">
+          <table class="rf_table_style table table-bordered table-hover">
             <thead>
               <tr>
-                <th>Parameter</th>
-                <th>Value</th>
+                <td>Parameter</td>
+                <td>Value</td>
               </tr>
             </thead>
             <tbody>
@@ -63,16 +63,16 @@
             <!-- Present the result -->
               <div class="card-body">
                 {% if f_IM1 != None %}
-                    <table class="table text-center table-light table-bordered table-striped">
+                    <table class="rf_table_style table text-center table-bordered">
                         <thead>
                           <tr>
-                            <th colspan="4"><h5 align="center">Results</h5></th>
+                            <td colspan="4"><h5 align="center">Results</h5></td>
                           </tr>
                           <tr>
-                            <th>Step</th>
-                            <th>Downconversion</th>
-                            <th>LO</th>
-                            <th>Image</th>
+                            <td>Step</td>
+                            <td>Downconversion</td>
+                            <td>LO</td>
+                            <td>Image</td>
                           </tr>
                         </thead>
                         <tbody>
@@ -91,16 +91,16 @@
                         </tbody>
                     </table>
                 {% else %}
-                <table class="table text-center table-light table-bordered table-striped">
+                <table class="rf_table_style table text-center table-bordered">
                   <thead>
                     <tr>
-                      <th colspan="4"><h5 align="center">Results</h5></th>
+                      <td colspan="4"><h5 align="center">Results</h5></td>
                     </tr>
                     <tr>
-                      <th>Step</th>
-                      <th>Downconversion</th>
-                      <th>LO</th>
-                      <th>Image</th>
+                      <td>Step</td>
+                      <td>Downconversion</td>
+                      <td>LO</td>
+                      <td>Image</td>
                     </tr>
                   </thead>
                   <tbody>

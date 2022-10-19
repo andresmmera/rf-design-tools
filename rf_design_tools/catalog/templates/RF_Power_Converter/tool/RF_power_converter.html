@@ -15,11 +15,11 @@
           <!-- Instantiate the form -->
           <form method="POST"> 
             {% csrf_token %}          
-            <table class="table table-bordered table-hover">
+            <table class="rf_table_style table table-bordered table-hover">
               <thead>
                 <tr>
-                  <th>Parameter</th>
-                  <th>Value</th>
+                  <td><b>Parameter</b></td>
+                  <td><b>Value</b></td>
                 </tr>
               </thead>
               <tbody>
@@ -70,10 +70,10 @@
               <!-- Present the result -->
               <div class="card-body">
                 {% if Pnew != None %}
-                    <table class="table text-center table-bordered table-light table-striped">
+                    <table class="rf_table_style table text-center table-bordered">
                         <thead>
                           <tr>
-                            <th colspan="2"><h5 align="center">Result</h5></th>
+                            <td colspan="2"><h4 align="center"><b>Result</b></h4></td>
                           </tr>
                         </thead>
                         <tbody>
@@ -83,7 +83,7 @@
                         </tbody>
                     </table>
                 {% else %}
-                    <table class="table text-center table-bordered table-light table-striped">
+                    <table class="rf_table_style table text-center table-bordered">
                       <thead>
                         <tr>
                           <th colspan="2"><h5 align="center">Result</h5></th>

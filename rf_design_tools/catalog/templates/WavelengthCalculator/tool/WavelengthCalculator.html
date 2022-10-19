@@ -19,7 +19,7 @@
           <!-- Instantiate the form -->
           <form method="POST"> 
             {% csrf_token %}          
-            <table class="table table-bordered table-hover" id="InputTable">
+            <table class="rf_table_style table table-bordered table-hover" id="InputTable">
               <thead>
                 <tr>
                   <td colspan="2">
@@ -30,8 +30,8 @@
                   </td>
                 </tr>
                 <tr>
-                  <th>Parameter</th>
-                  <th>Value</th>
+                  <td>Parameter</td>
+                  <td>Value</td>
                 </tr>
               </thead>
               <tbody>
@@ -72,10 +72,10 @@
         <div class="mx-auto">
               <!-- Present the result -->
                 <div class="card-body">
-                      <table class="table table-bordered table-light table-striped" id="ResultsTable">
+                      <table class="rf_table_style table table-bordered table-light table-striped" id="ResultsTable">
                         <thead>
                           <tr>
-                            <th colspan="2"><h5 align="center">Result</h5></th>
+                            <td colspan="2"><h5 align="center">Result</h5></td>
                           </tr>
                         </thead>
                         <tbody>

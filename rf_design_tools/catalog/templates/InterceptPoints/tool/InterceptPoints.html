@@ -73,12 +73,12 @@
         <!-- Instantiate the form -->
         <form method="POST">
           {% csrf_token %}          
-          <table class="table table-hover">
+          <table class="rf_table_style table table-hover">
             <h5 align="center"> IP<sub>n</sub> Calculation</h5>
             <thead>
               <tr>
-                <th>Parameter</th>
-                <th>Value</th>
+                <td>Parameter</td>
+                <td>Value</td>
               </tr>
             </thead>
             <tbody>
@@ -130,13 +130,13 @@
             </tbody>
           </table>
 
-          <table class="table table-hover">
+          <table class="rf_table_style table table-hover">
             <h5 align="center"> Dynamic Range and Noise Floor</h5>
             <button id="btn-hide-DR" type="button" class="btn btn-info" onclick="hideDR_NF()">Hide</button>
             <thead id='DR_NF_Head'>
               <tr>
-                <th>Parameter</th>
-                <th>Value</th>
+                <td>Parameter</td>
+                <td>Value</td>
               </tr>
             </thead>
             <tbody id='DR_NF_Table'>
@@ -187,12 +187,12 @@
             </tbody>
           </table>
 
-          <table class="table table-hover">
+          <table class="rf_table_style table table-hover">
             <h5 align="center">Compression</h5>
             <thead>
               <tr>
-                <th>Parameter</th>
-                <th>Value</th>
+                <td>Parameter</td>
+                <td>Value</td>
               </tr>
             </thead>
             <tbody>
@@ -208,13 +208,13 @@
               </tr>
               </tr>
             </tbody>
-            <table class="table table-hover">
+            <table class="rf_table_style table table-hover">
               <h5 align="center">DUT & Frequency</h5>
               <button id="btn-hide-DF" type="button" class="btn btn-info" onclick="hideDF()">Hide</button>
               <thead id="DF_Head">
                 <tr>
-                  <th>Parameter</th>
-                  <th>Value</th>
+                  <td>Parameter</td>
+                  <td>Value</td>
                 </tr>
               </thead>
               <tbody id = 'DF_Table'>

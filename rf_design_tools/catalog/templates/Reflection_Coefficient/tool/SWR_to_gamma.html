@@ -16,21 +16,18 @@
     <div class="row">
       <div class="col-md-auto">
       <div class="mx-auto box_form">
-        <!-- Instantiate the form -->   
-          <table class="table table-bordered table-hover">
+          <div class="col-md-auto box" align="center">
+            <select id="mode" onchange="change_mode(this)">
+              <option selected="selected" value="1"> SWR &#8594; |&#915;| and S<sub>11</sub></option>
+              <option value="2">S<sub>11</sub> &#8594; SWR and |&#915;| </option>
+              <option value="3">|&#915;| &#8594; SWR and S<sub>11</sub></option>
+            </select>
+          </div>
+          <table class="rf_table_style table table-bordered table-hover">
             <thead>
               <tr>
-                <td colspan="2">
-                <select id="mode" onchange="change_mode(this)">
-                  <option selected="selected" value="1"> SWR &#8594; |&#915;| and S<sub>11</sub></option>
-                  <option value="2">S<sub>11</sub> &#8594; SWR and |&#915;| </option>
-                  <option value="3">|&#915;| &#8594; SWR and S<sub>11</sub></option>
-                </select>
-                </td>
-              </tr>
-              <tr>
-                <th>Parameter</th>
-                <th>Value</th>
+                <td><b>Parameter</b></td>
+                <td><b>Value</b></td>
               </tr>
             </thead>
             <tbody>
@@ -74,10 +71,10 @@
       <div class="mx-auto">
             <!-- Present the result -->
               <div class="card-body">
-                    <table class="table text-center table-light table-bordered table-striped">
+                    <table class="rf_table_style table text-center table-bordered">
                       <thead>
                         <tr>
-                          <th colspan="2"><h5 align="center">Results</h5></th>
+                          <td colspan="2"><h4 align="center"><b>Results</b></h4></td>
                         </tr>
                       </thead>
                       <tbody>
