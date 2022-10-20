@@ -304,7 +304,7 @@
     let selected_index = document.getElementById("datasets").selectedIndex 
     let dataset_name = dataset_options[selected_index].value
     // Remove the extension if needed
-    dataset_name = dataset_name.replace(".S2P", "")
+    dataset_name = dataset_name.replace(".s2p", "")
 
     // Select trace
     let trace_options = document.getElementById("traces").options
@@ -492,7 +492,7 @@
         let index_point_2 = trace_name.indexOf('.', index_point_1+1)
 
         let dataset_name = trace_name.substring(0, index_point_1); // Name of the dataset
-        dataset_name = dataset_name + ".S2P"
+        dataset_name = dataset_name + ".s2p"
         let parameter = trace_name.substring(index_point_1+1, index_point_2); // Parameter to display
         let operation = trace_name.substring(index_point_2+1); // Operation to perform
 
@@ -644,7 +644,8 @@
 
                             // Name
                             var cell_name = document.createElement("td");
-                            cell_name.innerHTML = file.name
+                            let name = file.name.substring(0, file.name.length-3) + "s2p"
+                            cell_name.innerHTML = name  // Forced to be lower case
 
                             // Delete trace
                             var cell_delete = document.createElement("td");
@@ -654,7 +655,8 @@
                             row.appendChild(cell_delete);
                             table.appendChild(row);
 
-                            addData(data, file.name)
+                            // Add it to the table for trace display
+                            addData(data, name)
                           },
           function(error) { alert("Error loading the file") }
           );
