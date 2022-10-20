@@ -12,12 +12,12 @@
 
     
     <div class="row">
-      <div class="col-md-5 box_form">
+      <div class="col-md-auto box_form">
         <!-- Instantiate the form -->
           {% csrf_token %}
           <h5 align="center"> System Blocks</h5>
 
-          <table id="table1" class="rf_table_style table table-hover table-bordered ">
+          <table id="table1" class="rf_table_style table" align="center">
             
             <thead style="text-align: center; vertical-align: middle;">
               <tr>
@@ -47,12 +47,12 @@
             </tr>
           </table>
         
-          <table class="table table-hover table-bordered" id="SystemParams">
+          <table class="rf_table_style" align="center" id="SystemParams">
               <h5 align="center"> System Parameters</h5>
               <thead>
                 <tr>
-                  <th>Parameter</th>
-                  <th>Value</th>
+                  <td>Parameter</td>
+                  <td>Value</td>
                 </tr>
               </thead>
               <tbody>
@@ -97,16 +97,16 @@
       </div>
 
       
-      <div class="col-md-7">
+      <div class="col-md-auto">
         <div class="row justify-content-md-center">
           <script src="https://code.highcharts.com/highcharts.js"></script>
           <div id="container" style="width: 800px"></div>
         </div>
         <div class="row justify-content-md-center">
-          <table class="table table-light table-bordered table-striped" id="ResultsTable" style="width: 80%;">
+          <table class="rf_table_style" id="ResultsTable" style="width: 80%;">
             <thead>
               <tr>
-                <th colspan="2"><h5 align="center">Results</h5></th>
+                <th colspan="2"><h5 align="center"><b>Results</b></h5></th>
               </tr>
             </thead>
             <tbody>
