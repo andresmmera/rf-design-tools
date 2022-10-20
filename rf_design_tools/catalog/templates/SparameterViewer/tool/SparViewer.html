@@ -15,7 +15,7 @@
     </div>
     
     <div class="custom-file overflow-hidden rounded-pill mb-5">
-      <input id="add_S2P" type="file" class="custom-file-input rounded-pill" accept=".s2p" onchange="addNewFile(this)">
+      <input id="add_S2P" type="file" class="custom-file-input rounded-pill" accept=".s2p" multiple="multiple" onchange="addNewFile(this)">
       <label for="customFile" class="custom-file-label rounded-pill">Upload S-parameter file (only S2P)</label>
     </div>
 
@@ -319,6 +319,8 @@
     let measure_name = measure_options[measure_index].innerHTML
 
     append_trace(dataset_name, trace_name, measure_name)
+    // Call display function to read this table and create a plot accordingly
+    update()
   }
 
   function append_trace(dataset_name, trace_name, measure_name)
@@ -377,8 +379,7 @@
 
     displayed_data.push(trace_properties)
 
-    // Call display function to read this table and create a plot accordingly
-    update()
+
   }
   
   // This function is called when the user selects a trace to remove
@@ -559,6 +560,7 @@
                       name: trace_name,
                       data: data,
                       color: document.getElementById("color_trace_" + displayed_data[j].id.toString()).value,
+                      borderDash: [5, 5],
                       yAxis: 0
                     }
           series_index++;
@@ -626,54 +628,64 @@
   //  This function is called when the user wants to add a S2P file
   function addNewFile(btn)
   {
-    var file = document.getElementById(btn.id).files[0];
-    if (full_data[file.name] !== undefined) return 
-
-    let extension = file.name.toLowerCase().slice(0. -3)
-    if (extension != "s2p")
+    var selected_files = document.getElementById(btn.id).files;
+    for (let i = 0; i < selected_files.length; i++)
     {
-      alert(extension + " files are not supported. Only s2p files can be read." )
-      return
-    }
-    let A = readFile(file);
-    
-    A.then(
-          function(value) {
-                            let raw = value
-                            data = readTouchstone(raw)
-                            // Add new row
-                            var table = document.getElementById("DataFiles_Table");
-                            var row = document.createElement("tr");
+      let file = selected_files[i]
+      if (full_data[file.name] !== undefined) return 
 
-                            // Create ID
-                            let id = Object.keys(full_data).length + 1
+      let extension = file.name.toLowerCase().slice(0. -3)
+      if (extension != "s2p")
+      {
+        alert(extension + " files are not supported. Only s2p files can be read." )
+        return
+      }
+      let A = readFile(file);
 
-                            // Name
-                            var cell_name = document.createElement("td");
-                            let name = file.name.substring(0, file.name.length-3) + "s2p"
-                            cell_name.innerHTML = name  // Forced to be lower case
+      A.then(
+            function(value) {
+                              let raw = value
+                              data = readTouchstone(raw)
+                              // Add new row
+                              var table = document.getElementById("DataFiles_Table");
+                              var row = document.createElement("tr");
 
-                            // Delete trace
-                            var cell_delete = document.createElement("td");
-                            cell_delete.innerHTML =  "<input type=\"button\" id=\"delete_file_" + id.toString() + "\" value=\"-\" class=\"btn btn-danger\" onclick=\"DeleteFile(this)\"/>"
+                              // Create ID
+                              let id = Object.keys(full_data).length + 1
 
-                            row.appendChild(cell_name);
-                            row.appendChild(cell_delete);
-                            table.appendChild(row);
+                              // Name
+                              var cell_name = document.createElement("td");
+                              let name = file.name.substring(0, file.name.length-3) + "s2p"
+                              cell_name.innerHTML = name  // Forced to be lower case
 
-                            // Add it to the table for trace display
-                            addData(data, name)
-                          },
-          function(error) { alert("Error loading the file") }
-          );
-    
-    if (Object.keys(full_data).length == 1)
+                              // Delete trace
+                              var cell_delete = document.createElement("td");
+                              cell_delete.innerHTML =  "<input type=\"button\" id=\"delete_file_" + id.toString() + "\" value=\"-\" class=\"btn btn-danger\" onclick=\"DeleteFile(this)\"/>"
+
+                              row.appendChild(cell_name);
+                              row.appendChild(cell_delete);
+                              table.appendChild(row);
+
+                              // Add it to the table for trace display
+                              addData(data, name)
+                            },
+            function(error) { alert("Error loading the file") }
+            );
+
+      if (selected_files.length > 1){
+        // Add display S21 for each file
+        append_trace(file.name.substring(0, file.name.length-4), "S21", "dB")
+      }
+      
+    }    
+    if (Object.keys(full_data).length < 1)
     { 
-      let name = file.name.substring(0, file.name.length-4)
+      let name = selected_files[0].name.substring(0, selected_files[0].name.length-4)
       append_trace(name, "S21", "dB")
       append_trace(name, "S11", "dB")
       append_trace(name, "S22", "dB")
     }
+    update()
   }
 
 
