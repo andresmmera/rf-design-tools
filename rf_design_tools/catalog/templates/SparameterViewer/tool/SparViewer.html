@@ -299,6 +299,8 @@
   // As the trace is selected in the datasets table, this function adds a new row in the traces table.
   function add_trace()
   {
+    // Read trace properties
+    
     // Select dataset
     let dataset_options = document.getElementById("datasets").options
     let selected_index = document.getElementById("datasets").selectedIndex 
@@ -316,7 +318,11 @@
     let measure_index = document.getElementById("measure").selectedIndex
     let measure_name = measure_options[measure_index].innerHTML
 
+    append_trace(dataset_name, trace_name, measure_name)
+  }
 
+  function append_trace(dataset_name, trace_name, measure_name)
+  {
     // Add new row to the table
     var table = document.getElementById("DisplayTraces")
     var row = document.createElement("tr");
@@ -661,6 +667,13 @@
           function(error) { alert("Error loading the file") }
           );
     
+    if (Object.keys(full_data).length == 1)
+    { 
+      let name = file.name.substring(0, file.name.length-4)
+      append_trace(name, "S21", "dB")
+      append_trace(name, "S11", "dB")
+      append_trace(name, "S22", "dB")
+    }
   }
 
 
