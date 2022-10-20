@@ -122,14 +122,13 @@ def getCanonicalFilterSchematic(params):
     Mask = params['Mask']
 
     if (Mask =='Bandpass' or Mask =='Bandstop'):
-        w1 = 2*np.pi*f1*1e6 # rad/s
-        w2 = 2*np.pi*f2*1e6 # rad/s
+        w1 = 2*np.pi*f1 # rad/s
+        w2 = 2*np.pi*f2 # rad/s
         w0 = np.sqrt(w1*w2)
         Delta = w2-w1
     else:
-        w0 = 2*np.pi*fc*1e6 # rad/s
+        w0 = 2*np.pi*fc # rad/s
 
-    print(gi)
     ##################################################
     # Draw circuit
     schem.use('svg')
