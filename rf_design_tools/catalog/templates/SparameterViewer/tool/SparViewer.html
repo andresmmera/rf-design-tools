@@ -55,9 +55,10 @@
                 </thead>
                 <tr class="DisplayRow">
                   <td>
+                    <div class="col-xs-4 col-md-8" >
                     <div class="col-md-auto box">
                       <div class="row">
-                          <div class="col-xs-4 col-md-8" >
+                          
                               <div class="card shadow-sm">
                                 <script src="https://code.highcharts.com/highcharts.js"></script>
                                 <div  id="container0" style="width: 1000px; height: 600px"></div>
@@ -69,6 +70,11 @@
                   <td>
                     <div class="col-md-auto box">
                       <div class="col-md-auto box">
+                        <div class="col-md-auto box" align="center">
+                        <p>Title</p>
+                        <input id="title[0]" type="text" value="" size="20" onchange="update()">
+                        </div>
+
                         <div class="col-md-auto box" align="center">
                           <input type="radio" id="container[0].fmode1[0]" name="fmode" value="fmode1" checked="checked" onchange="switch_sweep_mode(this)">
                           <span>fstart | fstop</span>
@@ -353,7 +359,7 @@
 
     // Line Style
     var cell_line_style = document.createElement("td");
-    cell_line_style.innerHTML =  "<select id=\"LineStyle_trace_" + id.toString() + "\" onchange=\"update()\" > <option value=\"Solid\">Solid</option> <option value=\"Dot\">Dot</option> <option value=\"Dash\">Dash</option> </select>"
+    cell_line_style.innerHTML =  "<select id=\"LineStyle_trace_" + id.toString() + "\" onchange=\"update()\" > <option value=\"Solid\">Solid</option> <option value=\"Dot\">Dot</option> <option value=\"ShortDot\">Short Dot</option> <option value=\"Dash\">Dash</option> <option value=\"ShortDash\">Short Dash</option> <option value=\"LongDash\">Long Dash</option> <option value=\"ShortDashDot\">Short Dash Dot</option> <option value=\"ShortDashDotDot\">Short Dash Dot Dot</option> </select>"
   
     // Axis
     var cell_axis = document.createElement("td");
@@ -556,12 +562,16 @@
           if (full_data[dataset_name].freq[0] > min_freq_s2p) min_freq_s2p = full_data[dataset_name].freq[0]
           if (full_data[dataset_name].freq[full_data[dataset_name].freq.length-1] < max_freq_s2p) max_freq_s2p = full_data[dataset_name].freq[full_data[dataset_name].freq.length-1]
 
+          // Line styling
+          let linestyle= document.getElementById("LineStyle_trace_" + displayed_data[j].id.toString()).value
+
+
           series_[series_index] = {
                       name: trace_name,
                       data: data,
                       color: document.getElementById("color_trace_" + displayed_data[j].id.toString()).value,
-                      borderDash: [5, 5],
-                      yAxis: 0
+                      yAxis: 0,
+                      dashStyle: linestyle
                     }
           series_index++;
         
@@ -582,7 +592,7 @@
                                       }
                               },
                 title: {
-                          text: ''
+                          text: document.getElementById("title["+ String(i) + "]").value
                          },
                 xAxis: {
                         type: 'linear',
