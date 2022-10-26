@@ -501,7 +501,7 @@
         let trace_name = displayed_data[j].cell_name
 
         // The name of the trace has the following format: <File name>.<Trace>.<Operation>
-        let index_point_1 = trace_name.indexOf('.')
+        let index_point_1 = trace_name.lastIndexOf('.', trace_name.lastIndexOf('.')-1)
         let index_point_2 = trace_name.indexOf('.', index_point_1+1)
 
         let dataset_name = trace_name.substring(0, index_point_1); // Name of the dataset
@@ -863,13 +863,13 @@
             if (format == 'ma')
             {
               S2Pdata["S11_dB"].push(20*Math.log10(S11a));
-              S2Pdata["S11_ang"].push(20*Math.log10(S11b));
+              S2Pdata["S11_ang"].push(S11b);
               S2Pdata["S21_dB"].push(20*Math.log10(S12a));
-              S2Pdata["S21_ang"].push(20*Math.log10(S12b));
+              S2Pdata["S21_ang"].push(S12b);
               S2Pdata["S12_dB"].push(20*Math.log10(S21a));
-              S2Pdata["S12_ang"].push(20*Math.log10(S21b));
+              S2Pdata["S12_ang"].push(S21b);
               S2Pdata["S22_dB"].push(20*Math.log10(S22a));
-              S2Pdata["S22_ang"].push(20*Math.log10(S22b));
+              S2Pdata["S22_ang"].push(S22b);
             }
             else
             {// RI
