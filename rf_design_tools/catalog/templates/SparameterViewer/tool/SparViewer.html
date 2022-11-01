@@ -299,7 +299,7 @@
     opt.text = filename
     datasets.add(opt)
 
-    update()
+    update(autoscale_y_axis = 1)
   }
 
   // As the trace is selected in the datasets table, this function adds a new row in the traces table.
@@ -326,7 +326,7 @@
 
     append_trace(dataset_name, trace_name, measure_name)
     // Call display function to read this table and create a plot accordingly
-    update()
+    update(autoscale_y_axis = 1)
   }
 
   function append_trace(dataset_name, trace_name, measure_name)
@@ -434,10 +434,10 @@
     }
 
     // Finally, it's needed to update the display
-    update()
+    update(autoscale_y_axis = 1)
   }
 
-  function update()
+  function update(autoscale_y_axis = 0)
   {
     var table_Display = document.querySelectorAll('.DisplayRow'); // Get a list of all rows for display
 
@@ -492,7 +492,10 @@
       let series_index = 0
       let min_freq_s2p = f_start
       let max_freq_s2p = f_stop
-
+      
+      // Variables for y-axis autoscale, if needed
+      let y_max = -1e3;
+      let y_min = 1e3;
 
       for (let j = 0; j < displayed_data.length; j++)
       {
@@ -553,7 +556,8 @@
                 }
               }
               
-
+              if (y_data > y_max) y_max = y_data
+              if (y_data < y_min) y_min = y_data
               data.push([full_data[dataset_name].freq[k]*scale_freq, y_data])
             }
           }
@@ -576,10 +580,22 @@
           series_index++;
         
       }
-      
+    
     let y_axis_scale = parseFloat(document.getElementById("y_axis_scale[" + String(i) + "]").value)
-    let y_axis_min = document.getElementById("y_axis_min[" + String(i) + "]").value
-    let y_axis_max = document.getElementById("y_axis_max[" + String(i) + "]").value
+    let y_axis_min, y_axis_max;
+    if (autoscale_y_axis == 1)
+    {// Autoscale y-axis and put the new settings on the UI
+      y_axis_max = Math.ceil(y_max / y_axis_scale) * y_axis_scale;
+      y_axis_min = Math.floor(y_min / y_axis_scale) * y_axis_scale;
+      document.getElementById("y_axis_max[" + String(i) + "]").value = y_axis_max
+      document.getElementById("y_axis_min[" + String(i) + "]").value = y_axis_min
+    }
+    else
+    {
+      y_axis_min = parseFloat(document.getElementById("y_axis_min[" + String(i) + "]").value)
+      y_axis_max = parseFloat(document.getElementById("y_axis_max[" + String(i) + "]").value)
+    }
+
 
     if (min_freq_s2p > f_start) f_start = min_freq_s2p
     if (max_freq_s2p < f_stop) f_stop = max_freq_s2p  
@@ -605,7 +621,7 @@
                                 min: y_axis_min,
                                 max: y_axis_max,
                                 title: {
-                                        text: 'S21 (dB)'
+                                        text: 'Response (dB)'
                                       },
                                 gridLineWidth: 1, 
                                 tickInterval: y_axis_scale,
