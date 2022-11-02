@@ -518,8 +518,8 @@
 function plotChart(x, y1, y2, title) {
 
   let y_axis_scale = parseFloat(document.getElementById("y_axis_scale").value)
-  let y_axis_min = document.getElementById("y_axis_min").value
-  let y_axis_max = document.getElementById("y_axis_max").value
+  let y_axis_min = parseFloat(document.getElementById("y_axis_min").value)
+  let y_axis_max = parseFloat(document.getElementById("y_axis_max").value)
   
           $('#container').highcharts({
                 plotOptions: {
