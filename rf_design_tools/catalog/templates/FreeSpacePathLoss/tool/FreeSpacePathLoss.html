@@ -28,7 +28,7 @@
                     Frequency
                 </td>
                 <td>
-                  <input type="number" id="Frequency" min="0" value = "100" step="10" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="Frequency" min="0" value = "1" step="10" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
                 <td>
                   <select id="Frequency_units" onchange="submit_form(this)">
@@ -88,10 +88,28 @@
               </tbody>
           </table>
 
+          <table class="rf_table_style table text-center table-light table-bordered table-striped">
+            <thead>
+              <tr>
+                <td colspan="2"><h5 align="center">Result</h5></td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr> 
+                <td> <b>Distance</b> </td>
+                <td> <b>Attenuation</b> </td>
+              </tr>
+              <tr> 
+                <td><p id="distance_table_2">1000</p></td>
+                <td><p id="fsl_table_2">1000</p></td>
+              </tr>
+          </tbody>
+        </table>
+
           <!-- BUTTONS -->
           <div class="d-flex flex-row justify-content-center">
             <div class="p-2">
-              <a href="{% url 'ipn_nf_docs' %}" class="btn btn-info" role="button">See docs</a>
+              <a href="{% url 'free_space_path_loss_docs' %}" class="btn btn-info" role="button">See docs</a>
             </div>
           </div>
         </form>
@@ -108,45 +126,7 @@
               </div>
           </div>
         </div>
-      <!-- Present the result -->
-      <div class="col-md-auto">
-        <div class="card-body">
-            
-            <table class="rf_table_style table text-center table-light table-bordered table-striped">
-              <thead>
-                <tr>
-                  <td colspan="2"><h5 align="center">Results</h5></td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr> 
-                  <td> <b> Distance </b> </td>
-                  <td> <b> Attenuation (dB) </b> </td>
-                </tr>
-                <tr> 
-                  <td><p id="distance_table_0">1000</p></td>
-                  <td><p id="fsl_table_0">1000</p></td>
-                </tr>
-                <tr> 
-                  <td><p id="distance_table_1">1000</p></td>
-                  <td><p id="fsl_table_1">1000</p></td>
-                </tr>
-                <tr> 
-                  <td><p id="distance_table_2">1000</p></td>
-                  <td><p id="fsl_table_2">1000</p></td>
-                </tr>
-                <tr> 
-                  <td><p id="distance_table_3">1000</p></td>
-                  <td><p id="fsl_table_3">1000</p></td>
-                </tr>
-                <tr> 
-                  <td><p id="distance_table_4">1000</p></td>
-                  <td><p id="fsl_table_4">1000</p></td>
-                </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+
                
     </div>
   </div>
@@ -219,38 +199,26 @@
 
     const FSL = free_space_path_loss(freq, distance_swp, g_TX, g_RX)
 
-    document.getElementById("distance_table_0").innerHTML = distance_swp[0]
-    document.getElementById("fsl_table_0").innerHTML = FSL[0]
-
-    document.getElementById("distance_table_1").innerHTML = distance_swp[1]
-    document.getElementById("fsl_table_1").innerHTML = FSL[1]
-
-    document.getElementById("distance_table_2").innerHTML = distance_swp[2]
-    document.getElementById("fsl_table_2").innerHTML = FSL[2]
-
-    document.getElementById("distance_table_3").innerHTML = distance_swp[3]
-    document.getElementById("fsl_table_3").innerHTML = FSL[3]
-    
-    document.getElementById("distance_table_4").innerHTML = distance_swp[4]
-    document.getElementById("fsl_table_4").innerHTML = FSL[4]
+    document.getElementById("distance_table_2").innerHTML = String(Math.round(1e2*distance_swp[2]/distance_scale)/1e2) + ' ' + distance_scale_txt;
+    document.getElementById("fsl_table_2").innerHTML = String(FSL[2]) + ' dB'
 
     var FSL_series = [];
 
       for(var i=0; i<N; i++) {
         FSL_series[i] = new Array(2);
-        FSL_series[i][0] = distance_swp[i]/distance_scale;
+        distance_swp[i] = distance_swp[i]/distance_scale;
+        FSL_series[i][0] = distance_swp[i]
         FSL_series[i][1] = FSL[i];
       }
       
-    let xmin = distance_swp[0]/distance_scale
-    let xmax = distance_swp[4]/distance_scale
+
     let x_units = distance_scale_txt
 
     let ymin = roundto10(FSL[0], 'floor')-10
     let ymax = roundto10(FSL[4], 'ceil')+10
 
     title='Free Space Path Loss @ ' + String(freq/freq_scale) + ' ' + freq_scale_txt
-    plotChart(freq, FSL_series, title, xmin, xmax, x_units, ymin, ymax)
+    plotChart(freq, FSL_series, title, distance_swp, x_units, ymin, ymax)
     
   }
 
@@ -289,10 +257,7 @@
 
 
 
-
-
-
-function plotChart(x, FSL_series, title, xmin, xmax, x_units, ymin, ymax) {
+function plotChart(x, FSL_series, title, x_axis, x_units, ymin, ymax) {
           $('#container').highcharts({
                 plotOptions: {
                               series: {
@@ -304,10 +269,10 @@ function plotChart(x, FSL_series, title, xmin, xmax, x_units, ymin, ymax) {
                         },
                 xAxis: {
                   
-                    min: xmin,
-                    max: xmax,
-
-
+                    min: 0.9*x_axis[0],
+                    max: 1.1*x_axis[4],
+                    tickInterval: 1,
+    tickPositions: x_axis.map((v) => Math.log10(v)),
                     type: 'logarithmic',
                           gridLineWidth: 1,
                           title: {text: 'Distance (' + String(x_units) + ')'}},

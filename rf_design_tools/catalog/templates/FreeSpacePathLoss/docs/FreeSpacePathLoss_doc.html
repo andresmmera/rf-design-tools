@@ -1,0 +1,46 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="container-fluid">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.4cm 0.5cm; vertical-align: middle;">Free Space Path Loss</h1>
+        </div>
+    
+        <div class="col-6 align-self-center text-right">
+            <div class=”card card-inverse card-danger”>
+                <a href="{% url 'free_space_path_loss_tool' %}" class="btn btn-dark" role="button">Free Space Path Loss Tool</a>
+            </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>The free space path loss is the attenuation between a transmitter and a receiver caused by the distance between them (d), without considering multipath or atmospheric absorption.</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ P_{RX} = {P_{TX}} · {G_{TX}} · {G_{RX}} · {\left( \frac{\lambda}{4 · \pi · d}\right)^2} \tag{1} $$</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>The path loss is the difference (in dB) between the TX power (P<sub>TX</sub>) and the RX power (P<sub>TX</sub>)</p>
+    </div>
+
+    <div class= "d-flex flex-row justify-content-center">
+        <p> $$ FSL (dB) = {20·log_{10} \left(d \right)} + {20·log_{10} (freq)} + {20·log_{10} \left(\frac{4 · \pi}{c}\right)} \tag{2} $$</p>
+    </div>
+
+    <div class="col-6 align-self-right">
+        <h5>Reference</h5>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.4cm 0.2cm;">
+        <p>[1] David M. Pozar, Microwave Engineering, 4<sup>th</sup> edition, page 673. John Wiley and Sons. 2012.</p>
+    </div>
+    
+  </div> 
+{% endblock %}

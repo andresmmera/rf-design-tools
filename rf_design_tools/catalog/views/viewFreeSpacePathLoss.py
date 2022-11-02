@@ -9,4 +9,4 @@ def FreeSpacePathLossView(request):
     return render(request, 'FreeSpacePathLoss/tool/FreeSpacePathLoss.html')
 
 def FreeSpacePathLossDocs(request):
-    return render(request, 'FreeSpacePathLoss/tool/FreeSpacePathLoss.html')
+    return render(request, 'FreeSpacePathLoss/docs/FreeSpacePathLoss_doc.html')
