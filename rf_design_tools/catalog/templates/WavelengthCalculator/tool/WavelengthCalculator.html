@@ -22,7 +22,7 @@
             <table class="rf_table_style table table-bordered table-hover" id="InputTable">
               <thead>
                 <tr>
-                  <td colspan="2">
+                  <td colspan="3">
                     <select name="mode" id="mode" onchange="changeMode()">
                       <option value="f2l">Frequency &#8594; Wavelength</option>
                       <option value="l2f">Wavelength &#8594; Frequency</option>
@@ -32,15 +32,37 @@
                 <tr>
                   <td>Parameter</td>
                   <td>Value</td>
+                  <td>Units</td>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>
-                    <p id = "mode_id">Frequency (MHz) </p>
+                    <p id = "mode_id">Frequency</p>
                   </td>
                   <td>
                     <input type="number" id="freq" step = '0.1' min='0' value="1000" style="width: 5em" onchange="updateTable()">
+                  </td>
+                  <td>
+                    <select class="Frequency_units" id="Frequency_units" onchange="updateTable()">
+                      <option value="1">Hz</option>
+                      <option value="1e3">kHz</option>
+                      <option selected="selected" value="1e6">MHz</option>
+                      <option value="1e9">GHz</option>
+                      <option value="1e12">THz</option>
+                    </select>
+                    <select class="Wavelength_units" id="Wavelength_units" onchange="updateTable()">
+                      <option value="1e-9">nm</option>
+                      <option value="1e-6">um</option>
+                      <option value="1e-3">mm</option>
+                      <option value="1e-2">cm</option>
+                      <option selected="selected" value="1">m</option>
+                      <option value="1e3">km</option>
+                      <option value="2.54e-5">mil</option>
+                      <option value="2.54">inch</option>
+                      <option value="1609.34">mile</option>
+                      <option value="1852">nm</option>
+                    </select>
                   </td>
                 </tr>
                 <tr>
@@ -50,6 +72,7 @@
                   <td>
                     <input type="number" id="er" value="4.7" min='1' step='0.1' style="width: 5em" onchange="updateTable()">
                   </td>
+                  <td></td>
                 </tr>
               </tbody>
             </table>
@@ -102,23 +125,87 @@
 
   <script type="text/javascript">
 
+  // It's called just when the page is loaded
+  $(document).ready(function () {
+    $('.Wavelength_units').hide(); // Hide length units
+  })
+
+
     function getLength(len){
       var units = ' m';
 
-      if (len <= 0.01){
-          // Use mm
-          len *= 1e3;
-          units = ' mm'
-          
-      }else{
-        if (len < 1){
-          // Use cm
-          len *= 100;
-          units = ' cm';
+        if (len < 1e-6)
+        {
+          len *= 1e9;
+          units = ' nm'
+        }
+        else
+        {
+          if (len <= 0.001)
+          {
+            len *= 1e6;
+            units = ' um'
+          }
+          else
+          {
+            if (len <= 0.01)
+            {
+                // Use mm
+                len *= 1e3;
+                units = ' mm'
+                
+            }
+            else
+            {
+              if (len < 1){
+                // Use cm
+                len *= 100;
+                units = ' cm';
+              }
+            }
+          }
+        }
+        return len.toFixed(2) + units
+    }    
+
+    function getFreq_with_units(freq){
+      var units = ' MHz';
+      if (freq < 1e3)
+      {
+        freq *= 1;
+        units = ' Hz'
+      }
+      else
+      {
+        if (freq < 1e6)
+        {
+          freq *= 1e-3;
+          units = ' kHz'
+        }
+        else
+        {
+          if (freq < 1e9)
+          {
+            freq *= 1e-6;
+            units = ' MHz'
+          }
+          else
+          {
+            if (freq < 1e12)
+            {
+              freq *= 1e-9;
+              units = ' GHz'
+            }
+            else
+            {
+              freq *= 1e-12;
+              units = ' THz'
+            }
+          }
         }
       }
-      return len.toFixed(2) + units
-    }    
+      return freq.toFixed(2) + units
+    }
 
     function changeMode(){
       var mode = document.getElementById("mode").value;
@@ -130,30 +217,24 @@
       if (mode == "f2l"){
         mode_id.innerHTML = "Frequency (MHz)";
         val.value = 1000;
+        $('.Wavelength_units').hide(); // Hide length units
+        $('.Frequency_units').show(); // Show freq units
       }else{
         mode_id.innerHTML = "&lambda; (m)";
         val.value = 0.5;
+        $('.Wavelength_units').show(); // Show length units
+        $('.Frequency_units').hide(); // Hide freq units
       }
       updateTable()
     }
 
     function updateTable(){
       // Get data
-      var freq = parseFloat(document.getElementById("freq").value)
+      
       var er = parseFloat(document.getElementById("er").value)
       const c0 = 299792458; // Speed of light (m/s)
 
-      // Check the data is valid
-      if (freq <= 0){
-        alert("Frequency must be positive")
-        document.getElementById("freq").value = 1000;
-        return
-      }
-      if (er < 1){
-        alert("\u03B5\u1D63 must be equal or greater than 1")
-        document.getElementById("er").value = 4.7;
-        return
-      }
+
 
                    
       // Update table
@@ -162,9 +243,23 @@
 
       if (mode == "f2l"){
         // Frequency to wavelength
+        let freq_scale = parseFloat(document.getElementById("Frequency_units").value)
+        var freq = parseFloat(document.getElementById("freq").value)*freq_scale;
+
+        // Check the data is valid
+        if (freq <= 0){
+          alert("Frequency must be positive")
+          document.getElementById("freq").value = 1000;
+          return
+        }
+        if (er < 1){
+          alert("\u03B5\u1D63 must be equal or greater than 1")
+          document.getElementById("er").value = 4.7;
+          return
+        }
 
         // Calculations
-        var lambda = c0/(Math.sqrt(er)*(freq*1e6))
+        var lambda = c0/(Math.sqrt(er)*(freq))
 
         ResultsTable.rows[1].cells[0].innerHTML = "&lambda;";
         ResultsTable.rows[1].cells[1].textContent = getLength(lambda);
@@ -193,10 +288,13 @@
       else{
         // Wavelength to frequency
         // Calculations
-        var freq = 1e-6*c0/(Math.sqrt(er)*(freq))
+        let length_scale = parseFloat(document.getElementById("Wavelength_units").value)
+        var lambda = parseFloat(document.getElementById("freq").value)*length_scale;
+
+        var freq = c0/(Math.sqrt(er)*(lambda))
 
         ResultsTable.rows[1].cells[0].textContent = "Frequency";
-        ResultsTable.rows[1].cells[1].textContent = freq.toFixed(2) + " MHz";
+        ResultsTable.rows[1].cells[1].textContent = getFreq_with_units(freq.toFixed(2));
 
         if (ResultsTable.rows.length == 4){
           ResultsTable.deleteRow(2)
