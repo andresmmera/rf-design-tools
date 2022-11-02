@@ -57,6 +57,9 @@ from catalog.views import MatchingNetworkDesignDocs
 
 from catalog.views import S_parameter_Viewer_View
 
+from catalog.views import FreeSpacePathLossView
+from catalog.views import FreeSpacePathLossDocs
+
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
     
@@ -134,6 +137,11 @@ urlpatterns = [
     ## VOLTAGE DIVIDER TOOL
     path('tool/VoltageDivider', VoltageDividerView, name='voltage_divider_tool'),
     path('tool/VoltageDivider/docs', VoltageDividerDocs, name='voltage_divider_docs'),
+
+    #################################################################################
+    ## PATH LOSS TOOL
+    path('tool/FreeSpacePathLoss', FreeSpacePathLossView, name='free_space_path_loss_tool'),
+    path('tool/FreeSpacePathLoss/docs', FreeSpacePathLossDocs, name='free_space_path_loss_docs'),
 
     #################################################################################
     # MATCHING NETWORK DESIGN TOOL

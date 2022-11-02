@@ -1,0 +1,348 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-auto">
+          <h2 class="tool-name">Free Space Path Loss</h2>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-auto box_form">
+        <!-- Instantiate the form -->
+        <form method="POST">
+          {% csrf_token %}          
+          <table class="rf_table_style table table-hover">
+            <thead>
+              <tr>
+                <td>Parameter</td>
+                <td>Value</td>
+                <td>Units</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="frequency">
+                <td>
+                    Frequency
+                </td>
+                <td>
+                  <input type="number" id="Frequency" min="0" value = "100" step="10" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+                <td>
+                  <select id="Frequency_units" onchange="submit_form(this)">
+                    <option value="1">Hz</option>
+                    <option value="1e3">kHz</option>
+                    <option value="1e6">MHz</option>
+                    <option selected="selected" value="1e9">GHz</option>
+                    <option value="1e12">THz</option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr class="distance">
+                <td>
+                    Distance
+                </td>
+                <td>
+                  <input type="number" id="Distance" min="0.1" value = "10" step="1" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+                <td>
+                  <select id="Distance_units" onchange="submit_form(this)">
+                    <option value="1e-3">mm</option>
+                    <option value="1e-2">cm</option>
+                    <option value="1">m</option>
+                    <option selected="selected" value="1e3">km</option>
+                    <option value="2.54e-5">mil</option>
+                    <option value="0.0254">in</option>
+                    <option value="1609.34">mile</option>
+                    <option value="1852">nm</option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr class="Gain TX antenna"> 
+                <td>
+                    Gain TX antenna
+                </td>
+                <td>
+                  <input type="number" id="Gain_TX" min="0" value = "0" step="5" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+                <td>
+                  dB
+                </td>
+              </tr>
+
+              <tr class="Gain RX antenna"> 
+                <td>
+                    Gain RX antenna
+                </td>
+                <td>
+                  <input type="number" id="Gain_RX" min="0" value = "0" step="5" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+                <td>
+                  dB
+                </td>
+              </tr>
+              </tbody>
+          </table>
+
+          <!-- BUTTONS -->
+          <div class="d-flex flex-row justify-content-center">
+            <div class="p-2">
+              <a href="{% url 'ipn_nf_docs' %}" class="btn btn-info" role="button">See docs</a>
+            </div>
+          </div>
+        </form>
+
+      </div>
+
+      <div class="col-md-auto box">
+        <div class="row">
+          <div class="col-xs-6 col-md-6" >
+              <div class="card shadow-sm">
+                <script src="https://code.highcharts.com/highcharts.js"></script>
+                <script src="https://code.highcharts.com/modules/annotations.js"></script>
+                <div id="container" style="width: 800px"></div>
+              </div>
+          </div>
+        </div>
+      <!-- Present the result -->
+      <div class="col-md-auto">
+        <div class="card-body">
+            
+            <table class="rf_table_style table text-center table-light table-bordered table-striped">
+              <thead>
+                <tr>
+                  <td colspan="2"><h5 align="center">Results</h5></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr> 
+                  <td> <b> Distance </b> </td>
+                  <td> <b> Attenuation (dB) </b> </td>
+                </tr>
+                <tr> 
+                  <td><p id="distance_table_0">1000</p></td>
+                  <td><p id="fsl_table_0">1000</p></td>
+                </tr>
+                <tr> 
+                  <td><p id="distance_table_1">1000</p></td>
+                  <td><p id="fsl_table_1">1000</p></td>
+                </tr>
+                <tr> 
+                  <td><p id="distance_table_2">1000</p></td>
+                  <td><p id="fsl_table_2">1000</p></td>
+                </tr>
+                <tr> 
+                  <td><p id="distance_table_3">1000</p></td>
+                  <td><p id="fsl_table_3">1000</p></td>
+                </tr>
+                <tr> 
+                  <td><p id="distance_table_4">1000</p></td>
+                  <td><p id="fsl_table_4">1000</p></td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+               
+    </div>
+  </div>
+
+
+<script>
+  submit_form()
+  function submit_form(){
+    // Get variables from the form
+    let freq_scale = parseFloat(document.getElementById("Frequency_units").value)
+    var freq = parseFloat(document.getElementById("Frequency").value)*freq_scale;
+    let freq_scale_txt = 'MHz'
+    if (freq_scale == 1e3)
+    {
+      freq_scale_txt = 'kHz'
+    }
+    else
+    {
+      if(freq_scale == 1e9)
+      {
+        freq_scale_txt = 'GHz'
+      }
+      else
+      {
+        if(freq_scale == 1) freq_scale_txt = 'Hz'
+      }
+    }
+
+    let distance_scale = parseFloat(document.getElementById("Distance_units").value)
+    var distance = new Array(1)
+    distance[0] = parseFloat(document.getElementById("Distance").value)*distance_scale;
+
+    let distance_scale_txt = 'm'
+    if (distance_scale == 1e-3)
+    {
+      distance_scale_txt = 'mm'
+    }
+    else
+    {
+      if(distance_scale == 1e-2) distance_scale_txt = 'cm'
+      else{
+            if(distance_scale == 1e3) distance_scale_txt = 'km'
+            else{
+                    if(distance_scale == 2.54e-5) distance_scale_txt = 'mil'
+                    else{
+                          if(distance_scale == 0.0254) distance_scale_txt = 'in'
+                          else{
+                                if(distance_scale == 1609.34) distance_scale_txt = 'mile'
+                                else{
+                                  if(distance_scale == 1852) distance_scale_txt = 'nm'
+                                }
+                              }
+                        }
+                }
+          }
+    }
+
+
+    var g_TX = parseFloat(document.getElementById("Gain_TX").value);
+    var g_RX = parseFloat(document.getElementById("Gain_RX").value);
+
+    // Prepare plot
+    var N = 5;
+    var distance_swp = new Array(N)
+    distance_swp[0] = distance[0]/4;
+    distance_swp[1] = distance[0]/2;
+    distance_swp[2] = distance[0];
+    distance_swp[3] = 2*distance[0];
+    distance_swp[4] = 4*distance[0];
+
+    const FSL = free_space_path_loss(freq, distance_swp, g_TX, g_RX)
+
+    document.getElementById("distance_table_0").innerHTML = distance_swp[0]
+    document.getElementById("fsl_table_0").innerHTML = FSL[0]
+
+    document.getElementById("distance_table_1").innerHTML = distance_swp[1]
+    document.getElementById("fsl_table_1").innerHTML = FSL[1]
+
+    document.getElementById("distance_table_2").innerHTML = distance_swp[2]
+    document.getElementById("fsl_table_2").innerHTML = FSL[2]
+
+    document.getElementById("distance_table_3").innerHTML = distance_swp[3]
+    document.getElementById("fsl_table_3").innerHTML = FSL[3]
+    
+    document.getElementById("distance_table_4").innerHTML = distance_swp[4]
+    document.getElementById("fsl_table_4").innerHTML = FSL[4]
+
+    var FSL_series = [];
+
+      for(var i=0; i<N; i++) {
+        FSL_series[i] = new Array(2);
+        FSL_series[i][0] = distance_swp[i]/distance_scale;
+        FSL_series[i][1] = FSL[i];
+      }
+      
+    let xmin = distance_swp[0]/distance_scale
+    let xmax = distance_swp[4]/distance_scale
+    let x_units = distance_scale_txt
+
+    let ymin = roundto10(FSL[0], 'floor')-10
+    let ymax = roundto10(FSL[4], 'ceil')+10
+
+    title='Free Space Path Loss @ ' + String(freq/freq_scale) + ' ' + freq_scale_txt
+    plotChart(freq, FSL_series, title, xmin, xmax, x_units, ymin, ymax)
+    
+  }
+
+  function roundto10(number, op)
+  {//Inspired by https://jsfiddle.net/NvvGf/4/
+    var exp = Math.floor(Math.log(Math.abs(number))/Math.log(10)) - 1;
+    exp = Math.max(exp,0);
+    var n = number/Math.pow(10,exp);
+    var n2
+    if (op == 'ceil')
+    {
+      n2 = Math.ceil(n/10) * 10;
+    }
+    else
+    {
+      n2 = Math.floor(n/10) * 10;
+    }
+    var result = n2 * Math.pow(10,exp);
+
+    return number
+  }
+
+  function free_space_path_loss(frequency, distance, g_TX, g_RX)
+  {
+    N = distance.length;
+    fsl = new Array(N);
+    for (let i = 0; i < N; i++)
+    {
+      fsl[i] = 20*Math.log10(frequency*distance[i]) - 147.55 - g_TX - g_RX;
+      fsl[i] = Math.round(fsl[i]*1e2)/1e2;
+    }
+    
+    return fsl;
+  }
+
+
+
+
+
+
+
+function plotChart(x, FSL_series, title, xmin, xmax, x_units, ymin, ymax) {
+          $('#container').highcharts({
+                plotOptions: {
+                              series: {
+                                      animation: false
+                                      }
+                              },
+                title: {
+                          text: title
+                        },
+                xAxis: {
+                  
+                    min: xmin,
+                    max: xmax,
+
+
+                    type: 'logarithmic',
+                          gridLineWidth: 1,
+                          title: {text: 'Distance (' + String(x_units) + ')'}},
+                       
+                yAxis: [
+                                {
+                                min: ymin,
+                                max: ymax,
+                                title: {
+                                        text: 'Path Loss (dB)'
+                                      },
+                                gridLineWidth: 1, 
+                                tickInterval: 10,
+                                tickPositioner: function(){
+                                                            var ticks = this.tickPositions;
+                                                            ticks.sort(function(a, b) {
+                                                            return a - b;
+                                                            });
+                                                          return ticks;
+                                                          }
+                                }
+                        ],
+                series: [                             
+                              {
+                                name: 'Free Space Path Loss (dB)',
+                                data: FSL_series,
+                                color: 'red',
+                                yAxis: 0
+                              },
+                          ],
+        });
+    };
+
+</script>
+
+
+{% endblock %}
+
