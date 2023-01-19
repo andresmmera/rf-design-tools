@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="170.70984mm"
+   height="37.366562mm"
+   viewBox="0 0 170.70984 37.366562"
+   version="1.1"
+   id="svg4603"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="drawing.png"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview4605"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.64765011"
+     inkscape:cx="176.79299"
+     inkscape:cy="321.93309"
+     inkscape:window-width="1920"
+     inkscape:window-height="1020"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs4600" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-55.587309,-30.748631)">
+    <path
+       style="fill:#cba135;fill-opacity:1;stroke:#000000;stroke-width:0.342252px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 199.30905,55.153703 v 9.807037 l 5.81108,-5.765062 11.57472,8.62941 9.35576,-36.801252 -44.56985,16.712643 12.50934,4.595751 24.62036,-15.429091 z"
+       id="path1264"
+       inkscape:export-filename="/home/andresmmera/text4970.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="53.523563"
+       y="61.937473"
+       id="text4970"
+       inkscape:export-filename="/home/andresmmera/text4970.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><tspan
+         sodipodi:role="line"
+         id="tspan4968"
+         x="53.523563"
+         y="61.937473"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:35.2777px;font-family:Lato;-inkscape-font-specification:'Lato, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#cba135;fill-opacity:1;stroke-width:0.264583">Contact</tspan></text>
+  </g>
+</svg>

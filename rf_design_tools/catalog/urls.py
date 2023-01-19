@@ -60,8 +60,12 @@ from catalog.views import S_parameter_Viewer_View
 from catalog.views import FreeSpacePathLossView
 from catalog.views import FreeSpacePathLossDocs
 
+from catalog.views import contact_page
+
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
+
+    path('tool/about', contact_page, name='contact'),
     
     # REFLECTION COEFFICIENT TOOLS
     path('tool/reflection_coefficient', ReflectionToolsCatalogView, name='reflection_coeff_tools'),
