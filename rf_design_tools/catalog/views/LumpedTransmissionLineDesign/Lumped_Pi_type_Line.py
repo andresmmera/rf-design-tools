@@ -110,11 +110,9 @@ def Design_Lumped_Line(params):
             topology.append('CS')
             values_network.append(C)
 
-    print('Topology:', topology)    
-
     data = {}
     data['ZS'] = 50
-    data['ZL'] = Z0
+    data['ZL'] = Z0*Z0/50
     data['topology'] = topology
     data['values_network'] = values_network
     
@@ -129,7 +127,7 @@ def get_Lumped_Line_Network(params):
     comp_val = {}
     NetworkType['Network'] = 'Lumped Line'
     comp_val['ZS'] = 50
-    comp_val['ZL'] = params['Z0']
+    comp_val['ZL'] = np.round(data['ZL'] ,1)
     comp_val['topology'] = data["topology"]
     comp_val['values_network'] = data["values_network"]
           
@@ -173,7 +171,7 @@ def get_Lumped_Line_Schematic(params):
     # Draw the load port
     d += elm.Line().right().length(2).linewidth(1)
 
-    d += elm.Dot().label(str(params["Z0"]) + " \u03A9" , fontsize=_fontsize).linewidth(1)
+    d += elm.Dot().label(str(np.round(data["ZL"],1)) + " \u03A9" , fontsize=_fontsize).linewidth(1)
 
     d += elm.Line(color='white').length(2).linewidth(0)
     

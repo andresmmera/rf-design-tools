@@ -43,27 +43,27 @@ def LumpedTransmissionLineToolView(request):
         else:
             Structure = 'Pi-Type'
 
-        print("Structure:", Structure)
+        #print("Structure:", Structure)
 
         index = request.POST.get('Mask', None)
         Mask = MASK_TYPE[int(index)-1][1]
-        print("Mask:", Mask)
+        #print("Mask:", Mask)
                                        
         f0 = request.POST.get('f0', None)
-        print("f0: ", f0, " MHz")
+        #print("f0: ", f0)
                     
         Z0 = request.POST.get('Z0', None)
-        print("Z0 = ", Z0)
+        #print("Z0 = ", Z0)
 
         length = request.POST.get('length', None)
-        print("length = ", length)
+        #print("length = ", length)
         
         
         f_start = request.POST.get('f_start', None)
-        print(f_start)
+        #print(f_start)
         
         f_stop = request.POST.get('f_stop', None)
-        print(f_stop)
+        #print(f_stop)
 
         f0_span = request.POST.get('f0_span', None)        
         f_span = request.POST.get('f_span', None)
@@ -71,7 +71,7 @@ def LumpedTransmissionLineToolView(request):
         sweep_mode = request.POST.get('sweep_mode', None)
         
         n_points = request.POST.get('n_points', None)
-        print(n_points)
+        #print(n_points)
 
         # Lumped Transmission Line Design
         designer = LumpedTransmissionLine()
@@ -111,7 +111,7 @@ def LumpedTransmissionLineToolView(request):
         S21 = 20*np.log10(np.abs(S21))
         
         # Response
-        title = Structure + " Matching Network"
+        title = Structure + " Lumped Equivalent (Z" + "\u2080 = " + Z0 + "\u03A9 ,l = " + length + "\u03BB" + ")"
 
         response_data = {}
 
