@@ -62,6 +62,9 @@ from catalog.views import FreeSpacePathLossDocs
 
 from catalog.views import contact_page
 
+from catalog.views import LumpedTransmissionLineToolView
+from catalog.views import LumpedTransmissionLineToolDocs
+
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
 
@@ -136,6 +139,10 @@ urlpatterns = [
     path('tool/attenuator_design/docs/Pi-Tee-type', AttenuatorDesignDocs_PiTee, name='attenuator_design_PiTee_docs'),
     path('tool/attenuator_design/download/svg/', SchematicSVGDownload_Attenuator, name='svg_download_att'),
 
+    #################################################################################
+    # LUMPED TRANSMISSIONLINE TOOL
+    path('tool/lumped_trasmission_line', LumpedTransmissionLineToolView, name='lumped_trasnmission_line_tool'),
+    path('tool/lumped_trasmission_line/docs', LumpedTransmissionLineToolDocs, name='lumped_trasnmission_line_docs'),
 
     #################################################################################
     ## VOLTAGE DIVIDER TOOL

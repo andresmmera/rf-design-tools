@@ -1,0 +1,539 @@
+{% extends "base_generic.html" %}
+<head>
+  <!-- Add icon library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+{% load static %}
+
+{% block content %}
+
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-auto">
+          <h2 class="tool-name">Lumped Transmission Line Design</h2>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-auto box_form">
+        <!-- Instantiate the form -->
+        <form id="AttenuatorDesign_form" method="POST">
+          {% csrf_token %}          
+          <table class="rf_table_style table">
+            <h5 align="center"> Design Parameters</h5>
+            <thead>
+              <tr>
+                <td>Parameter</td>
+                <td>Value</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                    Structure
+                </td>
+                <td>                 
+                    <select id="Structure" onchange="submit_form(this)">
+                      <option selected="selected" value="1">Tee-Type</option>
+                      <option value="2">Pi-Type</option>
+                    </select>
+                </td>
+              </tr>
+
+              <tr class = "Mask_input">
+                <td>
+                  Response
+                </td>
+                <td>
+                  <select id="Mask" onchange="submit_form(this)">
+                    <option value="1">Lowpass</option>
+                    <option selected="selected" value="2">Highpass</option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr class="f0_input">
+                <td>
+                  Frequency (MHz)
+                </td>
+                <td>
+                  <input type="number" id="f0" min="1" value = "600" style="width: 4em" onchange="adjustSpan(this)"/>
+                  <select id="f0_scale" onchange="adjustSpan(this)">
+                    <option value="1">Hz</option>
+                    <option value="2">kHz</option>
+                    <option selected="selected" value="3">MHz</option>
+                    <option value="4">GHz</option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Z<sub>0</sub> (&Omega;)
+                </td>
+                <td>
+                  <input type="number" id="Z0" min="1" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Length
+                </td>
+                <td>
+                  <input type="number" id="length" min="0.01" step="0.01" value = "0.25" style="width: 4em" onchange="submit_form(this)"/> &lambda;
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+
+         
+        </form>
+        <!-- BUTTONS -->
+        <div class="d-flex flex-row justify-content-center">
+          <div class="p-2"><a href="{% url 'lumped_trasnmission_line_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+        </div>
+      </div>
+
+      
+      <div class="col-md-auto box">
+        <div class="row">
+          <div class="col-xs-4 col-md-8" >
+              <div class="card shadow-sm">
+                <script src="https://code.highcharts.com/highcharts.js"></script>
+                <div id="container" style="width: 800px"></div>
+              </div>
+          </div>
+        </div>
+        
+          <div class="card">
+            <div class="card-body">
+              <div class='row'>
+                <div class="col-xs-6 col-md-6" >
+                  <h5 class="card-title">Schematic</h5>
+                </div>
+
+                <!-- <div class="col-xs-2 col-md-2" > 
+                  <a href="{% url 'svg_download_att' %}" class="btn btn-light" role="button">Download SVG</a>
+                </div>
+
+                <div class="col-xs-4 col-md-4" > 
+                  <a href="{% url 'qucs_filter_download' %}" class="btn btn-warning" role="button">Download Qucs Schematic</a>
+                </div> -->
+              </div>
+            </div>
+            
+            <div class="card-text text-center">
+              <div class="col-xs-12 col-md-12" > 
+                <script src="https://unpkg.com/svg-pan-zoom-container"></script>
+                <!-- https://www.cssscript.com/svg-pan-zoom-container/ -->
+                <div data-zoom-on-wheel data-pan-on-drag>
+                  <svg id='svg_display' height = 500 width = 700>
+                    {{ svg | safe }}
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+
+          <div class="col-md-auto box_form">
+
+            <h5 align="center"> Simulation Parameters</h5>
+            
+            <div class="col-md-auto box">
+              <div class="col-md-auto box" align="center">
+                <input type="radio" id="fmode1" name="fmode" value="fmode1" checked="checked" onchange="switch_sweep_mode(this)">
+                <span>fstart | fstop</span>
+
+                <input type="radio" id="fmode2" name="fmode" value="fmode2" onchange="switch_sweep_mode(this)">
+                <span>fc | span</span>
+              </div>
+
+            </div>
+
+            <table class="rf_table_style table">
+              <thead>
+                <tr>
+                  <td>Parameter</td>
+                  <td>Value</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="sweep_mode1">
+                  <td>
+                    Start Freq
+                  </td>
+                  <td>
+                    <input type="number" id="f_start" min="0" value = "50" style="width: 4em" onchange="submit_form(this)"/>
+                    <select id="f_start_scale" onchange="submit_form(this)">
+                      <option value="1">Hz</option>
+                      <option value="2">kHz</option>
+                      <option selected="selected" value="3">MHz</option>
+                      <option value="4">GHz</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr class="sweep_mode1">
+                  <td>
+                    End Freq
+                  </td>
+                  <td>
+                    <input type="number" id="f_stop" min="0" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
+                    <select id="f_stop_scale" onchange="submit_form(this)">
+                      <option value="1">Hz</option>
+                      <option value="2">kHz</option>
+                      <option selected="selected" value="3">MHz</option>
+                      <option value="4">GHz</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr class="sweep_mode2">
+                  <td>
+                    f<sub>0</sub>
+                  </td>
+                  <td>
+                    <input type="number" id="f0_span" min="0" value = "500" style="width: 4em" onchange="submit_form(this)"/>
+                    <select id="f0_sweep_scale" onchange="submit_form(this)">
+                      <option value="1">Hz</option>
+                      <option value="2">kHz</option>
+                      <option selected="selected" value="3">MHz</option>
+                      <option value="4">GHz</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr class="sweep_mode2">
+                  <td>
+                    Span
+                  </td>
+                  <td>
+                    <input type="number" id="fspan" min="0" value = "1000" style="width: 4em" onchange="submit_form(this)"/>
+                    <select id="span_scale" onchange="submit_form(this)">
+                      <option value="1">Hz</option>
+                      <option value="2">kHz</option>
+                      <option selected="selected" value="3">MHz</option>
+                      <option value="4">GHz</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Points
+                  </td>
+                  <td>
+                    <input type="number" id="Points" min="1" value = "201" style="width: 4em" onchange="submit_form(this)"/>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="rf_table_style table">
+              <h5 align="center"> Display Parameters</h5>
+              <thead id = 'Sim_Head'>
+                <tr>
+                  <td>Parameter</td>
+                  <td>Value</td>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td>
+                      Scale (dB/div)
+                    </td>
+                    <td>
+                      <input type="number" id="y_axis_scale" min="1" value = "5" style="width: 4em" onchange="submit_form(this)"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Maximum (dB)
+                    </td>
+                    <td>
+                      <input type="number" id="y_axis_max"  value = "0" style="width: 4em" onchange="submit_form(this)"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Minimum (dB)
+                    </td>
+                    <td>
+                      <input type="number" id="y_axis_min" value = "-50" style="width: 4em" onchange="submit_form(this)"/>
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+
+      
+  </div>
+
+<script>
+  submit_form()
+
+    // It's called just when the page is loaded
+    $(document).ready(function () {
+    $('.sweep_mode2').hide();
+  })
+  
+
+    // Hide or show the corresponding inputs
+    function switch_sweep_mode(button){
+    if (button.value == 'fmode1'){
+      // fstart / fstop
+      $('.sweep_mode1').show();
+      $('.sweep_mode2').hide();
+
+      // Update inputs: the values may change in the other mode
+      let f0 = document.getElementById("f0_span").value;
+      let scale = document.getElementById('f0_sweep_scale').value;
+      f0 = f0*Math.pow(10, (scale-1)*3)
+
+
+      let span = document.getElementById("fspan").value;
+      scale = document.getElementById('span_scale').value;
+      span = span*Math.pow(10, (scale-1)*3)
+
+      let fstart = f0-0.5*span
+      let fstop = f0+0.5*span
+
+      let text_in = document.getElementById("f_start")
+      let units_in = document.getElementById("f_start_scale")
+
+      setFreqInputW_Units(text_in, units_in, fstart)
+
+      text_in = document.getElementById("f_stop")
+      units_in = document.getElementById("f_stop_scale")
+
+      setFreqInputW_Units(text_in, units_in, fstop)
+    }
+    else{
+      // fc / span
+      $('.sweep_mode1').hide();
+      $('.sweep_mode2').show();
+
+      // Update inputs: the values may change in the other mode
+      let fstart = document.getElementById("f_start").value;
+      let scale = document.getElementById('f_start_scale').value;
+      fstart = fstart*Math.pow(10, (scale-1)*3)
+
+      let fstop = document.getElementById("f_stop").value;
+      scale = document.getElementById('f_stop_scale').value;
+      fstop = fstop*Math.pow(10, (scale-1)*3)
+
+      let bw = fstop-fstart;
+
+      let f0 = fstart + 0.5*bw
+
+      let text_in = document.getElementById("f0_span")
+      let units_in = document.getElementById("f0_sweep_scale")
+      setFreqInputW_Units(text_in, units_in, f0)
+
+      text_in = document.getElementById("fspan")
+      units_in = document.getElementById("span_scale")
+      setFreqInputW_Units(text_in, units_in, bw)
+
+    }
+  }
+
+  // Set the frequency in the user input i.e. text + combobox
+  function setFreqInputW_Units(text_in, units_in, val)
+  {
+    if (val >= 2e9)
+    {
+      // GHz
+      val = val*1e-9;
+      text_in.value = val.toFixed(2)
+      units_in.value = 4
+    }
+    else
+    {
+      if (val >= 2e6)
+      {
+        // MHz
+        val = val*1e-6;
+        text_in.value = val.toFixed(2)
+        units_in.value = 3
+      }
+      else
+      {
+        if (val >= 2e3)
+        {
+          // KHz
+          val = val*1e-3;
+          text_in.value = val.toFixed(2)
+          units_in.value = 2
+        }
+        else
+        {
+          // Hz
+          text_in.value = val.toFixed(2)
+          units_in.value = 1
+        }
+      }
+    }
+  }
+
+
+  function adjustSpan(){
+    var f0 = document.getElementById("f0").value;
+    var scale_f0 = document.getElementById('f0_scale').value;
+    f0_scaled = f0*Math.pow(10, (scale_f0-1)*3)
+
+    var f_start = document.getElementById("f_start").value;
+    var scale_fstart = document.getElementById('f_start_scale').value;
+    f_start_scaled = f_start*Math.pow(10, (scale_fstart-1)*3)
+
+    var f_stop = document.getElementById("f_stop").value;
+    var scale_fstop = document.getElementById('f_stop_scale').value;
+    f_stop_scaled = f_stop*Math.pow(10, (scale_fstop-1)*3)
+
+    if ((f0_scaled < f_start_scaled) || (f0_scaled > 10*f_start_scaled)){
+      f_start = 0.5*f0
+      document.getElementById("f_start").value = f_start;
+      document.getElementById('f_start_scale').value = scale_f0;
+    }
+
+    if ((f0_scaled > f_stop_scaled) || (f0_scaled*10 < f_stop_scaled)){
+      f_stop = 1.5*f0
+      document.getElementById("f_stop").value = f_stop;
+      document.getElementById('f_stop_scale').value = scale_f0;
+    }
+    submit_form()
+  }
+ 
+  function submit_form(){
+    // Get variables from the form
+    var Structure = document.getElementById("Structure").value;
+    var Mask = document.getElementById("Mask").value;
+    var f0 = document.getElementById("f0").value;
+    var scale_f0 = document.getElementById('f0_scale').value;
+    f0 = f0*Math.pow(10, (scale_f0-1)*3)
+    var length = document.getElementById("length").value;
+
+    var Z0 = document.getElementById("Z0").value;
+
+    var f_start = document.getElementById("f_start").value;
+    var scale_fstart = document.getElementById('f_start_scale').value;
+    f_start = f_start*Math.pow(10, (scale_fstart-1)*3)
+
+    var f_stop = document.getElementById("f_stop").value;
+    var scale_fstop = document.getElementById('f_stop_scale').value;
+    f_stop = f_stop*Math.pow(10, (scale_fstop-1)*3)
+
+    var f0_span = document.getElementById("f0_span").value;
+    var scale_fsweep = document.getElementById('f0_sweep_scale').value;
+    f0_span = f0_span*Math.pow(10, (scale_fsweep-1)*3)
+
+    var f_span = document.getElementById("fspan").value;
+    var scale_fspan = document.getElementById('span_scale').value;
+    f_span = f_span*Math.pow(10, (scale_fspan-1)*3);
+
+    let sweep_mode = 1
+    sweep_mode_button = document.getElementById('fmode1')
+    if (sweep_mode_button.checked == false){
+      // f0 | span
+      sweep_mode = 2
+    }
+
+    var Points = document.getElementById("Points").value;
+    $.ajax({
+        type: "POST",
+        url: 'lumped_trasmission_line',
+        data: {
+            "Structure": Structure,
+            "Mask": Mask,
+            "f0": f0,
+            "Z0": Z0,
+            "length": length,
+            "f_start": f_start,
+            "f_stop": f_stop,
+            "f0_span": f0_span,
+            "f_span": f_span,
+            "sweep_mode": sweep_mode,
+            "n_points": Points,
+        },
+        dataType: "json",
+        success: function (data) {
+            $("#svg_display").html(data['svg'])
+
+            // Retrieve data from django
+            freq = data['freq']
+            S11 = data['S11']
+            S21 = data['S21']
+            title = data['title']
+            plotChart(freq, S21, S11, title)
+            
+            if (data['warning']){
+              alert(data['warning'])
+            }
+        },
+        failure: function () {
+            alert("JSON failure");
+        }
+    });
+  }
+
+
+
+  function linspace_int(startValue, stopValue, cardinality) {
+  var arr = [];
+  var step = (stopValue - startValue) / (cardinality - 1);
+  for (var i = 0; i < cardinality; i++) {
+    arr.push(Math.round(startValue + (step * i)));
+  }
+  return arr;
+}
+
+function plotChart(x, y1, y2, title) {
+
+  let y_axis_scale = parseFloat(document.getElementById("y_axis_scale").value)
+  let y_axis_min = parseFloat(document.getElementById("y_axis_min").value)
+  let y_axis_max = parseFloat(document.getElementById("y_axis_max").value)
+  
+          $('#container').highcharts({
+                plotOptions: {
+                              series: {
+                                      animation: false
+                                      }
+                              },
+                title: {
+                          text: title
+                         },
+                xAxis: {
+                        categories: x,
+                        gridLineWidth: 1,
+                        tickPositions: linspace_int(0, x.length-1, 11),
+                        title: {text: 'freq (MHz)'}
+                        },
+                yAxis: [
+                                {
+                                min: y_axis_min,
+                                max: y_axis_max,
+                                title: {
+                                        text: 'S21 (dB), S11 (dB)'
+                                      },
+                                gridLineWidth: 1, 
+                                tickInterval: y_axis_scale,
+                                }
+                        ],
+                                series: [{
+                                  name: 'S21 (dB)',
+                                  data: y1,
+                                  color: 'red',
+                                  yAxis: 0
+                                },
+                                {
+                                  name: 'S11 (dB)',
+                                  data: y2,
+                                  color: 'blue',
+                                  yAxis: 0
+                                }
+                              ]
+                            });
+                        };
+
+</script>
+{% endblock %}
+

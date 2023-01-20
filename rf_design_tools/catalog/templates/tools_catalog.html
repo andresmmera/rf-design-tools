@@ -54,8 +54,26 @@
            
          <!-- BUTTONS -->
          <div class="d-flex flex-row justify-content-center">
-           <div class="p-2"><a href="{% url 'attenuator_design_tool'%}" class="btn btn-dark" role="button">Go!</a></div>
+           <div class="p-2"><a href="{% url 'lumped_trasnmission_line_tool'%}" class="btn btn-dark" role="button">Go!</a></div>
            <div class="p-2"><a href="{% url 'attenuator_design_docs'%}" class="btn btn-info" role="button">See docs</a></div>
+         </div>
+      </div>
+
+      <div class="col-xs-9 col-md-3 box" style="background-color:#ffffff;">
+        <!-- LUMPED TRANSMISSION LINE TOOL -->
+         <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+           <a href='tool/lumped_trasmission_line'><h5 class="tool_title">Lumped Transmission Lines</h5></a>
+         </div>
+         
+         <!-- TOOL DESCRIPTION -->
+         <div class="d-flex flex-row justify-content-center">
+           <p>Synthesize Lumped Trasnmission Line Networks</p>
+         </div>
+           
+         <!-- BUTTONS -->
+         <div class="d-flex flex-row justify-content-center">
+           <div class="p-2"><a href="{% url 'lumped_trasnmission_line_tool'%}" class="btn btn-dark" role="button">Go!</a></div>
+           <div class="p-2"><a href="{% url 'lumped_trasnmission_line_docs'%}" class="btn btn-info" role="button">See docs</a></div>
          </div>
       </div>
 
