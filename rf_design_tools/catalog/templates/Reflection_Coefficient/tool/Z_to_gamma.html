@@ -106,7 +106,7 @@ function calculate(){
     
     let gamma = math.divide( math.add(ZL,- Z0), math.add(ZL, Z0) )
 
-    if (math.re(gamma) < 1e-3) gamma = math.complex(1e-3, math.im(gamma));
+    if (math.abs(math.re(gamma)) < 1e-3) gamma = math.complex(1e-3, math.im(gamma));
 
     let gamma_mag = math.sqrt(  math.re(gamma)*math.re(gamma)+ math.im(gamma)*math.im(gamma))
     let gamma_ang = (180/math.pi)*math.atan(math.im(gamma) / math.re(gamma))
