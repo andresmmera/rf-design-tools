@@ -3,40 +3,6 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 
-# FORM 2 - RF POWER CONVERTER
-class RF_PowerConversionForm(forms.Form):
-    
-    P = forms.FloatField(initial=0,  label='Power')
-    CHOICES_Units = (
-        ('0', "W"),
-        ('1', "dBm"),
-        ('2', "dB\u00B5V (Z\u2080 = 75 \u03A9)"),
-        ('3', "dBmV (Z\u2080 = 75 \u03A9)"),
-        ('4', "dB\u00B5V (Z\u2080 = 50 \u03A9)"),
-        ('5', "dBmV (Z\u2080 = 50 \u03A9)"),
-        ('6', "dBpW"),
-    )
-    old_units = forms.ChoiceField(choices=CHOICES_Units, label='Units', initial='1')
-    new_units = forms.ChoiceField(choices=CHOICES_Units, label='New units', initial='2')
-
-    
-    
-    def clean(self):
-        data = self.cleaned_data
-
-        # Check that the power is not negative
-        if (data['old_units'] == '0') and (data['P'] <= 0):
-            raise ValidationError("P must be > 0")
-
-        return data
-
-    def __init__(self, *args, **kwargs):
-        super(RF_PowerConversionForm, self).__init__(*args, **kwargs)
-        # Set the width of the boxes
-        box_width = 5
-        self.fields['P'].widget.attrs['style'] = "width:75px"
-
-
 class SecondaryImageForm(forms.Form):
     # Secondary Image Calculation
     f_IF1 = forms.FloatField(initial=200,  label='First IF (MHz)')

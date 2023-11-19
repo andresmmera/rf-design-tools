@@ -12,9 +12,7 @@
     <div class="row">
       <div class="col-md-auto">
         <div class="mx-auto box_form">
-          <!-- Instantiate the form -->
-          <form method="POST"> 
-            {% csrf_token %}          
+     
             <table class="rf_table_style table table-bordered table-hover">
               <thead>
                 <tr>
@@ -25,21 +23,48 @@
               <tbody>
                 <tr> <!--Power -->
                   <td>
-                    {{form.P.label}}
+                    Power
                   </td>
-                  <td>{{form.P}}</td>
+                  <td>
+                    <input type="number" step="1" value="0" size="4" id="P_old" onchange="update()">
+                  </td>
                 </tr>
                 <tr> <!--Old units -->
                   <td>
-                    {{form.old_units.label}}
+                    Units
                   </td>
-                  <td>{{form.old_units}}</td>
+                  <td>
+                    <select name="OldUnits" id="OldUnits" onchange="update()">
+                      <option value="W">W</option>
+                      <option value="mW">mW</option>
+                      <option value="dBm" selected="selected">dBm</option>
+                      <option value="dBuV_75">dB&#956;V (Z&#8320; = 75 &#937;)</option>
+                      <option value="dBmV_75">dBmV (Z&#8320; = 75 &#937;)</option>
+                      <option value="V_75">V (Z&#8320; = 75 &#937;)</option>
+                      <option value="dBuV_50">dB&#956;V (Z&#8320; = 50 &#937;)</option>
+                      <option value="dBmV_50">dBmV (Z&#8320; = 50 &#937;)</option>
+                      <option value="V_50">V (Z&#8320; = 50 &#937;)</option>
+                    </select>
+                  </td>
                 </tr>
+
                 <tr> <!--New units -->
                   <td>
-                    {{form.new_units.label}}
+                    New Units
                   </td>
-                  <td>{{form.new_units}}</td>
+                  <td>
+                    <select name="NewUnits" id="NewUnits" onchange="update()">
+                      <option value="W">W</option>
+                      <option value="mW">mW</option>
+                      <option value="dBm">dBm</option>
+                      <option value="dBuV_75" selected="selected">dB&#956;V (Z&#8320; = 75 &#937;)</option>
+                      <option value="dBmV_75">dBmV (Z&#8320; = 75 &#937;)</option>
+                      <option value="V_75">V (Z&#8320; = 75 &#937;)</option>
+                      <option value="dBuV_50">dB&#956;V (Z&#8320; = 50 &#937;)</option>
+                      <option value="dBmV_50">dBmV (Z&#8320; = 50 &#937;)</option>
+                      <option value="V_50">V (Z&#8320; = 50 &#937;)</option>
+                    </select>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -47,7 +72,7 @@
             <!-- BUTTONS -->
             <div class="d-flex flex-row justify-content-center">
               <div class="p-2">
-                <input type = "submit" value = "Calculate">
+                <input type = "submit" value = "Calculate" onchange="update()">
               </div>
 
               <div class="p-2">
@@ -57,19 +82,11 @@
         </div>
       </div>
 
-      <!-- <div class= "col-sm-4 my-auto">
-        <div class="mx-auto" align="center">
-          <input type="image" src="{% static 'images/general/arrow.png' %}" value = "Calculate" style="width:50%">
-        </div>
-    </div> -->
-    </form>
-
-          
+    
         <div class="col-md-auto">
             <div class="mx-auto">
               <!-- Present the result -->
               <div class="card-body">
-                {% if Pnew != None %}
                     <table class="rf_table_style table text-center table-bordered">
                         <thead>
                           <tr>
@@ -78,28 +95,141 @@
                         </thead>
                         <tbody>
                           <tr> 
-                            <td align="center">{{Pnew}} {{prefix_unit}}{{new_units}}</td>
+                            <td align="center" id="result"></td>
                           </tr>
                         </tbody>
                     </table>
-                {% else %}
-                    <table class="rf_table_style table text-center table-bordered">
-                      <thead>
-                        <tr>
-                          <th colspan="2"><h5 align="center">Result</h5></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr> 
-                          <td align="center">108.75 dB&#x00B5V (Z&#x2080 = 75 &#x03A9)</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                {% endif %}
               </div>
             </div>
           </div>
     </div>
 </div>
+
+
+<script type="text/javascript">
+  update()
+  function update(){
+    // Get the variables
+    var P_old = parseFloat(document.getElementById("P_old").value);
+    var OldUnits = document.getElementById("OldUnits").value;
+    var NewUnits = document.getElementById("NewUnits").value;
+    var power_W = 0;
+    var P = 0;
+
+    if ((P_old <= 0) && (OldUnits.indexOf("dB") === -1))
+    {
+      alert("Power must be a positive quantity")
+      return;
+    }
+    
+    // Convert the input power to W
+    switch (OldUnits)
+    {
+      case "W":
+        power_W = P_old;
+        break;
+      case "mW":
+        power_W = 1e-3*P_old;
+        break;
+      case "dBm":
+        power_W = Math.pow(10, 0.1*(P_old-30))
+        break;
+      case "dBuV_75":
+        power_W = Math.pow(10, 0.1*(P_old - 138.75))
+        break;
+      case "dBmV_75":
+        power_W = Math.pow(10, 0.1*(P_old - 78.75))
+        break;
+      case "V_75":
+        power_W = P_old*P_old/75;
+        break;
+      case "dBuV_50":
+        power_W = Math.pow(10, 0.1*(P - 136.99))
+        break;
+      case "dBmV_50":
+        power_W = Math.pow(10, 0.1*(P - 76.75))
+        break;
+      case "V_50":
+        power_W = P_old*P_old/50;
+        break;
+      case "dBpW":
+        power_W = Math.pow(10, 0.1*(P-120))
+        break;
+      default:
+        power_W = P_old;
+    }
+
+    // Convert power to the selected unit
+    switch (NewUnits)
+    {
+      case "W":
+        P = power_W;
+        break;
+      case "mW":
+        P = 1e3*power_W
+        break;
+      case "dBm":
+        P = 10*Math.log10(power_W) + 30;
+        break;
+      case "dBuV_75":
+        P = 10*Math.log10(power_W) + 138.75;
+        break;
+      case "dBmV_75":
+        P = 10*Math.log10(power_W) + 78.75;
+        break;
+      case "V_75":
+        P = Math.sqrt(power_W*75);
+        break;
+      case "dBuV_50":
+        P = 10*Math.log10(power_W) + 136.99;
+        break;
+      case "dBmV_50":
+        P = 10*Math.log10(power_W) + 76.99
+        break;
+      case "V_50":
+        P = Math.sqrt(power_W*50);
+        break;
+      case "dBpW":
+        P = 10*math.log10(power_W) + 120
+        break;
+      default:
+        P = power_W;
+    }
+
+    // In case of linear units, do scaling if needed
+    scale = " "
+    if ((P < 0.5) && ((NewUnits === "W") || (NewUnits === "V_75") || (NewUnits === "V_50")) )
+    {
+      if (P >= 1e-3) 
+      {
+        scale = " m"
+        P = P*1e3;
+      } 
+      else if (P >= 1e-6) 
+      {
+        scale = " u"
+        P = P*1e6;
+      } 
+      else if (P >= 1e-9)
+      {
+        scale = " n"
+        P = P*1e9;
+      } 
+      else {
+        scale = " p"
+        P = P*1e12;
+      }
+    }
+
+    // Round to 2 decimals
+    P = P.toFixed(2);
+    // Write the result in the table
+    var Combo_NewUnits = document.getElementById("NewUnits")
+    var Result = P.toString() + scale + Combo_NewUnits.options[Combo_NewUnits.selectedIndex].text; 
+    document.getElementById("result").innerHTML = Result;
+
+  }
+
+</script>
 
 {% endblock %}
