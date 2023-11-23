@@ -10,6 +10,7 @@ def ArrayToString(arr):
 def getUnitsWithScale(value, units, n_decimals=2):
     c = ''
     cal = abs(value)
+    Expo = -5
     if(cal > 1e-20):
         cal = np.log10(cal) / 3.0
         if(cal < -0.2):
