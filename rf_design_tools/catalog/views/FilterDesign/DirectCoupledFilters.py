@@ -347,8 +347,8 @@ def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fs
 
 def synthesize_DC_Filter_L_Coupled_Series_Resonators(params):
 
-    f1 = params['f1']
-    f2 = params['f2']
+    f1 = params['f1']*1e-6
+    f2 = params['f2']*1e-6
     Nres = params['N']
     Cres = params['Xres']
     RS = params['ZS']
@@ -600,8 +600,8 @@ def DirectCoupled_L_Coupled_SeriesResonators(params):
 
 def synthesize_DC_Filter_C_Coupled_Series_Resonators(params):
 
-    f1 = params['f1']
-    f2 = params['f2']
+    f1 = params['f1']*1e-6
+    f2 = params['f2']*1e-6
     Nres = params['N']
     Lres = params['Xres']
     RS = params['ZS']

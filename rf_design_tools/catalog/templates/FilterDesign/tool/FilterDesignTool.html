@@ -101,7 +101,7 @@
                   Ripple (dB)
                 </td>
                 <td>
-                  <input type="number" id="Ripple" value = "0.05" step="0.05" min="0" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="Ripple" value = "0.05" step="0.05" min="0.01" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
               </tr>
               <tr class="as_input">
@@ -620,7 +620,7 @@ submit_form()
     if ((select.value == 1) || (select.value == 4) ){
       $('.inductance_input').show()// Show resonator values
       CreateTableDirectCoupled(N, 'L')
-      for (var i = 0; i < N; i++){
+      for (var i = 1; i <= N; i++){
         document.getElementById("X[" + i.toString() + "]").value = 100
       }
       
@@ -629,7 +629,7 @@ submit_form()
     if ((select.value == 2) || (select.value == 3) || (select.value == 5)){
       $('.inductance_input').show()// Show resonator values
       CreateTableDirectCoupled(N, 'C')
-      for (var i = 0; i < N; i++){
+      for (var i = 1; i <= N; i++){
         document.getElementById("X[" + i.toString() + "]").value = 1
       }
     }
