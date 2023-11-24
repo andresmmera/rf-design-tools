@@ -282,14 +282,14 @@ class Filter:
                     Lres = [100e-9] * self.N
                 else:
                     Lres = np.asarray(self.Xres, dtype='float64')*1e-9 # nH
-                Schematic, NetworkType, comp_val = DirectCoupled_C_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc, BW, Lres, self.f_start, self.f_stop, self.n_points)
+                Schematic, NetworkType, comp_val = DirectCoupled_C_Coupled_ShuntResonators(params, Lres)
             elif (self.DC_Type == 'L-coupled shunt resonators'):
                 self.fc = 0.5*(self.f2 + self.f1)
                 if (not self.Xres):
                     Cres = [10e-12] * self.N
                 else:
                     Cres = np.asarray(self.Xres, dtype='float64')*1e-12 # pF
-                Schematic, NetworkType, comp_val = DirectCoupled_L_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc, BW, Cres, self.f_start, self.f_stop, self.n_points)
+                Schematic, NetworkType, comp_val = DirectCoupled_L_Coupled_ShuntResonators(params, Cres)
             elif (self.DC_Type == 'L-coupled series resonators'):
                 if (not self.Xres):
                     params['Xres'] = [10e-12] * (self.N)
@@ -312,7 +312,7 @@ class Filter:
                 params['Magnetic_Coupling'] = 1
                 Schematic, NetworkType, comp_val = DirectCoupled_L_Coupled_SeriesResonators(params)
             elif(self.DC_Type == 'Quarter-Wave coupled resonators'):
-                Schematic, NetworkType, comp_val = DirectCoupled_QW_Coupled_ShuntResonators(self.gi, self.ZS, self.ZL, self.fc, BW, self.f_start, self.f_stop, self.n_points)
+                Schematic, NetworkType, comp_val = DirectCoupled_QW_Coupled_ShuntResonators(params)
         
         # Define frequency sweep
         if (self.sweep_mode == 1):
