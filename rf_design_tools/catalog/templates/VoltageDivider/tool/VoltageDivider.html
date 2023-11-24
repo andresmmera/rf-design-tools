@@ -338,6 +338,14 @@ var Rlower = []
 
 function getValueWithUnits(val, unit){
     prefix = ''
+
+    // Catch the sign
+    var sign = 1;
+    if (val < 0) sign = -1;
+
+    // To determine the most convenient scale, use the magnitude
+    val = Math.abs(val)
+
     // Lower than 1
     if (val < 1)
     {
@@ -420,6 +428,11 @@ function getValueWithUnits(val, unit){
             prefix = ''
         }
     }
+
+    // Put the sign
+
+    val = val*sign;
+
     if (prefix == '')
         return val.toFixed(2) + ' ' + unit
     else
@@ -639,8 +652,7 @@ function parseUnits(R, units)
    
 
     R = parseFloat(R)
-    if (R < 0)
-        R = -1
+  
     
     return R
 }
