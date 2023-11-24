@@ -80,7 +80,19 @@ def synthesize_DC_Filter_C_Coupled_Shunt_Resonators(params):
 
 # Reference: 
 # [1] "Microwave Filters, Impedance-Matching Networks, and Coupling Structures", George L. Matthaei, L. Young, E. M. Jones, Artech House pg. 482
-def DirectCoupled_C_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Lres, fstart, fstop, npoints):
+def DirectCoupled_C_Coupled_ShuntResonators(params, Lres):
+    gi = params['gi']
+    RS = params['ZS']
+    RL = params['ZL']
+    f1 = params['f1']
+    f2 = params['f2']
+    f0 = params['fc']
+    BW = f2-f1
+    fstart = params['f_start']
+    fstop = params['f_stop']
+    npoints = params['n_points']
+    
+    
     Nres = len(gi) - 2 # Number of resonators
     bw = BW / f0
     
@@ -256,7 +268,18 @@ def synthesize_DC_Filter_L_Coupled_Shunt_Resonators(params):
 
 # Reference: 
 # [1] "Microwave Filters, Impedance-Matching Networks, and Coupling Structures", George L. Matthaei, L. Young, E. M. Jones, Artech House pg. 482
-def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fstop, npoints):
+def DirectCoupled_L_Coupled_ShuntResonators(params, Cres):
+    gi = params['gi']
+    RS = params['ZS']
+    RL = params['ZL']
+    f1 = params['f1']
+    f2 = params['f2']
+    f0 = params['fc']
+    BW = f2-f1
+    fstart = params['f_start']
+    fstop = params['f_stop']
+    npoints = params['n_points']
+    
     Nres = len(gi) - 2 # Number of resonators
     
     # Draw circuit
