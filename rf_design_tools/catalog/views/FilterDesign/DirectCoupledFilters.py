@@ -347,8 +347,8 @@ def DirectCoupled_L_Coupled_ShuntResonators(gi, RS, RL, f0, BW, Cres, fstart, fs
 
 def synthesize_DC_Filter_L_Coupled_Series_Resonators(params):
 
-    f1 = params['f1']*1e-6
-    f2 = params['f2']*1e-6
+    f1 = params['f1']
+    f2 = params['f2']
     Nres = params['N']
     Cres = params['Xres']
     RS = params['ZS']
@@ -469,8 +469,8 @@ def DirectCoupled_L_Coupled_SeriesResonators(params):
     count_C = 0
     count_L = 0
     
-    params['f1'] = params['f1'] *1e6
-    params['f2'] = params['f2'] *1e6
+    params['f1'] = params['f1']
+    params['f2'] = params['f2']
     M, Lseries, Cres = synthesize_DC_Filter_L_Coupled_Series_Resonators(params)
 
     NetworkType = {}
@@ -600,8 +600,8 @@ def DirectCoupled_L_Coupled_SeriesResonators(params):
 
 def synthesize_DC_Filter_C_Coupled_Series_Resonators(params):
 
-    f1 = params['f1']*1e-6
-    f2 = params['f2']*1e-6
+    f1 = params['f1']
+    f2 = params['f2']
     Nres = params['N']
     Lres = params['Xres']
     RS = params['ZS']
@@ -727,8 +727,8 @@ def DirectCoupled_C_Coupled_SeriesResonators(params, port_match):
     syn_params['N'] = params['N']
     syn_params['ZS'] = params['ZS']
     syn_params['ZL'] = params['ZL']
-    syn_params['f1'] = float(params['f1'])*1e6
-    syn_params['f2'] = float(params['f2'])*1e6
+    syn_params['f1'] = float(params['f1'])
+    syn_params['f2'] = float(params['f2'])
     syn_params['Xres'] = [float(i)*1e-9 for i in params['Xres']] # Resonator inductance
     Match_source, Match_load, Cinv, Lres, Cres = synthesize_DC_Filter_C_Coupled_Series_Resonators(syn_params)
     
