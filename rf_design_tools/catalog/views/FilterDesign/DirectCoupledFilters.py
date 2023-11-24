@@ -923,7 +923,7 @@ def DirectCoupled_QW_Coupled_ShuntResonators(params):
     # Draw circuit
     schem.use('svg')
     d = schem.Drawing()
-    _fontsize = 12
+    _fontsize = 10
     
     # Component counter
     count_C = 0
@@ -959,18 +959,21 @@ def DirectCoupled_QW_Coupled_ShuntResonators(params):
 
         comp_val['C'+str(count_C)] = Cres[i]
         comp_val['L'+str(count_L)] = Lres[i]
-        
-        # Coupling line
-        # Drawing
+
         d.pop()
-        d += elm.Line().right().length(2).linewidth(1)
-        d += TransmissionLine().right().label("l = " + getUnitsWithScale(qw, 'Distance'), fontsize=_fontsize, loc = 'bottom').label("Z\u2080 = " + str(RS) + " \u03A9 ", loc = 'top').linewidth(1)
-        d += elm.Line().right().length(2).linewidth(1)
+        d += elm.Line().right().length(1.5).linewidth(1)
         
-        count_TL += 1
-        comp_val['TL_'+str(count_TL)+'_Z0'] = RS;
-        comp_val['TL_'+str(count_TL)+'_ang'] = 90;
-       
+        if i < Nres-1:
+            # Coupling line
+            # Drawing
+            
+            d += TransmissionLine().right().label("l = " + getUnitsWithScale(qw, 'Distance'), fontsize=_fontsize, loc = 'bottom').label("Z\u2080 = " + str(RS) + " \u03A9 ", loc = 'top', fontsize=_fontsize).linewidth(1)
+            d += elm.Line().right().length(1.5).linewidth(1)
+            
+            count_TL += 1
+            comp_val['TL_'+str(count_TL)+'_Z0'] = RS;
+            comp_val['TL_'+str(count_TL)+'_ang'] = 90;
+        
         
     # Load port
     # Drawing
