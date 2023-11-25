@@ -916,6 +916,7 @@ def DirectCoupled_QW_Coupled_ShuntResonators(params):
     NetworkType['Network'] = 'Direct-Coupled'
     NetworkType['DC_Type'] = 'Quarter-Wave coupled resonators'
     NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))
+    NetworkType['f0'] = f0
     NetworkType['N'] = Nres
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL
@@ -967,7 +968,7 @@ def DirectCoupled_QW_Coupled_ShuntResonators(params):
             # Coupling line
             # Drawing
             
-            d += TransmissionLine().right().label("l = " + getUnitsWithScale(qw, 'Distance'), fontsize=_fontsize, loc = 'bottom').label("Z\u2080 = " + str(RS) + " \u03A9 ", loc = 'top', fontsize=_fontsize).linewidth(1)
+            d += TransmissionLine().right().label("l = 90 deg", fontsize=_fontsize, loc = 'bottom').label("Z\u2080 = " + str(RS) + " \u03A9 ", loc = 'top', fontsize=_fontsize).linewidth(1)
             d += elm.Line().right().length(1.5).linewidth(1)
             
             count_TL += 1

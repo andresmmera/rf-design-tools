@@ -5,6 +5,7 @@ from ..utilities import *
 from .CanonicalFilters import *
 from .EllipticFilters import *
 from .DirectCoupledFilters import *
+from .QuarterWave_TL import *
 
 
 from .exportQucs import getEllipticFilterQucsSchematic, getCanonicalFilterQucsSchematic
@@ -313,6 +314,13 @@ class Filter:
                 Schematic, NetworkType, comp_val = DirectCoupled_L_Coupled_SeriesResonators(params)
             elif(self.DC_Type == 'Quarter-Wave coupled resonators'):
                 Schematic, NetworkType, comp_val = DirectCoupled_QW_Coupled_ShuntResonators(params)
+
+        elif (self.Structure == 'Quarter-Wave TL'):
+            self.getLowpassCoefficients()
+            params = self.getParams()
+            BW = self.f2 - self.f1
+            self.fc = 0.5*(self.f2 + self.f1)
+            Schematic, NetworkType, comp_val = QW_TransmissionLine_Filter(params)
         
         # Define frequency sweep
         if (self.sweep_mode == 1):

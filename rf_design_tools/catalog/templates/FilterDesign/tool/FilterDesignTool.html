@@ -35,6 +35,7 @@
                     <select id="Structure" onchange="StructureChanged(this)">
                       <option selected="selected" value="1">Conventional LC</option>
                       <option value="2">Direct Coupled LC</option>
+                      <option value="3">Quarter-Wave TL</option>
                     </select>
                 </td>
               </tr>
@@ -126,10 +127,10 @@
                 </td>
                 <td>                    
                   <select id="Mask" onclick="MaskChanged(this)">
-                    <option selected="selected" value="1">Lowpass</option>
-                    <option value="2">Highpass</option>
-                    <option value="3">Bandpass</option>
-                    <option value="4">Bandstop</option>
+                    <option selected="selected" value="1" id="LPF">Lowpass</option>
+                    <option value="2" id="HPF">Highpass</option>
+                    <option value="3" id="BPF">Bandpass</option>
+                    <option value="4" id="BSF">Bandstop</option>
                   </select>
                 </td>
               </tr>
@@ -567,6 +568,12 @@ submit_form()
     $('.Mask_input').show(); //Show mask choice
     $('.inductance_input').hide()// Hide inductance values
 
+    // Restore masks
+    document.getElementById("LPF").disabled = false;
+    document.getElementById("HPF").disabled = false;
+    document.getElementById("BPF").disabled = false;
+    document.getElementById("BSF").disabled = false;
+
     // Restore initial setup
     document.getElementById("Mask").value = 1; // Lowpass
     document.getElementById("Cutoff").value = 500;
@@ -589,20 +596,18 @@ submit_form()
       document.getElementById("Response").value = 2 // Force Chebyshev response by default
       document.getElementById("Response").options[0].disabled = true // Disable elliptic response. It cannot be implemented using Direct Coupled LC techniques
 
-      // Put a narrowband setup
+      // Default setup
       document.getElementById("f1").value = 495;
       document.getElementById("f2").value = 505;
-
       document.getElementById("f_start").value = 480;
       document.getElementById("f_stop").value = 520;
-
       document.getElementById("Order").value = 3;
       
+      // Hide unneeded boxes
       $('.DC_Type_input').show(); // Show Direct Coupled LC type
       $('.FirstElement_input').hide()// Hide first shunt/series
       $('.EllipticType_input').hide();// Hide Elliptic type
       $('.as_input').hide();// Hide stopband attenuation
-      
       $('.inductance_input').show()// Show inductance values
 
       var N = document.getElementById("Order").value;
@@ -610,6 +615,36 @@ submit_form()
 
       $('.fc_input').hide();
       $('.fBPF_input').show();
+
+      submit_form()
+    }
+  
+    if (select.value == 3)
+    {
+      // Quarter-Wave Transmission Line
+      $('.DC_Type_input').hide(); // Hide Direct Coupled LC type
+      $('.Mask_input').show(); //Show mask choice
+      $('.inductance_input').hide()// Hide inductance values
+
+      // Hide LPF and HPF. They cannot be implemented in QW TL
+      document.getElementById("LPF").disabled = true;
+      document.getElementById("HPF").disabled = true;
+      document.getElementById("Mask").value = 3 // Bandpass
+
+      $('.DC_Type_input').hide(); // Show Direct Coupled LC type
+      $('.FirstElement_input').hide()// Hide first shunt/series
+      $('.EllipticType_input').hide();// Hide Elliptic type
+      $('.as_input').hide();// Hide stopband attenuation
+      $('.inductance_input').hide()// Show inductance values
+      $('.fc_input').hide(); // LPF cutoff
+      $('.fBPF_input').show();
+
+      // Default setup
+      document.getElementById("f1").value = 5250;
+      document.getElementById("f2").value = 5750;
+      document.getElementById("f_start").value = 3250;
+      document.getElementById("f_stop").value = 7750;
+      document.getElementById("Order").value = 3;
 
       submit_form()
     }

@@ -26,8 +26,8 @@ class SecondaryImageForm(forms.Form):
 FILTER_STRUCTURES =(
 ("1", "Conventional LC"),
 ("2", "Direct Coupled LC"),
-("3", "Three"),
-("4", "Four"),
+("3", "Quarter-Wave TL"),
+("4", "Quarter-Wave TL"),
 ("5", "Five"),
 )
 
