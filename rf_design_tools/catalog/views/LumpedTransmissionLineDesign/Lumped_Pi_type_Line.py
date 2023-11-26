@@ -21,6 +21,8 @@ def Synthesize_Lumped_Line_Section(params):
 def Design_Lumped_Line(params):
     # Unpack the dictionary
     Z0 =  params['Z0']
+    ZS =  params['ZS']
+    ZL =  params['ZL']
     f0 = params['f0']
     Mask = params['Mask']
     Structure = params['Structure']
@@ -111,8 +113,8 @@ def Design_Lumped_Line(params):
             values_network.append(C)
 
     data = {}
-    data['ZS'] = 50
-    data['ZL'] = Z0*Z0/50
+    data['ZS'] = ZS
+    data['ZL'] = ZL
     data['topology'] = topology
     data['values_network'] = values_network
     

@@ -46,38 +46,27 @@ def LumpedTransmissionLineToolView(request):
         #print("Structure:", Structure)
 
         index = request.POST.get('Mask', None)
-        Mask = MASK_TYPE[int(index)-1][1]
-        #print("Mask:", Mask)
-                                       
+        Mask = MASK_TYPE[int(index)-1][1]                    
         f0 = request.POST.get('f0', None)
-        #print("f0: ", f0)
-                    
         Z0 = request.POST.get('Z0', None)
-        #print("Z0 = ", Z0)
+        ZS = request.POST.get('ZS', None)
+        ZL = request.POST.get('ZL', None)
 
-        length = request.POST.get('length', None)
-        #print("length = ", length)
-        
-        
+        length = request.POST.get('length', None)       
         f_start = request.POST.get('f_start', None)
-        #print(f_start)
-        
         f_stop = request.POST.get('f_stop', None)
-        #print(f_stop)
-
         f0_span = request.POST.get('f0_span', None)        
         f_span = request.POST.get('f_span', None)
-      
         sweep_mode = request.POST.get('sweep_mode', None)
-        
         n_points = request.POST.get('n_points', None)
-        #print(n_points)
 
         # Lumped Transmission Line Design
         designer = LumpedTransmissionLine()
         designer.Structure = Structure
         designer.f0 = float(f0)
         designer.Z0 = float(Z0)
+        designer.ZS = float(ZS)
+        designer.ZL = float(ZL)
         designer.length = float(length)
         designer.f_start = float(f_start)
         designer.f_stop = float(f_stop)
@@ -111,7 +100,7 @@ def LumpedTransmissionLineToolView(request):
         S21 = 20*np.log10(np.abs(S21))
         
         # Response
-        title = Structure + " Lumped Equivalent (Z" + "\u2080 = " + Z0 + "\u03A9 ,l = " + length + "\u03BB" + ")"
+        title = Structure + " Lumped Equivalent (Z" + "\u2080 = " + Z0 + "\u03A9, l = " + length + "\u03BB" + ")"
 
         response_data = {}
 
@@ -197,56 +186,28 @@ def NetworkResponse(Network_Type, comp_val):
         C = comp_val['values_network'][0]
         L = comp_val['values_network'][1]
         
-        S11 = -(4*pi**2*C*L*ZS*freq**2 + (-2*I*pi*C*ZL*ZS + 2*I*pi*L)*freq + ZL - ZS)/(4*pi**2*C*L*ZS*freq**2 + (-2*I*pi*C*ZL*ZS - 2*I*pi*L)*freq - ZL - ZS)
-        S21 = -2*ZL*ZS/((4*pi**2*C*L*ZS*freq**2 + (-2*I*pi*C*ZL*ZS - 2*I*pi*L)*freq - ZL - ZS)*np.sqrt(ZL*ZS))
+        S11 = (-8*I*pi**3*C**2*L*ZL*ZS*freq**3 + 4*(pi**2*C*L*ZL - pi**2*C*L*ZS)*freq**2 - 2*(-2*I*pi*C*ZL*ZS + I*pi*L)*freq - ZL + ZS)/(8*I*pi**3*C**2*L*ZL*ZS*freq**3 + 4*(pi**2*C*L*ZL + pi**2*C*L*ZS)*freq**2 + 2*(-2*I*pi*C*ZL*ZS - I*pi*L)*freq - ZL - ZS)
+        S21 = -2*ZL*ZS/((8*I*pi**3*C**2*L*ZL*ZS*freq**3 + 4*(pi**2*C*L*ZL + pi**2*C*L*ZS)*freq**2 + 2*(-2*I*pi*C*ZL*ZS - I*pi*L)*freq - ZL - ZS)*np.sqrt(ZL*ZS))
 
     elif((comp_val['topology'][0] == 'LP') and (comp_val['topology'][1] == 'CS')):
         L = comp_val['values_network'][0]
         C = comp_val['values_network'][1]
-
-        S11 = (4*(pi**2*C*L*ZL - pi**2*C*L*ZS)*freq**2 - (-2*I*pi*C*ZL*ZS + 2*I*pi*L)*freq + ZS)/(4*(pi**2*C*L*ZL + pi**2*C*L*ZS)*freq**2 + (-2*I*pi*C*ZL*ZS - 2*I*pi*L)*freq - ZS)
-        S21 = 8*pi**2*C*L*ZL*ZS*freq**2/((4*(pi**2*C*L*ZL + pi**2*C*L*ZS)*freq**2 + (-2*I*pi*C*ZL*ZS - 2*I*pi*L)*freq - ZS)*np.sqrt(ZL*ZS))
+        S11 = (8*(pi**3*C*L**2*ZL - pi**3*C*L**2*ZS)*freq**3 - 4*(-2*I*pi**2*C*L*ZL*ZS + I*pi**2*L**2)*freq**2 - I*ZL*ZS - 2*(pi*L*ZL - pi*L*ZS)*freq)/(8*(pi**3*C*L**2*ZL + pi**3*C*L**2*ZS)*freq**3 + 4*(-2*I*pi**2*C*L*ZL*ZS - I*pi**2*L**2)*freq**2 + I*ZL*ZS - 2*(pi*L*ZL + pi*L*ZS)*freq)
+        S21 = 16*pi**3*C*L**2*ZL*ZS*freq**3/((8*(pi**3*C*L**2*ZL + pi**3*C*L**2*ZS)*freq**3 + 4*(-2*I*pi**2*C*L*ZL*ZS - I*pi**2*L**2)*freq**2 + I*ZL*ZS - 2*(pi*L*ZL + pi*L*ZS)*freq)*np.sqrt(ZL*ZS))
 
     elif((comp_val['topology'][0] == 'CS') and (comp_val['topology'][1] == 'LP')):
         C = comp_val['values_network'][0]
         L = comp_val['values_network'][1]
 
-        S11 = (4*(pi**2*C*L*ZL - pi**2*C*L*ZS)*freq**2 - (-2*I*pi*C*ZL*ZS + 2*I*pi*L)*freq - ZL)/(4*(pi**2*C*L*ZL + pi**2*C*L*ZS)*freq**2 + (-2*I*pi*C*ZL*ZS - 2*I*pi*L)*freq - ZL)
-        S21 = 8*pi**2*C*L*ZL*ZS*freq**2/((4*(pi**2*C*L*ZL + pi**2*C*L*ZS)*freq**2 + (-2*I*pi*C*ZL*ZS - 2*I*pi*L)*freq - ZL)*np.sqrt(ZL*ZS))
+        S11 = (8*(pi**3*C**2*L*ZL - pi**3*C**2*L*ZS)*freq**3 - 4*(-I*pi**2*C**2*ZL*ZS + 2*I*pi**2*C*L)*freq**2 - 2*(pi*C*ZL - pi*C*ZS)*freq + I)/(8*(pi**3*C**2*L*ZL + pi**3*C**2*L*ZS)*freq**3 + 4*(-I*pi**2*C**2*ZL*ZS - 2*I*pi**2*C*L)*freq**2 - 2*(pi*C*ZL + pi*C*ZS)*freq + I)
+        S21 = 16*pi**3*C**2*L*ZL*ZS*freq**3/((8*(pi**3*C**2*L*ZL + pi**3*C**2*L*ZS)*freq**3 + 4*(-I*pi**2*C**2*ZL*ZS - 2*I*pi**2*C*L)*freq**2 - 2*(pi*C*ZL + pi*C*ZS)*freq + I)*np.sqrt(ZL*ZS))
 
     elif((comp_val['topology'][0] == 'LS') and (comp_val['topology'][1] == 'CP')):
         L = comp_val['values_network'][0]
         C = comp_val['values_network'][1]
 
-        S11 = (4*pi**2*C*L*ZL*freq**2 + (2*I*pi*C*ZL*ZS - 2*I*pi*L)*freq - ZL + ZS)/(4*pi**2*C*L*ZL*freq**2 + (-2*I*pi*C*ZL*ZS - 2*I*pi*L)*freq - ZL - ZS)
-        S21 = -2*ZL*ZS/((4*pi**2*C*L*ZL*freq**2 + (-2*I*pi*C*ZL*ZS - 2*I*pi*L)*freq - ZL - ZS)*np.sqrt(ZL*ZS))
+        S11 = (8*I*pi**3*C*L**2*freq**3 + 4*(pi**2*C*L*ZL - pi**2*C*L*ZS)*freq**2 + 2*(I*pi*C*ZL*ZS - 2*I*pi*L)*freq - ZL + ZS)/(8*I*pi**3*C*L**2*freq**3 + 4*(pi**2*C*L*ZL + pi**2*C*L*ZS)*freq**2 + 2*(-I*pi*C*ZL*ZS - 2*I*pi*L)*freq - ZL - ZS)
+        S21 = -2*ZL*ZS/((8*I*pi**3*C*L**2*freq**3 + 4*(pi**2*C*L*ZL + pi**2*C*L*ZS)*freq**2 + 2*(-I*pi*C*ZL*ZS - 2*I*pi*L)*freq - ZL - ZS)*np.sqrt(ZL*ZS))
 
-    elif((comp_val['topology'][0] == 'CS') and (comp_val['topology'][1] == 'CP')):
-        CS = comp_val['values_network'][0]
-        CP = comp_val['values_network'][1]
-
-        S11 = (4*pi**2*CP*CS*ZL*freq**2 + (2*I*pi*CP*ZL*ZS - 2*I*pi*CS)*freq - ZL + ZS)/(4*pi**2*CP*CS*ZL*freq**2 + (-2*I*pi*CP*ZL*ZS - 2*I*pi*CS)*freq - ZL - ZS)
-        S21 = -2*ZL*ZS/((4*pi**2*CP*CS*ZL*freq**2 + (-2*I*pi*CP*ZL*ZS - 2*I*pi*CS)*freq - ZL - ZS)*np.sqrt(ZL*ZS))
-
-    elif((comp_val['topology'][0] == 'CP') and (comp_val['topology'][1] == 'CS')):
-        CP = comp_val['values_network'][0]
-        CS = comp_val['values_network'][1]
-
-        S11 = (4*pi**2*CP*CS*ZL*freq**2 + (2*I*pi*CS*ZL*ZS - 2*I*pi*CP)*freq - ZL + ZS)/(4*pi**2*CP*CS*ZL*freq**2 + (-2*I*pi*CS*ZL*ZS - 2*I*pi*CP)*freq - ZL - ZS)
-        S21 = -2*ZL*ZS/((4*pi**2*CP*CS*ZL*freq**2 + (-2*I*pi*CS*ZL*ZS - 2*I*pi*CP)*freq - ZL - ZS)*np.sqrt(ZL*ZS))
-
-    elif((comp_val['topology'][0] == 'LS') and (comp_val['topology'][1] == 'LP')):
-        LS = comp_val['values_network'][0]
-        LP = comp_val['values_network'][1]
-
-        S11 = (4*pi**2*LP*LS*ZL*freq**2 + (2*I*pi*LS*ZL*ZS - 2*I*pi*LP)*freq - ZL + ZS)/(4*pi**2*LP*LS*ZL*freq**2 + (-2*I*pi*LS*ZL*ZS - 2*I*pi*LP)*freq - ZL - ZS)
-        S21 = -2*ZL*ZS/((4*pi**2*LP*LS*ZL*freq**2 + (-2*I*pi*LS*ZL*ZS - 2*I*pi*LP)*freq - ZL - ZS)*np.sqrt(ZL*ZS))
-    
-    elif((comp_val['topology'][0] == 'LP') and (comp_val['topology'][1] == 'LS')):
-        LP = comp_val['values_network'][0]
-        LS = comp_val['values_network'][1]
-
-        S11 = -(4*pi**2*LP*LS*ZS*freq**2 + (-2*I*pi*LS*ZL*ZS + 2*I*pi*LP)*freq + ZL - ZS)/(4*pi**2*LP*LS*ZS*freq**2 + (-2*I*pi*LS*ZL*ZS - 2*I*pi*LP)*freq - ZL - ZS)
-        S21 = -2*ZL*ZS/((4*pi**2*LP*LS*ZS*freq**2 + (-2*I*pi*LS*ZL*ZS - 2*I*pi*LP)*freq - ZL - ZS)*np.sqrt(ZL*ZS))
 
     return np.ones(len(freq))*S11, np.ones(len(freq))*S21

@@ -28,6 +28,8 @@ class LumpedTransmissionLine:
         params = {}
         params['f0'] = self.f0
         params['Z0'] = self.Z0
+        params['ZS'] = self.ZS
+        params['ZL'] = self.ZL
         params['length'] = self.length
 
         params['Mask'] = self.Mask

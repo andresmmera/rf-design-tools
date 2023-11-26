@@ -56,7 +56,7 @@
                   Frequency (MHz)
                 </td>
                 <td>
-                  <input type="number" id="f0" min="1" value = "600" style="width: 4em" onchange="adjustSpan(this)"/>
+                  <input type="number" id="f0" min="1" value = "600" style="width: 5em" onchange="adjustSpan(this)"/>
                   <select id="f0_scale" onchange="adjustSpan(this)">
                     <option value="1">Hz</option>
                     <option value="2">kHz</option>
@@ -68,10 +68,10 @@
 
               <tr>
                 <td>
-                  Z<sub>0</sub> (&Omega;)
+                  Z<sub>0</sub>
                 </td>
                 <td>
-                  <input type="number" id="Z0" min="1" value = "70.71" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="Z0" min="1" value = "70.71" style="width: 6em" onchange="submit_form(this)"/> &Omega;
                 </td>
               </tr>
 
@@ -80,7 +80,7 @@
                   Length
                 </td>
                 <td>
-                  <input type="number" id="length" min="0.01" step="0.01" max="1" value = "0.25" style="width: 4em" onchange="submit_form(this)"/> &lambda;
+                  <input type="number" id="length" min="0.01" step="0.01" max="1" value = "0.25" style="width: 6em" onchange="submit_form(this)"/> &lambda;
                 </td>
               </tr>
 
@@ -114,13 +114,6 @@
                   <h5 class="card-title">Schematic</h5>
                 </div>
 
-                <!-- <div class="col-xs-2 col-md-2" > 
-                  <a href="{% url 'svg_download_att' %}" class="btn btn-light" role="button">Download SVG</a>
-                </div>
-
-                <div class="col-xs-4 col-md-4" > 
-                  <a href="{% url 'qucs_filter_download' %}" class="btn btn-warning" role="button">Download Qucs Schematic</a>
-                </div> -->
               </div>
             </div>
             
@@ -223,6 +216,33 @@
                   </td>
                   <td>
                     <input type="number" id="Points" min="1" value = "201" style="width: 4em" onchange="submit_form(this)"/>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="rf_table_style table">
+              <thead>
+                <tr>
+                  <td>Parameter</td>
+                  <td>Value</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    Z<sub>S</sub>
+                  </td>
+                  <td>
+                    <input type="number" id="ZS" min="1" value = "50" style="width: 5em" onchange="submit_form(this)"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Z<sub>L</sub>
+                  </td>
+                  <td>
+                    <input type="number" id="ZL" min="1" value = "100" style="width: 5em" onchange="submit_form(this)"/>
                   </td>
                 </tr>
               </tbody>
@@ -413,6 +433,8 @@
     var length = document.getElementById("length").value;
 
     var Z0 = document.getElementById("Z0").value;
+    var ZS = document.getElementById("ZS").value;
+    var ZL = document.getElementById("ZL").value;
 
     var f_start = document.getElementById("f_start").value;
     var scale_fstart = document.getElementById('f_start_scale').value;
@@ -446,6 +468,8 @@
             "Mask": Mask,
             "f0": f0,
             "Z0": Z0,
+            "ZS": ZS,
+            "ZL": ZL,
             "length": length,
             "f_start": f_start,
             "f_stop": f_stop,
