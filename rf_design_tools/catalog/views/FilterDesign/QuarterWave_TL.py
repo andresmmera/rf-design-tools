@@ -35,11 +35,11 @@ def synthesize_QW(params):
     if (params['Mask']== 'Bandpass'):
         # BPF
         for i in range(0, N):
-            Z.append((np.pi*RS)/(np.pi*gi[i]*delta))
+            Z.append((np.pi*RS*delta)/(4*gi[i+1]))
     else:
         # BSF
         for i in range(0, N):
-            Z.append((4*RS)/(np.pi*gi[i]*delta))
+            Z.append((4*RS)/(np.pi*gi[i+1]*delta))
 
     return Z
 
@@ -126,8 +126,8 @@ def QW_TransmissionLine_Filter(params):
         d += elm.Line().down().length(1).linewidth(1)
         d += TransmissionLine().down().label("Z\u2080 = " + getUnitsWithScale(Z[i], 'Impedance')+"\nl = 90 deg", fontsize=_fontsize, loc = 'bottom').linewidth(1)
 
-        if (params['Mask']== 'Bandstop'):
-            # BSF
+        if (params['Mask']== 'Bandpass'):
+            # BPF
             d += elm.Ground().linewidth(1)
             count_gnd += 1
 
@@ -136,6 +136,7 @@ def QW_TransmissionLine_Filter(params):
             comp_val['TL_SC_'+str(count_TL_SC)+'_Z0'] = Z[i];
             comp_val['TL_SC_'+str(count_TL_SC)+'_ang'] = 90;
         else:
+            # BSP
             # Network
             count_TL_OC += 1
             comp_val['TL_OC_'+str(count_TL_OC)+'_Z0'] = Z[i];
