@@ -27,7 +27,7 @@ FILTER_STRUCTURES =(
 ("1", "Conventional LC"),
 ("2", "Direct Coupled LC"),
 ("3", "Quarter-Wave TL"),
-("4", "Quarter-Wave TL"),
+("4", "C-coupled shunt resonators (TL)"),
 ("5", "Five"),
 )
 

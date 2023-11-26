@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Andrés Martínez Mera - andresmartinezmera@gmail.com
+# Copyright 2020-2023 Andrés Martínez Mera - andresmartinezmera@gmail.com
 # Schematic drawing
 # Get units with scale, etc.
 from ..utilities import *
@@ -6,6 +6,7 @@ from .CanonicalFilters import *
 from .EllipticFilters import *
 from .DirectCoupledFilters import *
 from .QuarterWave_TL import *
+from .C_Coupled_Shunt_TL import *
 
 
 from .exportQucs import getEllipticFilterQucsSchematic, getCanonicalFilterQucsSchematic
@@ -56,14 +57,6 @@ class Filter:
         self.f_start = 10
         self.f_stop = 1e3
         self.n_points = 201
-
-        # OPEN DATABASE CONNECTION FOR THE ZVEREV TABLES
-        # self.ZverevDB = mysql.connector.connect(
-        #   host="localhost",
-        #   user="admin",
-        #   passwd="",
-        #   database="ZverevTables"
-        # )
         self.gi = []
 
     def getLowpassCoefficients(self):
@@ -321,6 +314,13 @@ class Filter:
             BW = self.f2 - self.f1
             self.fc = 0.5*(self.f2 + self.f1)
             Schematic, NetworkType, comp_val = QW_TransmissionLine_Filter(params)
+
+        elif (self.Structure == 'C-coupled shunt resonators (TL)'):
+            self.getLowpassCoefficients()
+            params = self.getParams()
+            BW = self.f2 - self.f1
+            self.fc = 0.5*(self.f2 + self.f1)
+            Schematic, NetworkType, comp_val = C_Coupled_ShuntResonators_TL_Filter(params)
         
         # Define frequency sweep
         if (self.sweep_mode == 1):
@@ -328,6 +328,7 @@ class Filter:
         else:
             NetworkType['freq'] = np.linspace(self.f0_span-0.5*self.f_span, self.f0_span+0.5*self.f_span, self.n_points)
         return Schematic, NetworkType, comp_val
+
 
     def getQucsSchematic(self):
         params = self.getParams()
