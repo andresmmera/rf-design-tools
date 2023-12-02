@@ -19,7 +19,7 @@ def get_ABCD_Matrix_Ladder_Element(code, x, w):
         T =  np.array([[1, 0], [1j*np.tan(x[1])/(x[0]), 1]]);
     elif (code == 'SC'):# Short Circuit Stub
         x[1] *= w*np.pi/180
-        T =  np.array([[1, 0], [1j/(x[0]*np.tan(x[1])), 1]]);
+        T =  np.array([[1, 0], [-1j/(x[0]*np.tan(x[1])), 1]]);
     elif (code == 'SPR'): # Series Parallel Resonator
         ZL = 1j*w*x[0]
         ZC = 1/(1j*w*x[1])
