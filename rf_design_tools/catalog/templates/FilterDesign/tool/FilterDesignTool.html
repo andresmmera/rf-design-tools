@@ -37,6 +37,7 @@
                       <option value="2">Direct Coupled LC</option>
                       <option value="3">Quarter-Wave TL</option>
                       <option value="4">C-coupled shunt resonators (TL)</option>
+                      <option value="5">Stepped Impedance</option>
                     </select>
                 </td>
               </tr>
@@ -103,7 +104,7 @@
                   Ripple (dB)
                 </td>
                 <td>
-                  <input type="number" id="Ripple" value = "0.05" step="0.05" min="0.01" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="Ripple" value = "0.05" step="0.05" min="0.01" style="width: 5em" onchange="submit_form(this)"/>
                 </td>
               </tr>
               <tr class="as_input">
@@ -148,7 +149,7 @@
                   Cutoff Freq
                 </td>
                 <td>
-                  <input type="number" id="Cutoff" min="1" value = "500" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="Cutoff" min="1" value = "500" style="width: 5em" onchange="submit_form(this)"/>
                   <select id="fc_scale" onchange="submit_form(this)">
                     <option value="1">Hz</option>
                     <option value="2">kHz</option>
@@ -162,7 +163,7 @@
                   Lower Cutoff Freq
                 </td>
                 <td>
-                  <input type="number" id="f1" min="1" value = "400" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="f1" min="1" value = "400" style="width: 5em" onchange="submit_form(this)"/>
                   <select id="f1_scale" onchange="submit_form(this)">
                     <option value="1">Hz</option>
                     <option value="2">kHz</option>
@@ -176,7 +177,7 @@
                   Higher Cutoff Freq
                 </td>
                 <td>
-                  <input type="number" id="f2" min="1" value = "600" style="width: 4em" onchange="submit_form(this)"/>
+                  <input type="number" id="f2" min="1" value = "600" style="width: 5em" onchange="submit_form(this)"/>
                   <select id="f2_scale" onchange="submit_form(this)">
                     <option value="1">Hz</option>
                     <option value="2">kHz</option>
@@ -185,6 +186,23 @@
                   </select>
                 </td>
               </tr>
+              <tr class="Zlow_input">
+                <td>
+                  Z<sub>low</sub> (&Omega;)
+                </td>
+                <td>
+                  <input type="number" id="Zlow" value = "20" step="5" min="1" style="width: 5em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              <tr class="Zhigh_input">
+                <td>
+                  Z<sub>high</sub> (&Omega;)
+                </td>
+                <td>
+                  <input type="number" id="Zhigh" value = "120" step="5" min="1" style="width: 5em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+              
               <tr>
                 <td>
                   Z<sub>source</sub> (&Omega;)
@@ -580,6 +598,8 @@ submit_form()
     document.getElementById("Cutoff").value = 500;
     $('.fc_input').show();
     $('.fBPF_input').hide();
+    $('.Zlow_input').hide(); // Stepped Zlow
+    $('.Zhigh_input').hide(); // Stepped Zhigh
 
     document.getElementById("f_start").value = 10;
     document.getElementById("f_stop").value = 1000;
@@ -610,6 +630,8 @@ submit_form()
       $('.EllipticType_input').hide();// Hide Elliptic type
       $('.as_input').hide();// Hide stopband attenuation
       $('.inductance_input').show()// Show inductance values
+      $('.Zlow_input').hide(); // Stepped Zlow
+      $('.Zhigh_input').hide(); // Stepped Zhigh
 
       var N = document.getElementById("Order").value;
       CreateTableDirectCoupled(N, 'L')
@@ -641,6 +663,8 @@ submit_form()
       $('.inductance_input').hide()// Show inductance values
       $('.fc_input').hide(); // LPF cutoff
       $('.fBPF_input').show();
+      $('.Zlow_input').hide(); // Stepped Zlow
+      $('.Zhigh_input').hide(); // Stepped Zhigh
 
       // Default setup
       document.getElementById("f1").value = 5250;
@@ -655,8 +679,6 @@ submit_form()
     if (select.value == 4)
     {
       // C-coupled shunt resonators
-
-      // Quarter-Wave Transmission Line
       $('.DC_Type_input').hide(); // Hide Direct Coupled LC type
       $('.Mask_input').show(); //Show mask choice
       $('.inductance_input').hide()// Hide inductance values
@@ -665,6 +687,7 @@ submit_form()
       document.getElementById("LPF").disabled = true;
       document.getElementById("HPF").disabled = true;
       document.getElementById("BSF").disabled = true;
+      document.getElementById("BPF").disabled = false;
       document.getElementById("Mask").value = 3 // Bandpass
 
       $('.DC_Type_input').hide(); // Show Direct Coupled LC type
@@ -674,6 +697,8 @@ submit_form()
       $('.inductance_input').hide()// Show inductance values
       $('.fc_input').hide(); // LPF cutoff
       $('.fBPF_input').show();
+      $('.Zlow_input').hide(); // Stepped Zlow
+      $('.Zhigh_input').hide(); // Stepped Zhigh
 
       // Default setup
       document.getElementById("f1").value = 2975;
@@ -681,6 +706,42 @@ submit_form()
       document.getElementById("f_start").value = 2600;
       document.getElementById("f_stop").value = 3400;
       document.getElementById("Order").value = 3;
+
+      submit_form()
+    }
+
+    if (select.value == 5)
+    {
+      // Stepped impedance LPF
+      $('.DC_Type_input').hide(); // Hide Direct Coupled LC type
+      $('.Mask_input').show(); //Show mask choice
+      $('.inductance_input').hide()// Hide inductance values
+
+      // Hide LPF and HPF. They cannot be implemented in QW TL
+      document.getElementById("LPF").disabled = false;
+      document.getElementById("HPF").disabled = true;
+      document.getElementById("BSF").disabled = true;
+      document.getElementById("BPF").disabled = true;
+      document.getElementById("Mask").value = 1 // Lowpass
+
+      $('.DC_Type_input').hide(); // Show Direct Coupled LC type
+      $('.FirstElement_input').show()// Hide first shunt/series
+      $('.EllipticType_input').hide();// Hide Elliptic type
+      $('.as_input').hide();// Hide stopband attenuation
+      $('.inductance_input').hide()// Show inductance values
+      $('.fc_input').show(); // LPF cutoff
+      $('.fBPF_input').hide(); // BPF settings
+      $('.Zlow_input').show(); // Stepped Zlow
+      $('.Zhigh_input').show(); // Stepped Zhigh
+      
+
+      // Default setup
+
+      document.getElementById("Order").value = 3;
+      document.getElementById("Cutoff").value = 2000;
+      document.getElementById("f_start").value = 1;
+      document.getElementById("f_stop").value = 4500;
+      
 
       submit_form()
     }
@@ -771,6 +832,9 @@ submit_form()
     var PhaseError = document.getElementById("PhaseError").value;
     var Mask = document.getElementById("Mask").value;
     var Order = document.getElementById("Order").value;
+    var Zlow = document.getElementById('Zlow').value;
+    var Zhigh = document.getElementById('Zhigh').value;
+
     var Cutoff = document.getElementById("Cutoff").value;
     var scale_fc = document.getElementById('fc_scale').value;
     Cutoff = Cutoff*Math.pow(10, (scale_fc-1)*3)
@@ -838,6 +902,8 @@ submit_form()
             "f2": f2,
             "ZS": ZS,
             "ZL": ZL,
+            "Zlow": Zlow,
+            "Zhigh": Zhigh,
             "f_start": f_start,
             "f_stop": f_stop,
             "f0_span": f0_span,

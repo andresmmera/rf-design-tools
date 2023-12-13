@@ -67,6 +67,8 @@ def FilterDesignToolView(request):
         f1 = request.POST.get('f1', None)
         f2 = request.POST.get('f2', None)
         
+        Zlow = request.POST.get('Zlow', None)
+        Zhigh = request.POST.get('Zhigh', None)
         
         ZS = request.POST.get('ZS', None)
         ZL = request.POST.get('ZL', None)
@@ -98,6 +100,8 @@ def FilterDesignToolView(request):
         designer.fc = float(Cutoff)
         designer.f1 = float(f1)
         designer.f2 = float(f2)
+        designer.Zlow = float(Zlow)
+        designer.Zhigh = float(Zhigh)
         designer.f0_span = float(f0_span)
         designer.f_span = float(f_span)
         designer.sweep_mode = int(sweep_mode)
@@ -1910,8 +1914,23 @@ def NetworkResponse(network_type, comp_val):
 
             print (code)
             print (x)
-            S = get_SPAR([ZS], [ZL], code, x, freq)
+            S = get_SPAR([ZS], comp_val['ZL'], code, x, freq)
             S11 = S[:, 0,0]
             S21 = S[:, 1,0]
+    elif(network_type['Network'] == 'Stepped Impedance'):
+        f0 = network_type['f0']
+        
+        x = []
+        code = []
+
+        for i in range(1, network_type['N']+1):            
+            x.append([comp_val['TL_' + str(i) + '_Z0'], ((180/np.pi)*comp_val['TL_' + str(i) + '_ang']/299792458)])
+            code.append('CASTL')
+
+        print (code)
+        print (x)
+        S = get_SPAR([ZS], [ZL], code, x, freq)
+        S11 = S[:, 0,0]
+        S21 = S[:, 1,0]
 
     return S11, S21 

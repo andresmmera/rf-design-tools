@@ -28,7 +28,7 @@ FILTER_STRUCTURES =(
 ("2", "Direct Coupled LC"),
 ("3", "Quarter-Wave TL"),
 ("4", "C-coupled shunt resonators (TL)"),
-("5", "Five"),
+("5", "Stepped Impedance"),
 )
 
 DC_TYPE =(

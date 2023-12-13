@@ -7,6 +7,7 @@ from .EllipticFilters import *
 from .DirectCoupledFilters import *
 from .QuarterWave_TL import *
 from .C_Coupled_Shunt_TL import *
+from .SteppedImpedance import *
 
 
 from .exportQucs import getEllipticFilterQucsSchematic, getCanonicalFilterQucsSchematic
@@ -15,9 +16,6 @@ from .exportQucs import get_DirectCoupled_SeriesResonators_QucsSchematic
 from .exportQucs import get_DirectCoupled_MagneticCoupledResonators_QucsSchematic
 
 import numpy as np
-
-#import mysql.connector # MySQL connection for getting the filter coefficient from the Zverev Tables
-
 
 
 class Filter:
@@ -46,6 +44,8 @@ class Filter:
         self.Lseries = []
         self.Cseries = []
         self.Cshunt = []
+        self.Zlow = 20
+        self.Zhigh = 100
 
         if (self.Mask =='Bandpass' or self.Mask =='Bandstop'):
             self.w1 = 2*np.pi*self.f1 # rad/s
@@ -235,6 +235,8 @@ class Filter:
         params['EllipticType'] = self.EllipticType
         params['Xres'] = self.Xres
         params['DC_Type'] = self.DC_Type
+        params['Zlow'] = self.Zlow
+        params['Zhigh'] = self.Zhigh
 
         return params
 
@@ -321,6 +323,11 @@ class Filter:
             BW = self.f2 - self.f1
             self.fc = 0.5*(self.f2 + self.f1)
             Schematic, NetworkType, comp_val = C_Coupled_ShuntResonators_TL_Filter(params)
+
+        elif (self.Structure == 'Stepped Impedance'):
+            self.getLowpassCoefficients()
+            params = self.getParams()
+            Schematic, NetworkType, comp_val = SteppedImpedance_Filter(params)
         
         # Define frequency sweep
         if (self.sweep_mode == 1):
