@@ -55,6 +55,7 @@
             </li>
             <li><a class="dropdown-item"  href="{% url 'rf_power_converter_tool' %}">RF Power Unit Converter</a></li>
             <li><a class="dropdown-item"  href="{% url 'bw_octaves_tool' %}">Octave Bandwidth Calculator</a></li>
+            <li><a class="dropdown-item"  href="{% url 'voltage_divider_tool' %}">Voltage Divider</a></li>
             <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Parallel/Series resistors and capacitors</a>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{% url 'cseries_tool' %}">Series Capacitors</a></li>
@@ -92,7 +93,7 @@
             <li><a class="dropdown-item"  href="{% url 'filter_design_tool' %}">Filter Design</a></li>
             <li><a class="dropdown-item"  href="{% url 'matching_network_design_tool' %}">Matching Network Design</a></li>
             <li><a class="dropdown-item"  href="{% url 'attenuator_design_tool' %}">Attenuator Design</a></li>
-            <li><a class="dropdown-item"  href="{% url 'filter_design_tool' %}">Power Combiner Design</a></li>
+           <!-- <li><a class="dropdown-item"  href="{% url 'filter_design_tool' %}">Power Combiner Design</a></li>-->
             <li><a class="dropdown-item"  href="{% url 'lumped_trasnmission_line_tool' %}">Lumped Transmission Line Design</a></li>
           </ul>
         </li>
@@ -102,7 +103,6 @@
             Other Design Tools
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item"  href="{% url 'voltage_divider_tool' %}">Voltage Divider</a></li>
             <li><a class="dropdown-item"  href="{% url 's_parameter_viewer_tool' %}">S-parameter Viewer</a></li>
           </ul>
         </li>
