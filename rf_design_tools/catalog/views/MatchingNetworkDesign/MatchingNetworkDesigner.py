@@ -7,6 +7,7 @@ import numpy as np
 
 
 from .Lsection import *
+from .PiMatching import *
 
 class MatchingNetwork:
 
@@ -19,6 +20,8 @@ class MatchingNetwork:
         self.XL = 0
         self.Structure = 'L-Section'
         self.Mask = 'Highpass'
+        self.PiTee_NetworkMask = 1
+        self.Q = 1
 
         # SIMULATION SETUP
         self.f_start = 10e6
@@ -35,6 +38,9 @@ class MatchingNetwork:
 
         params['RL'] = self.RL
         params['XL'] = self.XL
+        
+        params['Q'] = self.Q
+        params['PiTee_NetworkMask'] = self.PiTee_NetworkMask
 
         params['Mask'] = self.Mask
       
@@ -48,6 +54,9 @@ class MatchingNetwork:
         params = self.getParams();
         if (self.Structure ==  'L-Section'):
             Schematic, NetworkType, comp_val = Synthesize_L_Section(params);
+        if (self.Structure == 'Pi-Matching'):
+            Schematic, NetworkType, comp_val = Pi_MatchingNetwork(params);
+
 
 
         

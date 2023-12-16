@@ -34,6 +34,7 @@
                 <td>                 
                     <select id="Structure" onchange="StructureChanged(this)">
                       <option selected="selected" value="1">L-Section</option>
+                      <option value="2">Pi-Matching</option>
                       <!-- <option value="2">Single Stub</option>
                       <option value="3">Double Stub</option>
                       <option value="4">Multistage &#955;/4</option>
@@ -79,14 +80,34 @@
                 </td>
               </tr>
 
+              <tr class="Q">
+                <td>
+                  Q
+                </td>
+                <td>
+                  <input type="number" id="Q" min="0.5" value = "1" step="0.5" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+
+              <tr class="PiTee_NetworkType">
+                <td>
+                  Network Type
+                </td>
+                <td>
+                  <select id="PiTee_NetworkMask" onchange="submit_form(this)">
+                    <option selected="selected" value="1">LP-LP</option>
+                    <option value="2">LP-HP</option>
+                    <option value="3">HP-LP</option>
+                    <option value="4">HP-HP</option>
+                  </select>                </td>
+              </tr>
+
               <tr>
                 <td>
                   Z<sub>source</sub> (&Omega;)
                 </td>
                 <td>
                   <input type="number" id="RS" min="1" value = "50" style="width: 4em" onchange="submit_form(this)"/>
-               <!--   +j
-                  <input type="number" id="XS" value = "0" style="width: 4em" onchange="submit_form(this)"/> -->
                 </td>
               </tr>
               <tr class = "Rload_input">
@@ -293,15 +314,24 @@
   })
   
   function StructureChanged(select) {
-    if (select.value != 1){
+    // L-section
+    if (select.value == 1){
       // Hide mask
-      $('.Mask_input').hide(); // Hide elliptic type
+      $('.Mask_input').show();
+      $('PiTee_NetworkType').hide()
+      submit_form()
     }
-    else{
-      $('.Mask_input').show(); // Hide elliptic type
+
+    // Pi-matching
+    if (select.value == 2){
+      // Hide mask
+      $('.Mask_input').hide();
+      $('PiTee_NetworkType').show()
+      submit_form()
     }
-    submit_form()
-  }
+   
+    
+    }
 
     // Hide or show the corresponding inputs
     function switch_sweep_mode(button){
@@ -441,6 +471,9 @@
     var RL = document.getElementById("RL").value;
     var XL = document.getElementById("XL").value;
 
+    var Q = document.getElementById("Q").value;
+    var PiTee_Mask = document.getElementById("PiTee_NetworkMask").value;
+
     var f_start = document.getElementById("f_start").value;
     var scale_fstart = document.getElementById('f_start_scale').value;
     f_start = f_start*Math.pow(10, (scale_fstart-1)*3)
@@ -476,6 +509,8 @@
             "XS": XS,
             "RL": RL,
             "XL": XL,
+            "Q": Q,
+            "PiTee_Mask": PiTee_Mask,
             "f_start": f_start,
             "f_stop": f_stop,
             "f0_span": f0_span,
