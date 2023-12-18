@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
       "SVG": {linebreaks: { automatic: true }}
@@ -25,7 +27,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_SVG-full"></script>
   
 
-<div class="container-fluid">
+  <div class="card shadow-sm">
 
     <div class="row">
         <div class="col-6 align-self-right">
@@ -228,6 +230,7 @@
       <a href="{% url 'rf_power_converter_tool' %}" class="btn btn-dark" role="button">Open tool</a>
     </div>
 
-  </div> 
+  </div>
+</main> 
 
 {% endblock %}

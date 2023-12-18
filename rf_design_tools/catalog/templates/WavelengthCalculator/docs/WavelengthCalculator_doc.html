@@ -1,10 +1,13 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+{% include "doc_sidebar_template.html" %}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-<div class="container-fluid">
+<div class="card shadow-sm">
 
    <div class="row">
         <div class="col-6 align-self-right">
@@ -21,6 +24,6 @@
     <div class= "d-flex flex-row justify-content-center">
         <p> $$\lambda = { c_0 \over {\sqrt{\epsilon_r} · f } }$$</p>
     </div>
-    
-  </div> 
+  </div>
+</main>
 {% endblock %}

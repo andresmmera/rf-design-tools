@@ -65,6 +65,8 @@ from catalog.views import contact_page
 from catalog.views import LumpedTransmissionLineToolView
 from catalog.views import LumpedTransmissionLineToolDocs
 
+from catalog.views import DocsView
+
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
 
@@ -162,4 +164,8 @@ urlpatterns = [
     #################################################################################
     # S-PARAMETER VIEWER
     path('tool/s-parameter-viewer', S_parameter_Viewer_View, name='s_parameter_viewer_tool'),
+
+    #################################################################################
+    # Docs
+    path('docs', DocsView, name='Docs'),
 ]
