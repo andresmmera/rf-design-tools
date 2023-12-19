@@ -8,6 +8,7 @@ import numpy as np
 
 from .Lsection import *
 from .PiMatching import *
+from .TeeMatching import *
 
 class MatchingNetwork:
 
@@ -54,8 +55,10 @@ class MatchingNetwork:
         params = self.getParams();
         if (self.Structure ==  'L-Section'):
             Schematic, NetworkType, comp_val = Synthesize_L_Section(params);
-        if (self.Structure == 'Pi-Matching'):
+        elif (self.Structure == 'Pi-Matching'):
             Schematic, NetworkType, comp_val = Pi_MatchingNetwork(params);
+        elif (self.Structure == 'Tee-Matching'):
+            Schematic, NetworkType, comp_val = Tee_MatchingNetwork(params);
 
 
 

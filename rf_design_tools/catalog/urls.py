@@ -70,7 +70,7 @@ from catalog.views import DocsView
 urlpatterns = [
     path('', tools_catalog, name='tools-catalog'),
 
-    path('/about', contact_page, name='contact'),
+    path('about', contact_page, name='contact'),
     
     # REFLECTION COEFFICIENT TOOLS
     path('tool/reflection_coefficient', ReflectionToolsCatalogView, name='reflection_coeff_tools'),

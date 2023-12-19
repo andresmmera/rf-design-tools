@@ -35,6 +35,7 @@
                     <select id="Structure" onchange="StructureChanged(this)">
                       <option selected="selected" value="1">L-Section</option>
                       <option value="2">Pi-Matching</option>
+                      <option value="3">Tee-Matching</option>
                       <!-- <option value="2">Single Stub</option>
                       <option value="3">Double Stub</option>
                       <option value="4">Multistage &#955;/4</option>
@@ -323,7 +324,7 @@
     }
 
     // Pi-matching
-    if (select.value == 2){
+    if ((select.value == 2) || (select.value == 3)){
       // Hide mask
       $('.Mask_input').hide();
       $('PiTee_NetworkType').show()

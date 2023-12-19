@@ -11,10 +11,7 @@ from ..utilities import *
 # Import for the generation of the Qucs schematic
 from datetime import date
 
-# Reference:
-# Microwave and RF Design Networks. Steer, M. 2019. North Carolina State University Libraries. Page 174
-
-def synthesize_Pi_Matching_Network(params):
+def synthesize_Tee_Matching_Network(params):
 
     RS = params['RS']
     RL = params['RL']
@@ -23,103 +20,102 @@ def synthesize_Pi_Matching_Network(params):
     Q = params['Q']
     PiTee_NetworkMask = params['PiTee_NetworkMask']
 
-    Rv = max(RS, RL)/(Q*Q + 1) # Rb is always smaller than RS and RL
+    Rv = (Q*Q + 1)*min(RS, RL) # Rb is always smaller than RS and RL
 
-    # There are four possible networks for Pi-matching
+    # There are four possible networks for Tee-matching
 
 
     # First section
     
     ###############################
-    #   RS -------- X ----- Rv
-    #         |
-    #         B
-    #         |
-    #        ---
+    #   RS -------- X -------- Rv
+    #                    |
+    #                    B
+    #                    |
+    #                   ---
     
     # Lowpass
-    X1_LP = np.sqrt(Rv * (RS - Rv)) # XL is 0 since Rv is real
-    B1_LP = np.sqrt((RS - Rv) / Rv) / RS
+    B1_LP = (np.sqrt(Rv / RS) * np.sqrt(Rv * Rv - RS * Rv)) / (Rv * Rv) # XL = 0 as Rv is pure real
+    X1_LP = 1 / B1_LP + RS / Rv - RS / (B1_LP * Rv)
 
     # Highpass
-    X1_HP = -np.sqrt(Rv * (RS - Rv)) # XL is 0 since Rv is real
-    B1_HP = -np.sqrt((RS - Rv) / Rv) / RS
+    B1_HP = (-np.sqrt(Rv / RS) * np.sqrt(Rv * Rv - RS * Rv)) / (Rv * Rv)
+    X1_HP = 1 / B1_HP + RS / Rv - RS / (B1_HP * Rv);
 
 
     # Second section
     
     ###############################
-    # Rv --- X --------- ZL
-    #             |
-    #             B
-    #             |
-    #            ---
+    # Rv ------------ X ----- ZL
+    #       |
+    #       B
+    #       |
+    #      ---
 
     # Lowpass
-    B2_LP = (XL + np.sqrt(RL / Rv) * np.sqrt(RL * RL + XL * XL - Rv * RL)) / (RL * RL + XL * XL)
-    X2_LP = 1 / B2_LP + XL * Rv / RL - Rv / (B2_LP * RL)
+    X2_LP = np.sqrt(RL * (Rv - RL)) - XL
+    B2_LP = np.sqrt((Rv - RL) / RL) / Rv
 
     # Highpass
-    B2_HP = (XL - np.sqrt(RL / Rv) * np.sqrt(RL * RL + XL * XL - Rv * RL)) / (RL * RL + XL * XL)
-    X2_HP = 1 / B2_HP + XL * Rv / RL - Rv / (B2_HP * RL);
+    X2_HP = -np.sqrt(RL * (Rv - RL)) - XL
+    B2_HP = -np.sqrt((Rv - RL) / RL) / Rv
 
     if PiTee_NetworkMask == 1:
         # 1st combination: 1st LP, 2nd LP
 
-        #   RS -------- X1_LP ----- Rv --- X2_LP --------- ZL
-        #         |                                 |
-        #       B1_LP                             B2_LP
-        #         |                                 |
-        #        ---                               ---
+        #   RS ----- X1_LP ---------- Rv ------------ X2_LP --------- ZL
+        #                      |              |
+        #                    B1_LP          B2_LP
+        #                      |              |
+        #                     ---            ---
 
-        B1 = B1_LP
-        X1 = X1_LP + X2_LP
-        B2 = B2_LP
+        X1 = X1_LP
+        B1 = B1_LP + B2_LP
+        X2 = X2_LP
 
     elif PiTee_NetworkMask == 2:
         # 2 nd combination: 1st LP, 2nd HP
 
-        #   RS -------- X1_LP ----- Rv --- X2_HP --------- ZL
-        #         |                                 |
-        #       B1_LP                             B2_HP
-        #         |                                 |
-        #        ---                               ---
+        #   RS ----- X1_LP ---------- Rv ------------ X2_HP --------- ZL
+        #                      |              |
+        #                    B1_LP          B2_HP
+        #                      |              |
+        #                     ---            ---
     
-        B1 = B1_LP
-        X1 = X1_LP + X2_HP
-        B2 = B2_HP
+        X1 = X1_LP
+        B1 = B1_LP + B2_HP
+        X2 = X2_HP
 
     elif PiTee_NetworkMask == 3:
         # 3rd combination: 1st HP, 2nd LP
 
-        #   RS -------- X1_HP ----- Rv --- X2_LP --------- ZL
-        #         |                                 |
-        #       B1_HP                             B2_LP
-        #         |                                 |
-        #        ---                               ---
-
-        B1 = B1_HP
-        X1 = X1_HP + X2_LP
-        B2 = B2_LP
+        #   RS ----- X1_HP ---------- Rv ------------ X2_LP --------- ZL
+        #                      |              |
+        #                    B1_HP          B2_LP
+        #                      |              |
+        #                     ---            ---
+    
+        X1 = X1_HP
+        B1 = B1_HP + B2_LP
+        X2 = X2_LP
 
     elif PiTee_NetworkMask == 4:
         # 4th combination: 1st HP, 2nd HP
 
-        #   RS -------- X1_HP ----- Rv --- X2_HP --------- ZL
-        #         |                                 |
-        #       B1_HP                             B2_HP
-        #         |                                 |
-        #        ---                               ---
+        #   RS ----- X1_HP ---------- Rv ------------ X2_HP --------- ZL
+        #                      |              |
+        #                    B1_HP          B2_HP
+        #                      |              |
+        #                     ---            ---
+    
+        X1 = X1_HP
+        B1 = B1_HP + B2_HP
+        X2 = X2_HP
 
-        B1 = B1_HP
-        X1 = X1_HP + X2_HP
-        B2 = B2_HP
+    return X1, B1, X2
 
 
-    return B1, X1, B2
-
-
-def Pi_MatchingNetwork(params):
+def Tee_MatchingNetwork(params):
 
     RS = params['RS']
     RL = params['RL']
@@ -144,7 +140,7 @@ def Pi_MatchingNetwork(params):
 
     
 
-    [B1, X1, B2] = synthesize_Pi_Matching_Network(params)
+    [X1, B1, X2] = synthesize_Tee_Matching_Network(params)
 
     NetworkType = {}
     comp_val = {}
@@ -165,7 +161,34 @@ def Pi_MatchingNetwork(params):
     
     d.push()
 
-    # First shunt element
+    # First series element
+    if (X1 < 0):
+        # Capacitor
+        C = -1 / (w0 * X1)
+
+        # Schematic
+        d += elm.Capacitor().label(getUnitsWithScale(C, 'Capacitance'), fontsize=_fontsize).linewidth(1)
+
+        # Network
+        count_C += 1
+        x.append(C)
+        topology.append("CS")
+    else:
+        # Inductor
+        L = X1 / w0
+        
+        # Schematic
+        d += elm.Inductor2(loops=2).label(getUnitsWithScale(L, 'Inductance'), fontsize=_fontsize).linewidth(1)
+        
+        # Network
+        count_L += 1
+        x.append(L)
+        topology.append("LS")
+
+    d.push()
+    
+    # Shunt element
+
     if (B1 > 0): # Capacitor
         C = B1 / w0
 
@@ -187,13 +210,15 @@ def Pi_MatchingNetwork(params):
         count_L += 1
         x.append(L)
         topology.append("LP")
-    
-    d += elm.Ground().linewidth(1)
 
-    # Series element
+    d += elm.Ground().linewidth(1)
+    
     d.pop()
-    if (X1 < 0): # Capacitor
-        C = -1 / (w0 * X1)
+
+    # Second series element
+    if (X2 < 0):
+        # Capacitor
+        C = -1 / (w0 * X2)
 
         # Schematic
         d += elm.Capacitor().label(getUnitsWithScale(C, 'Capacitance'), fontsize=_fontsize).linewidth(1)
@@ -202,9 +227,9 @@ def Pi_MatchingNetwork(params):
         count_C += 1
         x.append(C)
         topology.append("CS")
-
-    else: # Inductor
-        L = X1 / w0
+    else:
+        # Inductor
+        L = X2 / w0
         
         # Schematic
         d += elm.Inductor2(loops=2).label(getUnitsWithScale(L, 'Inductance'), fontsize=_fontsize).linewidth(1)
@@ -214,35 +239,6 @@ def Pi_MatchingNetwork(params):
         x.append(L)
         topology.append("LS")
 
-
-    d.push()
-    # Second shunt element
-    if (B2 > 0): # Capacitor
-        C = B2 / w0
-
-        # Schematic
-        d += elm.Capacitor().down().label(getUnitsWithScale(C, 'Capacitance'), fontsize=_fontsize).linewidth(1)
-
-        # Network
-        count_C += 1
-        x.append(C)
-        topology.append("CP")
-
-    else: # Inductor
-        L = -1 / (w0 * B2)
-
-        # Schematic
-        d += elm.Inductor2(loops=2).down().label(getUnitsWithScale(L, 'Inductance'), fontsize=_fontsize).linewidth(1)
-
-        # Network
-        count_L += 1
-        x.append(L)
-        topology.append("LP")
-
-    d += elm.Ground().linewidth(1)
-
-    
-    d.pop()
         
     # Drawing
     d += elm.Line().length(1).linewidth(1)

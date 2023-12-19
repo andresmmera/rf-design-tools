@@ -11,6 +11,8 @@ from ..utilities import *
 # Import for the generation of the Qucs schematic
 from datetime import date
 
+# Reference:
+# Microwave and RF Design Networks. Steer, M. 2019. North Carolina State University Libraries. Page 177
 
 
 def Synthesize_L_Section(params):
