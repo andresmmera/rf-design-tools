@@ -36,8 +36,8 @@
                       <option selected="selected" value="1">L-Section</option>
                       <option value="2">Pi-Matching</option>
                       <option value="3">Tee-Matching</option>
-                      <!-- <option value="2">Single Stub</option>
-                      <option value="3">Double Stub</option>
+                      <option value="4">Single Stub</option>
+                      <!-- <option value="3">Double Stub</option>
                       <option value="4">Multistage &#955;/4</option>
                       <option value="5">Multistage L-Section</option>
                       <option value="6">&#955;/4 matching</option>
@@ -81,7 +81,7 @@
                 </td>
               </tr>
 
-              <tr class="Q">
+              <tr class="Q_input">
                 <td>
                   Q
                 </td>
@@ -101,6 +101,18 @@
                     <option value="3">HP-LP</option>
                     <option value="4">HP-HP</option>
                   </select>                </td>
+              </tr>
+
+              <tr class="StubType">
+                <td>
+                  Stub Type
+                </td>
+                <td>
+                  <select id="StubType_Selection" onchange="submit_form(this)">
+                    <option selected="selected" value="1">Short</option>
+                    <option value="2">Open</option>
+                  </select>                
+                </td>
               </tr>
 
               <tr>
@@ -307,6 +319,14 @@
   </div>
 
 <script>
+
+  // Initial settings
+  document.getElementById('Structure').value=1;
+  $('.Mask_input').show();
+  $('.PiTee_NetworkType').hide()
+  $('.StubType').hide()
+  $('.Q_input').hide()
+
   submit_form()
 
     // It's called just when the page is loaded
@@ -319,15 +339,29 @@
     if (select.value == 1){
       // Hide mask
       $('.Mask_input').show();
-      $('PiTee_NetworkType').hide()
+      $('.PiTee_NetworkType').hide()
+      $('.StubType').hide()
+      $('.Q_input').hide()
       submit_form()
     }
 
-    // Pi-matching
+    // Pi and tee matching
     if ((select.value == 2) || (select.value == 3)){
       // Hide mask
       $('.Mask_input').hide();
-      $('PiTee_NetworkType').show()
+      $('.PiTee_NetworkType').show()
+      $('.StubType').hide()
+      $('.Q_input').show()
+      submit_form()
+    }
+
+    // Single Stub
+    if (select.value == 4){
+      // Hide mask
+      $('.Mask_input').hide();
+      $('.PiTee_NetworkType').hide()
+      $('.StubType').show()
+      $('.Q_input').hide()
       submit_form()
     }
    
@@ -475,6 +509,8 @@
     var Q = document.getElementById("Q").value;
     var PiTee_Mask = document.getElementById("PiTee_NetworkMask").value;
 
+    var StubType = document.getElementById("StubType_Selection").value;
+
     var f_start = document.getElementById("f_start").value;
     var scale_fstart = document.getElementById('f_start_scale').value;
     f_start = f_start*Math.pow(10, (scale_fstart-1)*3)
@@ -512,6 +548,7 @@
             "XL": XL,
             "Q": Q,
             "PiTee_Mask": PiTee_Mask,
+            "StubType": StubType,
             "f_start": f_start,
             "f_stop": f_stop,
             "f0_span": f0_span,

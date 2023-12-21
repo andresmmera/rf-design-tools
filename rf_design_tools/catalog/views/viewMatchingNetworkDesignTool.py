@@ -67,6 +67,9 @@ def MatchingNetworkDesignToolView(request):
 
         PiTee_Mask = request.POST.get('PiTee_Mask', None)
         print("PiTee_Mask = ", PiTee_Mask)
+
+        StubType = request.POST.get('StubType', None)
+        print("StubType = ", StubType)
         
         f_start = request.POST.get('f_start', None)
         print(f_start)
@@ -92,6 +95,7 @@ def MatchingNetworkDesignToolView(request):
         designer.XL = float(XL)
         designer.Q = float(Q)
         designer.PiTee_NetworkMask = float(PiTee_Mask)
+        designer.StubType = float(StubType)
         designer.f_start = float(f_start)
         designer.f_stop = float(f_stop)
         designer.n_points = int(n_points)
@@ -204,7 +208,7 @@ def NetworkResponse(Network_Type, comp_val):
 
     ZS = comp_val['ZS']
     ZL = comp_val['ZL']
-    freq = Network_Type['freq'];
+    freq = Network_Type['freq']
 
     if (Network_Type['Network'] == 'L-Section'):
 
@@ -265,13 +269,26 @@ def NetworkResponse(Network_Type, comp_val):
             S21 = -2*ZL*ZS/((4*pi**2*LP*LS*ZS*freq**2 + (-2*I*pi*LS*ZL*ZS - 2*I*pi*LP)*freq - ZL - ZS)*np.sqrt(ZL*ZS))
 
     if (Network_Type['Network'] == 'Pi'):
-        x = []
-        code = []
-
-
         S = get_SPAR([ZS], [ZL], comp_val['topology'], comp_val['values'], freq)
         S11 = S[:, 0,0]
         S21 = S[:, 1,0]
 
+    if (Network_Type['Network'] == 'SingleStub1'): # Short Circuit Stub
+        Z0 = comp_val['TL_Z0']
+        E1 = (np.pi/180)*comp_val['SC_ang']
+        E2 = (np.pi/180)*comp_val['TL_ang']
+        f0 = comp_val['f0']
+
+        S11 = -((-1.0*I*ZL*np.cos(E1*freq/f0) + (Z0 - ZL)*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) + (1.0*Z0*np.cos(E1*freq/f0) + (-I*Z0 + I*ZL)*np.sin(E1*freq/f0))*np.sin(E2*freq/f0))/((-1.0*I*ZL*np.cos(E1*freq/f0) + (Z0 + ZL)*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) + (1.0*Z0*np.cos(E1*freq/f0) + (I*Z0 + I*ZL)*np.sin(E1*freq/f0))*np.sin(E2*freq/f0))
+        S21 = 2*Z0*ZL*np.sin(E1*freq/f0)/(np.sqrt(Z0*ZL)*((-1.0*I*ZL*np.cos(E1*freq/f0) + (Z0 + ZL)*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) + (1.0*Z0*np.cos(E1*freq/f0) + (I*Z0 + I*ZL)*np.sin(E1*freq/f0))*np.sin(E2*freq/f0)))
+
+    if (Network_Type['Network'] == 'SingleStub2'): # Open Circuit Stub
+        Z0 = comp_val['TL_Z0']
+        E1 = (np.pi/180)*comp_val['OC_ang']
+        E2 = (np.pi/180)*comp_val['TL_ang']
+        f0 = comp_val['f0']
+        
+        S11 = -(((Z0 - ZL)*np.cos(E1*freq/f0) + I*ZL*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) - ((I*Z0 - I*ZL)*np.cos(E1*freq/f0) + Z0*np.sin(E1*freq/f0))*np.sin(E2*freq/f0))/(((Z0 + ZL)*np.cos(E1*freq/f0) + I*ZL*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) - ((-I*Z0 - I*ZL)*np.cos(E1*freq/f0) + Z0*np.sin(E1*freq/f0))*np.sin(E2*freq/f0))
+        S21 = 2*Z0*ZL*np.cos(E1*freq/f0)/(np.sqrt(Z0*ZL)*(((Z0 + ZL)*np.cos(E1*freq/f0) + I*ZL*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) - ((-I*Z0 - I*ZL)*np.cos(E1*freq/f0) + Z0*np.sin(E1*freq/f0))*np.sin(E2*freq/f0)))
 
     return np.ones(len(freq))*S11, np.ones(len(freq))*S21

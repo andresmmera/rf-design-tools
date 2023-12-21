@@ -9,6 +9,7 @@ import numpy as np
 from .Lsection import *
 from .PiMatching import *
 from .TeeMatching import *
+from .SingleStub import *
 
 class MatchingNetwork:
 
@@ -41,6 +42,7 @@ class MatchingNetwork:
         params['XL'] = self.XL
         
         params['Q'] = self.Q
+        params['StubType'] = self.StubType
         params['PiTee_NetworkMask'] = self.PiTee_NetworkMask
 
         params['Mask'] = self.Mask
@@ -59,6 +61,8 @@ class MatchingNetwork:
             Schematic, NetworkType, comp_val = Pi_MatchingNetwork(params);
         elif (self.Structure == 'Tee-Matching'):
             Schematic, NetworkType, comp_val = Tee_MatchingNetwork(params);
+        elif (self.Structure == 'Single Stub'):
+            Schematic, NetworkType, comp_val = SingleStub_MatchingNetwork(params);
 
 
 
