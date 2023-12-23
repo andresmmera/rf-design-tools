@@ -142,14 +142,14 @@ class AttenuatorDesignForm(forms.Form):
 
 MATCHING_NETWORK_STRUCTURES =(
 ("1", "L-Section"),
-("2", "Pi-Matching"),
-("3", "Tee-Matching"),
+("2", "Pi"),
+("3", "Tee"),
 ("4", "Single Stub"),
 ("5", "Double Stub"),
-("6", "Multistage lambda/4"),
+("6", "&#955;/8 + &#955;/4"),
 ("7", "Multistage L-Section"),
 ("8", "lambda/4 matching"),
-("9", "lambda/8 + lambda/4 matching"),
+("9", "Multistage lambda/4"),
 ("10", "Tapped C transformer"),
 ("11", "Tapped L transformer"),
 ("12", "Double-tapped resonator"),

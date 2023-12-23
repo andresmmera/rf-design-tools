@@ -12,8 +12,6 @@ from ..utilities import *
 from datetime import date
 from ..components import TransmissionLine
 
-#https://github.com/andresmmera/qucs/blob/ImpedanceMatching_Update/qucs/qucs/dialogs/matchdialog.cpp#L1272
-
 # Reference
 # Microwave Engineering. David M. Pozar. 4th Edition. 2012. John Wiley and Sons
 

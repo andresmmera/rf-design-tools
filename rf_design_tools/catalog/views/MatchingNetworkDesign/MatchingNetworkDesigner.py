@@ -11,6 +11,7 @@ from .PiMatching import *
 from .TeeMatching import *
 from .SingleStub import *
 from .DoubleStub import *
+from .L4L8_Matching import *
 
 class MatchingNetwork:
 
@@ -58,14 +59,16 @@ class MatchingNetwork:
         params = self.getParams();
         if (self.Structure ==  'L-Section'):
             Schematic, NetworkType, comp_val = Synthesize_L_Section(params)
-        elif (self.Structure == 'Pi-Matching'):
+        elif (self.Structure == 'Pi'):
             Schematic, NetworkType, comp_val = Pi_MatchingNetwork(params)
-        elif (self.Structure == 'Tee-Matching'):
+        elif (self.Structure == 'Tee'):
             Schematic, NetworkType, comp_val = Tee_MatchingNetwork(params)
         elif (self.Structure == 'Single Stub'):
             Schematic, NetworkType, comp_val = SingleStub_MatchingNetwork(params)
         elif (self.Structure == 'Double Stub'):
             Schematic, NetworkType, comp_val = DoubleStub_MatchingNetwork(params)
+        elif (self.Structure == '&#955;/8 + &#955;/4'):
+            Schematic, NetworkType, comp_val = L4L8_MatchingNetwork(params)
 
 
 

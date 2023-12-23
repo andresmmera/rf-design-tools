@@ -268,7 +268,7 @@ def NetworkResponse(Network_Type, comp_val):
             S11 = -(4*pi**2*LP*LS*ZS*freq**2 + (-2*I*pi*LS*ZL*ZS + 2*I*pi*LP)*freq + ZL - ZS)/(4*pi**2*LP*LS*ZS*freq**2 + (-2*I*pi*LS*ZL*ZS - 2*I*pi*LP)*freq - ZL - ZS)
             S21 = -2*ZL*ZS/((4*pi**2*LP*LS*ZS*freq**2 + (-2*I*pi*LS*ZL*ZS - 2*I*pi*LP)*freq - ZL - ZS)*np.sqrt(ZL*ZS))
 
-    if (Network_Type['Network'] == 'Pi'):
+    elif (Network_Type['Network'] == 'Pi'):
         S = get_SPAR([ZS], [ZL], comp_val['topology'], comp_val['values'], freq)
         S11 = S[:, 0,0]
         S21 = S[:, 1,0]
@@ -304,11 +304,23 @@ def NetworkResponse(Network_Type, comp_val):
     elif (Network_Type['Network'] == 'DoubleStub2'): # Open Circuit Stub
         Z0 = comp_val['TL_Z0']
         E1 = (np.pi/180)*comp_val['OC1_ang']
-        E2 = (np.pi/4)
+        E2 = (np.pi/4) # lambda/8
         E3 = (np.pi/180)*comp_val['OC2_ang']
         f0 = comp_val['f0']
 
         S11 = -((((Z0 - ZL)*np.cos(0.7853981633974483*freq/f0) - (I*Z0 - I*ZL)*np.sin(0.7853981633974483*freq/f0))*np.cos(E1*freq/f0) - (-I*ZL*np.cos(0.7853981633974483*freq/f0) + Z0*np.sin(0.7853981633974483*freq/f0))*np.sin(E1*freq/f0))*np.cos(E3*freq/f0) - (I*ZL*np.sin(E1*freq/f0)*np.sin(0.7853981633974483*freq/f0) + (-I*ZL*np.cos(0.7853981633974483*freq/f0) - ZL*np.sin(0.7853981633974483*freq/f0))*np.cos(E1*freq/f0))*np.sin(E3*freq/f0))/((((Z0 + ZL)*np.cos(0.7853981633974483*freq/f0) - (-I*Z0 - I*ZL)*np.sin(0.7853981633974483*freq/f0))*np.cos(E1*freq/f0) - (-I*ZL*np.cos(0.7853981633974483*freq/f0) + Z0*np.sin(0.7853981633974483*freq/f0))*np.sin(E1*freq/f0))*np.cos(E3*freq/f0) - (I*ZL*np.sin(E1*freq/f0)*np.sin(0.7853981633974483*freq/f0) + (-I*ZL*np.cos(0.7853981633974483*freq/f0) + ZL*np.sin(0.7853981633974483*freq/f0))*np.cos(E1*freq/f0))*np.sin(E3*freq/f0))
         S21 = 2*Z0*ZL*np.cos(E1*freq/f0)*np.cos(E3*freq/f0)/(np.sqrt(Z0*ZL)*((((Z0 + ZL)*np.cos(0.7853981633974483*freq/f0) - (-I*Z0 - I*ZL)*np.sin(0.7853981633974483*freq/f0))*np.cos(E1*freq/f0) - (-I*ZL*np.cos(0.7853981633974483*freq/f0) + Z0*np.sin(0.7853981633974483*freq/f0))*np.sin(E1*freq/f0))*np.cos(E3*freq/f0) - (I*ZL*np.sin(E1*freq/f0)*np.sin(0.7853981633974483*freq/f0) + (-I*ZL*np.cos(0.7853981633974483*freq/f0) + ZL*np.sin(0.7853981633974483*freq/f0))*np.cos(E1*freq/f0))*np.sin(E3*freq/f0)))
+
+    elif (Network_Type['Network'] == 'L4L8'):
+        Z0 = comp_val['ZS']
+        Zm = comp_val['Zm']
+        Zm_ = comp_val['Zm_']
+        f0 = comp_val['f0']
+
+        E1 = (np.pi/2) # lambda/4
+        E2 = (np.pi/4) # lambda/8
+
+        S11 = -(((Z0 - ZL)*Zm*Zm_*np.cos(E1*freq/f0) - (-I*Z0*ZL + I*Zm**2)*Zm_*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) - ((-I*Z0*ZL*Zm + I*Zm*Zm_**2)*np.cos(E1*freq/f0) - (ZL*Zm**2 - Z0*Zm_**2)*np.sin(E1*freq/f0))*np.sin(E2*freq/f0))/(((Z0 + ZL)*Zm*Zm_*np.cos(E1*freq/f0) - (-I*Z0*ZL - I*Zm**2)*Zm_*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) - ((-I*Z0*ZL*Zm - I*Zm*Zm_**2)*np.cos(E1*freq/f0) + (ZL*Zm**2 + Z0*Zm_**2)*np.sin(E1*freq/f0))*np.sin(E2*freq/f0))
+        S21 = 2*Z0*ZL*Zm*Zm_/(np.sqrt(Z0*ZL)*(((Z0 + ZL)*Zm*Zm_*np.cos(E1*freq/f0) - (-I*Z0*ZL - I*Zm**2)*Zm_*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) - ((-I*Z0*ZL*Zm - I*Zm*Zm_**2)*np.cos(E1*freq/f0) + (ZL*Zm**2 + Z0*Zm_**2)*np.sin(E1*freq/f0))*np.sin(E2*freq/f0)))
 
     return np.ones(len(freq))*S11, np.ones(len(freq))*S21
