@@ -273,7 +273,7 @@ def NetworkResponse(Network_Type, comp_val):
         S11 = S[:, 0,0]
         S21 = S[:, 1,0]
 
-    if (Network_Type['Network'] == 'SingleStub1'): # Short Circuit Stub
+    elif (Network_Type['Network'] == 'SingleStub1'): # Short Circuit Stub
         Z0 = comp_val['TL_Z0']
         E1 = (np.pi/180)*comp_val['SC_ang']
         E2 = (np.pi/180)*comp_val['TL_ang']
@@ -282,7 +282,7 @@ def NetworkResponse(Network_Type, comp_val):
         S11 = -((-1.0*I*ZL*np.cos(E1*freq/f0) + (Z0 - ZL)*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) + (1.0*Z0*np.cos(E1*freq/f0) + (-I*Z0 + I*ZL)*np.sin(E1*freq/f0))*np.sin(E2*freq/f0))/((-1.0*I*ZL*np.cos(E1*freq/f0) + (Z0 + ZL)*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) + (1.0*Z0*np.cos(E1*freq/f0) + (I*Z0 + I*ZL)*np.sin(E1*freq/f0))*np.sin(E2*freq/f0))
         S21 = 2*Z0*ZL*np.sin(E1*freq/f0)/(np.sqrt(Z0*ZL)*((-1.0*I*ZL*np.cos(E1*freq/f0) + (Z0 + ZL)*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) + (1.0*Z0*np.cos(E1*freq/f0) + (I*Z0 + I*ZL)*np.sin(E1*freq/f0))*np.sin(E2*freq/f0)))
 
-    if (Network_Type['Network'] == 'SingleStub2'): # Open Circuit Stub
+    elif (Network_Type['Network'] == 'SingleStub2'): # Open Circuit Stub
         Z0 = comp_val['TL_Z0']
         E1 = (np.pi/180)*comp_val['OC_ang']
         E2 = (np.pi/180)*comp_val['TL_ang']
@@ -290,5 +290,25 @@ def NetworkResponse(Network_Type, comp_val):
         
         S11 = -(((Z0 - ZL)*np.cos(E1*freq/f0) + I*ZL*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) - ((I*Z0 - I*ZL)*np.cos(E1*freq/f0) + Z0*np.sin(E1*freq/f0))*np.sin(E2*freq/f0))/(((Z0 + ZL)*np.cos(E1*freq/f0) + I*ZL*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) - ((-I*Z0 - I*ZL)*np.cos(E1*freq/f0) + Z0*np.sin(E1*freq/f0))*np.sin(E2*freq/f0))
         S21 = 2*Z0*ZL*np.cos(E1*freq/f0)/(np.sqrt(Z0*ZL)*(((Z0 + ZL)*np.cos(E1*freq/f0) + I*ZL*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) - ((-I*Z0 - I*ZL)*np.cos(E1*freq/f0) + Z0*np.sin(E1*freq/f0))*np.sin(E2*freq/f0)))
+
+    elif (Network_Type['Network'] == 'DoubleStub1'): # Short Circuit Stub
+        Z0 = comp_val['TL_Z0']
+        E1 = (np.pi/180)*comp_val['SC1_ang']
+        E2 = (3*np.pi/4)
+        E3 = (np.pi/180)*comp_val['SC2_ang']
+        f0 = comp_val['f0']
+
+        S11 = -((-1.0*I*ZL*np.cos(E1*freq/f0)*np.sin(2.356194490192345*freq/f0) + (-1.0*I*ZL*np.cos(2.356194490192345*freq/f0) - 1.0*ZL*np.sin(2.356194490192345*freq/f0))*np.sin(E1*freq/f0))*np.cos(E3*freq/f0) + ((-1.0*I*ZL*np.cos(2.356194490192345*freq/f0) + 1.0*Z0*np.sin(2.356194490192345*freq/f0))*np.cos(E1*freq/f0) + ((Z0 - ZL)*np.cos(2.356194490192345*freq/f0) + (-I*Z0 + I*ZL)*np.sin(2.356194490192345*freq/f0))*np.sin(E1*freq/f0))*np.sin(E3*freq/f0))/((-1.0*I*ZL*np.cos(E1*freq/f0)*np.sin(2.356194490192345*freq/f0) + (-1.0*I*ZL*np.cos(2.356194490192345*freq/f0) + 1.0*ZL*np.sin(2.356194490192345*freq/f0))*np.sin(E1*freq/f0))*np.cos(E3*freq/f0) + ((-1.0*I*ZL*np.cos(2.356194490192345*freq/f0) + 1.0*Z0*np.sin(2.356194490192345*freq/f0))*np.cos(E1*freq/f0) + ((Z0 + ZL)*np.cos(2.356194490192345*freq/f0) + (I*Z0 + I*ZL)*np.sin(2.356194490192345*freq/f0))*np.sin(E1*freq/f0))*np.sin(E3*freq/f0))
+        S21 = 2*Z0*ZL*np.sin(E1*freq/f0)*np.sin(E3*freq/f0)/(np.sqrt(Z0*ZL)*((-1.0*I*ZL*np.cos(E1*freq/f0)*np.sin(2.356194490192345*freq/f0) + (-1.0*I*ZL*np.cos(2.356194490192345*freq/f0) + 1.0*ZL*np.sin(2.356194490192345*freq/f0))*np.sin(E1*freq/f0))*np.cos(E3*freq/f0) + ((-1.0*I*ZL*np.cos(2.356194490192345*freq/f0) + 1.0*Z0*np.sin(2.356194490192345*freq/f0))*np.cos(E1*freq/f0) + ((Z0 + ZL)*np.cos(2.356194490192345*freq/f0) + (I*Z0 + I*ZL)*np.sin(2.356194490192345*freq/f0))*np.sin(E1*freq/f0))*np.sin(E3*freq/f0)))
+
+    elif (Network_Type['Network'] == 'DoubleStub2'): # Open Circuit Stub
+        Z0 = comp_val['TL_Z0']
+        E1 = (np.pi/180)*comp_val['OC1_ang']
+        E2 = (np.pi/4)
+        E3 = (np.pi/180)*comp_val['OC2_ang']
+        f0 = comp_val['f0']
+
+        S11 = -((((Z0 - ZL)*np.cos(0.7853981633974483*freq/f0) - (I*Z0 - I*ZL)*np.sin(0.7853981633974483*freq/f0))*np.cos(E1*freq/f0) - (-I*ZL*np.cos(0.7853981633974483*freq/f0) + Z0*np.sin(0.7853981633974483*freq/f0))*np.sin(E1*freq/f0))*np.cos(E3*freq/f0) - (I*ZL*np.sin(E1*freq/f0)*np.sin(0.7853981633974483*freq/f0) + (-I*ZL*np.cos(0.7853981633974483*freq/f0) - ZL*np.sin(0.7853981633974483*freq/f0))*np.cos(E1*freq/f0))*np.sin(E3*freq/f0))/((((Z0 + ZL)*np.cos(0.7853981633974483*freq/f0) - (-I*Z0 - I*ZL)*np.sin(0.7853981633974483*freq/f0))*np.cos(E1*freq/f0) - (-I*ZL*np.cos(0.7853981633974483*freq/f0) + Z0*np.sin(0.7853981633974483*freq/f0))*np.sin(E1*freq/f0))*np.cos(E3*freq/f0) - (I*ZL*np.sin(E1*freq/f0)*np.sin(0.7853981633974483*freq/f0) + (-I*ZL*np.cos(0.7853981633974483*freq/f0) + ZL*np.sin(0.7853981633974483*freq/f0))*np.cos(E1*freq/f0))*np.sin(E3*freq/f0))
+        S21 = 2*Z0*ZL*np.cos(E1*freq/f0)*np.cos(E3*freq/f0)/(np.sqrt(Z0*ZL)*((((Z0 + ZL)*np.cos(0.7853981633974483*freq/f0) - (-I*Z0 - I*ZL)*np.sin(0.7853981633974483*freq/f0))*np.cos(E1*freq/f0) - (-I*ZL*np.cos(0.7853981633974483*freq/f0) + Z0*np.sin(0.7853981633974483*freq/f0))*np.sin(E1*freq/f0))*np.cos(E3*freq/f0) - (I*ZL*np.sin(E1*freq/f0)*np.sin(0.7853981633974483*freq/f0) + (-I*ZL*np.cos(0.7853981633974483*freq/f0) + ZL*np.sin(0.7853981633974483*freq/f0))*np.cos(E1*freq/f0))*np.sin(E3*freq/f0)))
 
     return np.ones(len(freq))*S11, np.ones(len(freq))*S21

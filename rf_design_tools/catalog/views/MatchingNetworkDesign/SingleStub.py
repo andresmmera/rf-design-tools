@@ -12,7 +12,9 @@ from ..utilities import *
 from datetime import date
 from ..components import TransmissionLine
 
-# https://github.com/andresmmera/qucs/blob/ImpedanceMatching_Update/qucs/qucs/dialogs/matchdialog.cpp#L1165
+# Reference
+# Microwave Engineering. David M. Pozar. 4th Edition. 2012. John Wiley and Sons
+
 
 def synthesize_SingleStub_Matching_Network(params):
 

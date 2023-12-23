@@ -10,6 +10,7 @@ from .Lsection import *
 from .PiMatching import *
 from .TeeMatching import *
 from .SingleStub import *
+from .DoubleStub import *
 
 class MatchingNetwork:
 
@@ -56,13 +57,15 @@ class MatchingNetwork:
     def synthesize(self):
         params = self.getParams();
         if (self.Structure ==  'L-Section'):
-            Schematic, NetworkType, comp_val = Synthesize_L_Section(params);
+            Schematic, NetworkType, comp_val = Synthesize_L_Section(params)
         elif (self.Structure == 'Pi-Matching'):
-            Schematic, NetworkType, comp_val = Pi_MatchingNetwork(params);
+            Schematic, NetworkType, comp_val = Pi_MatchingNetwork(params)
         elif (self.Structure == 'Tee-Matching'):
-            Schematic, NetworkType, comp_val = Tee_MatchingNetwork(params);
+            Schematic, NetworkType, comp_val = Tee_MatchingNetwork(params)
         elif (self.Structure == 'Single Stub'):
-            Schematic, NetworkType, comp_val = SingleStub_MatchingNetwork(params);
+            Schematic, NetworkType, comp_val = SingleStub_MatchingNetwork(params)
+        elif (self.Structure == 'Double Stub'):
+            Schematic, NetworkType, comp_val = DoubleStub_MatchingNetwork(params)
 
 
 
