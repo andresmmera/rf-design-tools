@@ -12,6 +12,7 @@ from .TeeMatching import *
 from .SingleStub import *
 from .DoubleStub import *
 from .L4L8_Matching import *
+from .L4_Matching import *
 
 class MatchingNetwork:
 
@@ -67,6 +68,8 @@ class MatchingNetwork:
             Schematic, NetworkType, comp_val = SingleStub_MatchingNetwork(params)
         elif (self.Structure == 'Double Stub'):
             Schematic, NetworkType, comp_val = DoubleStub_MatchingNetwork(params)
+        elif (self.Structure == '&#955;/4'):
+            Schematic, NetworkType, comp_val = L4_MatchingNetwork(params)
         elif (self.Structure == '&#955;/8 + &#955;/4'):
             Schematic, NetworkType, comp_val = L4L8_MatchingNetwork(params)
 

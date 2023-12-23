@@ -13,9 +13,9 @@ from datetime import date
 from ..components import TransmissionLine
 
 # Reference
-# Fundamentals of RF and Microwave Transistor Amplifiers. Inder J. Bahl. Wiley. 2009. Pg 159-160
+# Fundamentals of RF and Microwave Transistor Amplifiers. Inder J. Bahl. Wiley. 2009. Pg 157
 
-def synthesize_L4L8_Matching_Network(params):
+def synthesize_L4_Matching_Network(params):
 
     RS = params['RS']
     RL = params['RL']
@@ -24,19 +24,17 @@ def synthesize_L4L8_Matching_Network(params):
 
     lambda_ = 299792458 / f0
 
-    Zm_ = np.sqrt(RL*RL + XL*XL)
-    RS_ = (Zm_ * RL) / (Zm_ - XL)
+    Zm = np.sqrt(RS*RL)
+
  
-    Zm = np.sqrt((RS*RL*Zm_) / (Zm_ - XL))
 
 
     l4 = 90
     l8 = 45
 
-    return Zm, l4, Zm_, l8
+    return Zm, l4
 
-
-def L4L8_MatchingNetwork(params):
+def L4_MatchingNetwork(params):
 
     RS = params['RS']
     RL = params['RL']
@@ -52,12 +50,12 @@ def L4L8_MatchingNetwork(params):
     d = schem.Drawing(inches_per_unit = 0.3)
     _fontsize = 8
        
-    [Zm, l4, Zm_, l8] = synthesize_L4L8_Matching_Network(params)
+    [Zm, l4] = synthesize_L4_Matching_Network(params)
 
     NetworkType = {}
     comp_val = {}
     NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))
-    NetworkType['Network'] = 'L4L8'
+    NetworkType['Network'] = 'L4'
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL + 1j*XL
     comp_val['f0'] = f0
@@ -78,15 +76,9 @@ def L4L8_MatchingNetwork(params):
     d += TransmissionLine().right().label("l = " + str(round(l4, 1)) + " deg", fontsize=_fontsize, loc = 'bottom').label("Z\u2080 = " + str(round(Zm,1)) + " \u03A9 ", loc = 'top', fontsize=_fontsize).linewidth(1)
     d += elm.Line().right().length(1).linewidth(1)
 
-    # lambda/8 line
-    # Drawing
-    d += TransmissionLine().right().label("l = " + str(round(l8, 1)) + " deg", fontsize=_fontsize, loc = 'bottom').label("Z\u2080 = " + str(round(Zm_,1)) + " \u03A9 ", loc = 'top', fontsize=_fontsize).linewidth(1)
-    d += elm.Line().right().length(1).linewidth(1)
 
-    
     # Network
     comp_val['Zm'] = Zm
-    comp_val['Zm_'] = Zm_
 
 
     d += elm.Line().right().length(1).linewidth(1)
