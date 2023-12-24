@@ -13,6 +13,7 @@ from .SingleStub import *
 from .DoubleStub import *
 from .L4L8_Matching import *
 from .L4_Matching import *
+from .SingleSectionTransformer import *
 
 class MatchingNetwork:
 
@@ -72,6 +73,8 @@ class MatchingNetwork:
             Schematic, NetworkType, comp_val = L4_MatchingNetwork(params)
         elif (self.Structure == '&#955;/8 + &#955;/4'):
             Schematic, NetworkType, comp_val = L4L8_MatchingNetwork(params)
+        elif (self.Structure == 'Single-Section Transformer'):
+            Schematic, NetworkType, comp_val = SingleSectionTransformer_MatchingNetwork(params)
 
 
 

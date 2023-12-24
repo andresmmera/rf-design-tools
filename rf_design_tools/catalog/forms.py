@@ -148,6 +148,7 @@ MATCHING_NETWORK_STRUCTURES =(
 ("5", "Double Stub"),
 ("6", "&#955;/4"),
 ("7", "&#955;/8 + &#955;/4"),
+("7", "Single-Section Transformer"),
 ("7", "Multistage L-Section"),
 ("8", "lambda/4 matching"),
 ("9", "Multistage lambda/4"),

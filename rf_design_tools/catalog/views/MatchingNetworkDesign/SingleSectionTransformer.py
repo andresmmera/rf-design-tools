@@ -13,20 +13,25 @@ from datetime import date
 from ..components import TransmissionLine
 
 # Reference
-# Fundamentals of RF and Microwave Transistor Amplifiers. Inder J. Bahl. Wiley. 2009. Pg 157
+# Fundamentals of RF and Microwave Transistor Amplifiers. Inder J. Bahl. Wiley. 2009. Pg 161
 
-def synthesize_L4_Matching_Network(params):
+def synthesize_SingleSectionTransformer_Matching_Network(params):
 
     RS = params['RS']
+    XS = 0.1
     RL = params['RL']
+    XL = params['XL']
+    f0 = params['f0']
 
-    Zm = np.sqrt(RS*RL)
+    Zm = np.sqrt((RS*np.abs(RL+1j*XL)**2-RL*np.abs(RS+1j*XS)**2)/(RL - RS))
+    theta = np.arctan((Zm*(RL-RS))/(RL*XS - RS*XL))
 
-    l4 = 90
+    # Convert to degrees
+    theta *= 180/np.pi
 
-    return Zm, l4
+    return Zm, theta
 
-def L4_MatchingNetwork(params):
+def SingleSectionTransformer_MatchingNetwork(params):
 
     RS = params['RS']
     RL = params['RL']
@@ -42,12 +47,12 @@ def L4_MatchingNetwork(params):
     d = schem.Drawing(inches_per_unit = 0.3)
     _fontsize = 8
        
-    [Zm, l4] = synthesize_L4_Matching_Network(params)
+    [Zm, theta] = synthesize_SingleSectionTransformer_Matching_Network(params)
 
     NetworkType = {}
     comp_val = {}
     NetworkType['freq'] = (np.linspace(fstart, fstop, npoints))
-    NetworkType['Network'] = 'L4'
+    NetworkType['Network'] = 'SST'
     comp_val['ZS'] = RS
     comp_val['ZL'] = RL + 1j*XL
     comp_val['f0'] = f0
@@ -63,14 +68,14 @@ def L4_MatchingNetwork(params):
     d += elm.Line().length(1).linewidth(1)
     
 
-    # lambda/4 line
     # Drawing
-    d += TransmissionLine().right().label("l = " + str(round(l4, 1)) + " deg", fontsize=_fontsize, loc = 'bottom').label("Z\u2080 = " + str(round(Zm,1)) + " \u03A9 ", loc = 'top', fontsize=_fontsize).linewidth(1)
+    d += TransmissionLine().right().label("l = " + str(round(theta, 1)) + " deg", fontsize=_fontsize, loc = 'bottom').label("Z\u2080 = " + str(round(Zm,1)) + " \u03A9 ", loc = 'top', fontsize=_fontsize).linewidth(1)
     d += elm.Line().right().length(1).linewidth(1)
 
 
     # Network
     comp_val['Zm'] = Zm
+    comp_val['theta'] = theta
 
 
     d += elm.Line().right().length(1).linewidth(1)

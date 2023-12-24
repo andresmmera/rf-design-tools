@@ -40,6 +40,7 @@
                       <option value="5">Double Stub</option>
                       <option value="6">&#955;/4 matching</option>
                       <option value="7">&#955;/8 + &#955;/4 matching</option>
+                      <option value="8">Single-Section Transformer</option>
                       <!--<option value="4">Multistage &#955;/4</option>
                       <option value="5">Multistage L-Section</option>
                       <option value="6">&#955;/4 matching</option>
@@ -367,8 +368,8 @@
       submit_form()
     }
    
-    // lambda/4 + lambda/8
-    if ((select.value == 6) || (select.value == 7)){
+    // lambda/4, lambda/4 + lambda/8 or single-section transformer
+    if ((select.value == 6) || (select.value == 7) || (select.value == 8)){
       // Hide mask
       $('.Mask_input').hide();
       $('.PiTee_NetworkType').hide()

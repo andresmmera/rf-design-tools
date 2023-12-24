@@ -333,4 +333,15 @@ def NetworkResponse(Network_Type, comp_val):
         S11 = -(((Z0 - ZL)*Zm*Zm_*np.cos(E1*freq/f0) - (-I*Z0*ZL + I*Zm**2)*Zm_*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) - ((-I*Z0*ZL*Zm + I*Zm*Zm_**2)*np.cos(E1*freq/f0) - (ZL*Zm**2 - Z0*Zm_**2)*np.sin(E1*freq/f0))*np.sin(E2*freq/f0))/(((Z0 + ZL)*Zm*Zm_*np.cos(E1*freq/f0) - (-I*Z0*ZL - I*Zm**2)*Zm_*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) - ((-I*Z0*ZL*Zm - I*Zm*Zm_**2)*np.cos(E1*freq/f0) + (ZL*Zm**2 + Z0*Zm_**2)*np.sin(E1*freq/f0))*np.sin(E2*freq/f0))
         S21 = 2*Z0*ZL*Zm*Zm_/(np.sqrt(Z0*ZL)*(((Z0 + ZL)*Zm*Zm_*np.cos(E1*freq/f0) - (-I*Z0*ZL - I*Zm**2)*Zm_*np.sin(E1*freq/f0))*np.cos(E2*freq/f0) - ((-I*Z0*ZL*Zm - I*Zm*Zm_**2)*np.cos(E1*freq/f0) + (ZL*Zm**2 + Z0*Zm_**2)*np.sin(E1*freq/f0))*np.sin(E2*freq/f0)))
 
+    elif (Network_Type['Network'] == 'SST'):
+        Z0 = comp_val['ZS']
+        Zm = comp_val['Zm']
+        E1 = (np.pi/180)*comp_val['theta']
+        f0 = comp_val['f0']
+
+        RL = np.real(ZL)
+        XL = np.imag(ZL)
+        
+        S11 = ((RL + 1.0*I*XL - Z0)*Zm*np.cos(E1*freq/f0) + ((-I*RL + 1.0*XL)*Z0 + I*Zm**2)*np.sin(E1*freq/f0))/((RL + 1.0*I*XL + Z0)*Zm*np.cos(E1*freq/f0) + ((I*RL - 1.0*XL)*Z0 + I*Zm**2)*np.sin(E1*freq/f0))
+        S21 = 2*RL*Z0*Zm/(((RL + 1.0*I*XL + Z0)*Zm*np.cos(E1*freq/f0) + ((I*RL - 1.0*XL)*Z0 + I*Zm**2)*np.sin(E1*freq/f0))*np.sqrt(RL*Z0))
     return np.ones(len(freq))*S11, np.ones(len(freq))*S21
