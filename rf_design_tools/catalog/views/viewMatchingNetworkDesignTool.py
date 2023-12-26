@@ -65,11 +65,20 @@ def MatchingNetworkDesignToolView(request):
         Q = request.POST.get('Q', None)
         print("Q = ", Q)
 
+        N = request.POST.get('N', None)
+        print("N = ", N)
+
         PiTee_Mask = request.POST.get('PiTee_Mask', None)
         print("PiTee_Mask = ", PiTee_Mask)
 
         StubType = request.POST.get('StubType', None)
         print("StubType = ", StubType)
+
+        Weighting = request.POST.get('Weighting', None)
+        print("Weighting = ", Weighting)
+
+        gamma_max = request.POST.get('gamma_max', None)
+        print("gamma_max = ", gamma_max)
         
         f_start = request.POST.get('f_start', None)
         print(f_start)
@@ -103,6 +112,9 @@ def MatchingNetworkDesignToolView(request):
         designer.f_span = float(f_span)
         designer.sweep_mode = int(sweep_mode)
         designer.Mask = Mask
+        designer.Weighting = Weighting
+        designer.N = int(N)
+        designer.gamma_max = float(gamma_max)
         
         Schematic, Network_Type, comp_val = designer.synthesize()
         svgcode = Schematic.get_imagedata('svg')
@@ -344,4 +356,21 @@ def NetworkResponse(Network_Type, comp_val):
         
         S11 = ((RL + 1.0*I*XL - Z0)*Zm*np.cos(E1*freq/f0) + ((-I*RL + 1.0*XL)*Z0 + I*Zm**2)*np.sin(E1*freq/f0))/((RL + 1.0*I*XL + Z0)*Zm*np.cos(E1*freq/f0) + ((I*RL - 1.0*XL)*Z0 + I*Zm**2)*np.sin(E1*freq/f0))
         S21 = 2*RL*Z0*Zm/(((RL + 1.0*I*XL + Z0)*Zm*np.cos(E1*freq/f0) + ((I*RL - 1.0*XL)*Z0 + I*Zm**2)*np.sin(E1*freq/f0))*np.sqrt(RL*Z0))
+
+    elif (Network_Type['Network'] == 'TL_Transformer'):
+        N = comp_val['N']
+        f0 = comp_val['f0']
+        x = []
+        code = []
+
+        for i in range(1, N+1):
+            x.append([comp_val['Z' + str(i)], 90/(2*np.pi*f0)])
+            code.append('CASTL')
+
+        print (code)
+        print (x)
+        S = get_SPAR([ZS], [ZL], code, x, freq)
+        S11 = S[:, 0,0]
+        S21 = S[:, 1,0]
+
     return np.ones(len(freq))*S11, np.ones(len(freq))*S21

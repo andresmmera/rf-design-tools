@@ -41,12 +41,9 @@
                       <option value="6">&#955;/4 matching</option>
                       <option value="7">&#955;/8 + &#955;/4 matching</option>
                       <option value="8">Single-Section Transformer</option>
-                      <!--<option value="4">Multistage &#955;/4</option>
+                      <option value="9">Multisection &#955;/4 Transformer</option>
+                      <!--
                       <option value="5">Multistage L-Section</option>
-                      <option value="6">&#955;/4 matching</option>
-                      <option value="7">&#955;/8 + &#955;/4 matching</option>
-                      <option value="8">&#960;-type</option>
-                      <option value="9">T-type</option>
                       <option value="10">Tapped C transformer</option>
                       <option value="11">Tapped L transformer</option>
                       <option value="12">Double-tapped resonator</option>
@@ -115,6 +112,36 @@
                     <option selected="selected" value="1">Short</option>
                     <option value="2">Open</option>
                   </select>                
+                </td>
+              </tr>
+
+              <tr class="Weighting">
+                <td>
+                  Weighting
+                </td>
+                <td>
+                  <select id="Weighting_Selection" onchange="WeightingChanged(this)">
+                    <option selected="selected" value="1">Binomial</option>
+                    <option value="2">Chebyshev</option>
+                  </select>                
+                </td>
+              </tr>
+
+              <tr class="gamma_max">
+                <td>
+                  |&#915;| <sub>max</sub>
+                </td>
+                <td>
+                  <input type="number" id="gamma_max" min="0.01" value = "0.05" step="0.1" style="width: 4em" onchange="submit_form(this)"/> dB
+                </td>
+              </tr>
+
+              <tr class="N_Sections">
+                <td>
+                  Sections
+                </td>
+                <td>
+                  <input type="number" id="N_Sections" min="1" value = "3" step="1" style="width: 4em" onchange="submit_form(this)"/>
                 </td>
               </tr>
 
@@ -329,6 +356,9 @@
   $('.PiTee_NetworkType').hide()
   $('.StubType').hide()
   $('.Q_input').hide()
+  $('.Weighting').hide()
+  $('.N_Sections').hide()
+  $('.gamma_max').hide()
 
   submit_form()
 
@@ -336,6 +366,17 @@
     $(document).ready(function () {
     $('.sweep_mode2').hide();
   })
+
+  function WeightingChanged(select){
+    if (select.value==2)
+        {
+          $('.gamma_max').show()
+        }
+        else{
+          $('.gamma_max').hide()
+        }
+    submit_form()
+  }
   
   function StructureChanged(select) {
     // L-section
@@ -345,6 +386,18 @@
       $('.PiTee_NetworkType').hide()
       $('.StubType').hide()
       $('.Q_input').hide()
+      $('.Weighting').hide()
+      $('.N_Sections').hide()
+      $('.gamma_max').hide()
+
+      // RF setup
+
+      document.getElementById("f0").value = 600;
+      document.getElementById("f0_scale").value = 3;
+      document.getElementById("f_start").value = 50;
+      document.getElementById("f_start_scale").value = 3;
+      document.getElementById("f_stop").value = 1000;
+      document.getElementById("f_stop_scale").value = 3;
       submit_form()
     }
 
@@ -355,6 +408,18 @@
       $('.PiTee_NetworkType').show()
       $('.StubType').hide()
       $('.Q_input').show()
+      $('.Weighting').hide()
+      $('.N_Sections').hide()
+      $('.gamma_max').hide()
+
+      // RF setup
+      document.getElementById("f0").value = 600;
+      document.getElementById("f0_scale").value = 3;
+      document.getElementById("f_start").value = 50;
+      document.getElementById("f_start_scale").value = 3;
+      document.getElementById("f_stop").value = 1000;
+      document.getElementById("f_stop_scale").value = 3;
+
       submit_form()
     }
 
@@ -365,16 +430,57 @@
       $('.PiTee_NetworkType').hide()
       $('.StubType').show()
       $('.Q_input').hide()
+      $('.Weighting').hide()
+      $('.N_Sections').hide()
+      $('.gamma_max').hide()
+
+    // MW setup
+    document.getElementById("f0").value = 10;
+    document.getElementById("f0_scale").value = 4;
+    document.getElementById("f_start").value = 5;
+    document.getElementById("f_start_scale").value = 4;
+    document.getElementById("f_stop").value = 15;
+    document.getElementById("f_stop_scale").value = 4;
+
+
       submit_form()
     }
    
-    // lambda/4, lambda/4 + lambda/8 or single-section transformer
-    if ((select.value == 6) || (select.value == 7) || (select.value == 8)){
+    // lambda/4, lambda/4 + lambda/8 or transmission line transformer
+    if ((select.value == 6) || (select.value == 7) || (select.value == 8)|| (select.value == 9)){
       // Hide mask
       $('.Mask_input').hide();
       $('.PiTee_NetworkType').hide()
       $('.StubType').hide()
       $('.Q_input').hide()
+      if (select.value == 9){
+        // Multisection TL transformer
+        $('.Weighting').show()
+        $('.N_Sections').show()
+        if (document.getElementById('Weighting_Selection').value==2)
+        {
+          $('.gamma_max').show()
+        }
+        else{
+          $('.gamma_max').hide()
+        }
+        
+      } 
+      else{
+        $('.Weighting').hide()
+        $('.N_Sections').hide()
+        $('.gamma_max').hide()
+      }
+
+      // MW setup
+      document.getElementById("f0").value = 10;
+      document.getElementById("f0_scale").value = 4;
+      document.getElementById("f_start").value = 5;
+      document.getElementById("f_start_scale").value = 4;
+      document.getElementById("f_stop").value = 15;
+      document.getElementById("f_stop_scale").value = 4;
+
+
       submit_form()
     }
     
@@ -523,6 +629,10 @@
 
     var StubType = document.getElementById("StubType_Selection").value;
 
+    var Weighting= document.getElementById("Weighting_Selection").value;
+    var N_Sections = document.getElementById("N_Sections").value;
+    var gamma_max = document.getElementById("gamma_max").value;
+
     var f_start = document.getElementById("f_start").value;
     var scale_fstart = document.getElementById('f_start_scale').value;
     f_start = f_start*Math.pow(10, (scale_fstart-1)*3)
@@ -559,6 +669,9 @@
             "RL": RL,
             "XL": XL,
             "Q": Q,
+            "Weighting": Weighting,
+            "N": N_Sections,
+            "gamma_max": gamma_max,
             "PiTee_Mask": PiTee_Mask,
             "StubType": StubType,
             "f_start": f_start,

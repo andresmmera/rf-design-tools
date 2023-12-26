@@ -14,6 +14,7 @@ from .DoubleStub import *
 from .L4L8_Matching import *
 from .L4_Matching import *
 from .SingleSectionTransformer import *
+from .Multisection_TL_Transformer import *
 
 class MatchingNetwork:
 
@@ -46,8 +47,11 @@ class MatchingNetwork:
         params['XL'] = self.XL
         
         params['Q'] = self.Q
+        params['N'] = self.N
         params['StubType'] = self.StubType
         params['PiTee_NetworkMask'] = self.PiTee_NetworkMask
+        params['Weighting'] = self.Weighting
+        params['gamma_max'] = self.gamma_max
 
         params['Mask'] = self.Mask
       
@@ -75,6 +79,8 @@ class MatchingNetwork:
             Schematic, NetworkType, comp_val = L4L8_MatchingNetwork(params)
         elif (self.Structure == 'Single-Section Transformer'):
             Schematic, NetworkType, comp_val = SingleSectionTransformer_MatchingNetwork(params)
+        elif (self.Structure == 'Multisection &#955;/4 Transformer'):
+            Schematic, NetworkType, comp_val = MultiSection_TL_Transformer_MatchingNetwork(params)
 
 
 
