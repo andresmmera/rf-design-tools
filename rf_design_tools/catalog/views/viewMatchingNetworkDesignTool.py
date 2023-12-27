@@ -220,6 +220,10 @@ def NetworkResponse(Network_Type, comp_val):
 
     ZS = comp_val['ZS']
     ZL = comp_val['ZL']
+
+    RL = np.real(ZL)
+    XL = np.imag(ZL)
+    
     freq = Network_Type['freq']
 
     if (Network_Type['Network'] == 'L-Section'):
@@ -350,9 +354,6 @@ def NetworkResponse(Network_Type, comp_val):
         Zm = comp_val['Zm']
         E1 = (np.pi/180)*comp_val['theta']
         f0 = comp_val['f0']
-
-        RL = np.real(ZL)
-        XL = np.imag(ZL)
         
         S11 = ((RL + 1.0*I*XL - Z0)*Zm*np.cos(E1*freq/f0) + ((-I*RL + 1.0*XL)*Z0 + I*Zm**2)*np.sin(E1*freq/f0))/((RL + 1.0*I*XL + Z0)*Zm*np.cos(E1*freq/f0) + ((I*RL - 1.0*XL)*Z0 + I*Zm**2)*np.sin(E1*freq/f0))
         S21 = 2*RL*Z0*Zm/(((RL + 1.0*I*XL + Z0)*Zm*np.cos(E1*freq/f0) + ((I*RL - 1.0*XL)*Z0 + I*Zm**2)*np.sin(E1*freq/f0))*np.sqrt(RL*Z0))
@@ -373,4 +374,29 @@ def NetworkResponse(Network_Type, comp_val):
         S11 = S[:, 0,0]
         S21 = S[:, 1,0]
 
+    elif (Network_Type['Network'] == 'Tapped-C'):
+        L = comp_val['L']
+        C1 = comp_val['C1']
+        C2 = comp_val['C2']
+        RS = ZS
+
+        if (RS < RL):
+            S11 = -((-8*I*pi**3*C1*C2*L*RL*RS + 8.0*pi**3*C1*C2*L*RS*XL)*freq**3 + (4*pi**2*C1*L*RL + 4.0*I*pi**2*C1*L*XL - 4*(pi**2*C1 + pi**2*C2)*L*RS)*freq**2 + (2*(I*pi*C1 + I*pi*C2)*RL*RS - (2.0*pi*C1 + 2.0*pi*C2)*RS*XL - 2*I*pi*L)*freq - RL - 1.0*I*XL)/((-8*I*pi**3*C1*C2*L*RL*RS + 8.0*pi**3*C1*C2*L*RS*XL)*freq**3 - (4*pi**2*C1*L*RL + 4.0*I*pi**2*C1*L*XL + 4*(pi**2*C1 + pi**2*C2)*L*RS)*freq**2 + (2*(I*pi*C1 + I*pi*C2)*RL*RS - (2.0*pi*C1 + 2.0*pi*C2)*RS*XL + 2*I*pi*L)*freq + RL + 1.0*I*XL)
+            S21 = -8*pi**2*C1*L*RL*RS*freq**2/(((-8*I*pi**3*C1*C2*L*RL*RS + 8.0*pi**3*C1*C2*L*RS*XL)*freq**3 - (4*pi**2*C1*L*RL + 4.0*I*pi**2*C1*L*XL + 4*(pi**2*C1 + pi**2*C2)*L*RS)*freq**2 + (2*(I*pi*C1 + I*pi*C2)*RL*RS - (2.0*pi*C1 + 2.0*pi*C2)*RS*XL + 2*I*pi*L)*freq + RL + 1.0*I*XL)*np.sqrt(RL*RS))
+        else:
+            S11 = -((-8*I*pi**3*C1*C2*L*RL*RS + 8.0*pi**3*C1*C2*L*RS*XL)*freq**3 - (4*pi**2*C1*L*RS - 4*(pi**2*C1 + pi**2*C2)*L*RL + (-4.0*I*pi**2*C1 - 4.0*I*pi**2*C2)*L*XL)*freq**2 + (2*(I*pi*C1 + I*pi*C2)*RL*RS - (2.0*pi*C1 + 2.0*pi*C2)*RS*XL - 2*I*pi*L)*freq + RS)/((-8*I*pi**3*C1*C2*L*RL*RS + 8.0*pi**3*C1*C2*L*RS*XL)*freq**3 - (4*pi**2*C1*L*RS + 4*(pi**2*C1 + pi**2*C2)*L*RL + (4.0*I*pi**2*C1 + 4.0*I*pi**2*C2)*L*XL)*freq**2 + (2*(I*pi*C1 + I*pi*C2)*RL*RS - (2.0*pi*C1 + 2.0*pi*C2)*RS*XL + 2*I*pi*L)*freq + RS)
+            S21 = -8*pi**2*C1*L*RL*RS*freq**2/(((-8*I*pi**3*C1*C2*L*RL*RS + 8.0*pi**3*C1*C2*L*RS*XL)*freq**3 - (4*pi**2*C1*L*RS + 4*(pi**2*C1 + pi**2*C2)*L*RL + (4.0*I*pi**2*C1 + 4.0*I*pi**2*C2)*L*XL)*freq**2 + (2*(I*pi*C1 + I*pi*C2)*RL*RS - (2.0*pi*C1 + 2.0*pi*C2)*RS*XL + 2*I*pi*L)*freq + RS)*np.sqrt(RL*RS))
+            
+    elif (Network_Type['Network'] == 'Tapped-L'):
+        C = comp_val['C']
+        L1 = comp_val['L1']
+        L2 = comp_val['L2']
+        RS = ZS
+
+        if (RL < RS):
+            S11 = -(8*pi**3*C*L1*L2*RS*freq**3 + (4*I*pi**2*L1*L2 + 4*(-I*pi**2*C*L1 - I*pi**2*C*L2)*RL*RS + (4.0*pi**2*C*L1 + 4.0*pi**2*C*L2)*RS*XL)*freq**2 + I*RL*RS - 1.0*RS*XL - (2*pi*L2*RS - 2*(pi*L1 + pi*L2)*RL + (-2.0*I*pi*L1 - 2.0*I*pi*L2)*XL)*freq)/(8*pi**3*C*L1*L2*RS*freq**3 + (-4*I*pi**2*L1*L2 + 4*(-I*pi**2*C*L1 - I*pi**2*C*L2)*RL*RS + (4.0*pi**2*C*L1 + 4.0*pi**2*C*L2)*RS*XL)*freq**2 + I*RL*RS - 1.0*RS*XL - (2*pi*L2*RS + 2*(pi*L1 + pi*L2)*RL + (2.0*I*pi*L1 + 2.0*I*pi*L2)*XL)*freq)
+            S21 = -4*pi*L2*RL*RS*freq/((8*pi**3*C*L1*L2*RS*freq**3 + (-4*I*pi**2*L1*L2 + 4*(-I*pi**2*C*L1 - I*pi**2*C*L2)*RL*RS + (4.0*pi**2*C*L1 + 4.0*pi**2*C*L2)*RS*XL)*freq**2 + I*RL*RS - 1.0*RS*XL - (2*pi*L2*RS + 2*(pi*L1 + pi*L2)*RL + (2.0*I*pi*L1 + 2.0*I*pi*L2)*XL)*freq)*np.sqrt(RL*RS))
+        else:
+            S11 = ((8*pi**3*C*L1*L2*RL + 8.0*I*pi**3*C*L1*L2*XL)*freq**3 + (-4*I*pi**2*L1*L2 + 4*(I*pi**2*C*L1 + I*pi**2*C*L2)*RL*RS + (-4.0*pi**2*C*L1 - 4.0*pi**2*C*L2)*RS*XL)*freq**2 - I*RL*RS + 1.0*RS*XL - (2*pi*L2*RL + 2.0*I*pi*L2*XL - 2*(pi*L1 + pi*L2)*RS)*freq)/((8*pi**3*C*L1*L2*RL + 8.0*I*pi**3*C*L1*L2*XL)*freq**3 + (-4*I*pi**2*L1*L2 + 4*(-I*pi**2*C*L1 - I*pi**2*C*L2)*RL*RS + (4.0*pi**2*C*L1 + 4.0*pi**2*C*L2)*RS*XL)*freq**2 + I*RL*RS - 1.0*RS*XL - (2*pi*L2*RL + 2.0*I*pi*L2*XL + 2*(pi*L1 + pi*L2)*RS)*freq)
+            S21 = -4*pi*L2*RL*RS*freq/(((8*pi**3*C*L1*L2*RL + 8.0*I*pi**3*C*L1*L2*XL)*freq**3 + (-4*I*pi**2*L1*L2 + 4*(-I*pi**2*C*L1 - I*pi**2*C*L2)*RL*RS + (4.0*pi**2*C*L1 + 4.0*pi**2*C*L2)*RS*XL)*freq**2 + I*RL*RS - 1.0*RS*XL - (2*pi*L2*RL + 2.0*I*pi*L2*XL + 2*(pi*L1 + pi*L2)*RS)*freq)*np.sqrt(RL*RS))
     return np.ones(len(freq))*S11, np.ones(len(freq))*S21

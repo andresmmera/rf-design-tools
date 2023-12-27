@@ -15,6 +15,8 @@ from .L4L8_Matching import *
 from .L4_Matching import *
 from .SingleSectionTransformer import *
 from .Multisection_TL_Transformer import *
+from .TappedC_Matching import *
+from .TappedL_Matching import *
 
 class MatchingNetwork:
 
@@ -81,6 +83,10 @@ class MatchingNetwork:
             Schematic, NetworkType, comp_val = SingleSectionTransformer_MatchingNetwork(params)
         elif (self.Structure == 'Multisection &#955;/4 Transformer'):
             Schematic, NetworkType, comp_val = MultiSection_TL_Transformer_MatchingNetwork(params)
+        elif (self.Structure == 'Tapped-C Transformer'):
+            Schematic, NetworkType, comp_val = Tapped_C_Transformer_MatchingNetwork(params)
+        elif (self.Structure == 'Tapped-L Transformer'):
+            Schematic, NetworkType, comp_val = Tapped_L_Transformer_MatchingNetwork(params)
 
 
 

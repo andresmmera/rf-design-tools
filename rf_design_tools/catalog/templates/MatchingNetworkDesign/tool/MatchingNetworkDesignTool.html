@@ -42,10 +42,12 @@
                       <option value="7">&#955;/8 + &#955;/4 matching</option>
                       <option value="8">Single-Section Transformer</option>
                       <option value="9">Multisection &#955;/4 Transformer</option>
+                      <option value="10">Tapped-C Transformer</option>
+                      <option value="11">Tapped-L Transformer</option>
                       <!--
                       <option value="5">Multistage L-Section</option>
-                      <option value="10">Tapped C transformer</option>
-                      <option value="11">Tapped L transformer</option>
+                      
+                      
                       <option value="12">Double-tapped resonator</option>
                       <option value="13">Single-tuned transformer</option>
                       <option value="14">Parallel double-tuned transformer</option>
@@ -481,6 +483,27 @@
       document.getElementById("f_stop_scale").value = 4;
 
 
+      submit_form()
+    }
+
+    // Tapped-C or tapped-L
+    if ((select.value == 10) || select.value == 11)
+    {
+      $('.Mask_input').hide();
+      $('.PiTee_NetworkType').hide()
+      $('.StubType').hide()
+      $('.Q_input').show()
+      $('.Weighting').hide()
+      $('.N_Sections').hide()
+      $('.gamma_max').hide()
+
+      // RF setup
+      document.getElementById("f0").value = 600;
+      document.getElementById("f0_scale").value = 3;
+      document.getElementById("f_start").value = 50;
+      document.getElementById("f_start_scale").value = 3;
+      document.getElementById("f_stop").value = 1000;
+      document.getElementById("f_stop_scale").value = 3;
       submit_form()
     }
     
