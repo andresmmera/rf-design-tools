@@ -98,3 +98,10 @@ class MatchingNetwork:
             NetworkType['freq'] = np.linspace(self.f0_span-0.5*self.f_span, self.f0_span+0.5*self.f_span, self.n_points)
         return Schematic, NetworkType, comp_val
 
+    def getLTspiceSchematic(self):
+        params = self.getParams();
+
+        if (self.Structure ==  'L-Section'):
+            [LTspiceSchematic, filename] = LTspice_Lsection(params)
+        
+        return LTspiceSchematic, filename

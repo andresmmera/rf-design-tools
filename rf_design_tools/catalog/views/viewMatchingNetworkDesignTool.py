@@ -158,18 +158,16 @@ def MatchingNetworkDesignToolView(request):
 
 # Source: https://linuxhint.com/download-the-file-in-django/
 @csrf_exempt
-def QucsFilterDownload(request):
-    # Create the Qucs schematic from the designer specs
+def LTspiceMatchingNetworkDownload(request):
+    # Create the LTspice schematic from the designer specs
     global design_global
-    QucsSchematic = design_global.getQucsSchematic()
+    [LTspiceSchematic, filename] = design_global.getLTspiceSchematic()
 
     # Save schematic to file
-    filename = "QucsSchematic-export.sch"
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    filepath = BASE_DIR + '/templates/download/' + filename
+    filepath = os.path.expanduser('~') + '/' + filename
     schematic_name = filepath
-    schematic_file = open(schematic_name, "w")
-    n = schematic_file.write(QucsSchematic)
+    schematic_file = open(schematic_name, "w+")
+    n = schematic_file.write(LTspiceSchematic)
     schematic_file.close()
 
     # Open the file for reading content
@@ -182,37 +180,6 @@ def QucsFilterDownload(request):
     response['Content-Disposition'] = "attachment; filename=%s" % filename
     # Return the response value
     return response
-
-# Source: https://linuxhint.com/download-the-file-in-django/
-@csrf_exempt
-def SchematicSVGDownload_Attenuator(request):
-    global schematic_drawing # Take the schematic from the global button
-    # Generate the SVG file
-    filename = 'schematic.svg'
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    filepath = BASE_DIR + '/templates/download/' + filename
-    schematic_drawing.save(filepath)
-
-    # Prepare to download
-    ########################################################
-    # Define Django project base directory
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # Define text file name
-    print("Location of the schematic:", BASE_DIR)
-    filename = 'schematic.svg'
-    # Define the full file path
-    filepath = BASE_DIR + '/templates/download/' + filename
-    # Open the file for reading content
-    path = open(filepath, 'r')
-    # Set the mime type
-    mime_type, _ = mimetypes.guess_type(filepath)
-    # Set the return value of the HttpResponse
-    response = HttpResponse(path, content_type=mime_type)
-    # Set the HTTP header for sending to browser
-    response['Content-Disposition'] = "attachment; filename=%s" % filename
-    # Return the response value
-    return response
-    
 
 def NetworkResponse(Network_Type, comp_val):
     I = 1j

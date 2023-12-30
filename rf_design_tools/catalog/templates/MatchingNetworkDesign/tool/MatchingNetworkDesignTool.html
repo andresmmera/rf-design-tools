@@ -174,6 +174,18 @@
         <!-- BUTTONS -->
         <div class="d-flex flex-row justify-content-center">
           <div class="p-2"><a href="{% url 'attenuator_design_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+          <div class="p-2">
+            <div class="dropdown">
+              <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Simulation Files
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">           
+                <li><a href="{% url 'ltspice_matching_download' %}" class="dropdown-item">LTspice</a></li>
+                <li><a href="{% url 'ltspice_matching_download' %}" class="dropdown-item">Qspice</a></li>
+              </ul>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -193,15 +205,7 @@
               <div class='row'>
                 <div class="col-xs-6 col-md-6" >
                   <h5 class="card-title">Schematic</h5>
-                </div>
-
-                <div class="col-xs-2 col-md-2" > 
-                  <a href="{% url 'svg_download_att' %}" class="btn btn-light" role="button">Download SVG</a>
-                </div>
-
-                <div class="col-xs-4 col-md-4" > 
-                  <a href="{% url 'qucs_filter_download' %}" class="btn btn-warning" role="button">Download Qucs Schematic</a>
-                </div>
+                </div>               
               </div>
             </div>
             

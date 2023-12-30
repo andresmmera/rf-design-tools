@@ -185,3 +185,123 @@ def get_L_Section_Schematic(params):
     d += elm.Line(color='white').length(2).linewidth(0)
     
     return d
+
+def LTspice_Lsection(params):
+
+    data = Design_L_Section(params)
+    
+    LTspiceSchematic = 'Version 4\nSHEET 1 1200 400\n'
+    
+    # Source
+    LTspiceSchematic += 'WIRE 208 0 0 0\n'
+    LTspiceSchematic += 'WIRE 0 64 0 0\n'
+    LTspiceSchematic += 'WIRE 0 208 0 144\n'
+
+
+    LTspiceSchematic += 'SYMBOL voltage 0 48 R0\n'
+    LTspiceSchematic += 'WINDOW 123 40 48 Left 2\n'
+    LTspiceSchematic += 'WINDOW 39 39 77 Left 2\n'
+    LTspiceSchematic += 'SYMATTR Value2 AC 1 0\n'
+    LTspiceSchematic += 'SYMATTR SpiceLine Rser=50.00\n'
+    LTspiceSchematic += 'SYMATTR InstName V1\n'
+    LTspiceSchematic += 'SYMATTR Value \"\"\n'
+    LTspiceSchematic += 'FLAG 0 208 0\n'
+
+    if ('P' in data["topology"][0]):
+        # First shunt
+        if (data["topology"][0] == 'CP'):
+            LTspiceSchematic += 'SYMBOL cap 192 64 R0\n'
+            LTspiceSchematic += 'SYMATTR InstName C1\n'
+            LTspiceSchematic += 'SYMATTR Value '+ getUnitsWithScale(data["values_network"][0], 'Capacitance').replace(" ", "").replace("F", "") +'\n'
+
+            LTspiceSchematic += 'WIRE 208 64 208 0\n'
+            LTspiceSchematic += 'WIRE 208 208 208 128\n'
+            LTspiceSchematic += 'FLAG 208 208 0\n'
+        else:
+            # Shunt inductor
+            LTspiceSchematic += 'SYMBOL ind 192 64 R0\n'
+            LTspiceSchematic += 'SYMATTR InstName L1\n'
+            LTspiceSchematic += 'WINDOW 3 74 55 VTop 2\n'
+            LTspiceSchematic += 'SYMATTR Value '+ getUnitsWithScale(data["values_network"][0], 'Inductance').replace(" ", "").replace("H", "") +'\n'
+            LTspiceSchematic += 'FLAG 208 208 0\n'
+            LTspiceSchematic += 'WIRE 208 80 208 0\n'
+            LTspiceSchematic += 'WIRE 208 208 208 160\n'
+            
+    else:
+        # First series
+
+        if (data["topology"][0] == 'CS'):
+            # Series capacitor
+            LTspiceSchematic += 'SYMBOL cap 336 -16 R90\n'
+            LTspiceSchematic += 'SYMATTR InstName C1\n'
+            LTspiceSchematic += 'WINDOW 0 0 32 VBottom 2\n'
+            LTspiceSchematic += 'WINDOW 3 32 32 VTop 2\n'
+            LTspiceSchematic += 'SYMATTR Value '+ getUnitsWithScale(data["values_network"][0], 'Capacitance').replace(" ", "").replace("F", "") +'\n'
+            LTspiceSchematic += 'WIRE 272 0 208 0\n'
+            LTspiceSchematic += 'WIRE 400 0 336 0\n'
+        else:
+            # Series inductor
+            LTspiceSchematic += 'SYMBOL ind 256 16 R270\n'
+            LTspiceSchematic += 'SYMATTR InstName L1\n'
+            LTspiceSchematic += 'WINDOW 0 32 56 VTop 2\n'
+            LTspiceSchematic += 'WINDOW 3 5 56 VBottom 2\n'
+            LTspiceSchematic += 'SYMATTR Value '+ getUnitsWithScale(data["values_network"][0], 'Inductance').replace(" ", "").replace("H", "") +'\n'
+            LTspiceSchematic += 'WIRE 272 0 208 0\n'
+            LTspiceSchematic += 'WIRE 400 0 352 0\n'
+
+    if ('P' in data["topology"][1]):
+        # Last shunt
+        if (data["topology"][1] == 'CP'):
+            LTspiceSchematic += 'SYMBOL cap 384 64 R0\n'
+            LTspiceSchematic += 'SYMATTR InstName C2\n'
+            LTspiceSchematic += 'SYMATTR Value '+ getUnitsWithScale(data["values_network"][1], 'Capacitance').replace(" ", "").replace("F", "") +'\n'
+            LTspiceSchematic += 'FLAG 400 208 0\n'
+            LTspiceSchematic += 'WIRE 400 64 400 0\n'
+            LTspiceSchematic += 'WIRE 400 208 400 128\n'
+        else:
+            # Shunt inductor
+            LTspiceSchematic += 'SYMBOL ind 384 64 R0\n'
+            LTspiceSchematic += 'SYMATTR InstName L2\n'
+            LTspiceSchematic += 'SYMATTR Value '+ getUnitsWithScale(data["values_network"][1], 'Inductance').replace(" ", "").replace("H", "") +'\n'
+            LTspiceSchematic += 'FLAG 400 208 0\n'
+
+            LTspiceSchematic += 'WIRE 400 80 400 0\n'
+            LTspiceSchematic += 'WIRE 400 208 400 160\n'
+
+    else:
+        # Last series
+        if (data["topology"][1] == 'CS'):
+            # Series capacitor
+            LTspiceSchematic += 'WINDOW 3 32 32 VTop 2\n'
+            LTspiceSchematic += 'SYMBOL cap 336 -16 R90\n'
+            LTspiceSchematic += 'WINDOW 0 0 32 VBottom 2\n'
+            LTspiceSchematic += 'WINDOW 3 32 32 VTop 2\n'
+            LTspiceSchematic += 'SYMATTR InstName C2\n'
+            LTspiceSchematic += 'SYMATTR Value '+ getUnitsWithScale(data["values_network"][1], 'Capacitance').replace(" ", "").replace("F", "") +'\n'
+            LTspiceSchematic += 'WIRE 272 0 208 0\n'
+            LTspiceSchematic += 'WIRE 400 0 336 0\n'
+        else:
+            # Series inductor
+            LTspiceSchematic += 'SYMBOL ind 256 16 R270\n'
+            LTspiceSchematic += 'WINDOW 0 32 56 VTop 2\n'
+            LTspiceSchematic += 'WINDOW 3 5 56 VBottom 2\n'
+            LTspiceSchematic += 'SYMATTR InstName L2\n'
+            LTspiceSchematic += 'SYMATTR Value '+ getUnitsWithScale(data["values_network"][1], 'Inductance').replace(" ", "").replace("H", "") +'\n'
+            LTspiceSchematic += 'WIRE 272 0 208 0\n'
+            LTspiceSchematic += 'WIRE 400 0 352 0\n'
+
+    # Load
+    LTspiceSchematic += 'WIRE 592 0 400 0\n'
+    LTspiceSchematic += 'WIRE 592 80 592 0\n'
+    LTspiceSchematic += 'WIRE 592 224 592 160\n'
+
+    LTspiceSchematic += 'SYMBOL res 576 64 R0\n'
+    LTspiceSchematic += 'SYMATTR InstName RL\n'
+    LTspiceSchematic += 'SYMATTR Value ' + str(params['RL']) + '\n'
+    LTspiceSchematic += 'FLAG 592 224 0\n'
+    
+    LTspiceSchematic += 'TEXT 0 280 Left 2 !.ac lin 1001 '+ str(params['f_start']) + ' ' + str(params['f_stop']) +'\n'
+    LTspiceSchematic += 'TEXT 0 320 Left 2 !.net I(RL) V1'
+
+    filename = 'L-section_' + params['Mask'] + '_RS_' + str(params['RS']) + '_Ohm_' +  'RL_' + str(params['RL']) + '_j' + str(params['XL']) + '.asc'
+    return LTspiceSchematic, filename
