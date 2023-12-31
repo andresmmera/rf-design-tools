@@ -127,10 +127,23 @@
             </tbody>
           </table>
         </form>
+
         <!-- BUTTONS -->
         <div class="d-flex flex-row justify-content-center">
-          <div class="p-2"><a href="{% url 'attenuator_design_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+          <div class="p-2"><a href="{% url 'attenuator_design_docs' %}" class="btn btn-info" role="button" id="ButtonDocs">See docs</a></div>
+          <div class="p-2">
+            <div class="dropdown">
+              <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownButtonDownload" data-bs-toggle="dropdown" aria-expanded="false">
+                Simulation Files
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">           
+                <li><a href="{% url 'ltspice_matching_download' %}" class="dropdown-item">LTspice</a></li>
+                <!-- <li><a href="{% url 'ltspice_matching_download' %}" class="dropdown-item">Qspice</a></li> -->
+              </ul>
+            </div>
+          </div>
         </div>
+
       </div>
 
       
@@ -151,13 +164,6 @@
                   <h5 class="card-title">Schematic</h5>
                 </div>
 
-                <div class="col-xs-2 col-md-2" > 
-                  <a href="{% url 'svg_download_att' %}" class="btn btn-light" role="button">Download SVG</a>
-                </div>
-
-                <div class="col-xs-4 col-md-4" > 
-                  <a href="{% url 'qucs_filter_download' %}" class="btn btn-warning" role="button">Download Qucs Schematic</a>
-                </div>
               </div>
             </div>
             <div class="card-text text-center">
@@ -180,7 +186,8 @@
   // It's called just when the page is loaded
   $(document).ready(function () {
     $('.f0_input').hide(); // Hide central frequency
-
+    $("#dropdownButtonDownload").hide();
+    $("#ButtonDocs").show();
   })
 
 

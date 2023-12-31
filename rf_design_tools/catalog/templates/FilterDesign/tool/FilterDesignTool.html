@@ -236,6 +236,22 @@
 
         </form>
 
+        <div class="row">
+                <!-- BUTTONS -->
+                  <div class="p-1"><a href="{% url 'attenuator_design_docs' %}" class="btn btn-info" role="button" id="ButtonDocs">See docs</a></div>
+                  <div class="p-1">
+                    <div class="dropdown">
+                      <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownButtonDownload" data-bs-toggle="dropdown" aria-expanded="false">
+                        Simulation Files
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">           
+                        <li><a href="{% url 'ltspice_matching_download' %}" class="dropdown-item">LTspice</a></li>
+                        <!-- <li><a href="{% url 'ltspice_matching_download' %}" class="dropdown-item">Qspice</a></li> -->
+                      </ul>
+                    </div>
+                  </div>
+        </div>
+
       </div>
 
       
@@ -254,14 +270,6 @@
               <div class='row'>
                 <div class="col-xs-6 col-md-6" >
                   <h5 class="card-title">Schematic</h5>
-                </div>
-
-                <div class="col-xs-2 col-md-2" > 
-                  <a href="{% url 'svg_download' %}" class="btn btn-light" role="button">Download SVG</a>
-                </div>
-
-                <div class="col-xs-4 col-md-4" > 
-                  <a href="{% url 'qucs_filter_download' %}" class="btn btn-warning" role="button">Download Qucs Schematic</a>
                 </div>
               </div>
             </div>
@@ -422,6 +430,8 @@ submit_form()
     $('.PhaseError_input').hide();
     $('.inductance_input').hide()// Hide resonator values
     $('.sweep_mode2').hide();
+    $("#dropdownButtonDownload").hide();
+    $("#ButtonDocs").hide();
   })
 
   // Hide or show the corresponding inputs

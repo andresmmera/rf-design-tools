@@ -173,7 +173,7 @@
         </form>
         <!-- BUTTONS -->
         <div class="d-flex flex-row justify-content-center">
-          <div class="p-2"><a href="{% url 'attenuator_design_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+          <div class="p-2"><a href="{% url 'attenuator_design_docs' %}" class="btn btn-info" role="button" id="ButtonDocs">See docs</a></div>
           <div class="p-2">
             <div class="dropdown">
               <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownButtonDownload" data-bs-toggle="dropdown" aria-expanded="false">
@@ -181,12 +181,12 @@
               </button>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">           
                 <li><a href="{% url 'ltspice_matching_download' %}" class="dropdown-item">LTspice</a></li>
-                <li><a href="{% url 'ltspice_matching_download' %}" class="dropdown-item">Qspice</a></li>
+                <!-- <li><a href="{% url 'ltspice_matching_download' %}" class="dropdown-item">Qspice</a></li> -->
               </ul>
             </div>
           </div>
-
         </div>
+        
       </div>
 
       
@@ -366,6 +366,7 @@
   $('.N_Sections').hide()
   $('.gamma_max').hide()
   $("#dropdownButtonDownload").show();
+  $("#ButtonDocs").hide();
 
   submit_form()
 

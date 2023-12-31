@@ -90,10 +90,24 @@
 
          
         </form>
+
         <!-- BUTTONS -->
         <div class="d-flex flex-row justify-content-center">
-          <div class="p-2"><a href="{% url 'lumped_trasnmission_line_docs' %}" class="btn btn-info" role="button">See docs</a></div>
+          <div class="p-2"><a href="{% url 'attenuator_design_docs' %}" class="btn btn-info" role="button" id="ButtonDocs">See docs</a></div>
+          <div class="p-2">
+            <div class="dropdown">
+              <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownButtonDownload" data-bs-toggle="dropdown" aria-expanded="false">
+                Simulation Files
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">           
+                <li><a href="{% url 'ltspice_matching_download' %}" class="dropdown-item">LTspice</a></li>
+                <!-- <li><a href="{% url 'ltspice_matching_download' %}" class="dropdown-item">Qspice</a></li> -->
+              </ul>
+            </div>
+          </div>
         </div>
+
+
       </div>
 
       
@@ -295,6 +309,8 @@
     // It's called just when the page is loaded
     $(document).ready(function () {
     $('.sweep_mode2').hide();
+    $("#dropdownButtonDownload").hide();
+    $("#ButtonDocs").hide();
   })
   
 
