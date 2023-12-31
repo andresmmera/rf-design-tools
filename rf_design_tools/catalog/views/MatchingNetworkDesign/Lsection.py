@@ -295,12 +295,43 @@ def LTspice_Lsection(params):
     LTspiceSchematic += 'WIRE 592 80 592 0\n'
     LTspiceSchematic += 'WIRE 592 224 592 160\n'
 
+    # Resistive part
+    RL = params['RL']
+    XL = params['XL']
+    if (params['XL'] != 0):
+        Rp = (RL*RL + XL*XL)/RL
+        XL = (RL*RL + XL*XL)/XL
+        RL = Rp
+        w = 2*np.pi*params['f0']
+        LTspiceSchematic += 'RECTANGLE Normal 880 256 544 -48 2\n'
+        LTspiceSchematic += 'TEXT 536 -88 Left 2 ;' + str(params['RL']) + '+j' + str(params['XL']) +'Ohm @ '+ str(params["f0"]*1e-6)+'MHz\n'
+        if (XL < 0):
+            # Capacitor
+            C = -1/(w*XL)
+            LTspiceSchematic += 'SYMBOL cap 720 96 R0\n'
+            LTspiceSchematic += 'SYMATTR InstName XC\n'
+            LTspiceSchematic += 'SYMATTR Value ' + getUnitsWithScale(C, 'Capacitance').replace(" ", "").replace("H", "") + '\n'
+            LTspiceSchematic += 'WIRE 736 0 592 0\n'
+            LTspiceSchematic += 'WIRE 736 96 736 0\n'
+            LTspiceSchematic += 'WIRE 736 224 736 160\n'
+            LTspiceSchematic += 'FLAG 736 224 0\n'
+        else:
+            # Inductor
+            L = XL/w
+            LTspiceSchematic += 'SYMBOL ind 720 64 R0\n'
+            LTspiceSchematic += 'SYMATTR InstName XL\n'
+            LTspiceSchematic += 'SYMATTR Value ' + getUnitsWithScale(L, 'Inductance').replace(" ", "").replace("H", "") + '\n'
+            LTspiceSchematic += 'FLAG 736 224 0\n'
+            LTspiceSchematic += 'WIRE 736 0 592 0\n'
+            LTspiceSchematic += 'WIRE 736 80 736 0\n'
+            LTspiceSchematic += 'WIRE 736 224 736 160\n'
+
     LTspiceSchematic += 'SYMBOL res 576 64 R0\n'
     LTspiceSchematic += 'SYMATTR InstName RL\n'
     LTspiceSchematic += 'SYMATTR Value ' + str(params['RL']) + '\n'
     LTspiceSchematic += 'FLAG 592 224 0\n'
-    
-    LTspiceSchematic += 'TEXT 0 280 Left 2 !.ac lin 1001 '+ str(params['f_start']) + ' ' + str(params['f_stop']) +'\n'
+   
+    LTspiceSchematic += 'TEXT 0 280 Left 2 !.ac lin 1001 '+ str(params['f_start']*1e-6) + 'Meg ' + str(params['f_stop']*1e-6) +'Meg\n'
     LTspiceSchematic += 'TEXT 0 320 Left 2 !.net I(RL) V1'
 
     filename = 'L-section_' + params['Mask'] + '_RS_' + str(params['RS']) + '_Ohm_' +  'RL_' + str(params['RL']) + '_j' + str(params['XL']) + '.asc'

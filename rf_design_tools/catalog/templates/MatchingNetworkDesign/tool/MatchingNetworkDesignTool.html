@@ -176,7 +176,7 @@
           <div class="p-2"><a href="{% url 'attenuator_design_docs' %}" class="btn btn-info" role="button">See docs</a></div>
           <div class="p-2">
             <div class="dropdown">
-              <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+              <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownButtonDownload" data-bs-toggle="dropdown" aria-expanded="false">
                 Simulation Files
               </button>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">           
@@ -365,6 +365,7 @@
   $('.Weighting').hide()
   $('.N_Sections').hide()
   $('.gamma_max').hide()
+  $("#dropdownButtonDownload").show();
 
   submit_form()
 
@@ -387,7 +388,6 @@
   function StructureChanged(select) {
     // L-section
     if (select.value == 1){
-      // Hide mask
       $('.Mask_input').show();
       $('.PiTee_NetworkType').hide()
       $('.StubType').hide()
@@ -395,6 +395,7 @@
       $('.Weighting').hide()
       $('.N_Sections').hide()
       $('.gamma_max').hide()
+      $("#dropdownButtonDownload").show();
 
       // RF setup
 
@@ -409,7 +410,6 @@
 
     // Pi and tee matching
     if ((select.value == 2) || (select.value == 3)){
-      // Hide mask
       $('.Mask_input').hide();
       $('.PiTee_NetworkType').show()
       $('.StubType').hide()
@@ -417,6 +417,7 @@
       $('.Weighting').hide()
       $('.N_Sections').hide()
       $('.gamma_max').hide()
+      $("#dropdownButtonDownload").hide();
 
       // RF setup
       document.getElementById("f0").value = 600;
@@ -431,7 +432,6 @@
 
     // Single Stub or double stub
     if ((select.value == 4) || (select.value == 5)){
-      // Hide mask
       $('.Mask_input').hide();
       $('.PiTee_NetworkType').hide()
       $('.StubType').show()
@@ -439,6 +439,7 @@
       $('.Weighting').hide()
       $('.N_Sections').hide()
       $('.gamma_max').hide()
+      $("#dropdownButtonDownload").hide();
 
     // MW setup
     document.getElementById("f0").value = 10;
@@ -454,11 +455,11 @@
    
     // lambda/4, lambda/4 + lambda/8 or transmission line transformer
     if ((select.value == 6) || (select.value == 7) || (select.value == 8)|| (select.value == 9)){
-      // Hide mask
       $('.Mask_input').hide();
       $('.PiTee_NetworkType').hide()
       $('.StubType').hide()
       $('.Q_input').hide()
+      $("#dropdownButtonDownload").hide();
       if (select.value == 9){
         // Multisection TL transformer
         $('.Weighting').show()
@@ -500,6 +501,7 @@
       $('.Weighting').hide()
       $('.N_Sections').hide()
       $('.gamma_max').hide()
+      $("#dropdownButtonDownload").hide();
 
       // RF setup
       document.getElementById("f0").value = 600;
