@@ -17,6 +17,7 @@ from .SingleSectionTransformer import *
 from .Multisection_TL_Transformer import *
 from .TappedC_Matching import *
 from .TappedL_Matching import *
+from .DoubleTappedResonator_Matching import *
 
 class MatchingNetwork:
 
@@ -49,6 +50,7 @@ class MatchingNetwork:
         params['XL'] = self.XL
         
         params['Q'] = self.Q
+        params['Ltap'] = self.Ltap
         params['N'] = self.N
         params['StubType'] = self.StubType
         params['PiTee_NetworkMask'] = self.PiTee_NetworkMask
@@ -87,8 +89,8 @@ class MatchingNetwork:
             Schematic, NetworkType, comp_val = Tapped_C_Transformer_MatchingNetwork(params)
         elif (self.Structure == 'Tapped-L Transformer'):
             Schematic, NetworkType, comp_val = Tapped_L_Transformer_MatchingNetwork(params)
-
-
+        elif (self.Structure == 'Double-Tapped Resonator'):
+            Schematic, NetworkType, comp_val = DoubleTappedResonator_MatchingNetwork(params)
 
         
         # Define frequency sweep

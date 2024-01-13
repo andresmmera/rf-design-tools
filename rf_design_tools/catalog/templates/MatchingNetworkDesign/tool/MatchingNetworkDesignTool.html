@@ -44,6 +44,7 @@
                       <option value="9">Multisection &#955;/4 Transformer</option>
                       <option value="10">Tapped-C Transformer</option>
                       <option value="11">Tapped-L Transformer</option>
+                      <option value="12">Double-Tapped Resonator</option>
                       <!--
                       <option value="5">Multistage L-Section</option>
                       
@@ -89,6 +90,15 @@
                 </td>
                 <td>
                   <input type="number" id="Q" min="0.5" value = "1" step="0.5" style="width: 4em" onchange="submit_form(this)"/>
+                </td>
+              </tr>
+
+              <tr class="L_DoubleTappedResonator">
+                <td>
+                  L<sub>tapped</sub>
+                </td>
+                <td>
+                  <input type="number" id="Ltap" min="0.1" value = "1" step="0.5" style="width: 4em" onchange="submit_form(this)"/> nH
                 </td>
               </tr>
 
@@ -367,6 +377,7 @@
   $('.gamma_max').hide()
   $("#dropdownButtonDownload").show();
   $("#ButtonDocs").hide();
+  $('.L_DoubleTappedResonator').hide()
 
   submit_form()
 
@@ -397,6 +408,7 @@
       $('.N_Sections').hide()
       $('.gamma_max').hide()
       $("#dropdownButtonDownload").show();
+      $(".L_DoubleTappedResonator").hide();
 
       // RF setup
 
@@ -419,6 +431,7 @@
       $('.N_Sections').hide()
       $('.gamma_max').hide()
       $("#dropdownButtonDownload").hide();
+      $(".L_DoubleTappedResonator").hide();
 
       // RF setup
       document.getElementById("f0").value = 600;
@@ -441,6 +454,7 @@
       $('.N_Sections').hide()
       $('.gamma_max').hide()
       $("#dropdownButtonDownload").hide();
+      $(".L_DoubleTappedResonator").hide();
 
     // MW setup
     document.getElementById("f0").value = 10;
@@ -461,6 +475,8 @@
       $('.StubType').hide()
       $('.Q_input').hide()
       $("#dropdownButtonDownload").hide();
+      $(".L_DoubleTappedResonator").hide();
+
       if (select.value == 9){
         // Multisection TL transformer
         $('.Weighting').show()
@@ -503,6 +519,7 @@
       $('.N_Sections').hide()
       $('.gamma_max').hide()
       $("#dropdownButtonDownload").hide();
+      $(".L_DoubleTappedResonator").hide();
 
       // RF setup
       document.getElementById("f0").value = 600;
@@ -513,8 +530,30 @@
       document.getElementById("f_stop_scale").value = 3;
       submit_form()
     }
+
+    // Double-tapped resonator
+    if (select.value == 12){
+      $('.Mask_input').hide();
+      $('.PiTee_NetworkType').hide()
+      $('.StubType').hide()
+      $('.Q_input').show()
+      $('.Weighting').hide()
+      $('.N_Sections').hide()
+      $('.gamma_max').hide()
+      $("#dropdownButtonDownload").hide();
+      $(".L_DoubleTappedResonator").show();
+
+      // RF setup
+      document.getElementById("f0").value = 600;
+      document.getElementById("f0_scale").value = 3;
+      document.getElementById("f_start").value = 50;
+      document.getElementById("f_start_scale").value = 3;
+      document.getElementById("f_stop").value = 1000;
+      document.getElementById("f_stop_scale").value = 3;
+      submit_form()
     
     }
+  }
 
     // Hide or show the corresponding inputs
     function switch_sweep_mode(button){
@@ -656,6 +695,7 @@
 
     var Q = document.getElementById("Q").value;
     var PiTee_Mask = document.getElementById("PiTee_NetworkMask").value;
+    var Ltap = document.getElementById("Ltap").value*1e-9;
 
     var StubType = document.getElementById("StubType_Selection").value;
 
@@ -699,6 +739,7 @@
             "RL": RL,
             "XL": XL,
             "Q": Q,
+            "Ltap": Ltap,
             "Weighting": Weighting,
             "N": N_Sections,
             "gamma_max": gamma_max,

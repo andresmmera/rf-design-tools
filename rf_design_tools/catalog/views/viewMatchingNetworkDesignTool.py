@@ -68,6 +68,9 @@ def MatchingNetworkDesignToolView(request):
         N = request.POST.get('N', None)
         print("N = ", N)
 
+        Ltap = request.POST.get('Ltap', None)
+        print("Ltap = ", Ltap)
+
         PiTee_Mask = request.POST.get('PiTee_Mask', None)
         print("PiTee_Mask = ", PiTee_Mask)
 
@@ -103,6 +106,7 @@ def MatchingNetworkDesignToolView(request):
         designer.RL = float(RL)
         designer.XL = float(XL)
         designer.Q = float(Q)
+        designer.Ltap = float(Ltap)
         designer.PiTee_NetworkMask = float(PiTee_Mask)
         designer.StubType = float(StubType)
         designer.f_start = float(f_start)
@@ -366,4 +370,14 @@ def NetworkResponse(Network_Type, comp_val):
         else:
             S11 = ((8*pi**3*C*L1*L2*RL + 8.0*I*pi**3*C*L1*L2*XL)*freq**3 + (-4*I*pi**2*L1*L2 + 4*(I*pi**2*C*L1 + I*pi**2*C*L2)*RL*RS + (-4.0*pi**2*C*L1 - 4.0*pi**2*C*L2)*RS*XL)*freq**2 - I*RL*RS + 1.0*RS*XL - (2*pi*L2*RL + 2.0*I*pi*L2*XL - 2*(pi*L1 + pi*L2)*RS)*freq)/((8*pi**3*C*L1*L2*RL + 8.0*I*pi**3*C*L1*L2*XL)*freq**3 + (-4*I*pi**2*L1*L2 + 4*(-I*pi**2*C*L1 - I*pi**2*C*L2)*RL*RS + (4.0*pi**2*C*L1 + 4.0*pi**2*C*L2)*RS*XL)*freq**2 + I*RL*RS - 1.0*RS*XL - (2*pi*L2*RL + 2.0*I*pi*L2*XL + 2*(pi*L1 + pi*L2)*RS)*freq)
             S21 = -4*pi*L2*RL*RS*freq/(((8*pi**3*C*L1*L2*RL + 8.0*I*pi**3*C*L1*L2*XL)*freq**3 + (-4*I*pi**2*L1*L2 + 4*(-I*pi**2*C*L1 - I*pi**2*C*L2)*RL*RS + (4.0*pi**2*C*L1 + 4.0*pi**2*C*L2)*RS*XL)*freq**2 + I*RL*RS - 1.0*RS*XL - (2*pi*L2*RL + 2.0*I*pi*L2*XL + 2*(pi*L1 + pi*L2)*RS)*freq)*np.sqrt(RL*RS))
+    
+    elif (Network_Type['Network'] == 'DoubleTappedResonator'):
+        LP = comp_val['LP']
+        LS = comp_val['LS']
+        CS = comp_val['CS']
+        CP = comp_val['CP']
+        RS = ZS
+
+        S11 = ((16*pi**4*CP*CS*LP*LS*RL + 16.0*I*pi**4*CP*CS*LP*LS*XL)*freq**4 + (-8*I*pi**3*CS*LP*LS + 8*(I*pi**3*CP*CS*LP + I*pi**3*CP*CS*LS)*RL*RS + (-8.0*pi**3*CP*CS*LP - 8.0*pi**3*CP*CS*LS)*RS*XL)*freq**3 - (4*(pi**2*CP + pi**2*CS)*LP*RL + (4.0*I*pi**2*CP + 4.0*I*pi**2*CS)*LP*XL - 4*(pi**2*CS*LP + pi**2*CS*LS)*RS)*freq**2 + (2*(-I*pi*CP - I*pi*CS)*RL*RS - (-2.0*pi*CP - 2.0*pi*CS)*RS*XL + 2*I*pi*LP)*freq - RS)/((16*pi**4*CP*CS*LP*LS*RL + 16.0*I*pi**4*CP*CS*LP*LS*XL)*freq**4 + (-8*I*pi**3*CS*LP*LS + 8*(-I*pi**3*CP*CS*LP - I*pi**3*CP*CS*LS)*RL*RS + (8.0*pi**3*CP*CS*LP + 8.0*pi**3*CP*CS*LS)*RS*XL)*freq**3 - (4*(pi**2*CP + pi**2*CS)*LP*RL + (4.0*I*pi**2*CP + 4.0*I*pi**2*CS)*LP*XL + 4*(pi**2*CS*LP + pi**2*CS*LS)*RS)*freq**2 + (2*(I*pi*CP + I*pi*CS)*RL*RS - (2.0*pi*CP + 2.0*pi*CS)*RS*XL + 2*I*pi*LP)*freq + RS)
+        S21 = -8*pi**2*CS*LP*RL*RS*freq**2/(((16*pi**4*CP*CS*LP*LS*RL + 16.0*I*pi**4*CP*CS*LP*LS*XL)*freq**4 + (-8*I*pi**3*CS*LP*LS + 8*(-I*pi**3*CP*CS*LP - I*pi**3*CP*CS*LS)*RL*RS + (8.0*pi**3*CP*CS*LP + 8.0*pi**3*CP*CS*LS)*RS*XL)*freq**3 - (4*(pi**2*CP + pi**2*CS)*LP*RL + (4.0*I*pi**2*CP + 4.0*I*pi**2*CS)*LP*XL + 4*(pi**2*CS*LP + pi**2*CS*LS)*RS)*freq**2 + (2*(I*pi*CP + I*pi*CS)*RL*RS - (2.0*pi*CP + 2.0*pi*CS)*RS*XL + 2*I*pi*LP)*freq + RS)*np.sqrt(RL*RS))    
     return np.ones(len(freq))*S11, np.ones(len(freq))*S21
