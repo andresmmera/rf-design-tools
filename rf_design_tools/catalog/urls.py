@@ -66,6 +66,9 @@ from catalog.views import contact_page
 from catalog.views import LumpedTransmissionLineToolView
 from catalog.views import LumpedTransmissionLineToolDocs
 
+from catalog.views import FilterDesignExamplesView
+from catalog.views import SteppedLPF_o3_2GHz_View
+
 from catalog.views import DocsView
 
 urlpatterns = [
@@ -166,6 +169,11 @@ urlpatterns = [
     #################################################################################
     # S-PARAMETER VIEWER
     path('tool/s-parameter-viewer', S_parameter_Viewer_View, name='s_parameter_viewer_tool'),
+
+    #################################################################################
+    # DESIGN EXAMPLES
+    path('filter_designs', FilterDesignExamplesView, name='filter_designs'),
+    path('filter_designs/SteppedLPF_o3_2GHz', SteppedLPF_o3_2GHz_View, name='SteppedLPF_o3_2GHz'),
 
     #################################################################################
     # Docs

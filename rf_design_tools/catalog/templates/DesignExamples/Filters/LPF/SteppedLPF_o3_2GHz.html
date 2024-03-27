@@ -1,0 +1,157 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="card shadow-sm">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Microstrip Stepped LPF</h1>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>A microstrip stepped impedance lowpass filter is designed on a 20 mil thickness RO4003C substrate in order to meet the following design goals:</p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <td><b>Parameter</b></td>
+                    <td><b>Value</b></td>
+                    <td><b>Band</b></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        Insertion loss
+                    </td>
+                    <td>                 
+                        &#60; 1 dB
+                    </td>
+                    <td>
+                        [0, 2] GHz
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Stopband rejection
+                    </td>
+                    <td>                 
+                        &#62; 10 dB
+                    </td>
+                    <td>
+                        &#62; 4 GHz
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Return loss
+                    </td>
+                    <td>                 
+                        &#60; -15 dB
+                    </td>
+                    <td>
+                        [0, 2] GHz
+                    </td>
+                </tr>
+                </tbody>
+            </table>    
+          </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>The first step is to determine the order of the filter that satifies the design goal. For doing this, the <a href="{% url 'filter_design_tool'%}" >filter design tool</a> included in this website is used.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Ideal Stepped LPF Circuit</h5>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o3_3GHz/Circuit.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Theoretical Frequency Response</h5>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o3_3GHz/TheoreticalResponse.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>Then, the transmission lines are synthesized using <a href="https://www.cadence.com/en_US/home/tools/system-analysis/rf-microwave-design/awr-tx-line.html">AWR TX-Line</a> tool (free). Notice that the high impedance lines must be wide enough to be fabricated into a standard PCB manufacturing facility, so let's keep them wider than 100 &#956;m. Once the physical dimensions of the filter are calculated, the design is laid out and assembleD into <a href="https://www.sonnetsoftware.com/products/lite/">Sonnet Lite</a> (it's free, too!)</p>
+    </div>
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Layout</h5>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o3_3GHz/Layout.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Insertion Loss</h5>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o3_3GHz/IL and RL.png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
+        </div>
+      </div>
+
+        <div class="row">
+            <div class="col-6 align-self-right">
+                <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Group Delay</h5>
+            </div>
+        </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o3_3GHz/Group Delay.png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Downloads</h5>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p><a href="https://drive.google.com/file/d/1Mc1WVon6luriv8sJWK9dSOpQKJqL-mQB/view?usp=drive_link">Stepped LPF Sonnet Worspace</a></p>
+    </div>
+
+
+  </div>
+</main>
+{% endblock %}
+
+

@@ -1,0 +1,103 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <h2 class="tool-list">Bandpass Filters</h2>
+    <div class = "row">
+      <div class="col-xs-9 col-md-3 box" style="background-color:#ffffff;">
+        <!-- FILTER DESIGN TOOL -->
+         <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+           <a href='tool/filter_design'><h5 class="tool_title">Filter Design Tool</h5></a>
+         </div>
+         
+         <!-- TOOL DESCRIPTION -->
+         <div class="d-flex flex-row justify-content-center">
+           <p>Synthesize RF and MW filters</p>
+         </div>
+           
+         <!-- BUTTONS -->
+         <div class="d-flex flex-row justify-content-center">
+           <div class="p-2"><a href="{% url 'filter_design_tool'%}" class="btn btn-dark" role="button">Go!</a></div>
+           <div class="p-2"><a href="{% url 'ipn_nf_docs'%}" class="btn btn-info" role="button">See docs</a></div>
+         </div>
+      </div>
+
+      <div class="col-xs-9 col-md-3 box" style="background-color:#ffffff;">
+        <!-- MATCHING NETWORK DESIGN TOOL -->
+         <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+           <a href='tool/matching_network_design'><h5 class="tool_title">Matching Network Design Tool</h5></a>
+         </div>
+         
+         <!-- TOOL DESCRIPTION -->
+         <div class="d-flex flex-row justify-content-center">
+           <p>Synthesize RF and MW matching networks</p>
+         </div>
+           
+         <!-- BUTTONS -->
+         <div class="d-flex flex-row justify-content-center">
+           <div class="p-2"><a href="{% url 'matching_network_design_tool'%}" class="btn btn-dark" role="button">Go!</a></div>
+           <div class="p-2"><a href="{% url 'matching_network_design_docs'%}" class="btn btn-info" role="button">See docs</a></div>
+         </div>
+      </div>
+
+      <div class="col-xs-9 col-md-3 box" style="background-color:#ffffff;">
+        <!-- ATTENUATOR DESIGN TOOL -->
+         <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+           <a href='tool/attenuator_design'><h5 class="tool_title">Attenuator Design Tool</h5></a>
+         </div>
+         
+         <!-- TOOL DESCRIPTION -->
+         <div class="d-flex flex-row justify-content-center">
+           <p>Synthesize RF and MW attenuators</p>
+         </div>
+           
+         <!-- BUTTONS -->
+         <div class="d-flex flex-row justify-content-center">
+           <div class="p-2"><a href="{% url 'lumped_trasnmission_line_tool'%}" class="btn btn-dark" role="button">Go!</a></div>
+           <div class="p-2"><a href="{% url 'attenuator_design_docs'%}" class="btn btn-info" role="button">See docs</a></div>
+         </div>
+      </div>
+
+      <div class="col-xs-9 col-md-3 box" style="background-color:#ffffff;">
+        <!-- LUMPED TRANSMISSION LINE TOOL -->
+         <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+           <a href='tool/lumped_trasmission_line'><h5 class="tool_title">Lumped Transmission Line Circuits</h5></a>
+         </div>
+         
+         <!-- TOOL DESCRIPTION -->
+         <div class="d-flex flex-row justify-content-center">
+           <p>Synthesize lumped trasnmission line circuit equivalents</p>
+         </div>
+           
+         <!-- BUTTONS -->
+         <div class="d-flex flex-row justify-content-center">
+           <div class="p-2"><a href="{% url 'lumped_trasnmission_line_tool'%}" class="btn btn-dark" role="button">Go!</a></div>
+           <div class="p-2"><a href="{% url 'lumped_trasnmission_line_docs'%}" class="btn btn-info" role="button">See docs</a></div>
+         </div>
+      </div>
+
+    </div>
+    
+    <h2 class="tool-list">Lowpass Filters</h2>
+    <div class="row">
+      <div class="col-xs-9 col-md-3 box" style="background-color:#ffffff;">
+        <!-- INTERCEPT POINT DIAGRAM -->
+         <!-- TOOL TITLE -->
+         <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+           <a href="{% url 'SteppedLPF_o3_2GHz'%}"><h5 class="tool_title">Stepped Impedance</h5></a>
+         </div>
+         
+         <!-- TOOL DESCRIPTION -->
+         <div class="d-flex flex-row justify-content-center">
+           <p>Chebyshev o3 <br> f<sub>c</sub> =  2 GHz<br>r = 0.01 dB</p>
+         </div>
+           
+         <!-- BUTTONS -->
+         <div class="d-flex flex-row justify-content-center">
+           <div class="p-2"><a href="{% url 'SteppedLPF_o3_2GHz'%}" class="btn btn-dark" role="button">See</a></div>
+         </div>
+      </div>
+ 
+    </div>
+{% endblock %}

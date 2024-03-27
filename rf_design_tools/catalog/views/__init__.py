@@ -27,3 +27,5 @@ from .viewContact import *
 
 from .viewLumpedTransmissionLineTool import *
 from .viewDocs import *
+
+from .viewFilterDesignExamples import *
