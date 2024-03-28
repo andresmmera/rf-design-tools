@@ -1,0 +1,136 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="card shadow-sm">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Quarter-Wave Coupled Line BPF</h1>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>A microstrip quarter-wave bandpass filter with input and output stubs is designed on a 20 mil thickness RO4003C substrate in order to meet the following design goals:</p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <td><b>Parameter</b></td>
+                    <td><b>Value</b></td>
+                    <td><b>Band</b></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        Insertion loss
+                    </td>
+                    <td>                 
+                        &#60; 1 dB
+                    </td>
+                    <td>
+                        [4.75, 5.25] GHz
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Stopband rejection
+                    </td>
+                    <td>                 
+                        &#62; 25 dB
+                    </td>
+                    <td>
+                        &#60; 4 GHz <br>
+                        &#62; 6 GHz
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Return loss
+                    </td>
+                    <td>                 
+                        &#60; -15 dB
+                    </td>
+                    <td>
+                        [4.75, 5.25] GHz
+                    </td>
+                </tr>
+                </tbody>
+            </table>    
+          </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>The advantage addition of the stubs allows to reduce the coupling needed in the first and last resonator, so that the gap between the input and output coupled section can be wider, which is very convenient for fabrication</p>
+    </div>
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Layout</h5>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o5_5GHz/Layout.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Insertion Loss</h5>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o5_5GHz/IL and RL (broadband).png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o5_5GHz/IL and RL (detail).png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
+        </div>
+    </div>
+
+        <div class="row">
+            <div class="col-6 align-self-right">
+                <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Group Delay</h5>
+            </div>
+        </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o5_5GHz/Group Delay.png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Downloads</h5>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p><a href="https://drive.google.com/file/d/1Mc1WVon6luriv8sJWK9dSOpQKJqL-mQB/view?usp=drive_link">Stepped LPF Sonnet Worspace</a></p>
+    </div>
+
+
+  </div>
+</main>
+{% endblock %}
+
+

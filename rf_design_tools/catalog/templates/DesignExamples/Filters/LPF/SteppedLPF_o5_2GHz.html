@@ -11,7 +11,7 @@
 
    <div class="row">
         <div class="col-6 align-self-right">
-            <h1 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Microstrip Stepped LPF</h1>
+            <h1 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Microstrip Stepped-Z LPF</h1>
         </div>
     </div>
 
@@ -36,7 +36,7 @@
                         Insertion loss
                     </td>
                     <td>                 
-                        &#60; 1 dB
+                        &#60; 1.5 dB
                     </td>
                     <td>
                         [0, 2] GHz
@@ -47,7 +47,7 @@
                         Stopband rejection
                     </td>
                     <td>                 
-                        &#62; 10 dB
+                        &#62; 20 dB
                     </td>
                     <td>
                         &#62; 4 GHz
@@ -70,53 +70,73 @@
         </div>
     </div>
 
-    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
-        <p>The first step is to determine the order of the filter that satifies the design goal. For doing this, the <a href="{% url 'filter_design_tool'%}" >filter design tool</a> included in this website is used.</p>
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p>The first step is to determine the order of the filter that satifies the design goals. For doing this, the Qucs-S filter design tool is used as it automatically generates the Qucs-S schematic.
+            For this first approach, ideal transmission lines are used as shown below:</p>
     </div>
 
     <div class="row">
         <div class="col-6 align-self-right">
-            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Ideal Stepped LPF Circuit</h5>
+            <h5 style = "margin: 0.2cm 0.2cm 0.2cm; vertical-align: middle;">Ideal Stepped-Z LPF Circuit</h5>
         </div>
     </div>
 
     <div class= "col-md-auto">
         <div class="thumbnail" align="center">
-            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o3_3GHz/Circuit.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o5_2GHz/IdealTranmissionLines.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption">Stepped-Z LPF with ideal transmission lines</figcaption>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-6 align-self-right">
-            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Theoretical Frequency Response</h5>
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p>Then, the filter is synthesized using microstrip lines according to the RO4003C properties.</p>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o5_2GHz/RO4003C_Properties.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption">RO4003C properties</figcaption>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm">
+        <p>Notice that the high impedance lines must be wide enough to be fabricated into a standard PCB manufacturing facility, so let's keep them wider than 100 &#956;m. Once the physical dimensions of the filter are calculated, the design is laid out and assembleD into <a href="https://www.sonnetsoftware.com/products/lite/">Sonnet Lite</a> (it's free, too!)</p>
+    </div>
+
+    <div class= "col-md-auto mb-3">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o5_2GHz/SteppedZ_QucsFilter_Design.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption">Qucs-S filter design tool window</figcaption>
         </div>
     </div>
 
     <div class= "col-md-auto">
         <div class="thumbnail" align="center">
-            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o3_3GHz/TheoreticalResponse.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o5_2GHz/QucsSimulation_SteppedZ_Microstrip.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption">Qucs-S simulation with microstrip transmission line models</figcaption>
         </div>
     </div>
 
-    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
-        <p>Then, the transmission lines are synthesized using <a href="https://www.cadence.com/en_US/home/tools/system-analysis/rf-microwave-design/awr-tx-line.html">AWR TX-Line</a> tool (free). Notice that the high impedance lines must be wide enough to be fabricated into a standard PCB manufacturing facility, so let's keep them wider than 100 &#956;m. Once the physical dimensions of the filter are calculated, the design is laid out and assembleD into <a href="https://www.sonnetsoftware.com/products/lite/">Sonnet Lite</a> (it's free, too!)</p>
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p>Once the filter is simulated with microstrip transmission line models, the circuit is laid out and assembled in <a href="https://www.sonnetsoftware.com/products/lite/">Sonnet Lite</a> (it's free!) for EM simulation</p>
     </div>
+
 
     <div class="row">
         <div class="col-6 align-self-right">
-            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Layout</h5>
+            <h5 style = "margin: 0.2cm 0.2cm 0.2cm; vertical-align: middle;">Layout</h5>
         </div>
     </div>
 
     <div class= "col-md-auto">
         <div class="thumbnail" align="center">
-            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o4_2GHz/Layout.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o5_2GHz/Layout.png' %}" style="width:60%" alt="SteppedLPF_Layout">
         </div>
       </div>
 
       <div class="row">
         <div class="col-6 align-self-right">
-            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Insertion Loss</h5>
+            <h5 style = "margin: 0.2cm 0.2cm 0.2cm; vertical-align: middle;">Insertion Loss</h5>
         </div>
     </div>
 
@@ -128,7 +148,7 @@
 
         <div class="row">
             <div class="col-6 align-self-right">
-                <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Group Delay</h5>
+                <h5 style = "margin: 0.2cm 0.2cm 0.2cm; vertical-align: middle;">Group Delay</h5>
             </div>
         </div>
 
@@ -138,16 +158,44 @@
         </div>
     </div>
 
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p>Finally, the results obtained from Sonnet are compared to those obtained with the Qucs-S simulation with MS transmission line models. As expected, the cutoff frequency in the EM simulation is lower with respect to the electrical simulation</p>
+    </div>
 
-    <div class="row">
-        <div class="col-6 align-self-right">
-            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Downloads</h5>
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o5_2GHz/Comparison between Sonnet and Qucs S.png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
         </div>
     </div>
 
-    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
-        <p><a href="https://drive.google.com/file/d/1Mc1WVon6luriv8sJWK9dSOpQKJqL-mQB/view?usp=drive_link">Stepped LPF Sonnet Worspace</a></p>
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h3 style = "margin: 0.2cm 0.2cm 0.2cm; vertical-align: middle;">Downloads</h3>
+        </div>
     </div>
+        
+    <div class="list-group">
+    <a href="https://drive.google.com/file/d/1ym2HhtnpKWZCQ7GPyF56cA1kt8_PDc73/view?usp=drive_link" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">Sonnet Workspace</h5>
+        </div>
+        <p class="mb-1">Stepped-Z Sonnet Lite workspace</p></a>
+        
+        <a href="https://drive.google.com/file/d/1xhsyaZ0cBnAFOqq_Z5EQ_na7AAhR_cml/view?usp=drive_link" class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Qucs-S Workspace</h5>
+    </div>
+    <p class="mb-1">Stepped-Z Qucs-S workspace</p></a>
+    
+    <a href="https://drive.google.com/file/d/19ketNyv5dLZnl5Yl7pp1Ur0r21BhWAhX/view?usp=drive_link" class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">Schematic</h5>
+    </div>
+    <p class="mb-1">PDF schematic</p></a>
+    </div>
+        
+
 
 
   </div>
