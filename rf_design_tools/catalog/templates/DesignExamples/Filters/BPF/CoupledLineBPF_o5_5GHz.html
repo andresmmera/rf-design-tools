@@ -39,7 +39,7 @@
                         &#60; 1 dB
                     </td>
                     <td>
-                        [4.75, 5.25] GHz
+                        [4.8, 5.2] GHz
                     </td>
                 </tr>
                 <tr>
@@ -62,7 +62,7 @@
                         &#60; -15 dB
                     </td>
                     <td>
-                        [4.75, 5.25] GHz
+                        [4.8, 5.2] GHz
                     </td>
                 </tr>
                 </tbody>
@@ -72,6 +72,65 @@
     </div>
 
 
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p>The first step is to determine the order of the filter that satifies the design goals. For doing this, the Qucs-S filter design tool is used as it automatically generates the Qucs-S schematic.
+        For this first approach, ideal transmission lines are used as shown below:</p>
+    </div>
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.2cm 0.2cm 0.2cm; vertical-align: middle;">Ideal QW Coupled Lines Circuit</h5>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o3_5GHz/IdealTranmissionLines.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption">Ideal quarter wavelength coupled lines BPF</figcaption>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p>Then, the filter is synthesized using microstrip lines according to the RO4003C properties.</p>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o3_5GHz/RO4003C_Properties.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption">RO4003C properties</figcaption>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm">
+        <p>The design must be compatible with the capabilities of a standard PCB manufacturing facility, so it is important to keep the separation between the first two lines wide enough.
+             This minumum gap could be something close to 100 &#956;m. Notice that wider passbands would require tighter coupling between the first (last) pair of coupled lines and the gap would be etched correctly
+             in a real PCB manufacturing process. 
+        </p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm">
+        <p>Now the transmission lines are synthesized using the Qucs-S filter tool by taking into account the substrate properties. The circuit variables are parametrized so as to easily tune them.
+        </p>
+    </div>
+
+    <div class= "col-md-auto mb-3">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o3_5GHz/QW_CoupledLines_QucsFilter.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption">Qucs-S filter design tool window</figcaption>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o3_5GHz/QucsSimulation_Microstrip.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption">Qucs-S simulation with microstrip transmission line models</figcaption>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm">
+        <p>Once the filter response is tuned, the circuit is laid-out and simulated in <a href="https://www.sonnetsoftware.com/products/lite/">Sonnet Lite</a>. Care must be taken in the box size definition to avoid unintended resonant modes caused by the bounding conditions.
+        </p>
+    </div>
 
     <div class="row">
         <div class="col-6 align-self-right">
@@ -81,7 +140,7 @@
 
     <div class= "col-md-auto">
         <div class="thumbnail" align="center">
-            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o5_5GHz/Layout.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o3_5GHz/Layout.png' %}" style="width:60%" alt="SteppedLPF_Layout">
         </div>
       </div>
 
@@ -93,13 +152,13 @@
 
     <div class= "col-md-auto">
         <div class="thumbnail" align="center">
-            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o5_5GHz/IL and RL (broadband).png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o3_5GHz/IL and RL (broadband).png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
         </div>
     </div>
 
     <div class= "col-md-auto">
         <div class="thumbnail" align="center">
-            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o5_5GHz/IL and RL (detail).png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o3_5GHz/IL and RL (detail).png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
         </div>
     </div>
 
@@ -111,21 +170,46 @@
 
     <div class= "col-md-auto">
         <div class="thumbnail" align="center">
-            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o5_5GHz/Group Delay.png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o3_5GHz/Group Delay.png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
         </div>
     </div>
 
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p>Finally, the results obtained from Sonnet are compared to those obtained with the Qucs-S simulation with MS transmission line models. As expected, the passband in the EM simulation is slightly shifted towards lower frecuencies 
+            with respect to the circuit simulation with microstrip transmission line models.</p>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o3_5GHz/Comparison between Sonnet and Qucs S.png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-6 align-self-right">
-            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Downloads</h5>
+            <h3 style = "margin: 0.2cm 0.2cm 0.2cm; vertical-align: middle;">Downloads</h3>
         </div>
     </div>
-
-    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
-        <p><a href="https://drive.google.com/file/d/1Mc1WVon6luriv8sJWK9dSOpQKJqL-mQB/view?usp=drive_link">Stepped LPF Sonnet Worspace</a></p>
+        
+    <div class="list-group">
+    <a href="https://drive.google.com/file/d/1vFoQBwQWIEKQQdsefULw8ZWUoozqJQ0o/view?usp=drive_link" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">Sonnet Workspace</h5>
+        </div>
+        <p class="mb-1">Download</p></a>
+        
+        <a href="https://drive.google.com/file/d/14walqJrGc0qCYn8-_frhov0oqUcAl0ok/view?usp=drive_link" class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Qucs-S Workspace</h5>
     </div>
-
+    <p class="mb-1">Download</p></a>
+    
+    <a href="https://drive.google.com/file/d/1KB6lzDRDTh-2tbcNhH3QUou8mEydxHDO/view?usp=drive_link" class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">Schematic</h5>
+    </div>
+    <p class="mb-1">Download</p></a>
+    </div>
 
   </div>
 </main>

@@ -13,13 +13,15 @@
          
          <div class="d-flex flex-row justify-content-center">
           <figure class="figure">
-            <img src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o5_5GHz/3D_View.png' %}" class="figure-img img-fluid rounded">
+            <a href="{% url 'CoupledLineBPF_o5_5GHz'%}">
+              <img src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o3_5GHz/preview.png' %}" class="figure-img img-fluid rounded">
+            </a>
           </figure>
          </div>
 
          <!-- DESCRIPTION -->
          <div class="d-flex flex-row justify-content-center">
-          <p>Chebyshev o5 <br> f<sub>c</sub> =  5 GHz<br>BW = 500 MHz<br> r = 0.01 dB</p>
+          <p>Chebyshev o3 <br> f<sub>c</sub> =  5 GHz<br>BW = 500 MHz<br> r = 0.01 dB</p>
          </div>
            
          <!-- BUTTONS -->
@@ -60,7 +62,7 @@
          <div class="d-flex flex-row justify-content-center">
           <figure class="figure">
             <a href="{% url 'SteppedLPF_o5_2GHz'%}">
-              <img src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o5_2GHz/3D_View.png' %}" class="figure-img img-fluid rounded">
+              <img src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o5_2GHz/preview.png' %}" class="figure-img img-fluid rounded">
             </a>
           </figure>
          </div>
