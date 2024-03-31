@@ -8,12 +8,12 @@
       <div class="col-xs-9 col-md-3 box" style="background-color:#ffffff;">
         <!-- TITLE -->
          <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
-           <a href="{% url 'CoupledLineBPF_o5_5GHz'%}"><h5 class="tool_title">Quarter-Wave Coupled Line</h5></a>
+           <a href="{% url 'CoupledLineBPF_o3_5GHz'%}"><h5 class="tool_title">Quarter-Wave Coupled Line</h5></a>
          </div>
          
          <div class="d-flex flex-row justify-content-center">
           <figure class="figure">
-            <a href="{% url 'CoupledLineBPF_o5_5GHz'%}">
+            <a href="{% url 'CoupledLineBPF_o3_5GHz'%}">
               <img src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_BPF_o3_5GHz/preview.png' %}" class="figure-img img-fluid rounded">
             </a>
           </figure>
@@ -26,25 +26,32 @@
            
          <!-- BUTTONS -->
          <div class="d-flex flex-row justify-content-center">
-           <div class="p-2"><a href="{% url 'CoupledLineBPF_o5_5GHz'%}" class="btn btn-dark" role="button">See</a></div>
+           <div class="p-2"><a href="{% url 'CoupledLineBPF_o3_5GHz'%}" class="btn btn-dark" role="button">See</a></div>
          </div>
       </div>
 
       <div class="col-xs-9 col-md-3 box" style="background-color:#ffffff;">
-        <!-- MATCHING NETWORK DESIGN TOOL -->
+        <!-- TITLE -->
          <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
-           <a href='tool/matching_network_design'><h5 class="tool_title">Matching Network Design Tool</h5></a>
+           <a href="{% url 'CoupledLineBPF_w_stubs_o3_5GHz'%}"><h5 class="tool_title">Stubbed Quarter-Wave Coupled Line</h5></a>
          </div>
          
-         <!-- TOOL DESCRIPTION -->
          <div class="d-flex flex-row justify-content-center">
-           <p>Synthesize RF and MW matching networks</p>
+          <figure class="figure">
+            <a href="{% url 'CoupledLineBPF_w_stubs_o3_5GHz'%}">
+              <img src="{% static 'images/Designs/Filters/BPF/QW_Coupled_Line_w_stubs_BPF_o3_5GHz/preview.png' %}" class="figure-img img-fluid rounded">
+            </a>
+          </figure>
+         </div>
+
+         <!-- DESCRIPTION -->
+         <div class="d-flex flex-row justify-content-center">
+          <p>Chebyshev o3 <br> f<sub>c</sub> =  5 GHz<br>BW = 500 MHz<br> r = 0.01 dB</p>
          </div>
            
          <!-- BUTTONS -->
          <div class="d-flex flex-row justify-content-center">
-           <div class="p-2"><a href="{% url 'matching_network_design_tool'%}" class="btn btn-dark" role="button">Go!</a></div>
-           <div class="p-2"><a href="{% url 'matching_network_design_docs'%}" class="btn btn-info" role="button">See docs</a></div>
+           <div class="p-2"><a href="{% url 'CoupledLineBPF_o3_5GHz'%}" class="btn btn-dark" role="button">See</a></div>
          </div>
       </div>
 

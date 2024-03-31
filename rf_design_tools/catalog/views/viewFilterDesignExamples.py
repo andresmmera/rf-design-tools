@@ -14,3 +14,8 @@ def SteppedLPF_o3_2GHz_View(request):
 def CoupledLineBPF_o5_5GHz_View(request):
     # Render the HTML template index.html with the data in the context variable
     return render(request, './DesignExamples/Filters/BPF/CoupledLineBPF_o5_5GHz.html')
+
+def CoupledLineBPF_w_stubs_o5_5GHz_View(request):
+    # Render the HTML template index.html with the data in the context variable
+    return render(request, './DesignExamples/Filters/BPF/CoupledLineBPF_o5_5GHz_w_stubs.html')
+

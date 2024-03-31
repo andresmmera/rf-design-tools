@@ -126,7 +126,22 @@
           Design Examples
         </button>
         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <li><a class="dropdown-item"  href="{% url 'filter_designs' %}">Filters</a></li>
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="">Filters</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'filter_designs' %}">Filter Examples Catalog</a></li>
+              <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="">LPF</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'SteppedLPF_o5_2GHz' %}">Stepped-Z 3 GHz</li>
+                </ul>
+              </li>
+              <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="">BPF</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'CoupledLineBPF_o3_5GHz' %}">QW Coupled Line 5 GHz</a></li>
+                  <li><a class="dropdown-item" href="{% url 'CoupledLineBPF_w_stubs_o3_5GHz' %}">QW Coupled Line w/ stubs 5 GHz</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
         </ul>
       </div>
     </li>

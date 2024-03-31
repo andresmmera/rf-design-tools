@@ -71,10 +71,15 @@
         </div>
     </div>
 
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p>The design goals were chosen so that the design can be simulated in Sonnet Lite. This software has a memory limitation of 64 MB which means that large designs, like an o5 or a o7 filter cannot
+            be simulated. Taking the classical QW coupled lines filter as the baseline, open stubs are added at the input and output. Having parametrized all the circuit features in Qucs-S, the variables are 
+        tuned manually so as to have the desired frequency response.</p>
+    </div>
 
     <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
-        <p>The first step is to determine the order of the filter that satifies the design goals. For doing this, the Qucs-S filter design tool is used as it automatically generates the Qucs-S schematic.
-        For this first approach, ideal transmission lines are used as shown below:</p>
+        <p>The Qucs-S filter design tool is specially convenient for designing the filter as it automatically generates an schematic which is used for electrical-level simulation and tuning.
+        As a first approach, ideal transmission lines are used as shown below:</p>
     </div>
 
     <div class="row">
