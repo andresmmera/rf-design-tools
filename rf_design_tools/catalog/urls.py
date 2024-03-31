@@ -68,8 +68,9 @@ from catalog.views import LumpedTransmissionLineToolDocs
 
 from catalog.views import FilterDesignExamplesView
 from catalog.views import SteppedLPF_o3_2GHz_View
-from catalog.views import CoupledLineBPF_o5_5GHz_View
-from catalog.views import CoupledLineBPF_w_stubs_o5_5GHz_View
+from catalog.views import CoupledLineBPF_o3_5GHz_View
+from catalog.views import CoupledLineBPF_w_stubs_o3_5GHz_View
+from catalog.views import QW_Open_Stubs_o3_5GHz_View
 
 from catalog.views import DocsView
 
@@ -176,8 +177,10 @@ urlpatterns = [
     # DESIGN EXAMPLES
     path('filter_designs', FilterDesignExamplesView, name='filter_designs'),
     path('filter_designs/SteppedLPF_o5_2GHz', SteppedLPF_o3_2GHz_View, name='SteppedLPF_o5_2GHz'),
-    path('filter_designs/CoupledLineBPF_o3_5GHz', CoupledLineBPF_o5_5GHz_View, name='CoupledLineBPF_o3_5GHz'),
-    path('filter_designs/CoupledLineBPF_w_stubs_o3_5GHz', CoupledLineBPF_w_stubs_o5_5GHz_View, name='CoupledLineBPF_w_stubs_o3_5GHz'),
+    path('filter_designs/CoupledLineBPF_o3_5GHz', CoupledLineBPF_o3_5GHz_View, name='CoupledLineBPF_o3_5GHz'),
+    path('filter_designs/CoupledLineBPF_w_stubs_o3_5GHz', CoupledLineBPF_w_stubs_o3_5GHz_View, name='CoupledLineBPF_w_stubs_o3_5GHz'),
+    path('filter_designs/QW_open_stubs_o3_5GHz', QW_Open_Stubs_o3_5GHz_View, name='QW_Open_Stubs_w_stubs_o3_5GHz'),
+    
 
     #################################################################################
     # Docs

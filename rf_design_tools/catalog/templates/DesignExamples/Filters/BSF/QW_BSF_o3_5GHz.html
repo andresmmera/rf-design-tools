@@ -1,0 +1,206 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="card shadow-sm">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Quarter-Wave Notch Filter</h1>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>A microstrip quarter-wave notch filter is designed on a 20 mil thickness RO4003C substrate in order to meet the following design goals:</p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <td><b>Parameter</b></td>
+                    <td><b>Value</b></td>
+                    <td><b>Band</b></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        Insertion loss
+                    </td>
+                    <td>                 
+                        &#60; 1 dB
+                    </td>
+                    <td>
+                        &#60; 4 GHz
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Stopband rejection
+                    </td>
+                    <td>                 
+                        &#62; 20 dB
+                    </td>
+                    <td>
+                        &#60; 4.5 GHz <br>
+                        &#62; 5.3 GHz
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Return loss
+                    </td>
+                    <td>                 
+                        &#60; -15 dB
+                    </td>
+                    <td>
+                        &#60; 4 GHz
+                    </td>
+                </tr>
+                </tbody>
+            </table>    
+          </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p>The filter must have a deep notch in 5 GHz. For designing such a filter, tge Qucs-S filter design tool is specially convenient since it automatically generates an schematic which can be 
+            used for simulation and tuning. As a first approach, ideal transmission lines are used as shown below:</p>
+    </div>
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.2cm 0.2cm 0.2cm; vertical-align: middle;">Ideal QW Coupled Lines Circuit</h5>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BSF/QW_Notch_o3_5GHz/IdealTranmissionLines.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption">Ideal quarter wavelength notch filter</figcaption>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p>Then, the filter is synthesized using microstrip lines according to the RO4003C properties. Notice that such high impedance lines are difficult to implement in a real PCB manufacturing process
+             since they require line widths below 100 &#x3BC;m. In order to handle this problem, the minimum width is fixed to 100 &#x3BC;m and the wider line is tuned in Qucs-S to that to get a suitable 
+            frequency response, giving priority to the lower frequencies.
+        </p>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BSF/QW_Notch_o3_5GHz/RO4003C_Properties.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption">RO4003C properties</figcaption>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BSF/QW_Notch_o3_5GHz/QucsSimulation_Microstrip.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption">Qucs-S simulation with microstrip transmission line models</figcaption>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm">
+        <p>Once the filter response is tuned, the circuit is laid-out and simulated in <a href="https://www.sonnetsoftware.com/products/lite/">Sonnet Lite</a>. Care must be taken in the box size definition to avoid unintended resonant modes caused by the bounding conditions.
+        </p>
+    </div>
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Layout</h5>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BSF/QW_Notch_o3_5GHz/Layout.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Insertion Loss</h5>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BSF/QW_Notch_o3_5GHz/IL and RL (broadband).png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Group Delay</h5>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BSF/QW_Notch_o3_5GHz/Group Delay.png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p>Finally, the results obtained from Sonnet are compared to those obtained with the Qucs-S simulation with MS transmission line models. As expected, the passband in the EM simulation is slightly shifted towards lower frecuencies 
+            with respect to the circuit simulation with microstrip transmission line models.</p>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/BSF/QW_Notch_o3_5GHz/Comparison between Sonnet and Qucs S.png' %}" style="width:60%" alt="SteppedLPF_IL_and_RL">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h3 style = "margin: 0.2cm 0.2cm 0.2cm; vertical-align: middle;">Downloads</h3>
+        </div>
+    </div>
+        
+    <div class="list-group">
+        <a href="https://drive.google.com/file/d/1n0CuBdkM6hfZmrL5_69xHTNgm9TgHA_p/view?usp=drive_link" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Sonnet Workspace</h5>
+            </div>
+            <p class="mb-1">Download</p>
+        </a>
+        
+        <a href="https://drive.google.com/file/d/1jT73JCUX1B8awO-5M4VQIbJFS4fI-IfB/view?usp=drive_link" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Qucs-S Workspace</h5>
+            </div>
+            <p class="mb-1">Download</p>
+        </a>
+    
+        <a href="https://drive.google.com/file/d/1zx11h8R-qJe-W4YYry7rFgwJWeskh90e/view?usp=drive_link" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Schematic</h5>
+            </div>
+            <p class="mb-1">Download</p>
+        </a>
+
+        <a href="https://drive.google.com/file/d/18HZ1z85ebE3uBAhR-C3SiOTzjnOVLkvc/view?usp=drive_link" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">S-parameters</h5>
+            </div>
+            <p class="mb-1">Download</p>
+        </a>
+        
+        </div>
+  </div>
+</main>
+{% endblock %}
+
+
