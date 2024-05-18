@@ -21,7 +21,7 @@
 
          <!-- DESCRIPTION -->
          <div class="d-flex flex-row justify-content-center">
-          <p>Chebyshev o3 <br> f<sub>c</sub> =  5 GHz<br>BW = 500 MHz<br> r = 0.01 dB</p>
+          <p>Chebyshev response o3<br> f<sub>c</sub> =  5 GHz<br>BW = 500 MHz<br> r = 0.01 dB</p>
          </div>
            
          <!-- BUTTONS -->
@@ -46,7 +46,7 @@
 
          <!-- DESCRIPTION -->
          <div class="d-flex flex-row justify-content-center">
-          <p>Chebyshev o3 <br> f<sub>c</sub> =  5 GHz<br>BW = 500 MHz<br> r = 0.01 dB</p>
+          <p>Chebyshev response o3<br> f<sub>c</sub> =  5 GHz<br>BW = 500 MHz<br> r = 0.01 dB</p>
          </div>
            
          <!-- BUTTONS -->
@@ -75,7 +75,7 @@
          </div>
 
          <div class="d-flex flex-row justify-content-center">
-          <p>Chebyshev o5 <br> f<sub>c</sub> =  2 GHz<br>r = 0.01 dB</p>
+          <p>Chebyshev response o5<br> f<sub>c</sub> =  2 GHz<br>r = 0.01 dB</p>
         </div>
  
            
@@ -105,13 +105,43 @@
          </div>
 
          <div class="d-flex flex-row justify-content-center">
-          <p>Chebyshev o3 <br> f<sub>c</sub> =  5 GHz<br>r = 0.01 dB<br>f<sub>stop</sub> = [4.5, 5.3] GHz</p>
+          <p>Chebyshev response o3. <br> f<sub>c</sub> =  5 GHz<br>r = 0.01 dB<br>f<sub>stop</sub> = [4.5, 5.3] GHz</p>
         </div>
  
            
          <!-- BUTTONS -->
          <div class="d-flex flex-row justify-content-center">
            <div class="p-2"><a href="{% url 'QW_Open_Stubs_w_stubs_o3_5GHz'%}" class="btn btn-dark" role="button">See</a></div>
+         </div>
+      </div>
+ 
+    </div>
+
+    <h2 class="tool-list">Highpass Filters</h2>
+    <div class="row">
+      <div class="col-xs-9 col-md-3 box" style="background-color:#ffffff;">
+         <!-- TITLE -->
+         <div class= "d-flex flex-row justify-content-center" style="margin-top: 10px">
+           <a href="{% url 'Lumped_HPF_o2_2GHz'%}"><h5 class="tool_title">Lumped HPF</h5></a>
+         </div>
+         
+         <!-- DESCRIPTION -->
+         <div class="d-flex flex-row justify-content-center">
+          <figure class="figure">
+            <a href="{% url 'Lumped_HPF_o2_2GHz'%}">
+              <img src="{% static 'images/Designs/Filters/HPF/Lumped_HPF_2GHz/preview.png' %}" class="figure-img img-fluid rounded">
+            </a>
+          </figure>
+         </div>
+
+         <div class="d-flex flex-row justify-content-center">
+          <p>Elliptic response. 2 resonators <br> f<sub>c</sub> =  2 GHz<br>r = 0.08 dB</p>
+        </div>
+ 
+           
+         <!-- BUTTONS -->
+         <div class="d-flex flex-row justify-content-center">
+           <div class="p-2"><a href="{% url 'Lumped_HPF_o2_2GHz'%}" class="btn btn-dark" role="button">See</a></div>
          </div>
       </div>
  

@@ -22,3 +22,7 @@ def CoupledLineBPF_w_stubs_o3_5GHz_View(request):
 def QW_Open_Stubs_o3_5GHz_View(request):
     # Render the HTML template index.html with the data in the context variable
     return render(request, './DesignExamples/Filters/BSF/QW_BSF_o3_5GHz.html')
+
+def Lumped_HPF_o2_2GHz_View(request):
+    # Render the HTML template index.html with the data in the context variable
+    return render(request, './DesignExamples/Filters/HPF/LumpedHPF_o2_2GHz.html')

@@ -1,0 +1,224 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="card shadow-sm">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Lumped HPF</h1>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0cm 0.5cm 0.2cm;">
+        <p>A lumped 2 GHz elliptic highpass filter is designed on a 20 mil thickness RO4003C substrate. The design goals are the following:</p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <td><b>Parameter</b></td>
+                    <td><b>Value</b></td>
+                    <td><b>Band</b></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        Insertion loss
+                    </td>
+                    <td>                 
+                        &#60; 1 dB
+                    </td>
+                    <td>
+                        [2, 4] GHz
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Stopband rejection
+                    </td>
+                    <td>                 
+                        &#62; 30 dB
+                    </td>
+                    <td>
+                        &#60; 1.5 GHz
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Return loss
+                    </td>
+                    <td>                 
+                        &#60; -15 dB
+                    </td>
+                    <td>
+                        [0, 2] GHz
+                    </td>
+                </tr>
+                </tbody>
+            </table>    
+          </div>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p> An order 2 elliptic filter (2 resonators) satisfies the requirements above.
+            The <a href="{% url 'filter_design_tool' %}">filter designer tool</a> from this website is used for the first steps. Then <a href="https://www.sonnetsoftware.com/products/lite/">Sonnet Lite</a>, <a href="https://ra3xdh.github.io/">Qucs-S</a>, and <a href="https://www.kicad.org/">Kicad</a> are used.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.2cm 0.2cm 0.2cm; vertical-align: middle;">Ideal 2 GHz elliptic HPF Circuit</h5>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p> Once having obtained the filter values from the <a href="{% url 'filter_design_tool' %}">filter designer tool</a>, the filter is built with ideal components and simulated using  <a href="https://ra3xdh.github.io/">Qucs-S.</a></p>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/HPF/Lumped_HPF_2GHz/IdealFilter-Schematic.png' %}" style="width:30%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption">Ideal elliptic HPF 2 GHz schematic</figcaption>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/HPF/Lumped_HPF_2GHz/IdealFilter-Qucs-S-Simulation.png' %}" style="width:40%" alt="HPF_QucsS">
+            <figcaption class="figure-caption">Ideal elliptic HPF 2 GHz. <a href="https://ra3xdh.github.io/">Qucs-S</a> simulation</figcaption>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p>The next step is to synthesize the inductors with PCB traces. A <a href="https://rogerscorp.com/advanced-electronics-solutions/ro4000-series-laminates/ro4003c-laminates">RO4003C</a> substrate will be used. 
+            As a first approach the MLIN component with the RO4003C substrate properties is used for estimating the length of the traces. A width of 200 &#956;m to maximize the length of the trace. 
+            Once the estimation of the inductor length are obtained, the inductors are laid out into Kicad with a meander shape in order to have a compact design.
+        </p>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/LPF/SteppedLPF_o5_2GHz/RO4003C_Properties.png' %}" style="width:60%" alt="SteppedLPF_Layout">
+            <figcaption class="figure-caption"><a href="https://rogerscorp.com/advanced-electronics-solutions/ro4000-series-laminates/ro4003c-laminates">RO4003C</a> properties</figcaption>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/HPF/Lumped_HPF_2GHz/L1-Sonnet.png' %}" style="width:20%" alt="L1_Layout">
+            <figcaption class="figure-caption">L1 microstrip meander implementation in <a href="https://www.sonnetsoftware.com/products/lite/">Sonnet Lite</a></figcaption>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm;">
+        <p> Once the meander are simulated in <a href="https://www.sonnetsoftware.com/products/lite/">Sonnet Lite</a>, it is convenient to compare their performance with the ideal inductors.
+            For doing this, the S-parameter data obtained from <a href="https://www.sonnetsoftware.com/products/lite/">Sonnet Lite</a> are exported into a Touchstone file and then compared those of
+             an ideal inductor in  <a href="https://ra3xdh.github.io/">Qucs-S.</a>
+        </p>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/HPF/Lumped_HPF_2GHz/L1 - EM vs ideal.png' %}" style="width:40%" alt="L1_Comparison">
+            <figcaption class="figure-caption">Performance comparison between the microstrip meander implementation of L1 and an ideal inductance</figcaption>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/HPF/Lumped_HPF_2GHz/L2 - EM vs ideal.png' %}" style="width:40%" alt="L2_Comparison">
+            <figcaption class="figure-caption">Performance comparison between the microstrip meander implementation of L2 and an ideal inductance</figcaption>
+        </div>
+    </div>
+
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm">
+        <p> Both inductors have an inductance sufficiently close to the ideal one. The Q factor of both inductors at the attenuation poles frequency are good enough to make decent resonators.</p>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm">
+        <p> As the meander inductors are no longer ideal inductances, it is need to readjust the filter capacitors so as the elliptic shape is preserved. Also it is needed to replace the ideal capacitors
+            by commercial SMD parts. In this sense, <a href='https://www.murata.com/en-global/products/capacitor/ceramiccapacitor'>Murata SMD ceramic capacitors</a> will be used. <a href='https://ds.murata.co.jp/simsurfing/index.html?lcid=en-us'> Murata Simsurfing </a> is a 
+            nice tool and allows the download of S2P files that can be used in  <a href="https://ra3xdh.github.io/">Qucs-S</a>.</p>
+    </div>
+
+    <div class= "col-md-auto mb-3">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/HPF/Lumped_HPF_2GHz/HPF-MurataCaps and Printed L.png' %}" style="width:60%" alt="HPF_w_MurataCaps_and_Printed_L">
+            <figcaption class="figure-caption"> <a href="https://ra3xdh.github.io/">Qucs-S</a> simulation with printed inductors and commercial SMD caps</figcaption>
+        </div>
+    </div>
+
+    <div class= "d-flex flex-row" style = "margin: 0.2cm 0.2cm 0.2cm">
+        <p> <a href="https://www.sonnetsoftware.com/products/lite/">Sonnet Lite</a> does not allow to include ports inside the simulation box, just only on the box edges. Consequently, having SMD capacitors in the design imply that the filter components
+            must be simulated as independent unit. Unfortunately, this approach misses EM couplings between the inductors and other traces, but the result should be close enough for a 2 GHz HPF.
+            Proceeding this way, the feed lines, and GND via holes are simulated separatedly and then after exporting the S-parameters, simulated all together inside  <a href="https://ra3xdh.github.io/">Qucs-S</a>.</p>
+    </div>
+
+    <div class= "col-md-auto mb-3">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/HPF/Lumped_HPF_2GHz/HPF_Refined.png' %}" style="width:60%" alt="HPF_w_Refined">
+            <figcaption class="figure-caption">HPF with EM-simulated feed lines, unions, and GND vias </figcaption>
+        </div>
+    </div>
+
+
+
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h5 style = "margin: 0.2cm 0.2cm 0.2cm; vertical-align: middle;">Layout</h5>
+        </div>
+    </div>
+
+    <div class= "col-md-auto">
+        <div class="thumbnail" align="center">
+            <img class="img-responsive" src="{% static 'images/Designs/Filters/HPF/Lumped_HPF_2GHz/Layout.png' %}" style="width:40%" alt="HPF_Layout">
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-6 align-self-right">
+            <h3 style = "margin: 0.2cm 0.2cm 0.2cm; vertical-align: middle;">Downloads</h3>
+        </div>
+    </div>
+        
+    <div class="list-group">      
+        <a href="https://github.com/andresmmera/rf-design-tools/blob/master/rf_design_tools/catalog/static/images/Designs/Filters/HPF/Lumped_HPF_2GHz/Design%20Files/Qucs-S%20and%20Sonnte%20Lite%20-%20Lumped_HPF_2_GHz_prj.zip" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Qucs-S + Sonnet Lite Workspace</h5>
+            </div>
+            <p class="mb-1">Download</p>
+        </a>
+    
+        <a href="https://github.com/andresmmera/rf-design-tools/blob/master/rf_design_tools/catalog/static/images/Designs/Filters/HPF/Lumped_HPF_2GHz/Design%20Files/Schematic%20-%20HPF_2_GHz.pdf" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Schematic</h5>
+            </div>
+        <p class="mb-1">Download</p>
+        </a>
+
+        <a href="https://github.com/andresmmera/rf-design-tools/blob/master/rf_design_tools/catalog/static/images/Designs/Filters/HPF/Lumped_HPF_2GHz/Design%20Files/KiCAD%20-%20HPF_2_GHz.zip" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">KiCAD Project</h5>
+            </div>
+            <p class="mb-1">Download</p>
+        </a>
+
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+
