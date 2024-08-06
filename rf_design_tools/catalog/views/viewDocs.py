@@ -10,3 +10,5 @@ def DocsView(request):
     return render(request, 'documentation_main.html')
 
 
+def Libraries_View(request):
+    return render(request, 'Resources/libraries.html')

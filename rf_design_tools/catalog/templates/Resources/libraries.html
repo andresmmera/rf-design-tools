@@ -1,0 +1,60 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="card shadow-sm">
+
+   <div class="row">
+        <div class="col-6 align-self-right">
+            <h1 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Qucs-S Libraries</h1>
+        </div>
+
+        <div class="row" style = "margin: 0.5cm 0.3cm 0.5cm;">
+          <div class="col-12">
+            <p>Here you may find some useful libraries with parts models I have been collected for the convenience of Qucs-S users. 
+              These libraries are not intended to replace those provided by suppliers. 
+              The component models included have been collected solely for educational purposes, and there is no guarantee of their accuracy.</p>
+          </div>
+        </div>
+    
+        <div class="row" style = "margin: 0.5cm 0.3cm 0.2cm 0.2;">
+          <div class="col-12">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Component</th>
+                    <th scope="col">Last updated</th>
+                    <th scope="col">Link</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Murata LQW18AN inductors</td>
+                    <td>RF chip inductors (0603)</td>
+                    <td>Aug. 2024</td>
+                    <th scope="col"><a href="https://github.com/andresmmera/rf-design-tools/blob/master/rf_design_tools/catalog/templates/Resources/Libraries/LQW18AN.lib" download>Download</a></th>
+                  </tr>
+                  <tr>
+                    <td>Murata GRM03 capacitors</td>
+                    <td>RF chip capacitors (0201)</td>
+                    <td>Aug. 2024</td>
+                    <th scope="col"><a href="https://github.com/andresmmera/rf-design-tools/blob/master/rf_design_tools/catalog/templates/Resources/Libraries/GRM03.lib" download>Download</a></th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+    
+    
+  </div> 
+</main>
+{% endblock %} 

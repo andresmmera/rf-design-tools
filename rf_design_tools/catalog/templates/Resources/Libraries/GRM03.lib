@@ -1,0 +1,1589 @@
+<Qucs Library 0.0.10 "Murata_Multilayer_Capacitors_GRM03">
+    
+<Component 0.2 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 0.1 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1ER20BA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_0_2_pF _port1 _port2
+C:C1 _port1 _11 C="2.00e-13"
+L:L2 _11 _12 L="3.30e-10"
+R:R3 _12 _13 R="9.66e-1"
+C:C4 _13 _port2 C="4.52e-11"
+L:L4 _13 _port2 L="1.06e-12"
+R:R4 _13 _port2 R="3.15"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "0.2 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 0.3 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 0.3 pF
+    Tolerance: +/- 0.1 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1ER30BA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_0_3_pF _port1 _port2
+C:C1 _port1 _11 C="3.00e-13"
+L:L2 _11 _12 L="2.84e-10"
+R:R3 _12 _13 R="9.65e-1"
+C:C4 _13 _14 C="2.29e-12"
+L:L4 _13 _14 L="2.03e-11"
+R:R4 _13 _14 R="1.00e+8"
+C:C5 _14 _port2 C="1.36e-11"
+L:L5 _14 _port2 L="3.13e-12"
+R:R5 _14 _port2 R="4.17"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "0.3 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 0.4 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 0.4 pF
+    Tolerance: +/- 0.1 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1ER40BA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_0_4_pF _port1 _port2
+C:C1 _port1 _11 C="4.00e-13"
+L:L2 _11 _12 L="2.22e-10"
+R:R3 _12 _13 R="9.45e-1"
+C:C4 _13 _14 C="1.62e-11"
+L:L4 _13 _14 L="3.30e-12"
+R:R4 _13 _14 R="2.36"
+C:C5 _14 _port2 C="4.55e-13"
+L:L5 _14 _port2 L="7.55e-11"
+R:R5 _14 _port2 R="1.00e+8"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "0.4 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 0.5 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 0.5 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1ER50WA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_0_5_pF _port1 _port2
+C:C1 _port1 _11 C="5.00e-13"
+L:L2 _11 _12 L="1.71e-10"
+R:R3 _12 _13 R="9.01e-1"
+C:C4 _13 _14 C="2.23e-11"
+L:L4 _13 _14 L="2.34e-12"
+R:R4 _13 _14 R="1.11"
+C:C5 _14 _port2 C="2.40e-13"
+L:L5 _14 _port2 L="1.17e-10"
+R:R5 _14 _port2 R="1.00e+8"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "0.5 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 0.6 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 0.6 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1ER60BA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_0_6_pF _port1 _port2
+C:C1 _port1 _11 C="6.00e-13"
+L:L2 _11 _12 L="2.22e-10"
+R:R3 _12 _13 R="8.62e-1"
+C:C4 _13 _14 C="1.03e-11"
+L:L4 _13 _14 L="3.95e-12"
+R:R4 _13 _14 R="2.14"
+C:C5 _14 _port2 C="4.31e-13"
+L:L5 _14 _port2 L="7.44e-11"
+R:R5 _14 _port2 R="1.00e+8"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "0.6 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 0.7 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 0.7 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1ER70BA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_0_7_pF _port1 _port2
+C:C1 _port1 _11 C="7.00e-13"
+L:L2 _11 _12 L="2.02e-10"
+R:R3 _12 _13 R="8.37e-1"
+C:C4 _13 _14 C="3.00e-11"
+L:L4 _13 _14 L="1.95e-12"
+R:R4 _13 _14 R="8.82e-1"
+C:C5 _14 _port2 C="3.48e-13"
+L:L5 _14 _port2 L="9.59e-11"
+R:R5 _14 _port2 R="1.00e+8"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "0.7 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 0.8 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 0.8 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1ER80BA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_0_8_pF _port1 _port2
+C:C1 _port1 _11 C="8.00e-13"
+L:L2 _11 _12 L="2.20e-10"
+R:R3 _12 _13 R="8.05e-1"
+C:C4 _13 _14 C="2.15e-11"
+L:L4 _13 _14 L="2.61e-12"
+R:R4 _13 _14 R="9.57e-1"
+C:C5 _14 _port2 C="4.60e-13"
+L:L5 _14 _port2 L="7.69e-11"
+R:R5 _14 _port2 R="1.00e+8"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "0.8 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 0.9 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 0.9 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1ER90BA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_0_9_pF _port1 _port2
+C:C1 _port1 _11 C="9.00e-13"
+L:L2 _11 _12 L="2.34e-10"
+R:R3 _12 _13 R="7.79e-1"
+C:C4 _13 _14 C="2.08e-11"
+L:L4 _13 _14 L="2.82e-12"
+R:R4 _13 _14 R="1.01"
+C:C5 _14 _port2 C="5.93e-13"
+L:L5 _14 _port2 L="6.36e-11"
+R:R5 _14 _port2 R="1.00e+8"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "0.9 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 1 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 1 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E1R0WA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_1_pF _port1 _port2
+C:C1 _port1 _11 C="1.00e-12"
+L:L2 _11 _12 L="2.64e-10"
+R:R3 _12 _13 R="7.56e-1"
+C:C4 _13 _14 C="4.63e-12"
+L:L4 _13 _14 L="1.01e-11"
+R:R4 _13 _14 R="5.09"
+C:C5 _14 _port2 C="9.70e-13"
+L:L5 _14 _port2 L="4.20e-11"
+R:R5 _14 _port2 R="1.00e+8"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "1 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+<Component 1.5 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 1.5 pF
+    Tolerance: +/- 2 %
+    Rated voltage: 25 V
+    Part name: GRM0335C1E1R5WA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_1_5_pF _port1 _port2
+C:C1 _port1 _11 C="1.50e-12"
+L:L2 _11 _12 L="2.46e-10"
+R:R3 _12 _13 R="2.90e-1"
+C:C4 _13 _port2 C="2.61e-11"
+L:L4 _13 _port2 L="1.26e-11"
+R:R4 _13 _port2 R="9.40e-1"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "1.5 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+<Component 2.2 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 2.2 pF
+    Tolerance: +/- 2 %
+    Rated voltage: 25 V
+    Part name: GRM0335C1E2R2WA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_2_2_pF _port1 _port2
+C:C1 _port1 _11 C="2.20e-12"
+L:L2 _11 _12 L="6.79e-11"
+R:R3 _12 _13 R="2.70e-1"
+L:L4 _13 _14 L="1.79e-11"
+R:R4 _13 _14 R="6.64e-1"
+C:C5 _14 _15 C="2.42e-11"
+L:L5 _14 _15 L="9.93e-12"
+R:R5 _14 _15 R="1.55"
+C:C6 _15 _port2 C="1.95e-12"
+L:L6 _15 _port2 L="1.05e-10"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "2.2 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 3 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 3 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E3R0CA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_3_pF _port1 _port2
+C:C1 _port1 _11 C="3.00e-12"
+L:L2 _11 _12 L="2.27e-10"
+R:R3 _12 _13 R="2.50e-1"
+L:L4 _13 _14 L="2.31e-11"
+R:R4 _13 _14 R="4.35e-1"
+C:C5 _14 _15 C="5.82e-11"
+L:L5 _14 _15 L="5.43e-12"
+R:R5 _14 _15 R="5.70e-1"
+C:C6 _15 _port2 C="7.80e-12"
+L:L6 _15 _port2 L="2.31e-11"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "3 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+<Component 3.3 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 3.3 pF
+    Tolerance: +/- 2 %
+    Rated voltage: 25 V
+    Part name: GRM0335C1E3R3WA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_3_3_pF _port1 _port2
+C:C1 _port1 _11 C="3.30e-12"
+L:L2 _11 _12 L="1.30e-10"
+R:R3 _12 _13 R="2.48e-1"
+L:L4 _13 _14 L="9.44e-12"
+R:R4 _13 _14 R="2.36e-1"
+C:C5 _14 _15 C="3.16e-12"
+L:L5 _14 _15 L="7.85e-11"
+R:R5 _14 _15 R="1.00e+5"
+C:C6 _15 _port2 C="9.54e-12"
+L:L6 _15 _port2 L="2.09e-11"
+R:R6 _15 _port2 R="3.25"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "3.3 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+<Component 3.9 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 3.9 pF
+    Tolerance: +/- 2 %
+    Rated voltage: 25 V
+    Part name: GRM0335C1E3R9BA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_3_9_pF _port1 _port2
+C:C1 _port1 _11 C="3.90e-12"
+L:L2 _11 _12 L="1.37e-10"
+R:R3 _12 _13 R="2.37e-1"
+C:C4 _13 _14 C="2.36e-11"
+L:L4 _13 _14 L="1.56e-11"
+R:R4 _13 _14 R="1.09"
+C:C5 _14 _port2 C="2.86e-12"
+L:L5 _14 _port2 L="8.67e-11"
+R:R5 _14 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "3.9 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+<Component 4 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 4 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E4R0CA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_4_pF _port1 _port2
+C:C1 _port1 _11 C="4.00e-12"
+L:L2 _11 _12 L="1.37e-10"
+R:R3 _12 _13 R="2.37e-1"
+C:C4 _13 _14 C="2.36e-11"
+L:L4 _13 _14 L="1.56e-11"
+R:R4 _13 _14 R="1.09"
+C:C5 _14 _port2 C="2.86e-12"
+L:L5 _14 _port2 L="8.67e-11"
+R:R5 _14 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "4 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+<Component 4.7 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 4.7 pF
+    Tolerance: +/- 2 %
+    Rated voltage: 25 V
+    Part name: GRM0335C1E4R7WA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_4_7_pF _port1 _port2
+C:C1 _port1 _11 C="4.70e-12"
+L:L2 _11 _12 L="2.22e-10"
+R:R3 _12 _13 R="2.15e-1"
+L:L4 _13 _14 L="1.81e-11"
+R:R4 _13 _14 R="3.14e-1"
+C:C5 _14 _15 C="2.98e-11"
+L:L5 _14 _15 L="1.06e-11"
+R:R5 _14 _15 R="1.29"
+C:C6 _15 _port2 C="1.24e-11"
+L:L6 _15 _port2 L="2.18e-11"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "4.7 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 5 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 5 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E5R0CA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_5_pF _port1 _port2
+C:C1 _port1 _11 C="5.00e-12"
+L:L2 _11 _12 L="6.89e-11"
+R:R3 _12 _13 R="2.10e-1"
+C:C4 _13 _14 C="1.33e-12"
+L:L4 _13 _14 L="1.48e-10"
+R:R4 _13 _14 R="1.00e+5"
+C:C5 _14 _port2 C="7.70e-12"
+L:L5 _14 _port2 L="2.44e-11"
+R:R5 _14 _port2 R="1.53"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "5 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+<Component 5.6 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 5.6 pF
+    Tolerance: +/- 2 %
+    Rated voltage: 25 V
+    Part name: GRM0335C1E5R6WA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_5_6_pF _port1 _port2
+C:C1 _port1 _11 C="5.60e-12"
+L:L2 _11 _12 L="5.29e-11"
+R:R3 _12 _13 R="2.05e-1"
+L:L4 _13 _14 L="5.92e-12"
+R:R4 _13 _14 R="3.07e-1"
+C:C5 _14 _15 C="1.96e-11"
+L:L5 _14 _15 L="1.62e-11"
+R:R5 _14 _15 R="9.48e-1"
+C:C6 _15 _port2 C="2.35e-13"
+L:L6 _15 _port2 L="1.89e-10"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "5.6 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 6 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 6 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E6R0BA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_6_pF _port1 _port2
+C:C1 _port1 _11 C="6.00e-12"
+L:L2 _11 _12 L="2.11e-10"
+R:R3 _12 _13 R="2.00e-1"
+L:L4 _13 _14 L="1.63e-11"
+R:R4 _13 _14 R="3.89e-1"
+C:C5 _14 _15 C="4.37e-11"
+L:L5 _14 _15 L="7.79e-12"
+R:R5 _14 _15 R="9.62e-1"
+C:C6 _15 _port2 C="5.79e-12"
+L:L6 _15 _port2 L="3.65e-11"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "6 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 7 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 7 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E7R0DA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_7_pF _port1 _port2
+C:C1 _port1 _11 C="7.00e-12"
+L:L2 _11 _12 L="1.04e-10"
+R:R3 _12 _13 R="1.95e-1"
+L:L4 _13 _14 L="8.38e-11"
+R:R4 _13 _14 R="19.5"
+C:C5 _14 _15 C="2.29e-11"
+L:L5 _14 _15 L="1.43e-11"
+R:R5 _14 _15 R="3.77"
+C:C6 _15 _port2 C="6.37e-12"
+L:L6 _15 _port2 L="4.73e-11"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "7 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 8 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 8 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E8R0CA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_8_pF _port1 _port2
+C:C1 _port1 _11 C="8.00e-12"
+L:L2 _11 _12 L="1.37e-10"
+R:R3 _12 _13 R="1.85e-1"
+L:L4 _13 _14 L="2.00e-11"
+R:R4 _13 _14 R="4.11e-1"
+C:C5 _14 _15 C="1.14e-10"
+L:L5 _14 _15 L="3.04e-12"
+R:R5 _14 _15 R="3.77e-1"
+C:C6 _15 _port2 C="3.97e-13"
+L:L6 _15 _port2 L="1.05e-10"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "8 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+<Component 8.2 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 8.2 pF
+    Tolerance: +/- 2 %
+    Rated voltage: 25 V
+    Part name: GRM0335C1E8R2WA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_8_2_pF _port1 _port2
+C:C1 _port1 _11 C="8.20e-12"
+L:L2 _11 _12 L="1.37e-10"
+R:R3 _12 _13 R="1.85e-1"
+L:L4 _13 _14 L="2.00e-11"
+R:R4 _13 _14 R="4.11e-1"
+C:C5 _14 _15 C="1.14e-10"
+L:L5 _14 _15 L="3.04e-12"
+R:R5 _14 _15 R="3.77e-1"
+C:C6 _15 _port2 C="3.97e-13"
+L:L6 _15 _port2 L="1.05e-10"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "8.2 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+
+<Component 9 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 9 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E9R0DA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_9_pF _port1 _port2
+C:C1 _port1 _11 C="9.00e-12"
+L:L2 _11 _12 L="1.16e-10"
+R:R3 _12 _13 R="1.80e-1"
+L:L4 _13 _14 L="2.88e-11"
+R:R4 _13 _14 R="2.12"
+C:C5 _14 _15 C="3.62e-12"
+L:L5 _14 _15 L="5.54e-11"
+R:R5 _14 _15 R="22.2"
+C:C6 _15 _port2 C="3.53e-12"
+L:L6 _15 _port2 L="5.15e-11"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "9 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 10 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 10 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E100JA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_10_pF _port1 _port2
+C:C1 _port1 _11 C="1.00e-11"
+L:L2 _11 _12 L="2.02e-10"
+R:R3 _12 _13 R="1.97e-1"
+L:L4 _13 _14 L="9.41e-12"
+R:R4 _13 _14 R="1.18e-1"
+C:C5 _14 _15 C="2.46e-11"
+L:L5 _14 _15 L="1.35e-11"
+R:R5 _14 _15 R="7.83e-1"
+C:C6 _15 _port2 C="2.08e-12"
+L:L6 _15 _port2 L="5.07e-11"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "10 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 12 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 12 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E120GA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_12_pF _port1 _port2
+C:C1 _port1 _11 C="1.20e-11"
+L:L2 _11 _12 L="1.97e-10"
+R:R3 _12 _13 R="1.88e-1"
+L:L4 _13 _14 L="2.04e-11"
+R:R4 _13 _14 R="5.14e-1"
+C:C5 _14 _15 C="3.25e-11"
+L:L5 _14 _15 L="9.75e-12"
+R:R5 _14 _15 R="1.15"
+C:C6 _15 _port2 C="5.48e-12"
+L:L6 _15 _port2 L="3.75e-11"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "12 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 15 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 15 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E150JA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_15_pF _port1 _port2
+C:C1 _port1 _11 C="1.50e-11"
+L:L2 _11 _12 L="1.66e-10"
+R:R3 _12 _13 R="1.78e-1"
+L:L4 _13 _14 L="1.48e-11"
+R:R4 _13 _14 R="2.88e-1"
+C:C5 _14 _15 C="1.08e-11"
+L:L5 _14 _15 L="2.93e-11"
+R:R5 _14 _15 R="4.87"
+C:C6 _15 _port2 C="4.90e-12"
+L:L6 _15 _port2 L="5.39e-11"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "15 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 18 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 18 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E180JA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_18_pF _port1 _port2
+C:C1 _port1 _11 C="1.80e-11"
+L:L2 _11 _12 L="1.63e-10"
+R:R3 _12 _13 R="1.59e-1"
+L:L4 _13 _14 L="1.17e-11"
+R:R4 _13 _14 R="2.21e-1"
+C:C5 _14 _15 C="1.61e-11"
+L:L5 _14 _15 L="2.37e-11"
+R:R5 _14 _15 R="2.56"
+C:C6 _15 _port2 C="5.01e-12"
+L:L6 _15 _port2 L="4.81e-11"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "18 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 22 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 22 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E220JA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_22_pF _port1 _port2
+C:C1 _port1 _11 C="2.20e-11"
+L:L2 _11 _12 L="2.00e-10"
+R:R3 _12 _13 R="1.48e-1"
+L:L4 _13 _14 L="1.54e-11"
+R:R4 _13 _14 R="2.91e-1"
+C:C5 _14 _port2 C="1.14e-11"
+L:L5 _14 _port2 L="3.02e-11"
+R:R5 _14 _port2 R="4.56"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "22 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 33 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 33 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E330GA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_33_pF _port1 _port2
+C:C1 _port1 _11 C="3.30e-11"
+L:L2 _11 _12 L="8.57e-11"
+R:R3 _12 _13 R="1.46e-1"
+L:L4 _13 _14 L="8.46e-12"
+R:R4 _13 _14 R="1.11e-1"
+C:C5 _14 _15 C="9.36e-12"
+L:L5 _14 _15 L="3.54e-11"
+R:R5 _14 _15 R="3.63"
+C:C6 _15 _port2 C="6.75e-13"
+L:L6 _15 _port2 L="1.18e-10"
+R:R6 _15 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "33 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 47 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 47 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E470JA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_47_pF _port1 _port2
+C:C1 _port1 _11 C="4.70e-11"
+L:L2 _11 _12 L="1.66e-10"
+R:R3 _12 _13 R="1.26e-1"
+L:L4 _13 _14 L="1.31e-11"
+R:R4 _13 _14 R="1.65e-1"
+C:C5 _14 _15 C="5.81e-10"
+L:L5 _14 _15 L="3.32e-12"
+R:R5 _14 _15 R="2.62e-1"
+C:C6 _15 _16 C="9.57e-11"
+L:L6 _15 _16 L="9.24e-12"
+R:R6 _15 _16 R="1.10"
+C:C7 _16 _17 C="1.69e-11"
+L:L7 _16 _17 L="1.94e-11"
+R:R7 _16 _17 R="2.53"
+C:C8 _17 _port2 C="4.90e-12"
+L:L8 _17 _port2 L="3.18e-11"
+R:R8 _17 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "47 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 56 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 56 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E560JA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_56_pF _port1 _port2
+C:C1 _port1 _11 C="5.60e-11"
+L:L2 _11 _12 L="1.30e-10"
+R:R3 _12 _13 R="1.21e-1"
+L:L4 _13 _14 L="1.12e-11"
+R:R4 _13 _14 R="1.41e-1"
+C:C5 _14 _15 C="4.77e-10"
+L:L5 _14 _15 L="4.85e-12"
+R:R5 _14 _15 R="3.49e-1"
+C:C6 _15 _16 C="7.82e-11"
+L:L6 _15 _16 L="1.35e-11"
+R:R6 _15 _16 R="1.31"
+C:C7 _16 _17 C="1.89e-11"
+L:L7 _16 _17 L="1.74e-11"
+R:R7 _16 _17 R="2.27"
+C:C8 _17 _port2 C="3.64e-12"
+L:L8 _17 _port2 L="5.64e-11"
+R:R8 _17 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "56 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 68 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 68 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E680JA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_68_pF _port1 _port2
+C:C1 _port1 _11 C="6.80e-11"
+L:L2 _11 _12 L="1.95e-10"
+R:R3 _12 _13 R="1.22e-1"
+L:L4 _13 _14 L="1.72e-11"
+R:R4 _13 _14 R="2.16e-1"
+C:C5 _14 _15 C="1.34e-9"
+L:L5 _14 _15 L="2.18e-12"
+R:R5 _14 _15 R="1.57e-1"
+C:C6 _15 _16 C="1.28e-10"
+L:L6 _15 _16 L="9.42e-12"
+R:R6 _15 _16 R="8.00e-1"
+C:C7 _16 _17 C="1.47e-11"
+L:L7 _16 _17 L="2.27e-11"
+R:R7 _16 _17 R="2.72"
+C:C8 _17 _port2 C="7.36e-12"
+L:L8 _17 _port2 L="2.86e-11"
+R:R8 _17 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "68 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 100 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 100 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E101JA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_100_pF _port1 _port2
+C:C1 _port1 _11 C="10.0e-11"
+L:L2 _11 _12 L="1.82e-10"
+R:R3 _12 _13 R="1.11e-1"
+L:L4 _13 _14 L="1.42e-11"
+R:R4 _13 _14 R="8.01e-2"
+C:C5 _14 _15 C="8.18e-10"
+L:L5 _14 _15 L="5.66e-12"
+R:R5 _14 _15 R="2.81e-1"
+C:C6 _15 _16 C="1.93e-10"
+L:L6 _15 _16 L="1.09e-11"
+R:R6 _15 _16 R="8.44e-1"
+C:C7 _16 _17 C="1.29e-11"
+L:L7 _16 _17 L="3.09e-11"
+R:R7 _16 _17 R="2.89"
+C:C8 _17 _port2 C="7.88e-12"
+L:L8 _17 _port2 L="3.35e-11"
+R:R8 _17 _port2 R="1.00e+5"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "100 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 150 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 150 pF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E151JA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_150_pF _port1 _port2
+C:C1 _port1 _11 C="1.50e-10"
+L:L2 _11 _12 L="1.97e-10"
+R:R3 _12 _13 R="9.12e-2"
+L:L4 _13 _14 L="2.50e-11"
+R:R4 _13 _14 R="7.73e-1"
+C:C5 _14 _15 C="1.16e-9"
+L:L5 _14 _15 L="6.03e-12"
+R:R5 _14 _15 R="1.98e-1"
+C:C6 _15 _16 C="3.43e-10"
+L:L6 _15 _16 L="8.69e-12"
+R:R6 _15 _16 R="4.90e-1"
+C:C7 _16 _port2 C="2.32e-11"
+L:L7 _16 _port2 L="1.35e-11"
+R:R7 _16 _port2 R="4.15"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "150 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 220 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 220 pF
+    Tolerance: +/- 5 %
+    Rated voltage: 25 V
+    Part name: GRM0335C1E221JA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_220_pF _port1 _port2
+C:C1 _port1 _11 C="2.20e-10"
+L:L2 _11 _12 L="1.81e-10"
+R:R3 _12 _13 R="7.29e-2"
+L:L4 _13 _14 L="3.30e-11"
+R:R4 _13 _14 R="6.97e-1"
+C:C5 _14 _15 C="2.42e-9"
+L:L5 _14 _15 L="4.73e-12"
+R:R5 _14 _15 R="2.24e-1"
+C:C6 _15 _16 C="4.53e-10"
+L:L6 _15 _16 L="1.18e-11"
+R:R6 _15 _16 R="4.96e-1"
+C:C7 _16 _port2 C="1.44e-10"
+L:L7 _16 _port2 L="2.06e-12"
+R:R7 _16 _port2 R="3.58e-1"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "220 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 330 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 330 pF
+    Tolerance: +/- 2 %
+    Rated voltage: 25 V
+    Part name: GRM0335C1E331GA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_330_pF _port1 _port2
+C:C1 _port1 _11 C="3.30e-10"
+L:L2 _11 _12 L="2.26e-10"
+R:R3 _12 _13 R="8.02e-2"
+L:L4 _13 _14 L="3.97e-11"
+R:R4 _13 _14 R="5.26e-1"
+C:C5 _14 _port2 C="7.11e-10"
+L:L5 _14 _port2 L="8.76e-12"
+R:R5 _14 _port2 R="2.46e-1"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "330 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 470 pF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 470 pF
+    Tolerance: +/- 2 %
+    Rated voltage: 25 V
+    Part name: GRM0335C1E471GA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_470_pF _port1 _port2
+C:C1 _port1 _11 C="4.70e-10"
+L:L2 _11 _12 L="2.13e-10"
+R:R3 _12 _13 R="7.34e-2"
+L:L4 _13 _14 L="3.65e-11"
+R:R4 _13 _14 R="7.60e-1"
+C:C5 _14 _15 C="5.17e-9"
+L:L5 _14 _15 L="4.38e-12"
+R:R5 _14 _15 R="7.26e-2"
+C:C6 _15 _16 C="6.98e-10"
+L:L6 _15 _16 L="1.44e-11"
+R:R6 _15 _16 R="3.24e-1"
+C:C7 _16 _port2 C="9.56e-11"
+L:L7 _16 _port2 L="2.00e-12"
+R:R7 _16 _port2 R="4.09e-1"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "470 pF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 1 nF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 1 nF
+    Tolerance: +/- 0.05 pF
+    Rated voltage: 25 V
+    Part name: GRM0335C1E102GA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_1_nF _port1 _port2
+C:C1 _port1 _11 C="1.01e-9"
+L:L2 _11 _12 L="1.77e-10"
+R:R3 _12 _13 R="9.26e-3"
+L:L4 _13 _14 L="5.22e-11"
+R:R4 _13 _14 R="4.33e-1"
+L:L5 _14 _15 L="2.70e-11"
+R:R5 _14 _15 R="2.70e-2"
+L:L6 _15 _16 L="6.87e-11"
+R:R6 _15 _16 R="1.01e-2"
+C:C7 _16 _17 C="1.77e-8"
+L:L7 _16 _17 L="3.33e-12"
+R:R7 _16 _17 R="7.40e-2"
+C:C8 _17 _port2 C="2.82e-9"
+L:L8 _17 _port2 L="1.06e-11"
+R:R8 _17 _port2 R="2.03e-1"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "1 nF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 10 nF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 10 nF
+    Tolerance: +/- 10 %
+    Rated voltage: 6.3 V
+    Part name: GRM033R60J103KA01
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_10_nF _port1 _port2
+C:C1 _port1 _11 C="9.72e-9"
+L:L2 _11 _12 L="2.06e-10"
+R:R3 _12 _13 R="5.50e-2"
+C:C4 _13 _14 C="9.31e-7"
+R:R4 _13 _14 R="3.97e+3"
+C:C5 _14 _15 C="1.60e-6"
+R:R5 _14 _15 R="362"
+C:C6 _15 _16 C="1.31e-6"
+R:R6 _15 _16 R="64.3"
+C:C7 _16 _17 C="1.22e-6"
+R:R7 _16 _17 R="8.68"
+C:C8 _17 _18 C="8.77e-7"
+R:R8 _17 _18 R="1.22"
+C:C9 _18 _19 C="6.54e-7"
+R:R9 _18 _19 R="2.66e-1"
+C:C10 _19 _20 C="6.70e-7"
+R:R10 _19 _20 R="3.86e-2"
+L:L11 _20 _21 L="4.02e-11"
+R:R11 _20 _21 R="1.62e-1"
+L:L12 _21 _22 L="5.07e-12"
+R:R12 _21 _22 R="5.51e-2"
+C:C13 _22 _23 C="1.03e-8"
+L:L13 _22 _23 L="2.05e-11"
+R:R13 _22 _23 R="4.27e-2"
+C:C14 _23 _port2 C="2.36e-11"
+L:L14 _23 _port2 L="1.34e-11"
+R:R14 _23 _port2 R="1.68"
+R:R100 _port1 _11 R="1.00e+10"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "10 nF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 47 nF>
+  <Description>
+    Chip Capacitor
+    Size code (mm/in): 0603/0201
+    Capacitance: 47 nF
+    Tolerance: +/- 10 %
+    Rated voltage: 6.3 V
+    Part name: GRM033R60J473KE19
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:GRM03_47_nF _port1 _port2
+C:C1 _port1 _11 C="4.75e-8"
+L:L2 _11 _12 L="1.79e-10"
+R:R3 _12 _13 R="2.51e-2"
+C:C4 _13 _14 C="2.60e-6"
+R:R4 _13 _14 R="1.49e+3"
+C:C5 _14 _15 C="4.96e-6"
+R:R5 _14 _15 R="126"
+C:C6 _15 _16 C="4.38e-6"
+R:R6 _15 _16 R="22.0"
+C:C7 _16 _17 C="7.15e-6"
+R:R7 _16 _17 R="1.45"
+C:C8 _17 _18 C="7.74e-6"
+R:R8 _17 _18 R="3.11e-1"
+C:C9 _18 _19 C="5.49e-6"
+R:R9 _18 _19 R="7.92e-2"
+C:C10 _19 _20 C="3.40e-6"
+R:R10 _19 _20 R="2.24e-2"
+L:L11 _20 _21 L="1.41e-11"
+R:R11 _20 _21 R="1.22e-1"
+L:L12 _21 _22 L="6.15e-11"
+R:R12 _21 _22 R="7.53e-2"
+C:C13 _22 _23 C="4.63e-7"
+L:L13 _22 _23 L="6.92e-12"
+R:R13 _22 _23 R="6.21e-3"
+C:C14 _23 _24 C="9.34e-8"
+L:L14 _23 _24 L="1.69e-11"
+R:R14 _23 _24 R="1.73e-2"
+C:C15 _24 _port2 C="1.71e-11"
+L:L15 _24 _port2 L="1.15e-11"
+R:R15 _24 _port2 R="5.99e-1"
+R:R100 _port1 _11 R="1.06e+9"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 C>
+    <Line -30 0 25 0 #14148c 1 1>
+    <Line 30 0 -25 0 #14148c 1 1>
+    <Line 5 10 0 -20 #14148c 3 1>
+    <Line -5 10 0 -20 #14148c 3 1>
+    <Text -14 -30 12 #000000 0 "47 nF">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+

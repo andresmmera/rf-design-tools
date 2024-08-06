@@ -1,0 +1,1473 @@
+<Qucs Library 0.0.10 "Murata_RF_Inductors_LQW18AN">
+    
+<Component 2.2 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 2.2 nH
+    Tolerance: +/- 0.5 nH
+    Rated current: 700 mA
+    Part name: LQW18AN2N2D00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_2_2_nH _port1 _port2
+C:C1 _port1 _port2 C="2.61e-15"
+L:L2 _port1 _1 L="2.57e-9"
+R:R2 _1 _port2 R="3.20e-2"
+R:R3 _port1 _port2 R="5.83e+3"
+L:L4 _port1 _2 L="7.57e-9"
+R:R4 _2 _port2 R="4.56e-1"
+L:L5 _port1 _3 L="4.01e-8"
+R:R5 _3 _port2 R="20.1"
+L:L6 _port1 _4 L="1.48e-7"
+R:R6 _4 _port2 R="755"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "2.2 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 3.9 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 3.9 nH
+    Tolerance: +/- 0.2 nH
+    Rated current: 850 mA
+    Part name: LQW18AN3N9C00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_3_9_nH _port1 _port2
+C:C1 _port1 _port2 C="1.04e-14"
+L:L2 _port1 _1 L="4.11e-9"
+R:R2 _1 _port2 R="4.20e-2"
+R:R3 _port1 _port2 R="4.79e+3"
+L:L4 _port1 _2 L="2.83e-8"
+R:R4 _2 _port2 R="1.08"
+L:L5 _port1 _3 L="8.50e-8"
+R:R5 _3 _port2 R="37.6"
+L:L6 _port1 _4 L="2.20e-7"
+R:R6 _4 _port2 R="1.32e+3"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "3.9 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 5.6 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 5.6 nH
+    Tolerance: +/- 0.2 nH
+    Rated current: 750 mA
+    Part name: LQW18AN5N6C00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_5_6_nH _port1 _port2
+C:C1 _port1 _port2 C="7.59e-15"
+L:L2 _port1 _1 L="6.32e-9"
+R:R2 _1 _port2 R="5.80e-2"
+R:R3 _port1 _port2 R="1.07e+4"
+L:L4 _port1 _2 L="3.67e-8"
+R:R4 _2 _port2 R="1.76"
+L:L5 _port1 _3 L="1.35e-7"
+R:R5 _3 _port2 R="66.0"
+L:L6 _port1 _4 L="4.08e-7"
+R:R6 _4 _port2 R="2.15e+3"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "5.6 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 6.8 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 6.8 nH
+    Tolerance: +/- 0.5 nH
+    Rated current: 750 mA
+    Part name: LQW18AN6N8D00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_6_8_nH _port1 _port2
+C:C1 _port1 _port2 C="2.73e-14"
+L:L2 _port1 _1 L="7.75e-9"
+R:R2 _1 _port2 R="5.80e-2"
+R:R3 _port1 _port2 R="2.49e+4"
+L:L4 _port1 _2 L="4.68e-8"
+R:R4 _2 _port2 R="2.64"
+L:L5 _port1 _3 L="1.71e-7"
+R:R5 _3 _port2 R="116"
+L:L6 _port1 _4 L="4.16e-7"
+R:R6 _4 _port2 R="2.60e+3"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "6.8 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 8.2 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 8.2 nH
+    Tolerance: +/- 0.2 nH
+    Rated current: 650 mA
+    Part name: LQW18AN8N2C00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_8_2_nH _port1 _port2
+C:C1 _port1 _port2 C="5.91e-15"
+L:L2 _port1 _1 L="9.35e-9"
+R:R2 _1 _port2 R="7.40e-2"
+R:R3 _port1 _port2 R="4.12e+4"
+L:L4 _port1 _2 L="4.20e-8"
+R:R4 _2 _port2 R="2.76"
+L:L5 _port1 _3 L="1.67e-7"
+R:R5 _3 _port2 R="103"
+L:L6 _port1 _4 L="4.84e-7"
+R:R6 _4 _port2 R="3.06e+3"
+L:L7 _port1 _5 L="1.20e-8"
+C:C7 _5 _6 C="5.47e-15"
+R:R7 _6 _port2 R="473"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "8.2 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 10 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 10 nH
+    Tolerance: +/- 2 %
+    Rated current: 650 mA
+    Part name: LQW18AN10NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_10_nH _port1 _port2
+C:C1 _port1 _port2 C="2.75e-14"
+L:L2 _port1 _1 L="1.13e-8"
+R:R2 _1 _port2 R="7.40e-2"
+R:R3 _port1 _port2 R="1.82e+4"
+L:L4 _port1 _2 L="5.66e-8"
+R:R4 _2 _port2 R="3.77"
+L:L5 _port1 _3 L="2.28e-7"
+R:R5 _3 _port2 R="147"
+L:L6 _port1 _4 L="5.98e-7"
+R:R6 _4 _port2 R="4.00e+3"
+L:L7 _port1 _5 L="8.34e-9"
+C:C7 _5 _6 C="1.92e-14"
+R:R7 _6 _port2 R="10.5"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "10 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 12 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 12 nH
+    Tolerance: +/- 2 %
+    Rated current: 600 mA
+    Part name: LQW18AN12NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_12_nH _port1 _port2
+C:C1 _port1 _port2 C="1.09e-14"
+L:L2 _port1 _1 L="1.37e-8"
+R:R2 _1 _port2 R="9.00e-2"
+R:R3 _port1 _port2 R="1.77e+4"
+L:L4 _port1 _2 L="8.63e-8"
+R:R4 _2 _port2 R="4.77"
+L:L5 _port1 _3 L="2.74e-7"
+R:R5 _3 _port2 R="171"
+L:L6 _port1 _4 L="1.09e-6"
+R:R6 _4 _port2 R="4.34e+3"
+L:L7 _port1 _5 L="8.68e-7"
+C:C7 _5 _6 C="1.59e-16"
+R:R7 _6 _port2 R="7.38e+3"
+L:L8 _port1 _7 L="1.61e-8"
+C:C8 _7 _8 C="4.90e-15"
+R:R8 _8 _port2 R="19.9"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "12 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 15 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 15 nH
+    Tolerance: +/- 2 %
+    Rated current: 600 mA
+    Part name: LQW18AN15NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_15_nH _port1 _port2
+C:C1 _port1 _port2 C="2.45e-14"
+L:L2 _port1 _1 L="1.77e-8"
+R:R2 _1 _port2 R="9.00e-2"
+R:R3 _port1 _port2 R="3.16e+4"
+L:L4 _port1 _2 L="1.00e-7"
+R:R4 _2 _port2 R="6.34"
+L:L5 _port1 _3 L="4.23e-7"
+R:R5 _3 _port2 R="281"
+L:L6 _port1 _4 L="9.56e-7"
+R:R6 _4 _port2 R="6.13e+3"
+L:L7 _port1 _5 L="2.86e-8"
+C:C7 _5 _6 C="8.40e-15"
+R:R7 _6 _port2 R="46.5"
+L:L8 _port1 _7 L="6.41e-9"
+C:C8 _7 _8 C="1.17e-14"
+R:R8 _8 _port2 R="9.82"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "15 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 18 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 18 nH
+    Tolerance: +/- 2 %
+    Rated current: 550 mA
+    Part name: LQW18AN18NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_18_nH _port1 _port2
+C:C1 _port1 _port2 C="2.20e-14"
+L:L2 _port1 _1 L="2.03e-8"
+R:R2 _1 _port2 R="1.10e-1"
+R:R3 _port1 _port2 R="2.92e+4"
+L:L4 _port1 _2 L="1.42e-7"
+R:R4 _2 _port2 R="9.92"
+L:L5 _port1 _3 L="5.32e-7"
+R:R5 _3 _port2 R="376"
+L:L6 _port1 _4 L="1.08e-6"
+R:R6 _4 _port2 R="7.05e+3"
+L:L7 _port1 _5 L="1.87e-8"
+C:C7 _5 _6 C="1.60e-14"
+R:R7 _6 _port2 R="27.4"
+L:L8 _port1 _7 L="2.43e-8"
+C:C8 _7 _8 C="4.51e-15"
+R:R8 _8 _port2 R="29.4"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "18 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 20 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 20 nH
+    Tolerance: +/- 5 %
+    Rated current: 550 mA
+    Part name: LQW18AN20NJ00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_20_nH _port1 _port2
+C:C1 _port1 _port2 C="2.47e-14"
+L:L2 _port1 _1 L="2.27e-8"
+R:R2 _1 _port2 R="1.10e-1"
+R:R3 _port1 _port2 R="3.18e+4"
+L:L4 _port1 _2 L="1.65e-7"
+R:R4 _2 _port2 R="10.7"
+L:L5 _port1 _3 L="6.23e-7"
+R:R5 _3 _port2 R="427"
+L:L6 _port1 _4 L="1.23e-6"
+R:R6 _4 _port2 R="8.30e+3"
+L:L7 _port1 _5 L="4.71e-8"
+C:C7 _5 _6 C="5.90e-15"
+R:R7 _6 _port2 R="78.1"
+L:L8 _port1 _7 L="8.20e-9"
+C:C8 _7 _8 C="1.52e-14"
+R:R8 _8 _port2 R="18.0"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "20 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 22 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 22 nH
+    Tolerance: +/- 2 %
+    Rated current: 500 mA
+    Part name: LQW18AN22NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_22_nH _port1 _port2
+C:C1 _port1 _port2 C="2.56e-14"
+L:L2 _port1 _1 L="2.46e-8"
+R:R2 _1 _port2 R="1.20e-1"
+R:R3 _port1 _port2 R="3.60e+4"
+L:L4 _port1 _2 L="2.17e-7"
+R:R4 _2 _port2 R="10.9"
+L:L5 _port1 _3 L="6.21e-7"
+R:R5 _3 _port2 R="387"
+L:L6 _port1 _4 L="1.37e-6"
+R:R6 _4 _port2 R="9.39e+3"
+L:L7 _port1 _5 L="1.62e-7"
+C:C7 _5 _6 C="2.55e-15"
+R:R7 _6 _port2 R="92.0"
+L:L8 _port1 _7 L="3.72e-8"
+C:C8 _7 _8 C="3.12e-15"
+R:R8 _8 _port2 R="51.4"
+L:L9 _port1 _9 L="1.07e-7"
+C:C9 _9 _10 C="7.31e-16"
+R:R9 _10 _port2 R="307"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "22 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 27 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 27 nH
+    Tolerance: +/- 2 %
+    Rated current: 440 mA
+    Part name: LQW18AN27NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_27_nH _port1 _port2
+C:C1 _port1 _port2 C="1.48e-14"
+L:L2 _port1 _1 L="3.15e-8"
+R:R2 _1 _port2 R="1.70e-1"
+R:R3 _port1 _port2 R="4.15e+4"
+L:L4 _port1 _2 L="2.11e-7"
+R:R4 _2 _port2 R="13.8"
+L:L5 _port1 _3 L="7.83e-7"
+R:R5 _3 _port2 R="503"
+L:L6 _port1 _4 L="1.64e-6"
+R:R6 _4 _port2 R="9.61e+3"
+L:L7 _port1 _5 L="7.43e-7"
+C:C7 _5 _6 C="5.79e-16"
+R:R7 _6 _port2 R="8.17e+3"
+L:L8 _port1 _7 L="1.36e-8"
+C:C8 _7 _8 C="1.09e-14"
+R:R8 _8 _port2 R="22.4"
+L:L9 _port1 _9 L="3.59e-9"
+C:C9 _9 _10 C="1.76e-14"
+R:R9 _10 _port2 R="14.3"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "27 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 30 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 30 nH
+    Tolerance: +/- 2 %
+    Rated current: 420 mA
+    Part name: LQW18AN30NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_30_nH _port1 _port2
+C:C1 _port1 _port2 C="1.88e-14"
+L:L2 _port1 _1 L="3.39e-8"
+R:R2 _1 _port2 R="1.90e-1"
+R:R3 _port1 _port2 R="5.40e+4"
+L:L4 _port1 _2 L="2.64e-7"
+R:R4 _2 _port2 R="14.5"
+L:L5 _port1 _3 L="1.04e-6"
+R:R5 _3 _port2 R="649"
+L:L6 _port1 _4 L="2.01e-6"
+R:R6 _4 _port2 R="8.74e+3"
+L:L7 _port1 _5 L="1.90e-6"
+C:C7 _5 _6 C="2.45e-16"
+R:R7 _6 _port2 R="1.73e+4"
+L:L8 _port1 _7 L="3.87e-8"
+C:C8 _7 _8 C="5.16e-15"
+R:R8 _8 _port2 R="43.7"
+L:L9 _port1 _9 L="3.41e-8"
+C:C9 _9 _10 C="2.03e-15"
+R:R9 _10 _port2 R="1.09e+3"
+L:L10 _port1 _11 L="9.74e-9"
+C:C10 _11 _12 C="6.16e-15"
+R:R10 _12 _port2 R="20.1"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "30 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 33 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 33 nH
+    Tolerance: +/- 2 %
+    Rated current: 420 mA
+    Part name: LQW18AN33NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_33_nH _port1 _port2
+C:C1 _port1 _port2 C="2.18e-14"
+L:L2 _port1 _1 L="3.74e-8"
+R:R2 _1 _port2 R="1.90e-1"
+R:R3 _port1 _port2 R="3.51e+4"
+L:L4 _port1 _2 L="2.74e-7"
+R:R4 _2 _port2 R="17.9"
+L:L5 _port1 _3 L="9.72e-7"
+R:R5 _3 _port2 R="644"
+L:L6 _port1 _4 L="1.92e-6"
+R:R6 _4 _port2 R="1.26e+4"
+L:L7 _port1 _5 L="3.91e-8"
+C:C7 _5 _6 C="1.08e-14"
+R:R7 _6 _port2 R="48.2"
+L:L8 _port1 _7 L="1.61e-8"
+C:C8 _7 _8 C="1.70e-14"
+R:R8 _8 _port2 R="48.0"
+L:L9 _port1 _9 L="2.08e-7"
+C:C9 _9 _10 C="4.49e-16"
+R:R9 _10 _port2 R="2.60e+3"
+L:L10 _port1 _11 L="9.18e-9"
+C:C10 _11 _12 C="6.87e-15"
+R:R10 _12 _port2 R="36.7"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "33 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 39 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 39 nH
+    Tolerance: +/- 2 %
+    Rated current: 400 mA
+    Part name: LQW18AN39NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_39_nH _port1 _port2
+C:C1 _port1 _port2 C="1.64e-14"
+L:L2 _port1 _1 L="4.36e-8"
+R:R2 _1 _port2 R="2.10e-1"
+R:R3 _port1 _port2 R="4.69e+4"
+L:L4 _port1 _2 L="4.03e-7"
+R:R4 _2 _port2 R="26.2"
+L:L5 _port1 _3 L="1.35e-6"
+R:R5 _3 _port2 R="818"
+L:L6 _port1 _4 L="2.46e-6"
+R:R6 _4 _port2 R="1.30e+4"
+L:L7 _port1 _5 L="1.99e-7"
+C:C7 _5 _6 C="2.66e-15"
+R:R7 _6 _port2 R="271"
+L:L8 _port1 _7 L="1.94e-8"
+C:C8 _7 _8 C="1.53e-14"
+R:R8 _8 _port2 R="55.6"
+L:L9 _port1 _9 L="3.41e-7"
+C:C9 _9 _10 C="3.12e-16"
+R:R9 _10 _port2 R="9.93e+3"
+L:L10 _port1 _11 L="8.57e-9"
+C:C10 _11 _12 C="8.94e-15"
+R:R10 _12 _port2 R="23.9"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "39 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 47 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 47 nH
+    Tolerance: +/- 2 %
+    Rated current: 380 mA
+    Part name: LQW18AN47NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_47_nH _port1 _port2
+C:C1 _port1 _port2 C="1.67e-14"
+L:L2 _port1 _1 L="5.23e-8"
+R:R2 _1 _port2 R="2.40e-1"
+R:R3 _port1 _port2 R="4.82e+4"
+L:L4 _port1 _2 L="4.79e-7"
+R:R4 _2 _port2 R="33.3"
+L:L5 _port1 _3 L="1.51e-6"
+R:R5 _3 _port2 R="1.03e+3"
+L:L6 _port1 _4 L="2.78e-6"
+R:R6 _4 _port2 R="1.71e+4"
+L:L7 _port1 _5 L="5.97e-6"
+C:C7 _5 _6 C="1.29e-16"
+R:R7 _6 _port2 R="3.83e+4"
+L:L8 _port1 _7 L="2.03e-8"
+C:C8 _7 _8 C="1.57e-14"
+R:R8 _8 _port2 R="46.8"
+L:L9 _port1 _9 L="3.92e-8"
+C:C9 _9 _10 C="3.66e-15"
+R:R9 _10 _port2 R="218"
+L:L10 _port1 _11 L="1.16e-8"
+C:C10 _11 _12 C="8.63e-15"
+R:R10 _12 _port2 R="58.7"
+L:L11 _port1 _13 L="4.35e-8"
+C:C11 _13 _14 C="1.44e-15"
+R:R11 _14 _port2 R="437"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "47 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 56 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 56 nH
+    Tolerance: +/- 2 %
+    Rated current: 360 mA
+    Part name: LQW18AN56NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_56_nH _port1 _port2
+C:C1 _port1 _port2 C="2.03e-14"
+L:L2 _port1 _1 L="6.20e-8"
+R:R2 _1 _port2 R="2.90e-1"
+R:R3 _port1 _port2 R="9.30e+4"
+L:L4 _port1 _2 L="5.50e-7"
+R:R4 _2 _port2 R="34.8"
+L:L5 _port1 _3 L="1.80e-6"
+R:R5 _3 _port2 R="1.12e+3"
+L:L6 _port1 _4 L="3.68e-6"
+R:R6 _4 _port2 R="2.34e+4"
+L:L7 _port1 _5 L="3.16e-5"
+C:C7 _5 _6 C="3.34e-17"
+R:R7 _6 _port2 R="1.12e+5"
+L:L8 _port1 _7 L="9.50e-8"
+C:C8 _7 _8 C="4.57e-15"
+R:R8 _8 _port2 R="94.5"
+L:L9 _port1 _9 L="9.93e-7"
+C:C9 _9 _10 C="1.87e-16"
+R:R9 _10 _port2 R="1.48e+4"
+L:L10 _port1 _11 L="2.59e-7"
+C:C10 _11 _12 C="7.54e-16"
+R:R10 _12 _port2 R="3.42e+3"
+L:L11 _port1 _13 L="4.47e-8"
+C:C11 _13 _14 C="2.60e-15"
+R:R11 _14 _port2 R="121"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "56 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 68 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 68 nH
+    Tolerance: +/- 2 %
+    Rated current: 340 mA
+    Part name: LQW18AN68NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_68_nH _port1 _port2
+C:C1 _port1 _port2 C="1.54e-14"
+L:L2 _port1 _1 L="7.67e-8"
+R:R2 _1 _port2 R="3.10e-1"
+R:R3 _port1 _port2 R="7.64e+4"
+L:L4 _port1 _2 L="7.80e-7"
+R:R4 _2 _port2 R="45.8"
+L:L5 _port1 _3 L="2.19e-6"
+R:R5 _3 _port2 R="1.50e+3"
+L:L6 _port1 _4 L="4.10e-6"
+R:R6 _4 _port2 R="2.49e+4"
+L:L7 _port1 _5 L="3.31e-5"
+C:C7 _5 _6 C="5.29e-17"
+R:R7 _6 _port2 R="1.09e+5"
+L:L8 _port1 _7 L="1.25e-7"
+C:C8 _7 _8 C="3.91e-15"
+R:R8 _8 _port2 R="462"
+L:L9 _port1 _9 L="1.87e-8"
+C:C9 _9 _10 C="8.52e-15"
+R:R9 _10 _port2 R="77.1"
+L:L10 _port1 _11 L="2.61e-8"
+C:C10 _11 _12 C="3.99e-15"
+R:R10 _12 _port2 R="220"
+L:L11 _port1 _13 L="9.39e-9"
+C:C11 _13 _14 C="7.72e-15"
+R:R11 _14 _port2 R="68.4"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "68 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 82 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 82 nH
+    Tolerance: +/- 2 %
+    Rated current: 250 mA
+    Part name: LQW18AN82NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_82_nH _port1 _port2
+C:C1 _port1 _port2 C="1.55e-14"
+L:L2 _port1 _1 L="9.28e-8"
+R:R2 _1 _port2 R="5.00e-1"
+R:R3 _port1 _port2 R="9.39e+4"
+L:L4 _port1 _2 L="1.17e-6"
+R:R4 _2 _port2 R="47.7"
+L:L5 _port1 _3 L="2.59e-6"
+R:R5 _3 _port2 R="1.64e+3"
+L:L6 _port1 _4 L="6.22e-6"
+R:R6 _4 _port2 R="2.82e+4"
+L:L7 _port1 _5 L="3.80e-5"
+C:C7 _5 _6 C="4.22e-17"
+R:R7 _6 _port2 R="1.34e+5"
+L:L8 _port1 _7 L="1.22e-7"
+C:C8 _7 _8 C="5.27e-15"
+R:R8 _8 _port2 R="144"
+L:L9 _port1 _9 L="2.10e-7"
+C:C9 _9 _10 C="1.36e-15"
+R:R9 _10 _port2 R="2.26e+3"
+L:L10 _port1 _11 L="7.94e-8"
+C:C10 _11 _12 C="2.22e-15"
+R:R10 _12 _port2 R="378"
+L:L11 _port1 _13 L="1.51e-8"
+C:C11 _13 _14 C="5.60e-15"
+R:R11 _14 _port2 R="104"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "82 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 91 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 91 nH
+    Tolerance: +/- 2 %
+    Rated current: 230 mA
+    Part name: LQW18AN91NG00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_91_nH _port1 _port2
+C:C1 _port1 _port2 C="1.31e-14"
+L:L2 _port1 _1 L="1.03e-7"
+R:R2 _1 _port2 R="5.30e-1"
+R:R3 _port1 _port2 R="8.60e+4"
+L:L4 _port1 _2 L="1.09e-6"
+R:R4 _2 _port2 R="54.9"
+L:L5 _port1 _3 L="2.81e-6"
+R:R5 _3 _port2 R="1.75e+3"
+L:L6 _port1 _4 L="6.64e-6"
+R:R6 _4 _port2 R="2.43e+4"
+L:L7 _port1 _5 L="2.26e-5"
+C:C7 _5 _6 C="9.14e-17"
+R:R7 _6 _port2 R="9.82e+4"
+L:L8 _port1 _7 L="1.50e-7"
+C:C8 _7 _8 C="4.80e-15"
+R:R8 _8 _port2 R="177"
+L:L9 _port1 _9 L="2.13e-6"
+C:C9 _9 _10 C="1.71e-16"
+R:R9 _10 _port2 R="1.71e+4"
+L:L10 _port1 _11 L="4.69e-8"
+C:C10 _11 _12 C="4.42e-15"
+R:R10 _12 _port2 R="302"
+L:L11 _port1 _13 L="9.69e-9"
+C:C11 _13 _14 C="9.13e-15"
+R:R11 _14 _port2 R="82.7"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "91 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 100 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 100 nH
+    Tolerance: +/- 2 %
+    Rated current: 220 mA
+    Part name: LQW18ANR10G00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_100_nH _port1 _port2
+C:C1 _port1 _port2 C="1.63e-14"
+L:L2 _port1 _1 L="1.11e-7"
+R:R2 _1 _port2 R="5.60e-1"
+R:R3 _port1 _port2 R="9.58e+4"
+L:L4 _port1 _2 L="1.05e-6"
+R:R4 _2 _port2 R="72.8"
+L:L5 _port1 _3 L="3.28e-6"
+R:R5 _3 _port2 R="2.16e+3"
+L:L6 _port1 _4 L="6.02e-6"
+R:R6 _4 _port2 R="2.92e+4"
+L:L7 _port1 _5 L="2.53e-5"
+C:C7 _5 _6 C="8.57e-17"
+R:R7 _6 _port2 R="1.03e+5"
+L:L8 _port1 _7 L="1.24e-7"
+C:C8 _7 _8 C="6.49e-15"
+R:R8 _8 _port2 R="113"
+L:L9 _port1 _9 L="3.43e-6"
+C:C9 _9 _10 C="1.15e-16"
+R:R9 _10 _port2 R="2.18e+4"
+L:L10 _port1 _11 L="8.78e-8"
+C:C10 _11 _12 C="2.67e-15"
+R:R10 _12 _port2 R="254"
+L:L11 _port1 _13 L="3.56e-8"
+C:C11 _13 _14 C="2.99e-15"
+R:R11 _14 _port2 R="164"
+L:L12 _port1 _15 L="1.77e-8"
+C:C12 _15 _16 C="3.76e-15"
+R:R12 _16 _port2 R="55.0"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "100 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 150 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 150 nH
+    Tolerance: +/- 2 %
+    Rated current: 160 mA
+    Part name: LQW18ANR15G00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_150_nH _port1 _port2
+C:C1 _port1 _port2 C="8.93e-15"
+L:L2 _port1 _1 L="1.62e-7"
+R:R2 _1 _port2 R="1.17"
+R:R3 _port1 _port2 R="1.27e+5"
+L:L4 _port1 _2 L="2.34e-6"
+R:R4 _2 _port2 R="80.1"
+L:L5 _port1 _3 L="4.65e-6"
+R:R5 _3 _port2 R="3.08e+3"
+L:L6 _port1 _4 L="2.32e-5"
+R:R6 _4 _port2 R="5.48e+4"
+L:L7 _port1 _5 L="3.33e-6"
+C:C7 _5 _6 C="6.10e-16"
+R:R7 _6 _port2 R="4.77e+4"
+L:L8 _port1 _7 L="3.04e-7"
+C:C8 _7 _8 C="3.51e-15"
+R:R8 _8 _port2 R="294"
+L:L9 _port1 _9 L="3.90e-6"
+C:C9 _9 _10 C="1.42e-16"
+R:R9 _10 _port2 R="2.63e+4"
+L:L10 _port1 _11 L="1.09e-7"
+C:C10 _11 _12 C="3.06e-15"
+R:R10 _12 _port2 R="339"
+L:L11 _port1 _13 L="2.81e-8"
+C:C11 _13 _14 C="5.57e-15"
+R:R11 _14 _port2 R="226"
+L:L12 _port1 _15 L="1.28e-8"
+C:C12 _15 _16 C="6.81e-15"
+R:R12 _16 _port2 R="185"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "150 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 180 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 180 nH
+    Tolerance: +/- 2 %
+    Rated current: 140 mA
+    Part name: LQW18ANR18G00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_180_nH _port1 _port2
+C:C1 _port1 _port2 C="5.76e-15"
+L:L2 _port1 _1 L="1.97e-7"
+R:R2 _1 _port2 R="1.81"
+R:R3 _port1 _port2 R="1.36e+5"
+L:L4 _port1 _2 L="2.43e-6"
+R:R4 _2 _port2 R="80.8"
+L:L5 _port1 _3 L="6.61e-6"
+R:R5 _3 _port2 R="3.26e+3"
+L:L6 _port1 _4 L="1.37e-5"
+R:R6 _4 _port2 R="5.63e+4"
+L:L7 _port1 _5 L="5.83e-5"
+C:C7 _5 _6 C="5.87e-17"
+R:R7 _6 _port2 R="1.78e+5"
+L:L8 _port1 _7 L="2.15e-7"
+C:C8 _7 _8 C="6.05e-15"
+R:R8 _8 _port2 R="177"
+L:L9 _port1 _9 L="1.40e-6"
+C:C9 _9 _10 C="4.43e-16"
+R:R9 _10 _port2 R="8.83e+3"
+L:L10 _port1 _11 L="1.01e-7"
+C:C10 _11 _12 C="3.94e-15"
+R:R10 _12 _port2 R="192"
+L:L11 _port1 _13 L="4.96e-8"
+C:C11 _13 _14 C="3.80e-15"
+R:R11 _14 _port2 R="184"
+L:L12 _port1 _15 L="2.40e-8"
+C:C12 _15 _16 C="4.39e-15"
+R:R12 _16 _port2 R="149"
+L:L13 _port1 _17 L="1.08e-8"
+C:C13 _17 _18 C="6.25e-15"
+R:R13 _18 _port2 R="90.9"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "180 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 200 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 200 nH
+    Tolerance: +/- 2 %
+    Rated current: 120 mA
+    Part name: LQW18ANR20G00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_200_nH _port1 _port2
+C:C1 _port1 _port2 C="9.90e-15"
+L:L2 _port1 _1 L="2.16e-7"
+R:R2 _1 _port2 R="1.98"
+R:R3 _port1 _port2 R="2.18e+5"
+L:L4 _port1 _2 L="3.29e-6"
+R:R4 _2 _port2 R="88.3"
+L:L5 _port1 _3 L="6.47e-6"
+R:R5 _3 _port2 R="3.56e+3"
+L:L6 _port1 _4 L="1.58e-5"
+R:R6 _4 _port2 R="6.61e+4"
+L:L7 _port1 _5 L="4.91e-4"
+C:C7 _5 _6 C="8.86e-18"
+R:R7 _6 _port2 R="5.24e+5"
+L:L8 _port1 _7 L="7.80e-7"
+C:C8 _7 _8 C="2.00e-15"
+R:R8 _8 _port2 R="497"
+L:L9 _port1 _9 L="6.72e-6"
+C:C9 _9 _10 C="1.19e-16"
+R:R9 _10 _port2 R="3.55e+4"
+L:L10 _port1 _11 L="1.83e-7"
+C:C10 _11 _12 C="2.77e-15"
+R:R10 _12 _port2 R="411"
+L:L11 _port1 _13 L="7.02e-8"
+C:C11 _13 _14 C="3.33e-15"
+R:R11 _14 _port2 R="377"
+L:L12 _port1 _15 L="2.90e-8"
+C:C12 _15 _16 C="4.62e-15"
+R:R12 _16 _port2 R="379"
+L:L13 _port1 _17 L="3.91e-8"
+C:C13 _17 _18 C="2.14e-15"
+R:R13 _18 _port2 R="243"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "200 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 220 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 220 nH
+    Tolerance: +/- 2 %
+    Rated current: 120 mA
+    Part name: LQW18ANR22G00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_220_nH _port1 _port2
+C:C1 _port1 _port2 C="7.74e-15"
+L:L2 _port1 _1 L="2.41e-7"
+R:R2 _1 _port2 R="2.07"
+R:R3 _port1 _port2 R="1.94e+5"
+L:L4 _port1 _2 L="2.83e-6"
+R:R4 _2 _port2 R="89.6"
+L:L5 _port1 _3 L="7.21e-6"
+R:R5 _3 _port2 R="5.30e+3"
+L:L6 _port1 _4 L="2.69e-5"
+R:R6 _4 _port2 R="7.19e+4"
+L:L7 _port1 _5 L="1.93e-4"
+C:C7 _5 _6 C="2.70e-17"
+R:R7 _6 _port2 R="3.16e+5"
+L:L8 _port1 _7 L="6.20e-7"
+C:C8 _7 _8 C="2.87e-15"
+R:R8 _8 _port2 R="371"
+L:L9 _port1 _9 L="5.94e-6"
+C:C9 _9 _10 C="1.69e-16"
+R:R9 _10 _port2 R="3.04e+4"
+L:L10 _port1 _11 L="2.86e-7"
+C:C10 _11 _12 C="1.81e-15"
+R:R10 _12 _port2 R="317"
+L:L11 _port1 _13 L="1.22e-7"
+C:C11 _13 _14 C="2.23e-15"
+R:R11 _14 _port2 R="511"
+L:L12 _port1 _15 L="4.22e-8"
+C:C12 _15 _16 C="3.61e-15"
+R:R12 _16 _port2 R="294"
+L:L13 _port1 _17 L="1.20e-8"
+C:C13 _17 _18 C="7.34e-15"
+R:R13 _18 _port2 R="272"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "220 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 270 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 270 nH
+    Tolerance: +/- 2 %
+    Rated current: 110 mA
+    Part name: LQW18ANR27G00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_270_nH _port1 _port2
+C:C1 _port1 _port2 C="3.07e-15"
+L:L2 _port1 _1 L="2.92e-7"
+R:R2 _1 _port2 R="2.43"
+R:R3 _port1 _port2 R="2.00e+5"
+L:L4 _port1 _2 L="5.05e-6"
+R:R4 _2 _port2 R="135"
+L:L5 _port1 _3 L="1.08e-5"
+R:R5 _3 _port2 R="5.30e+3"
+L:L6 _port1 _4 L="2.80e-5"
+R:R6 _4 _port2 R="8.36e+4"
+L:L7 _port1 _5 L="4.23e-4"
+C:C7 _5 _6 C="1.71e-17"
+R:R7 _6 _port2 R="3.83e+5"
+L:L8 _port1 _7 L="4.50e-7"
+C:C8 _7 _8 C="4.93e-15"
+R:R8 _8 _port2 R="301"
+L:L9 _port1 _9 L="8.93e-6"
+C:C9 _9 _10 C="1.25e-16"
+R:R9 _10 _port2 R="3.45e+4"
+L:L10 _port1 _11 L="1.62e-7"
+C:C10 _11 _12 C="4.15e-15"
+R:R10 _12 _port2 R="277"
+L:L11 _port1 _13 L="1.11e-7"
+C:C11 _13 _14 C="2.82e-15"
+R:R11 _14 _port2 R="575"
+L:L12 _port1 _15 L="5.10e-8"
+C:C12 _15 _16 C="3.51e-15"
+R:R12 _16 _port2 R="354"
+L:L13 _port1 _17 L="1.50e-8"
+C:C13 _17 _18 C="7.27e-15"
+R:R13 _18 _port2 R="222"
+L:L14 _port1 _19 L="1.62e-8"
+C:C14 _19 _20 C="4.48e-15"
+R:R14 _20 _port2 R="163"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "270 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 330 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 330 nH
+    Tolerance: +/- 2 %
+    Rated current: 85 mA
+    Part name: LQW18ANR33G00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_330_nH _port1 _port2
+C:C1 _port1 _port2 C="1.54e-14"
+L:L2 _port1 _1 L="3.71e-7"
+R:R2 _1 _port2 R="3.93"
+R:R3 _port1 _port2 R="1.77e+5"
+L:L4 _port1 _2 L="4.91e-6"
+R:R4 _2 _port2 R="140"
+L:L5 _port1 _3 L="1.60e-5"
+R:R5 _3 _port2 R="5.92e+3"
+L:L6 _port1 _4 L="3.86e-5"
+R:R6 _4 _port2 R="7.94e+4"
+L:L7 _port1 _5 L="1.01e-4"
+C:C7 _5 _6 C="6.56e-17"
+R:R7 _6 _port2 R="2.23e+5"
+L:L8 _port1 _7 L="5.19e-7"
+C:C8 _7 _8 C="5.22e-15"
+R:R8 _8 _port2 R="251"
+L:L9 _port1 _9 L="2.36e-5"
+C:C9 _9 _10 C="6.86e-17"
+R:R9 _10 _port2 R="8.29e+4"
+L:L10 _port1 _11 L="2.29e-7"
+C:C10 _11 _12 C="3.62e-15"
+R:R10 _12 _port2 R="251"
+L:L11 _port1 _13 L="1.33e-7"
+C:C11 _13 _14 C="2.92e-15"
+R:R11 _14 _port2 R="335"
+L:L12 _port1 _15 L="1.09e-7"
+C:C12 _15 _16 C="2.02e-15"
+R:R12 _16 _port2 R="371"
+L:L13 _port1 _17 L="1.54e-7"
+C:C13 _17 _18 C="9.13e-16"
+R:R13 _18 _port2 R="246"
+L:L14 _port1 _19 L="4.85e-8"
+C:C14 _19 _20 C="2.09e-15"
+R:R14 _20 _port2 R="212"
+L:L15 _port1 _21 L="1.97e-8"
+C:C15 _21 _22 C="3.60e-15"
+R:R15 _22 _port2 R="144"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "330 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 390 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 390 nH
+    Tolerance: +/- 2 %
+    Rated current: 80 mA
+    Part name: LQW18ANR39G00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_390_nH _port1 _port2
+C:C1 _port1 _port2 C="1.61e-14"
+L:L2 _port1 _1 L="4.33e-7"
+R:R2 _1 _port2 R="4.43"
+R:R3 _port1 _port2 R="2.21e+5"
+L:L4 _port1 _2 L="4.64e-6"
+R:R4 _2 _port2 R="167"
+L:L5 _port1 _3 L="2.03e-5"
+R:R5 _3 _port2 R="8.48e+3"
+L:L6 _port1 _4 L="5.08e-5"
+R:R6 _4 _port2 R="1.31e+5"
+L:L7 _port1 _5 L="2.30e-4"
+C:C7 _5 _6 C="4.20e-17"
+R:R7 _6 _port2 R="3.19e+5"
+L:L8 _port1 _7 L="7.43e-7"
+C:C8 _7 _8 C="4.75e-15"
+R:R8 _8 _port2 R="497"
+L:L9 _port1 _9 L="8.47e-6"
+C:C9 _9 _10 C="2.56e-16"
+R:R9 _10 _port2 R="3.33e+4"
+L:L10 _port1 _11 L="1.15e-6"
+C:C10 _11 _12 C="9.14e-16"
+R:R10 _12 _port2 R="449"
+L:L11 _port1 _13 L="7.03e-7"
+C:C11 _13 _14 C="6.75e-16"
+R:R11 _14 _port2 R="409"
+L:L12 _port1 _15 L="3.44e-7"
+C:C12 _15 _16 C="7.90e-16"
+R:R12 _16 _port2 R="398"
+L:L13 _port1 _17 L="2.65e-7"
+C:C13 _17 _18 C="6.34e-16"
+R:R13 _18 _port2 R="259"
+L:L14 _port1 _19 L="4.43e-8"
+C:C14 _19 _20 C="2.73e-15"
+R:R14 _20 _port2 R="316"
+L:L15 _port1 _21 L="3.74e-8"
+C:C15 _21 _22 C="2.50e-15"
+R:R15 _22 _port2 R="193"
+L:L16 _port1 _23 L="3.26e-8"
+C:C16 _23 _24 C="2.18e-15"
+R:R16 _24 _port2 R="170"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "390 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
+<Component 470 nH>
+  <Description>
+    Chip Inductor
+    Size code (mm/in): 1608/0603
+    Inductance: 470 nH
+    Tolerance: +/- 2 %
+    Rated current: 75 mA
+    Part name: LQW18ANR47G00
+    Manufacturer: Murata Manufacturing Co.
+  </Description>
+  <Model>
+    .Def:LQW18AN_470_nH _port1 _port2
+C:C1 _port1 _port2 C="2.14e-15"
+L:L2 _port1 _1 L="5.27e-7"
+R:R2 _1 _port2 R="5.00"
+R:R3 _port1 _port2 R="3.29e+5"
+L:L4 _port1 _2 L="5.06e-6"
+R:R4 _2 _port2 R="167"
+L:L5 _port1 _3 L="2.53e-5"
+R:R5 _3 _port2 R="1.02e+4"
+L:L6 _port1 _4 L="4.24e-5"
+R:R6 _4 _port2 R="1.25e+5"
+L:L7 _port1 _5 L="5.38e-4"
+C:C7 _5 _6 C="1.99e-17"
+R:R7 _6 _port2 R="5.64e+5"
+L:L8 _port1 _7 L="1.18e-6"
+C:C8 _7 _8 C="4.13e-15"
+R:R8 _8 _port2 R="534"
+L:L9 _port1 _9 L="3.60e-5"
+C:C9 _9 _10 C="9.39e-17"
+R:R9 _10 _port2 R="4.77e+4"
+L:L10 _port1 _11 L="6.83e-7"
+C:C10 _11 _12 C="2.20e-15"
+R:R10 _12 _port2 R="882"
+L:L11 _port1 _13 L="2.66e-7"
+C:C11 _13 _14 C="2.65e-15"
+R:R11 _14 _port2 R="813"
+L:L12 _port1 _15 L="1.84e-7"
+C:C12 _15 _16 C="2.14e-15"
+R:R12 _16 _port2 R="969"
+L:L13 _port1 _17 L="8.19e-8"
+C:C13 _17 _18 C="2.92e-15"
+R:R13 _18 _port2 R="520"
+L:L14 _port1 _19 L="3.37e-8"
+C:C14 _19 _20 C="4.96e-15"
+R:R14 _20 _port2 R="371"
+L:L15 _port1 _21 L="3.39e-8"
+C:C15 _21 _22 C="3.64e-15"
+R:R15 _22 _port2 R="286"
+L:L16 _port1 _23 L="2.14e-8"
+C:C16 _23 _24 C="4.17e-15"
+R:R16 _24 _port2 R="176"
+.Def:End
+  </Model>
+  <Symbol>
+    <.ID -10 13 L>
+    <Line -28 0 10 0 #14148c 1 1>
+    <Line 18 0 10 0 #14148c 1 1>
+    <EArc -18 -6 12 12 5 2850 #14148c 1 1>
+    <EArc -6 -6 12 12 5 2850 #14148c 1 1>
+    <EArc 6 -6 12 12 5 2850 #14148c 1 1>
+    <Text -16 -25 12 #000000 0 "470 nH">
+    <.PortSym -30 0 1 0>
+    <.PortSym 30 0 2 180>
+  </Symbol>
+</Component>
+
+
