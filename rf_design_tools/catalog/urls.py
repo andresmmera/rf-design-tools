@@ -73,6 +73,7 @@ from catalog.views import CoupledLineBPF_w_stubs_o3_5GHz_View
 from catalog.views import QW_Open_Stubs_o3_5GHz_View
 from catalog.views import Lumped_HPF_o2_2GHz_View
 from catalog.views import Libraries_View
+from catalog.views import MurataRF_Filter_View
 
 from catalog.views import DocsView
 
@@ -187,6 +188,7 @@ urlpatterns = [
     #################################################################################
     # RESOURCES
     path('libraries', Libraries_View, name='libraries'),
+    path('MurataRF_filter', MurataRF_Filter_View, name='MurataRF_filter'),
 
     #################################################################################
     # Docs

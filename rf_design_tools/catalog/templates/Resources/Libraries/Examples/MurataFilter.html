@@ -1,0 +1,48 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="card shadow-sm">
+
+   <div class="row">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h1 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">Lumped RF Filter with Murata parts</h1>
+          </div>
+          <div class="col-md-4 d-flex justify-content-end">
+            <a class="btn btn-warning" href="https://github.com/andresmmera/rf-design-tools/blob/master/rf_design_tools/catalog/templates/Resources/Libraries/Examples/Example_Designs_Murata_Parts_prj.zip" role="button"> <strong>Download</strong></a>
+          </div>
+        </div>
+
+        <div class="row" style = "margin: 0.5cm 0.3cm 0.5cm;">
+          <div class="col-12">
+            <p>This is an example on how to use the Murata parts to design an RF filter. The libraries provided contain public 
+              data available from <a href="https://ds.murata.co.jp/simsurfing/?lcid=en-us">Murata SimSurfing</a>. This is only for 
+              educational purposes and comes with no guarantee. The <a href="https://github.com/andresmmera/rf-design-tools/blob/master/rf_design_tools/catalog/templates/Resources/Libraries/Examples/Example_Designs_Murata_Parts_prj.zip" download>sample project</a> contains the libraries already integrated.</p>
+          </div>
+        </div>
+    
+        <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">HPF 500 MHz with LQW18AN and GRM03 parts</h1>
+
+        <div class= "col-md-auto">
+          <div class="thumbnail" align="center">
+              <img class="img-responsive" src="{% static 'images/Designs/Library_Examples/MurataRF_Filter/HPF_500MHz.png' %}" style="width:50%" alt="HPF">
+          </div>
+        </div>
+
+        <h5 style = "margin: 0.5cm 0.3cm 0.5cm; vertical-align: middle;">BPF 450-550 MHz with LQW18AN and GRM03 parts</h1>
+
+
+        <div class= "col-md-auto">
+          <div class="thumbnail" align="center">
+              <img class="img-responsive" src="{% static 'images/Designs/Library_Examples/MurataRF_Filter/BPF_500MHz.png' %}" style="width:50%" alt="BPF">
+          </div>
+        </div>
+  </div> 
+</main>
+{% endblock %} 

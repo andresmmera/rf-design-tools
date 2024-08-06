@@ -12,3 +12,7 @@ def DocsView(request):
 
 def Libraries_View(request):
     return render(request, 'Resources/libraries.html')
+
+def MurataRF_Filter_View(request):
+    return render(request, 'Resources/Libraries/Examples/MurataFilter.html')
+
