@@ -1063,14 +1063,14 @@
             }
             else
             {// RI
-              S2Pdata["S11_dB"].push(10*Math.log10(Math.sqrt(S11a*S11a + S11b*S11b)));
-              S2Pdata["S11_ang"].push(10*Math.log10(Math.atan(S11b/S11a)));
-              S2Pdata["S21_dB"].push(10*Math.log10(Math.sqrt(S12a*S12a + S12b*S12b)));
-              S2Pdata["S21_ang"].push(10*Math.log10(Math.atan(S12b/S12a)));
-              S2Pdata["S12_dB"].push(10*Math.log10(Math.sqrt(S21a*S21a + S21b*S21b)));
-              S2Pdata["S12_ang"].push(10*Math.log10(Math.atan(S21b/S21a)));
-              S2Pdata["S22_dB"].push(10*Math.log10(Math.sqrt(S22a*S22a + S22b*S22b)));
-              S2Pdata["S22_ang"].push(10*Math.log10(Math.atan(S22b/S22a)));
+              S2Pdata["S11_dB"].push(20*Math.log10(Math.sqrt(S11a*S11a + S11b*S11b)));
+              S2Pdata["S11_ang"].push(20*Math.log10(Math.atan(S11b/S11a)));
+              S2Pdata["S21_dB"].push(20*Math.log10(Math.sqrt(S12a*S12a + S12b*S12b)));
+              S2Pdata["S21_ang"].push(20*Math.log10(Math.atan(S12b/S12a)));
+              S2Pdata["S12_dB"].push(20*Math.log10(Math.sqrt(S21a*S21a + S21b*S21b)));
+              S2Pdata["S12_ang"].push(20*Math.log10(Math.atan(S21b/S21a)));
+              S2Pdata["S22_dB"].push(20*Math.log10(Math.sqrt(S22a*S22a + S22b*S22b)));
+              S2Pdata["S22_ang"].push(20*Math.log10(Math.atan(S22b/S22a)));
             }
           }
         }
