@@ -432,6 +432,8 @@ submit_form()
     $('.sweep_mode2').hide();
     $("#dropdownButtonDownload").hide();
     $("#ButtonDocs").hide();
+    $('.Zlow_input').hide(); // Stepped Zlow
+    $('.Zhigh_input').hide(); // Stepped Zhigh
   })
 
   // Hide or show the corresponding inputs
@@ -746,7 +748,6 @@ submit_form()
       
 
       // Default setup
-
       document.getElementById("Order").value = 3;
       document.getElementById("Cutoff").value = 2000;
       document.getElementById("f_start").value = 1;
