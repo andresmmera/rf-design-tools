@@ -1,4 +1,5 @@
 {% extends "base_generic.html" %}
+{% load static %}
 
 {% block content %}
  
@@ -7,23 +8,47 @@
     <div class="row">
       <div class="col-xs-12">
         <h1 class="text-center">About</h1>					
-
+        
         <div class="card shadow-sm">
           <div class="text-nowrap" style="width: 8rem;">
-                      
             <ul style="list-style-type:disc">
               <li>This site was created with the aim of providing quick tools for the day-to-day work of RF engineers.</li>
               <li>Please notice that I write these tools in my spare time so they are likely to be riddled with errors.</li>
               <li>If you have found a bug or just have a suggestion for improvement, feel free to get in touch at <a href="mailto:andresmmera@protonmail.com">andresmmera@protonmail.com</a></li>
               <li>Please consider making a <a href="https://www.paypal.com/donate/?hosted_button_id=DQJJ8Q9MQMJBY"> donation</a> if you find this website useful. This would help me to put more resources into it.</li>
             </ul>
-
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
- 
-<br>
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1 class="text-center">License</h1>
+        
+        <div class="card shadow-sm">
+          <div class="text-nowrap" style="width: 8rem;">
+            <p>This website is licensed under the GNU General Public License v3.0 (GPL-3.0).</p>
+            <p>The source code for this website is available at: <a href="https://github.com/andresmmera/rf-design-tools">https://github.com/andresmmera/rf-design-tools</a></p>
+            <p>The following open-source packages are used in this project:</p>
+            <ul>
+              <li>Django (BSD 3-Clause License)</li>
+              <li>NumPy (BSD 3-Clause License)</li>
+              <li>Bokeh (BSD 3-Clause License)</li>
+              <li>SchemDraw (MIT License)</li>
+              <li>IPython (BSD 3-Clause License)</li>
+              <li>Matplotlib (Matplotlib License)</li>
+            </ul>
+            <p>For full license texts and more details, please refer to the <a href="#">LICENSES</a> file in our repository.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

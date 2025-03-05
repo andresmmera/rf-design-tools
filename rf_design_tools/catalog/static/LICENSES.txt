@@ -1,0 +1,51 @@
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+
+Copyright (C) 2023 [Your Name or Organization]
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+--------------------------------------------------------------------
+
+This project's source code is available at:
+https://github.com/andresmmera/rf-design-tools
+
+--------------------------------------------------------------------
+
+This project uses the following open-source packages:
+
+1. Django - BSD 3-Clause License
+   https://github.com/django/django/blob/main/LICENSE
+
+2. NumPy - BSD 3-Clause License
+   https://github.com/numpy/numpy/blob/main/LICENSE.txt
+
+3. Bokeh - BSD 3-Clause License
+   https://github.com/bokeh/bokeh/blob/branch-3.0/LICENSE.txt
+
+4. SchemDraw - MIT License
+   https://github.com/cdelker/schemdraw/blob/master/LICENSE
+
+5. IPython - BSD 3-Clause License
+   https://github.com/ipython/ipython/blob/main/LICENSE
+
+6. Matplotlib - Matplotlib License (based on PSF License)
+   https://github.com/matplotlib/matplotlib/blob/main/LICENSE/LICENSE
+
+The full text of these licenses can be found in the respective repositories linked above.
+
+--------------------------------------------------------------------
+
+For the full text of the GNU General Public License version 3, please visit:
+https://www.gnu.org/licenses/gpl-3.0.en.html
