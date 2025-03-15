@@ -29,6 +29,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@1,900&display=swap" rel="stylesheet"/> 
   <link type="text/css" rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
 <style>
 .dropdown-submenu {
@@ -234,6 +235,29 @@
   </nav>
 
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script type="text/javascript">
+    // Check if the pop-up has already been shown
+    if (!sessionStorage.getItem('popupShown')) {
+      Swal.fire({
+        title: 'Help me grow!',
+        html: '<b>Please consider making a small donation if you like this</b>.<br><b>That\'ll help me to put more resources into the project.</b>',
+        confirmButtonText: 'Maybe next time',
+        showDenyButton: true,
+        denyButtonText: 'Donate &#9829;',
+        denyButtonColor: '#dc3545', // Red color (Bootstrap's danger color)
+      }).then((result) => {
+        if (result.isDenied) {
+          // User clicked the Donate button
+          window.open('https://www.paypal.com/donate/?hosted_button_id=DQJJ8Q9MQMJBY', '_blank');
+        }
+      });
+      sessionStorage.setItem('popupShown', 'true');
+    }
+  </script>
+  
+  
 
       <script>
         $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
