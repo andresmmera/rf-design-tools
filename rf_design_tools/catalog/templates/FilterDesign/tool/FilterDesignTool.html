@@ -259,8 +259,8 @@
           <div class="row">
               <div class="col-xs-4 col-md-8" >
                   <div class="card shadow-sm">
-                    <script src="https://code.highcharts.com/highcharts.js"></script>
-                    <div id="container" style="width: 800px"></div>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.2.0/highcharts.js"></script>
+                    <div id="container" style="width: 800px; height: 400px"></div>
                   </div>
               </div>
           </div>
@@ -938,9 +938,9 @@ submit_form()
               alert(data['warning'])
             }
         },
-        failure: function () {
-            alert("JSON failure");
-        }
+        error: function (xhr) {
+            alert("AJAX error: " + xhr.status + " " + xhr.responseText);
+            }
     });
   }
 
@@ -992,52 +992,48 @@ function linspace_int(startValue, stopValue, cardinality) {
 }
 
 function plotChart(x, y1, y2, title) {
-
   let y_axis_scale = parseFloat(document.getElementById("y_axis_scale").value)
   let y_axis_min = parseFloat(document.getElementById("y_axis_min").value)
   let y_axis_max = parseFloat(document.getElementById("y_axis_max").value)
 
-          $('#container').highcharts({
-                plotOptions: {
-                              series: {
-                                      animation: false
-                                      }
-                              },
-                title: {
-                          text: title
-                         },
-                xAxis: {
-                        categories: x,
-                        gridLineWidth: 1,
-                        tickPositions: linspace_int(0, x.length-1, 11),
-                        title: {text: 'freq (MHz)'}
-                        },
-                yAxis: [
-                                {
-                                min: y_axis_min,
-                                max: y_axis_max,
-                                title: {
-                                        text: 'S21 (dB), S11 (dB)'
-                                      },
-                                      gridLineWidth: 1, 
-                                      tickInterval: y_axis_scale,
-                                }
-                        ],
-                                series: [{
-                                  name: 'S21 (dB)',
-                                  data: y1,
-                                  color: 'red',
-                                  yAxis: 0
-                                },
-                                {
-                                  name: 'S11 (dB)',
-                                  data: y2,
-                                  color: 'blue',
-                                  yAxis: 0
-                                }
-                              ]
-                            });
-                        };
+  Highcharts.chart('container', {
+    plotOptions: {
+      series: {
+        animation: false
+      }
+    },
+    title: {
+      text: title
+    },
+    xAxis: {
+      categories: x,
+      gridLineWidth: 1,
+      tickPositions: linspace_int(0, x.length-1, 11),
+      title: {text: 'freq (MHz)'}
+    },
+    yAxis: [{
+      min: y_axis_min,
+      max: y_axis_max,
+      title: {
+        text: 'S21 (dB), S11 (dB)'
+      },
+      gridLineWidth: 1,
+      tickInterval: y_axis_scale,
+    }],
+    series: [{
+      name: 'S21 (dB)',
+      data: y1,
+      color: 'red',
+      yAxis: 0
+    },
+    {
+      name: 'S11 (dB)',
+      data: y2,
+      color: 'blue',
+      yAxis: 0
+    }]
+  });
+};
 
 </script>
 {% endblock %}

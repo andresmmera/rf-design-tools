@@ -144,7 +144,7 @@ def FilterDesignToolView(request):
         response_data = {}
         
         # Prepare objects for the html 
-        response_data['freq'] = np.round_(freq*1e-6, 1).tolist()
+        response_data['freq'] = np.round(freq*1e-6, 1).tolist()
         response_data['S11'] = S11.tolist()
         response_data['S21'] = S21.tolist()
         response_data['title'] = title
