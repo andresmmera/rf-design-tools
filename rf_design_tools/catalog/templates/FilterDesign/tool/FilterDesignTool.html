@@ -2,6 +2,10 @@
 <head>
   <!-- Add icon library -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    #schematic_viewport:active { cursor: grabbing; }
+    #schematic_viewport svg { transition: transform 0.1s ease-out; }
+  </style>
 </head>
 {% load static %}
 
@@ -265,7 +269,8 @@
               </div>
           </div>
         
-          <div class="card">
+
+                    <div class="card">
             <div class="card-body">
               <div class='row'>
                 <div class="col-xs-6 col-md-6" >
@@ -276,14 +281,34 @@
             <div class="card-text text-center">
               <script src="https://unpkg.com/svg-pan-zoom-container"></script>
               <!-- https://www.cssscript.com/svg-pan-zoom-container/ -->
-              <div data-zoom-on-wheel data-pan-on-drag>
-                <svg id='svg_display' height = 500 width = 700>
+
+              <div class="schematic-toolbar" style="margin-bottom:6px;">
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="schematicZoom(1.25)" title="Zoom in">
+                  <i class="fa fa-search-plus"></i> Zoom In
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="schematicZoom(0.8)" title="Zoom out">
+                  <i class="fa fa-search-minus"></i> Zoom Out
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="schematicResetView()" title="Fit to screen">
+                  <i class="fa fa-expand"></i> Fit
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="downloadSchematic()" title="Download schematic as PNG">
+                  <i class="fa fa-download"></i> Download
+                </button>
+              </div>
+
+              <div id="schematic_viewport" data-zoom-on-wheel data-pan-on-drag
+                   style="width:100%; max-width:700px; height:500px; margin:0 auto; overflow:hidden; border:1px solid #ddd; cursor:grab;">
+                <svg id='svg_display' height="500" width="700" style="width:100%; height:100%;">
                   {{ svg | safe }}
                 </svg>
               </div>
 
             </div>
           </div>
+          
+
+
           </div>
 
           <div class="col-md-auto box_form">
@@ -924,8 +949,9 @@ submit_form()
             "Xres[]": Xres,
         },
         dataType: "json",
-        success: function (data) {
+          success: function (data) {
             $("#svg_display").html(data['svg'])
+            schematicResetView()  // auto-fit newly drawn schematic (handles high-order filters)
     
             // Retrieve data from django
             freq = data['freq']
@@ -943,6 +969,100 @@ submit_form()
             }
     });
   }
+
+    // ---------------------------------------------------------------------
+  // Schematic zoom / pan / fit / download helpers
+  // ---------------------------------------------------------------------
+  var schematicZoomLevel = 1;
+
+  function schematicResetView(){
+    var svg = document.getElementById('svg_display');
+    if (!svg) return;
+    schematicZoomLevel = 1;
+    svg.style.transform = '';
+    try {
+      var bbox = svg.getBBox();
+      if (bbox && bbox.width > 0 && bbox.height > 0) {
+        var pad = 10;
+        var vb = [bbox.x - pad, bbox.y - pad, bbox.width + 2 * pad, bbox.height + 2 * pad].join(' ');
+        svg.setAttribute('viewBox', vb);
+        svg.removeAttribute('width');
+        svg.removeAttribute('height');
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      }
+    } catch (e) {
+      // getBBox can throw if the SVG isn't rendered/visible yet; ignore.
+    }
+  }
+
+  function schematicZoom(factor){
+    var svg = document.getElementById('svg_display');
+    if (!svg) return;
+    schematicZoomLevel = Math.max(0.2, Math.min(8, schematicZoomLevel * factor));
+    svg.style.transformOrigin = 'center center';
+    svg.style.transform = 'scale(' + schematicZoomLevel + ')';
+  }
+
+  function downloadSchematic(){
+    var svg = document.getElementById('svg_display');
+    if (!svg) return;
+
+    var bbox;
+    try { bbox = svg.getBBox(); } catch (e) { bbox = null; }
+    var width = (bbox && bbox.width > 0) ? bbox.width : svg.clientWidth || 700;
+    var height = (bbox && bbox.height > 0) ? bbox.height : svg.clientHeight || 500;
+    var pad = 10;
+
+    var clone = svg.cloneNode(true);
+    clone.removeAttribute('style');
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    clone.setAttribute('viewBox', [
+      (bbox ? bbox.x - pad : 0),
+      (bbox ? bbox.y - pad : 0),
+      width + 2 * pad,
+      height + 2 * pad
+    ].join(' '));
+    clone.setAttribute('width', width + 2 * pad);
+    clone.setAttribute('height', height + 2 * pad);
+
+    var svgData = new XMLSerializer().serializeToString(clone);
+    var svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    var url = URL.createObjectURL(svgBlob);
+
+    var img = new Image();
+    img.onload = function () {
+      var scale = 2;
+      var canvas = document.createElement('canvas');
+      canvas.width = (width + 2 * pad) * scale;
+      canvas.height = (height + 2 * pad) * scale;
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.scale(scale, scale);
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+
+      canvas.toBlob(function (blob) {
+        var link = document.createElement('a');
+        link.download = 'schematic.png';
+        link.href = URL.createObjectURL(blob);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+    };
+    img.onerror = function(){
+      URL.revokeObjectURL(url);
+      alert('Could not render schematic for download.');
+    };
+    img.src = url;
+  }
+
+  $(document).ready(function(){
+    schematicResetView();
+  });
+
+
 
 function CreateTableDirectCoupled(N, X){
   var table = document.querySelector('#tableX');
